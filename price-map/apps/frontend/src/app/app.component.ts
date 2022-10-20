@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'pm-front-root',
+  selector: 'price-map-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

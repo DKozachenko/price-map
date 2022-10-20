@@ -13,7 +13,7 @@
           "error",
           {
             "type": "attribute",
-            "prefix": "pmFront",
+            "prefix": "priceMap",
             "style": "camelCase"
           }
         ],
@@ -21,7 +21,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "pm-front",
+            "prefix": "price-map",
             "style": "kebab-case"
           }
         ]

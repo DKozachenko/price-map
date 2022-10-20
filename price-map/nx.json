@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "npmScope": "pm-back",
+  "npmScope": "price-map",
   "affected": {
     "defaultBase": "master"
   },
@@ -14,7 +14,7 @@
           "test",
           "e2e"
         ],
-        "accessToken": "M2MzNTZiMzMtYTEyZS00MDg5LWJiZjYtYjAyMmExZjc3OTY3fHJlYWQtd3JpdGU="
+        "accessToken": "ZTFhMTYzZDQtZDJlMy00YzIyLWIyYjItMDI0OWIzMTc3MDkxfHJlYWQtd3JpdGU="
       }
     }
   },
@@ -56,5 +56,23 @@
     ],
     "sharedGlobals": []
   },
-  "defaultProject": "backend"
+  "cli": {
+    "packageManager": "npm"
+  },
+  "generators": {
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "defaultProject": "frontend"
 }
