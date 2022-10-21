@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'price-map-login',
@@ -9,7 +10,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class LoginComponent implements OnInit {
   public form!: FormGroup;
 
-  constructor() {}
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     this.form = new FormGroup({
@@ -20,5 +21,7 @@ export class LoginComponent implements OnInit {
 
   public submit(): void {
     console.log(this.form.value)
+
+    this.router.navigate(['../map'])
   }
 }
