@@ -1,1 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+html {
+  font-size: 10px!important;
+}
+
+body {
+  font-family: 'Consolas', sans-serif;
+}
+
+.root {
+  height: 100vh;
+  width: 100%;
+}

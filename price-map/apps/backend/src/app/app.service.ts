@@ -3,6 +3,6 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   getData(): { message: string } {
-    return { message: 'Welcome to backend!' };
+    return { message: 'Hello world на бэке вот так уот' };
   }
 }
