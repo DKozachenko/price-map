@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { webSocket } from 'rxjs/webSocket';
+import io from 'socket.io-client'
 
 @Component({
   selector: 'price-map-root',
@@ -7,4 +9,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'frontend';
+
+  public send(): void {
+
+
+    const subject = io('http://localhost:3333');
+
+    subject.emit('send', { }, (res: any) => {
+      console.log('res', res)
+    })
+  }
 }

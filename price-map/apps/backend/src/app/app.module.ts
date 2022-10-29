@@ -5,9 +5,10 @@ import { AppService } from './app.service';
 import { CatsController } from './controllers/cats.controller';
 import { CatsService } from './controllers/cats.service';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
+import { WsModule } from './modules/ws/ws.module';
 
 @Module({
-  imports: [],
+  imports: [WsModule],
   controllers: [AppController, CatsController],
   providers: [AppService, CatsService],
 })
