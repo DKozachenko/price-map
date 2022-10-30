@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { io } from 'socket.io-client';
 
 @Component({
   selector: 'price-map-login',
@@ -20,8 +21,20 @@ export class LoginComponent implements OnInit {
   }
 
   public submit(): void {
-    console.log(this.form.value)
+    const subject = io('http://localhost:3333');
 
-    this.router.navigate(['../map'])
+    subject.connect();
+
+    subject.on("connect", () => {
+      console.log('connect')
+    });
+
+
+    subject.emit('send', {data: 'data'});
+
+    subject.on('send', (response) => {
+      console.log('on send', response)
+    })
+
   }
 }
