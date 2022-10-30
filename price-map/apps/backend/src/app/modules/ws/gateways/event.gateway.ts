@@ -11,6 +11,7 @@ import { Observable, of } from 'rxjs';
 import { DataSource, Repository } from 'typeorm';
 import { BaseEntity } from '../../../models/test.entity';
 import * as https from 'https';
+import * as puppeteer from 'puppeteer';
 
 @WebSocketGateway({
   cors: {
@@ -20,6 +21,27 @@ import * as https from 'https';
 export class WsGateway implements OnGatewayInit, OnGatewayConnection {
   @InjectRepository(BaseEntity)
   private readonly repository: Repository<BaseEntity>;
+
+  public async getPic() {
+    const browser = await puppeteer.launch({headless: false});
+    const page = await browser.newPage();
+    await page.goto('https://novosibirsk.shops-prices.ru/jelektronika');
+    await page.setViewport({width: 1000, height: 500})
+    await page.click('#content > section > div.row.products-category.pmain.clearfix > div:nth-child(1) > a.image > img');
+
+    const result = await page.evaluate(() => {
+      let title = document.querySelector('div.short_info_block > div.bbox > div.short_info > div').textContent;
+      let price = document.querySelector('div.short_info_block > div.bbox > div.short_info > span:nth-child(2)').textContent;
+
+      return {
+        title,
+        price
+      }
+    });
+    await browser.close();
+    return result;
+  }
+  
 
   public readURL(url) {
   
@@ -94,7 +116,7 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection {
     const regexCAtegories2Level : RegExp = new RegExp('<li><a href="\/[a-z- \/]+">[А-ЯA-Z]{1}[a-zа-яА-Я ]+<\/a><\/li>', 'g');
     this.readURL(url)
       .then((data: string) => {
-          // console.log(data)
+          console.log(data)
           const liList = data.match(regexCAtegories3Level)
           const categories3Level = [];
           // console.log(liList)
@@ -132,6 +154,9 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection {
 
   @SubscribeMessage('send')
   public async handleMessage(@MessageBody() data: string): Promise<WsResponse<BaseEntity>> {
+    const data2 = await this.getPic();
+    console.log(data2)
+
     console.log(data)
     const newEnt = await this.create();
     const ent = await this.find();
