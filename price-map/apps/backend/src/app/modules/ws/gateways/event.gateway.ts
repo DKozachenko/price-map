@@ -12,6 +12,8 @@ import { DataSource, Repository } from 'typeorm';
 import { BaseEntity } from '../../../models/test.entity';
 import * as https from 'https';
 import * as puppeteer from 'puppeteer';
+import * as userAgents from 'user-agents';
+import * as useProxy from 'puppeteer-page-proxy';
 
 @WebSocketGateway({
   cors: {
@@ -22,35 +24,226 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection {
   @InjectRepository(BaseEntity)
   private readonly repository: Repository<BaseEntity>;
 
-  public async getPic() {
-    const browser = await puppeteer.launch({headless: false});
+  public async getPage() {
+    const referers = ["https://www.google.com", "https://www.facebook.com", "https://www.instagram.com"];
+    const randomReferer = referers[Math.floor(Math.random() * referers.length)];
+
+
+    const browser = await puppeteer.launch({
+      headless: false,
+      // args: ['--proxy-server=socks5://127.0.0.1:9050']
+    });
     const page = await browser.newPage();
-    await page.goto('https://novosibirsk.shops-prices.ru/jelektronika');
-    await page.setViewport({width: 1000, height: 500})
-    await page.click('#content > section > div.row.products-category.pmain.clearfix > div:nth-child(1) > a.image > img');
+
+    const cookies = [ { name: 'yuidss',
+    value: '3890917711664608778',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'yandexuid',
+    value: '3890917711664608778',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'is_gdpr',
+    value: '0',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'gdpr', value: '0', domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: '_ym_uid',
+    value: '1664609197646862615',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: '_ym_d',
+    value: '1664609198',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'device_id',
+    value: 'b0ebd232b5f35d163f29479c164e7d67026402387',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'skid',
+    value: '8013247771664779555',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'js', value: '1', domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'currentRegionId',
+    value: '65',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'currentRegionName',
+    value:
+     '%D0%9D%D0%BE%D0%B2%D0%BE%D1%81%D0%B8%D0%B1%D0%B8%D1%80%D1%81%D0%BA',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'mOC', value: '1', domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'viewtype',
+    value: 'grid',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: '_ga',
+    value: 'GA1.2.2082354009.1666542569',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'active-browser-timestamp',
+    value: '1666542606948',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'yp',
+    value:
+     '1667719358.szm.1:1920x1080:1920x937#1982475634.udn.cDpES296YWNoZW5rbzAwMA%3D%3D',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'L',
+    value: 'XSh5SGZ8dFReXnhBaUlKT35ESGwMSnxnMCM1IhRREjQMJS5xAVc',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'yandex_login',
+    value: 'DKozachenko000',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'utm_campaign',
+    value: '2347842',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'utm_medium',
+    value: 'widget',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'utm_source',
+    value: 'partner_network',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'utm_term',
+    value: 'button',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'ys',
+    value: 'udn.cDpES296YWNoZW5rbzAwMA%3D%3D#c_chck.600749601',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'spravka',
+    value:
+     'dD0xNjY3MTE5MzkwO2k9MTc4LjQ5LjI1My4yMjM7RD05MDJGRkYzM0NDNkU5MDVBNzFCRjczMjYzQTZCNzJBNTM5RTdBMUNGN0NCNzg5OEM1ODY2NTgwNzZGMDdENjdFQjI2NTE3RUU7dT0xNjY3MTE5MzkwNjc5NzkwMDY4O2g9ODk5Yzk2ZGJmNGZhZjMxMmFhMzU3YzZkYjFkZWVjNjY',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'cashback_onboarding',
+    value: '1',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'yandex_help',
+    value: '1',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'm2b_popover_was_viewed_1476374398',
+    value: '1',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'm2b_popover_next_step_1476374398',
+    value: '3',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'is_gdpr_b',
+    value: 'CIyaHxCGlAEoAg',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'ymex',
+    value: '1979969193.yrts.1664609193#1983193677.yrtsi.1667833677',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'i',
+    value:
+     'NU+4x2gvgymvnzIl5XnimGcFwIWefCtXzpQvrYL9NM3yDhNKeCsyvfP0eUJOKh/UoDQCduVxx9k2ARR1F5U4yzBlm+k',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'Session_id',
+    value:
+     '3:1668954535.5.0.1667115634574:3_0xsg:1e.1.2:1|1476374398.0.2|3:10261447.810921.rrfekgR1nmbqvE0jPbfcg3yJB8U',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'sessionid2',
+    value:
+     '3:1668954535.5.0.1667115634574:3_0xsg:1e.1.2:1|1476374398.0.2|3:10261447.810921.fakesign0000000000000000000',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'Beko', value: '0', domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'yaplus_BF',
+    value: '0',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'Commo',
+    value: '0',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'vendor_testgenotek',
+    value: '0',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'visits',
+    value: '1665667397-1668956964-1669026552',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: '_ym_isad',
+    value: '2',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'user_unchecked_cart_item_ids',
+    value: '%5B%5D',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'nec', value: '0', domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'ugcp', value: '1', domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: '_ym_visorc',
+    value: 'b',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: '_yasc',
+    value:
+     '9JYlPTBztYdkCmXrvDwbxPWgms/aIFnRa90OGiz5hSXgG1fae5u2YNyEvM6NmxVYXIdVJxTrj/CaKduHizo',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'parent_reqid_seq',
+    value:
+     '1669042079824%2Fcb34010e7535db0d6d7b4824fced0500%2C1669043342070%2F57b149ddcdcaa2fbebd2846ffced0500%2C1669046103847%2F1887660172e03085c6332214fded0500%2C1669046572157%2Fbcfdeb8017673ebfb2090c30fded0500%2C1669047759525%2F94d31e593de63e7de8d7d176fded0500',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'server_request_id_market:index',
+    value: '1669047759525%2F94d31e593de63e7de8d7d176fded0500',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'suppress_order_notifications',
+    value: '1',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'bnpl_limit',
+    value: '100000',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' },
+  { name: 'fetch_loyalty_notifications_time_stamp',
+    value: '2022-11-21T16:22:42.224Z',
+    domain: 'https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ' } ]
+    ;
+    page.setExtraHTTPHeaders({ referer: randomReferer, accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9' });
+    page.setUserAgent(userAgents.random().toString())
+    page.setCookie(...cookies);
+    // await useProxy(page, 'https://127.0.0.1:443');
+    // await page.goto('https://whoer.net');
+    await page.goto('https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ');
+    // await page.goto('https://market.yandex.ru/product--mnogorazovyi-umnyi-bloknot-sketchbuk-bloknot-tvorcheskii-dlia-zapisei-vechnyi-bloknot/1699008846?glfilter=14871214%3A14899090_101345093882&cpc=HEJYghj2a2K8y1tTOyHhI7GloL9hdAvotmbStwukf1QMvQo1IQZoui9tgKcMjGJNA2Zs8r_KQoXmk1MJtlUsJXOgD5NyTEvijBdChA3ew4FEDLjtYyd28dRRLwF35dPGibZwYvXypHpNKkD-BrJiw6ZFIXmXacy0gol8J9BrAcHXJI2raq5XjjbezESFFzVLNONC-B03o-c%2C&from-show-uid=16690400159917681397500001&sku=101345093882&do-waremd5=WRChxNBDP-e7a-TtCnWZtw&sponsored=1&cpa=1');
+    await page.setViewport({width: 1000, height: 500});
+
 
     const result = await page.evaluate(() => {
-      let title = document.querySelector('div.short_info_block > div.bbox > div.short_info > div').textContent;
-      let price = document.querySelector('div.short_info_block > div.bbox > div.short_info > span:nth-child(2)').textContent;
+      let title = document.querySelector('h1[data-baobab-name="$name"]')?.textContent;
+      let price = document.querySelector('span[data-auto="mainPrice"] span')?.textContent;
 
       return {
         title,
         price
       }
     });
-    await browser.close();
+    browser.close();
     return result;
+  }
+
+  public async getPic() {
+    // setInterval(async () => {
+      const res = await this.getPage();
+      console.log(res)
+    // }, 1000)
   }
   
 
   public readURL(url) {
-  
+    const options = {
+      hostname: 'market.yandex.ru',
+      port: 443,
+      path: '/',
+      method: 'GET',
+      headers: {
+        accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+        acceptEncoding: 'gzip, deflate, br',
+        acceptLanguage: 'ru,ru-RU;q=0.9,en-US;q=0.8,en;q=0.7,zh;q=0.6',
+        cacheControl: 'no-cache',
+        cookie: 'yuidss=3890917711664608778; yandexuid=3890917711664608778; is_gdpr=0; gdpr=0; _ym_uid=1664609197646862615; _ym_d=1664609198; device_id=b0ebd232b5f35d163f29479c164e7d67026402387; skid=8013247771664779555; js=1; currentRegionId=65; currentRegionName=%D0%9D%D0%BE%D0%B2%D0%BE%D1%81%D0%B8%D0%B1%D0%B8%D1%80%D1%81%D0%BA; mOC=1; viewtype=grid; _ga=GA1.2.2082354009.1666542569; active-browser-timestamp=1666542606948; yp=1667719358.szm.1:1920x1080:1920x937#1982475634.udn.cDpES296YWNoZW5rbzAwMA%3D%3D; L=XSh5SGZ8dFReXnhBaUlKT35ESGwMSnxnMCM1IhRREjQMJS5xAVc=.1667115634.15146.368550.e31941568020f1d11bcafb55d90833a4; yandex_login=DKozachenko000; nec=1; utm_campaign=2347842; utm_medium=widget; utm_source=partner_network; utm_term=button; ys=udn.cDpES296YWNoZW5rbzAwMA%3D%3D#c_chck.600749601; spravka=dD0xNjY3MTE5MzkwO2k9MTc4LjQ5LjI1My4yMjM7RD05MDJGRkYzM0NDNkU5MDVBNzFCRjczMjYzQTZCNzJBNTM5RTdBMUNGN0NCNzg5OEM1ODY2NTgwNzZGMDdENjdFQjI2NTE3RUU7dT0xNjY3MTE5MzkwNjc5NzkwMDY4O2g9ODk5Yzk2ZGJmNGZhZjMxMmFhMzU3YzZkYjFkZWVjNjY=; cashback_onboarding=1; yandex_help=1; m2b_popover_was_viewed_1476374398=1; m2b_popover_next_step_1476374398=3; is_gdpr_b=CIyaHxCGlAEoAg==; ymex=1979969193.yrts.1664609193#1983193677.yrtsi.1667833677; i=NU+4x2gvgymvnzIl5XnimGcFwIWefCtXzpQvrYL9NM3yDhNKeCsyvfP0eUJOKh/UoDQCduVxx9k2ARR1F5U4yzBlm+k=; cycada=ByAAZbLnWDbFQDAjAk4Y/yvHRNIbN9Ygg15+pkRSGU8=; _ym_isad=2; Session_id=3:1668954535.5.0.1667115634574:3_0xsg:1e.1.2:1|1476374398.0.2|3:10261447.810921.rrfekgR1nmbqvE0jPbfcg3yJB8U; sessionid2=3:1668954535.5.0.1667115634574:3_0xsg:1e.1.2:1|1476374398.0.2|3:10261447.810921.fakesign0000000000000000000; visits=1665667397-1667743239-1668956964; Beko=0; yaplus_BF=0; Commo=0; server_request_id_market:index=1668960429946%2F511b236936204ea25d359221e9ed0500; suppress_order_notifications=1; ugcp=1; bnpl_limit=100000; fetch_loyalty_notifications_time_stamp=2022-11-20T16:07:12.814Z; _yasc=JRK1VUsY2DGQbFLXRYX4tSkd62AVqjEj9eyGu5okNRKxX9BAtyovRYstSnO1acB9VJ2ARh/y7LDgm8Ww; parent_reqid_seq=1668956964492%2F6ad7a53f974f03c710960353e8ed0500%2C1668956974143%2F86c719e3513d3feda6d79653e8ed0500%2C1668957096676%2F27cd57653ca94fa6478de45ae8ed0500%2C1668960429946%2F511b236936204ea25d359221e9ed0500%2C1668960434112%2F5d3bc5f0203ba6e316c7d121e9ed0500',
+        pragma: 'no-cache',
+        referer: 'https://www.google.com/',
+        secChUa: '"Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"',
+        secChUaMobile: '?0',
+        secChUaPlatform: '"Windows"',
+        secFetchDest: 'document',
+        secFetchMode: 'navigate',
+        secFetchSite: 'same-origin',
+        secFetchUser: '?1',
+        upgradeInsecureRequests: '1',
+        'User-agent': '*'
+      },
+    }
+
+
+
   // возвращаем Promise - так как операция чтения может длиться достаточно долго
     return new Promise((resolve, reject) => {
       // встроенный в NodeJS модуль https
       // первый аргумент - url, второй - callback c параметром ответа сервера
 
-      https.get(url, (res) => {
+      const req = https.request(options, (res) => {
         // получаем статус ответа сервера посредством деструктуризации объекта
         const { statusCode } = res;
         
@@ -80,6 +273,8 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection {
         // после получения всех данных успешно завершаем Промис
         res.on('end', () => resolve(rawData));
       }).on('error', (e) => reject(e)); // ошибка -> отклоняем Промис
+
+      req.end()
     })
   }
 
@@ -109,43 +304,21 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection {
 
   public afterInit(server: any) {
     // const url = 'http://books.toscrape.com/';
-    const url = 'https://novosibirsk.shops-prices.ru';
-    // const url = 'https://sravni.com/';
+    // const url = 'https://novosibirsk.shops-prices.ru';
+    // const url = 'sravni.com';
     // const url = 'https://book24.ru/';
-    const regexCAtegories3Level : RegExp = new RegExp('<li class="blist"><a href="\/[a-z-]+">[А-ЯA-Z]{1}[a-zа-я ]+<\/a><\/li>', 'g');
-    const regexCAtegories2Level : RegExp = new RegExp('<li><a href="\/[a-z- \/]+">[А-ЯA-Z]{1}[a-zа-яА-Я ]+<\/a><\/li>', 'g');
-    this.readURL(url)
-      .then((data: string) => {
-          console.log(data)
-          const liList = data.match(regexCAtegories3Level)
-          const categories3Level = [];
-          // console.log(liList)
-
-          for (const li of liList) {
-            // console.log(li)
-            const reg = new RegExp('[А-Я]{1}[а-я]+');
-            const category = li.match(reg);
-            categories3Level.push(category[0]);
-          }
-
-          // console.log(categories3Level);
-
-          const liList2 = data.match(regexCAtegories2Level);
-          const categories2Level = [];
-          for (const li of liList2) {
-            // console.log(li)
-            const reg = new RegExp('[А-Я]{1}[а-яА-Я ]+');
-            const category = li.match(reg);
-            categories2Level.push(category[0]);
-          }
-
-          console.log(categories2Level)
-        }
-        
-      )
-      .catch(err =>
-        console.log(err.message)
-      )
+    // const url = 'market.yandex.ru/product--mnogorazovyi-umnyi-bloknot-sketchbuk-bloknot-tvorcheskii-dlia-zapisei-vechnyi-bloknot/1699008846?glfilter=14871214%3A14899090_101345093882&cpc=HEJYghj2a2K8y1tTOyHhI7GloL9hdAvotmbStwukf1QMvQo1IQZoui9tgKcMjGJNA2Zs8r_KQoXmk1MJtlUsJXOgD5NyTEvijBdChA3ew4FEDLjtYyd28dRRLwF35dPGibZwYvXypHpNKkD-BrJiw6ZFIXmXacy0gol8J9BrAcHXJI2raq5XjjbezESFFzVLNONC-B03o-c%2C&from-show-uid=16690400159917681397500001&sku=101345093882&do-waremd5=WRChxNBDP-e7a-TtCnWZtw&sponsored=1&cpa=1';
+    // const regexCAtegories3Level : RegExp = new RegExp('<li class="blist"><a href="\/[a-z-]+">[А-ЯA-Z]{1}[a-zа-я ]+<\/a><\/li>', 'g');
+    // const regexCAtegories2Level : RegExp = new RegExp('<li><a href="\/[a-z- \/]+">[А-ЯA-Z]{1}[a-zа-яА-Я ]+<\/a><\/li>', 'g');
+    // this.readURL(url)
+    //   .then((data: string) => {
+    //       console.log(data)
+    //     }
+    //   )
+    //   .catch(err =>
+    //     console.log(err.message)
+    //   )
+    this.getPic().then((data) => console.log(data))
   }
 
   handleConnection(client: any, ...args: any[]) {
