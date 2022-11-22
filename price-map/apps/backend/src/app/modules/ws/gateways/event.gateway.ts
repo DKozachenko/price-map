@@ -14,6 +14,9 @@ import * as https from 'https';
 import * as puppeteer from 'puppeteer';
 import * as userAgents from 'user-agents';
 import * as useProxy from 'puppeteer-page-proxy';
+import { Builder, Browser, By, until } from 'selenium-webdriver';
+import * as chrome from 'selenium-webdriver/chrome';
+const fs = require('fs');
 
 @WebSocketGateway({
   cors: {
@@ -208,6 +211,133 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection {
       console.log(res)
     // }, 1000)
   }
+
+  public async getInfo(driver, url) {
+    await driver.get(url)
+    const name = await driver.findElement(By.css, 'h1[data-baobab-name="$name"]').getText()
+    const price = await driver.findElement(By.css, 'div[data-baobab-name="price"] h3 span:nth-child(2)').getText()
+    const raiting = await driver.findElement(By.css, 'div[data-baobab-name="$productActions"] div div span:nth-child(2)').getText()
+  }
+    
+
+  public async drive() {
+    console.time()
+    const categories: any[] = []
+
+    let opts = new chrome.Options();
+    opts.addArguments("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36")
+    opts.addArguments('ignore-certificate-errors')
+
+    const service = new chrome.ServiceBuilder('C:/Users/kozac/Downloads/chromedriver_win32/chromedriver.exe');
+    const driver = new Builder().forBrowser(Browser.CHROME).setChromeOptions(opts).setChromeService(service).build();
+    await driver.manage().window().maximize();
+
+    await driver.get('https://market.yandex.ru/');
+    await (driver.manage() as any).addCookie({name: "_yasc", value: "It7+VfsAEkQQ6+5y2bY/39GDw+x4bK4FrjdHSH6JvdMjCBSKxfB8kOXBcyhvAiVUYYQ=", domain: ".yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "_ym_d", value: "1669101421/yQUXLkON7IOuAkzlnLOutwD3Q", domain: ".yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "_ym_isad", value: "2", domain: ".yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "_ym_uid", value: "1664609197646862615", domain: ".yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "_ym_visorc", value: "b", domain: ".yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "bnpl_limit", value: "200000", domain: ".yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "cmp-merge", value: "true", domain: ".market.yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "currentRegionId", value: "65", domain: "market.yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "currentRegionName", value: "%D0%9D%D0%BE%D0%B2%D0%BE%D1%81%D0%B8%D0%B1%D0%B8%D1%80%D1%81%D0%BA", domain: "market.yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "fetch_loyalty_notifications_time_stamp", value: "2022-11-22T07:48:18.217Z", domain: ".yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "gdpr", value: "0", domain: ".yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "is_gdpr", value: "0", domain: ".yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "is_gdpr_b", value: "CMyzPRDqlgE=", domain: ".yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "js", value: "1", domain: "market.yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "mOC", value: "1", domain: "market.yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "nec", value: "0", domain: "market.yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "parent_reqid_seq", value: "1669101426989%2Fd6d0199893ed1daa275ba6f509ee0500%2C1669101443600%2Ff8c4170b15d711bb47d1a3f609ee0500", domain: ".market.yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "reviews-merge", value: "true", domain: ".market.yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "session_server_request_id_market:product/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov/1750369481", value: "1669101426989%2Fd6d0199893ed1daa275ba6f509ee0500", domain: "market.yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "spravka", value: "dD0xNjY5MTAzMjQyO2k9MTc4LjQ5LjI1My4yMjM7RD1GRDMzOENFRkM2RUJEQTlEMTE0OUM3MTQwNDhCOTQ1MDQyNUI0MDBFOERDNjJCODhDNEEwMUZERTZFMDQ5QTY4MTI3NkU3QzY7dT0xNjY5MTAzMjQyODk3NDY3NDIxO2g9NGUwM2I5OGI4M2FkMTRmMzNmMmU4Mzg4OTRjNjc5MTA=", domain: ".yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "skid", value: "3271347601669101427", domain: "market.yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "ugcp", value: "1", domain: "market.yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "visits", value: "1669103160-1669103160-1669103160", domain: ".market.yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "yandexuid", value: "96788151669101421", domain: ".yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "ymex", value: "1984461421.yrts.1669101421#1984461421.yrtsi.1669101421", domain: ".yandex.ru"});
+    await (driver.manage() as any).addCookie({name: "yuidss", value: "96788151669101421", domain: ".yandex.ru"});
+
+    try {
+      const name = await driver.findElement(By.css('h1[data-baobab-name="$name"]'))
+      console.log(name)
+    }
+    catch (e) {
+      await driver.get('https://market.yandex.ru/product--futbolka-suvenirshop-ghostbuster-gostbaster-maslennikov-chernaia-3xl/1750369481?glfilter=14871214%3A14899090_101729037139&glfilter=25911110%3AM1hMICg1Ni01OCk_101729037139&cpa=1&cpc=WlI4woY17JRyaVZJzsxsxL2Nd1Ox8SS8KbLpvmAmN4G5BL9r1zijfSQiwPFt4OyUfVnUXrHk0At50AHMRXFAYLW5Oq4h1zEV6-38wEhrevG2-i6jSYVba6SVKoEpNqRMl6j4RU7gDy24g9brG4mkgRfpsRbgW2pkr_dZ6y8JShWZCroJcgBr5jMYDayW7Q6y&sku=101729037139&offerid=yHDwl3-Ma7MjRqq6RELdXQ');
+      let actions = driver.actions({ async: true });
+      
+
+      const popupButton = await driver.findElement(By.id('catalogPopupButton'));
+      await actions.move({ origin: popupButton }).click().perform();
+
+      //ожидание пока прогрузится меню
+      let ele = await driver.wait(until.elementLocated(By.css('div[data-zone-name="catalog-content"]')), 10000);
+
+      const elements = await driver.findElements(By.css('ul[role="tablist"]:first-child li'));
+ 
+      for (const cat1 of elements) {
+        actions = driver.actions({ async: true });
+        await actions.move({ origin: cat1 }).perform();
+
+        // #кликаем на все еще
+        const moreSpans = await driver.findElements(By.css('div[role="heading"] div div[data-auto="category"] ul[data-autotest-id="subItems"] li > span'))
+        for (const span of moreSpans) {
+          actions = driver.actions({ async: true });
+          await actions.move({ origin: span }).click().perform();
+        }
+        // await new Promise(resolve => setTimeout(resolve, 133000));
+        
+        const category1Level = await driver.findElement(By.css('div[role="heading"] > a'));
+        const category1LevelName = await category1Level.getText();
+        const category1LevelObj = {
+          name: category1LevelName,
+          children: []
+        }
+        console.log(category1LevelName)
+
+        const categories2Level = await driver.findElements(By.css('div[role="heading"] div div[data-auto="category"]'))
+        
+        for (const category of categories2Level) {
+          const cat = await category.findElement(By.css('div[role="heading"]'));
+          const catName = await cat.getText()
+          const category2LevelObj = {
+            name: catName,
+            children: []
+          }
+
+          console.log('\t', catName)
+
+          const categories3Level = await category.findElements(By.css('ul[data-autotest-id="subItems"] li > div'))
+
+          if (categories3Level) {
+            for (const cat3 of categories3Level) {
+              const cat3Name = await cat3.getText();
+              console.log('\t\t', cat3Name);
+              category2LevelObj.children.push({
+                name: cat3Name
+              })
+            }
+          }
+          
+          category1LevelObj.children.push(category2LevelObj)
+          console.log('-------')
+        }
+
+        categories.push(category1LevelObj)
+      }
+    }
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    await driver.quit();
+
+    fs.writeFile('test.json', JSON.stringify(categories), function (err) {
+      if (err) return console.log(err);
+    });
+    // console.log(categories)
+    console.timeEnd()
+    return categories;
+  }
   
 
   public readURL(url) {
@@ -318,7 +448,7 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection {
     //   .catch(err =>
     //     console.log(err.message)
     //   )
-    this.getPic().then((data) => console.log(data))
+    this.drive().then((data) => console.log(data))
   }
 
   handleConnection(client: any, ...args: any[]) {
