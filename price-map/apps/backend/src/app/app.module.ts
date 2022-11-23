@@ -6,21 +6,31 @@ import { AppService } from './app.service';
 import { CatsController } from './controllers/cats.controller';
 import { CatsService } from './controllers/cats.service';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
-import { BaseEntity } from './models/test.entity';
+import { 
+  Organization, 
+  Shop, 
+  Product, 
+  User, 
+  Category1Level,
+  Category2Level,
+  Category3Level } from '@price-map/core/entities';
 import { WsModule } from './modules/ws/ws.module';
 
 @Module({
   imports: [
     WsModule,
+    //TODO: Добавить свой логгер
+    //TODO: Миграции
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
       port: 5432,
       username: 'postgres',
       password: 'vkdima03',
-      database: 'testDb',
-      entities: [BaseEntity],
-      synchronize: true
+      database: 'master_pm',
+      entities: [Organization, Shop, Product, User, Category1Level, Category2Level, Category3Level],
+      synchronize: true,
+      logging: true,
     })
   ],
   controllers: [AppController, CatsController],
