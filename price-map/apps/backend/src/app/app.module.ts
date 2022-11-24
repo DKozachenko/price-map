@@ -1,17 +1,18 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CatsController } from './controllers/cats.controller';
 import { CatsService } from './controllers/cats.service';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { BaseEntity } from './models/test.entity';
-import { WsModule } from './modules/ws/ws.module';
+import { WsModule, ScrapingModule } from './modules';
+import { ScrapingService } from './modules/scraping/services';
 
 @Module({
   imports: [
     WsModule,
+    ScrapingModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -26,10 +27,19 @@ import { WsModule } from './modules/ws/ws.module';
   controllers: [AppController, CatsController],
   providers: [AppService, CatsService],
 })
-export class AppModule {
+export class AppModule implements OnModuleInit {
+  constructor(private readonly scrapingService: ScrapingService) {}
+
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
       .forRoutes(CatsController);
+  }
+
+  public async onModuleInit(): Promise<void> {
+    console.time();
+    const result = await this.scrapingService.scrapeCategories1Level();
+    console.timeEnd();
+    // console.log(result)
   }
 }

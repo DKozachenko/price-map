@@ -143,9 +143,9 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection {
     await new Promise(resolve => setTimeout(resolve, 1000));
     await driver.quit();
 
-    fs.writeFile('test.json', JSON.stringify(categories), function (err) {
-      if (err) return console.log(err);
-    });
+    // fs.writeFile('test.json', JSON.stringify(categories), function (err) {
+    //   if (err) return console.log(err);
+    // });
     // console.log(categories)
     console.timeEnd()
     return categories;
@@ -260,7 +260,7 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection {
     //   .catch(err =>
     //     console.log(err.message)
     //   )
-    this.drive().then((data) => console.log(data))
+    // this.drive().then((data) => console.log(data))
   }
 
   handleConnection(client: any, ...args: any[]) {
