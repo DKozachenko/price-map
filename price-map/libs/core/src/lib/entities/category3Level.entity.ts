@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm"
 import { Category2Level, Product } from ".";
+import { IFilter } from "../interfaces";
 
 @Entity({
   name: 'Categories3Level'
@@ -19,7 +20,7 @@ export class Category3Level {
     type: 'jsonb',
     nullable: false
   })
-  public filters: string;
+  public filters: IFilter[];
 
   @ManyToOne(() => Category2Level, (category: Category2Level) => category.categories3Level, {
     orphanedRowAction: 'delete'

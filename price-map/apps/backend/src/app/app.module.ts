@@ -1,6 +1,5 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CatsController } from './controllers/cats.controller';
@@ -22,6 +21,7 @@ import { WsModule } from './modules/ws/ws.module';
     //TODO: Добавить свой логгер
     //TODO: Миграции
     TypeOrmModule.forRoot({
+      name: 'postgresConnect',
       type: 'postgres',
       host: 'localhost',
       port: 5432,
@@ -30,14 +30,13 @@ import { WsModule } from './modules/ws/ws.module';
       database: 'master_pm',
       entities: [Organization, Shop, Product, User, Category1Level, Category2Level, Category3Level],
       synchronize: true,
-      logging: true,
     })
   ],
   controllers: [AppController, CatsController],
   providers: [AppService, CatsService],
 })
 export class AppModule {
-  configure(consumer: MiddlewareConsumer) {
+  public configure(consumer: MiddlewareConsumer): void {
     consumer
       .apply(LoggerMiddleware)
       .forRoutes(CatsController);

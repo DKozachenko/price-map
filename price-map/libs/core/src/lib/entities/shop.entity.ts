@@ -1,5 +1,6 @@
 import { Organization, Product } from '.';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import { ICoordinates, ISchedule } from '../interfaces';
 
 @Entity({
   name: 'Shops'
@@ -19,7 +20,7 @@ export class Shop {
     type: 'jsonb',
     nullable: false
   })
-  public shedule: string;
+  public schedule: ISchedule;
 
   @Column({
     type: 'varchar',
@@ -32,7 +33,7 @@ export class Shop {
     type: 'jsonb',
     nullable: true
   })
-  public coordinates: string;
+  public coordinates: ICoordinates;
 
   @ManyToOne(() => Organization, (organization: Organization) => organization.shops, {
     orphanedRowAction: 'delete'
