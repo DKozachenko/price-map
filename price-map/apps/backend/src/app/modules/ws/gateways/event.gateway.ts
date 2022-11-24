@@ -1,3 +1,4 @@
+import { InjectRepository } from '@nestjs/typeorm';
 import {
   MessageBody,
   OnGatewayConnection,
@@ -6,6 +7,8 @@ import {
   WebSocketGateway,
   WsResponse,
 } from '@nestjs/websockets';
+import { Category3Level } from '@price-map/core/entities';
+import { Repository } from 'typeorm';
 
 @WebSocketGateway({
   cors: {
@@ -13,8 +16,14 @@ import {
   }
 })
 export class WsGateway implements OnGatewayInit, OnGatewayConnection {
-  public afterInit(server: any) {
-    
+  @InjectRepository(Category3Level, 'postgresConnect')
+  private readonly repository: Repository<Category3Level>;
+
+  public async afterInit(server: any): Promise<void> {
+    const cat3first = new Category3Level();
+
+    const categories = await this.repository.find();
+    console.log('init', categories)
   }
 
   handleConnection(client: any, ...args: any[]) {

@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm"
 import { Category3Level, Shop, User } from ".";
+import { ICharacteristic } from './../interfaces';
 
 @Entity({
   name: 'Products'
@@ -26,7 +27,7 @@ export class Product {
     type: 'jsonb',
     nullable: false
   })
-  public characteristics: string;
+  public characteristics: ICharacteristic[];
 
   @Column({
     type: 'varchar',
