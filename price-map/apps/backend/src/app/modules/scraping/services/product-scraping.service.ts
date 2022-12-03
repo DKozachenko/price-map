@@ -134,7 +134,7 @@ export class ProductScrapingService extends BaseScrapingService {
     return products;
   }
 
-  public async scrapeProducts(productsMap: Map<BreadcrumbInfo, string[]>): Promise<any[]> {
+  public async scrape(productsMap: Map<BreadcrumbInfo, string[]>): Promise<any[]> {
     let products: any[] = [];
 
     await this.initializeDriver();
