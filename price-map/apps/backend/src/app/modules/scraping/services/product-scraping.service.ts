@@ -11,7 +11,7 @@ interface BreadcrumbInfo {
 
 @Injectable()
 export class ProductScrapingService extends BaseScrapingService {
-  public async getCharacteristics(): Promise<any[]> {
+  private async getCharacteristics(): Promise<any[]> {
     const characteristics: any[] = [];
     const characteristicsDls = await this.driver.findElements(By.css('dl[id]'));
     for (const characteristicDl of characteristicsDls)  {
@@ -45,7 +45,7 @@ export class ProductScrapingService extends BaseScrapingService {
     return characteristics;
   }
 
-  public async getProduct(offerDiv: any, info: BreadcrumbInfo, name: string, description: string, characteristics: any[], imagePath: string): Promise<any> {
+  private async getProduct(offerDiv: any, info: BreadcrumbInfo, name: string, description: string, characteristics: any[], imagePath: string): Promise<any> {
     const offerLinksA = await offerDiv.findElements(By.css('a[data-zone-name="offerLink"]'));
     const shopName: string = await offerLinksA[1].getText();
     
@@ -67,7 +67,7 @@ export class ProductScrapingService extends BaseScrapingService {
     return product;
   }
 
-  public async getProductsByCategory(info: BreadcrumbInfo): Promise<any[]> {
+  private async getProductsByCategory(info: BreadcrumbInfo): Promise<any[]> {
     const products: any[] = [];
 
     const productActionsA = await this.driver.findElements(By.css('div[data-baobab-name="$productActions"] a'));
@@ -106,7 +106,7 @@ export class ProductScrapingService extends BaseScrapingService {
     return products;
   }
 
-  public async getProducts(productsMap: Map<BreadcrumbInfo, string[]>): Promise<any[]> {
+  private async getProducts(productsMap: Map<BreadcrumbInfo, string[]>): Promise<any[]> {
     const products: any[] = [];
 
     for (const [info, links] of productsMap) {

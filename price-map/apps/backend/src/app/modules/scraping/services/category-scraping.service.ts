@@ -4,36 +4,27 @@ import { BaseScrapingService } from "./base-scraping.service";
 
 @Injectable()
 export class CategoryScrapingService extends BaseScrapingService {
-  private readonly catalogPopupButtonId: string = 'catalogPopupButton';
-  private readonly catalogContentSelector: string = 'div[data-zone-name="catalog-content"]';
-  private readonly category1LevelLisSelector: string = 'ul[role="tablist"]:first-child li';
-  private readonly moreSpansSelector: string = 'div[role="heading"] div div[data-auto="category"] ul[data-autotest-id="subItems"] li > span';
-  private readonly category1LevelASelector: string = 'div[role="heading"] > a';
-  private readonly category2LevelDivsSelector: string = 'div[role="heading"] div div[data-auto="category"]';
-  private readonly category2LevelDivHeadingSelector: string = 'div[role="heading"]';
-  private readonly categories3LevelDivsSelector: string = 'ul[data-autotest-id="subItems"] li > div';
-
   private readonly category3LevelLinks: Set<string> = new Set<string>();
 
   private async openCatalogPopup(): Promise<void> {
     let actions = this.driver.actions({ async: true });
         
-    const catalogPopupButton = await this.driver.findElement(By.id(this.catalogPopupButtonId));
+    const catalogPopupButton = await this.driver.findElement(By.id('catalogPopupButton'));
     await actions.move({ origin: catalogPopupButton }).click().perform();
 
     //ожидание пока прогрузится каталог
-    await this.driver.wait(until.elementLocated(By.css(this.catalogContentSelector)), 10000);
+    await this.driver.wait(until.elementLocated(By.css('div[data-zone-name="catalog-content"]')), 10000);
   }
 
   private async clickAllMoreSpans(): Promise<void> {
-    const moreSpans = await this.driver.findElements(By.css(this.moreSpansSelector));
+    const moreSpans = await this.driver.findElements(By.css('div[role="heading"] div div[data-auto="category"] ul[data-autotest-id="subItems"] li > span'));
     for (const span of moreSpans) {
       const actions = this.driver.actions({ async: true });
       await actions.move({ origin: span }).click().perform();
     }
   }
 
-  public async getFilters(): Promise<any[]> {
+  private async getFilters(): Promise<any[]> {
     const filters: any[] = [];
 
     const filterDiv = await this.driver.findElement(By.css('div[data-grabber="SearchFilters"]'));
@@ -134,7 +125,7 @@ export class CategoryScrapingService extends BaseScrapingService {
     return filters;
   }
 
-  public async setFilters(categories1Level: any[]): Promise<void> {
+  private async setFilters(categories1Level: any[]): Promise<void> {
     let index: number = 0;
     let attemptsToGetUrl: number = 0;
     const array = [...this.category3LevelLinks];
@@ -172,7 +163,7 @@ export class CategoryScrapingService extends BaseScrapingService {
 
   private async getCategories1Level(): Promise<any[]> {
     const categories1Level: any[] = [];
-    const category1LevelLis = await this.driver.findElements(By.css(this.category1LevelLisSelector));
+    const category1LevelLis = await this.driver.findElements(By.css('ul[role="tablist"]:first-child li'));
     //TODO: убрать count
     let count = 0;
     let count3Level = 0;
@@ -182,7 +173,7 @@ export class CategoryScrapingService extends BaseScrapingService {
 
       await this.clickAllMoreSpans();
       
-      const category1LevelA = await this.driver.findElement(By.css(this.category1LevelASelector));
+      const category1LevelA = await this.driver.findElement(By.css('div[role="heading"] > a'));
       const category1LevelName = await category1LevelA.getText();
 
       if (category1LevelName !== 'Скидки' && count < 2) {    
@@ -192,10 +183,10 @@ export class CategoryScrapingService extends BaseScrapingService {
           categories2Level: []
         }
 
-        const category2LevelDivs = await this.driver.findElements(By.css(this.category2LevelDivsSelector))
+        const category2LevelDivs = await this.driver.findElements(By.css('div[role="heading"] div div[data-auto="category"]'))
         
         for (const category2LevelDiv of category2LevelDivs) {
-          const category2LevelDivHeading = await category2LevelDiv.findElement(By.css(this.category2LevelDivHeadingSelector));
+          const category2LevelDivHeading = await category2LevelDiv.findElement(By.css('div[role="heading"]'));
           //при переборе не получает элемент
           const category2LevelName = await category2LevelDivHeading.getText()
           const category2Level = {
@@ -203,7 +194,7 @@ export class CategoryScrapingService extends BaseScrapingService {
             categories3Level: []
           }
 
-          const categories3LevelDivs = await category2LevelDiv.findElements(By.css(this.categories3LevelDivsSelector))
+          const categories3LevelDivs = await category2LevelDiv.findElements(By.css('ul[data-autotest-id="subItems"] li > div'))
           
           if (categories3LevelDivs) {
             for (const categories3LevelDiv of categories3LevelDivs) {

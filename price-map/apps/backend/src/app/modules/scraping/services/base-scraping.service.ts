@@ -2,23 +2,23 @@ import { Builder, Browser } from 'selenium-webdriver';
 import * as chrome from 'selenium-webdriver/chrome';
 
 export abstract class BaseScrapingService {
-  public driver = null;
-  public readonly MAX_ATTEMPTS_TO_GET_URL = 10;
+  protected driver = null;
+  protected readonly MAX_ATTEMPTS_TO_GET_URL = 10;
 
-  public async isShowedCaptcha(): Promise<boolean> {
+  protected async isShowedCaptcha(): Promise<boolean> {
     const title: string = await this.driver.getTitle();
 
     return title === 'Ой!';
   }
 
-  public async initializeDriver(): Promise<void> {
+  protected async initializeDriver(): Promise<void> {
     const chromeOptions = new chrome.Options();
     const service = new chrome.ServiceBuilder('C:/Users/kozac/Downloads/chromedriver_win32/chromedriver.exe');
     this.driver = new Builder().forBrowser(Browser.CHROME).setChromeOptions(chromeOptions).setChromeService(service).build();
     await this.driver.manage().window().maximize();
   }
 
-  public async setCookies(): Promise<void> {
+  protected async setCookies(): Promise<void> {
     await this.driver.manage().addCookie({name: "_yasc", value: "It7+VfsAEkQQ6+5y2bY/39GDw+x4bK4FrjdHSH6JvdMjCBSKxfB8kOXBcyhvAiVUYYQ=", domain: ".yandex.ru"});
     await this.driver.manage().addCookie({name: "_ym_d", value: "1669101421/yQUXLkON7IOuAkzlnLOutwD3Q", domain: ".yandex.ru"});
     await this.driver.manage().addCookie({name: "_ym_isad", value: "2", domain: ".yandex.ru"});
