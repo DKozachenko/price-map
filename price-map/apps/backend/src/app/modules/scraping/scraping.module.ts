@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ScrapingService } from './services';
+import { ScrapingService, ProductScrapingService } from './services';
 
 @Module({
   imports: [],
-  providers: [ScrapingService],
-  exports: [ScrapingService]
+  providers: [ScrapingService, ProductScrapingService],
+  exports: [ScrapingService, ProductScrapingService]
 })
 export class ScrapingModule {}
