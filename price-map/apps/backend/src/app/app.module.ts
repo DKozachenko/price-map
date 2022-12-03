@@ -8,6 +8,7 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { BaseEntity } from './models/test.entity';
 import { WsModule, ScrapingModule } from './modules';
 import { ScrapingService } from './modules/scraping/services';
+let fs = require('fs');
 
 @Module({
   imports: [
@@ -39,6 +40,9 @@ export class AppModule implements OnModuleInit {
   public async onModuleInit(): Promise<void> {
     console.time();
     const result = await this.scrapingService.scrapeCategories1Level();
+    // fs.writeFile('test.json', JSON.stringify(result), function(error){
+    //   if(error) throw error;
+    // });
     console.timeEnd();
     // console.log(result)
   }

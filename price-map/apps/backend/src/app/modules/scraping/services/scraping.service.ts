@@ -15,7 +15,7 @@ export class ScrapingService {
   private readonly category2LevelDivHeadingSelector: string = 'div[role="heading"]';
   private readonly categories3LevelDivsSelector: string = 'ul[data-autotest-id="subItems"] li > div';
 
-  private readonly category3LevelLinks: string[] = [];
+  private readonly category3LevelLinks: Set<string> = new Set<string>();
 
   private driver = null;
 
@@ -135,7 +135,6 @@ export class ScrapingService {
           value: [filterRangeMinValue, filterRangeMaxValue]
         })
       }
-      
     }
 
     //енумки
@@ -143,7 +142,7 @@ export class ScrapingService {
       const filterDivEnumLegend = await filterDivEnum.findElement(By.css('fieldset legend'));
       const filterDivEnumName: string = await filterDivEnumLegend.getText();
 
-      await this.driver.manage().setTimeouts( { implicit: 3000 } );
+      await this.driver.manage().setTimeouts( { implicit: 1500 } );
       const filterEnumFieldsetDivs = await filterDivEnum.findElements(By.css('fieldset > div > div'));
 
       for (let fieldsetDiv of filterEnumFieldsetDivs) {
@@ -178,15 +177,52 @@ export class ScrapingService {
       }
     }
 
-    console.log('filters', filters)
     return filters;
+  }
+
+  public async setFilters(categories1Level: any[]): Promise<void> {
+    let index: number = 0;
+    let attemptsToGetUrl: number = 0;
+    const array = [...this.category3LevelLinks];
+    while (index < array.length && attemptsToGetUrl < 50) {
+      await this.setCookies();
+      await this.driver.get(array[index]);
+      
+      await this.driver.manage().setTimeouts( { implicit: 1000 } );
+
+      try {
+        const breadcrumb = await this.driver.findElements(By.css('ol[itemscope] li'));
+
+        const category1LevelName: string = await breadcrumb[0].getText();
+        const category2LevelName: string = await breadcrumb[1].getText();
+        const category3LevelName: string = await breadcrumb[2].getText();
+        
+        const category1Level: any = categories1Level.find((item: any) => item.name === category1LevelName);
+        const category2Level: any = category1Level?.categories2Level?.find((item: any) => item.name === category2LevelName);
+        const category3Level: any = category2Level?.categories3Level?.find((item: any) => 
+          item.name.toLowerCase().includes(category3LevelName.toLowerCase()) 
+          || category3LevelName.toLowerCase().includes(item.name.toLowerCase()));
+  
+        if (category3Level) {
+          const filters = await this.getFilters();
+          category3Level.filters = filters;
+        } 
+
+        ++index;
+        attemptsToGetUrl = 0;
+      } catch (err) {
+        ++attemptsToGetUrl;
+      }
+    }
   }
 
   private async getCategories1Level(): Promise<any[]> {
     const categories1Level: any[] = [];
     const category1LevelLis = await this.driver.findElements(By.css(this.category1LevelLisSelector));
-
-    for (const category1LevelLi of category1LevelLis) {
+    //TODO: убрать count
+    let count = 0;
+    let count3Level = 0;
+    for (const category1LevelLi of category1LevelLis) {      
       const actions = this.driver.actions({ async: true });
       await actions.move({ origin: category1LevelLi }).perform();
 
@@ -194,57 +230,50 @@ export class ScrapingService {
       
       const category1LevelA = await this.driver.findElement(By.css(this.category1LevelASelector));
       const category1LevelName = await category1LevelA.getText();
-      const category1Level = {
-        name: category1LevelName,
-        categories2Level: []
-      }
 
-      const category2LevelDivs = await this.driver.findElements(By.css(this.category2LevelDivsSelector))
-      
-      for (const category2LevelDiv of category2LevelDivs) {
-        const category2LevelDivHeading = await category2LevelDiv.findElement(By.css(this.category2LevelDivHeadingSelector));
-        //при переборе не получает элемент
-        const category2LevelName = await category2LevelDivHeading.getText()
-        const category2Level = {
-          name: category2LevelName,
-          categories3Level: []
+      if (category1LevelName !== 'Скидки' && count < 2) {    
+        ++count;  
+        const category1Level = {
+          name: category1LevelName,
+          categories2Level: []
         }
 
-        const categories3LevelDivs = await category2LevelDiv.findElements(By.css(this.categories3LevelDivsSelector))
+        const category2LevelDivs = await this.driver.findElements(By.css(this.category2LevelDivsSelector))
+        
+        for (const category2LevelDiv of category2LevelDivs) {
+          const category2LevelDivHeading = await category2LevelDiv.findElement(By.css(this.category2LevelDivHeadingSelector));
+          //при переборе не получает элемент
+          const category2LevelName = await category2LevelDivHeading.getText()
+          const category2Level = {
+            name: category2LevelName,
+            categories3Level: []
+          }
 
-        if (categories3LevelDivs) {
-          //for (const categories3LevelDiv of categories3LevelDivs) {
-            const category3LevelA = await categories3LevelDivs[0].findElement(By.css('a'));
-            const category3LevelLink = await category3LevelA.getAttribute('href');
-            this.category3LevelLinks.push(category3LevelLink);
+          const categories3LevelDivs = await category2LevelDiv.findElements(By.css(this.categories3LevelDivsSelector))
+          
+          if (categories3LevelDivs) {
+            for (const categories3LevelDiv of categories3LevelDivs) {
+              const category3LevelA = await categories3LevelDiv.findElement(By.css('a'));
 
-            const actions = this.driver.actions({ async: true });
-            await actions.move({ origin: categories3LevelDivs[0] }).click().perform();
-            
-            const breadcrumb = await this.driver.findElements(By.css('ol[itemscope] li'));
+              if (count3Level < 5) {
+                const category3LevelLink = await category3LevelA.getAttribute('href');
+                this.category3LevelLinks.add(category3LevelLink);
+              }
 
-            const category1LevelNameTemp: string = await breadcrumb[0].getText();
-            const category2LevelNameTemp: string = await breadcrumb[1].getText();
-            const category3LevelNameTemp: string = await breadcrumb[2].getText();
-            console.log('path', category1LevelNameTemp, category2LevelNameTemp, category3LevelNameTemp)
+              const category3LevelName = await categories3LevelDiv.getText();
+              category2Level.categories3Level.push({
+                name: category3LevelName,
+                filters: []
+              })
 
-            const filters = await this.getFilters();
-
-            console.log('filters', filters)
-            console.log('links', this.category3LevelLinks)
-            const category3LevelName = await categories3LevelDivs[0].getText();
-            category2Level.categories3Level.push({
-              name: category3LevelName,
-              filters
-            })
-          //}
+              ++count3Level;
+            }
+          }
+          
+          category1Level.categories2Level.push(category2Level);
         }
-        
-        category1Level.categories2Level.push(category2Level);
-        
+        categories1Level.push(category1Level)
       }
-
-      categories1Level.push(category1Level)
     }
 
     return categories1Level;
@@ -267,6 +296,7 @@ export class ScrapingService {
       await this.openCatalogPopup();
 
       categories1Level = await this.getCategories1Level();
+      await this.setFilters(categories1Level);
       
       await this.driver.quit();
     }
