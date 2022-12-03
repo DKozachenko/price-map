@@ -2,7 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { Builder, Browser, By, until } from 'selenium-webdriver';
 import * as chrome from 'selenium-webdriver/chrome';
 
-
+//TODO: Разбить парсинг различных сущностей на разные сервисы,
+// чтобы не было оч много кода в одном классе
 @Injectable()
 export class ScrapingService {
   private readonly catalogPopupButtonId: string = 'catalogPopupButton';
@@ -13,6 +14,8 @@ export class ScrapingService {
   private readonly category2LevelDivsSelector: string = 'div[role="heading"] div div[data-auto="category"]';
   private readonly category2LevelDivHeadingSelector: string = 'div[role="heading"]';
   private readonly categories3LevelDivsSelector: string = 'ul[data-autotest-id="subItems"] li > div';
+
+  private readonly category3LevelLinks: string[] = [];
 
   private driver = null;
 
@@ -76,6 +79,109 @@ export class ScrapingService {
     }
   }
 
+  public async getFilters(): Promise<any[]> {
+    const filters: any[] = [];
+
+    const filterDiv = await this.driver.findElement(By.css('div[data-grabber="SearchFilters"]'));
+    const filterDivsBoolean = await filterDiv.findElements(By.css('div[data-filter-type="boolean"]'));
+    const filterDivsEnum = await filterDiv.findElements(By.css('div[data-filter-type="enum"]'));
+    const filterDivsRange = await filterDiv.findElements(By.css('div[data-filter-type="range"]'));
+
+    //бульки
+    for (const filterDivBoolean of filterDivsBoolean) {
+      const filterBooleanName: string = await filterDivBoolean.getText();
+
+      if (filterBooleanName) {
+        filters.push({
+          name: filterBooleanName.replace('\n',''),
+          type: 'boolean'
+        })
+      }
+    }
+
+    //рэнжи
+    for (const filterDivRange of filterDivsRange) {
+      const filterDivRangeLegend = await filterDivRange.findElement(By.css('fieldset span'));
+      const filterDivRangeName: string = await filterDivRangeLegend.getText();
+      const filterDivRangeMinLabel = await filterDivRange.findElement(By.css('span[data-auto="filter-range-min"] label:not([for])'));
+      const filterDivRangeMaxLabel = await filterDivRange.findElement(By.css('span[data-auto="filter-range-max"] label:not([for])'));
+
+      const filterDivRangeMinLabelText: string = await filterDivRangeMinLabel.getText();
+      const filterDivRangeMaxLabelText: string = await filterDivRangeMaxLabel.getText();
+
+      const filterDivRangeMinValueStr: string = filterDivRangeMinLabelText.split(' ')[1];
+      const filterDivRangeMaxValueStr: string = filterDivRangeMaxLabelText.split(' ')[1];
+
+      let filterRangeMinValue: number = 0;
+
+      if (filterDivRangeMinValueStr.includes(',')) {
+        filterRangeMinValue = Number.parseFloat(filterDivRangeMinValueStr.replace(',', '.'));
+      } else {
+        filterRangeMinValue = Number.parseInt(filterDivRangeMinValueStr);
+      }
+
+      let filterRangeMaxValue: number = 0;
+
+      if (filterDivRangeMaxValueStr.includes(',')) {
+        filterRangeMaxValue = Number.parseFloat(filterDivRangeMaxValueStr.replace(',', '.'));
+      } else {
+        filterRangeMaxValue = Number.parseInt(filterDivRangeMaxValueStr);
+      }
+
+      if (filterDivRangeName) { 
+        filters.push({
+          name: filterDivRangeName,
+          type: 'range',
+          value: [filterRangeMinValue, filterRangeMaxValue]
+        })
+      }
+      
+    }
+
+    //енумки
+    for (const filterDivEnum of filterDivsEnum) {
+      const filterDivEnumLegend = await filterDivEnum.findElement(By.css('fieldset legend'));
+      const filterDivEnumName: string = await filterDivEnumLegend.getText();
+
+      await this.driver.manage().setTimeouts( { implicit: 3000 } );
+      const filterEnumFieldsetDivs = await filterDivEnum.findElements(By.css('fieldset > div > div'));
+
+      for (let fieldsetDiv of filterEnumFieldsetDivs) {
+        const moreSpans = await fieldsetDiv.findElements(By.css('span[tabindex="0"]'))
+
+        for (let moreSpan of moreSpans) {
+          const actions = this.driver.actions({ async: true });
+          await this.driver.actions().scroll(0, 0, 0, 0, moreSpan).perform()
+          await actions.move({ origin: moreSpan }).click().perform();
+          await this.driver.manage().setTimeouts( { implicit: 1000 } );
+        }                
+      }
+
+      const filterEnumValueDivs = await filterDivEnum.findElements(By.css('fieldset div[data-baobab-name="FilterValue"]'));
+      const filterValues: string[] = [];
+      
+      for (const filterEnumValueDiv of filterEnumValueDivs) {
+        try {
+          const filterEnumValue: string = await filterEnumValueDiv.getText();
+          filterValues.push(filterEnumValue);
+        } catch (err) {
+          break;
+        }
+      }
+
+      if (filterDivEnumName && filterValues.some((value: string) => !!value)) {
+        filters.push({
+          name: filterDivEnumName,
+          type: 'enum',
+          value: filterValues
+        })
+      }
+    }
+
+    console.log('filters', filters)
+    return filters;
+  }
+
   private async getCategories1Level(): Promise<any[]> {
     const categories1Level: any[] = [];
     const category1LevelLis = await this.driver.findElements(By.css(this.category1LevelLisSelector));
@@ -108,10 +214,12 @@ export class ScrapingService {
 
         if (categories3LevelDivs) {
           //for (const categories3LevelDiv of categories3LevelDivs) {
+            const category3LevelA = await categories3LevelDivs[0].findElement(By.css('a'));
+            const category3LevelLink = await category3LevelA.getAttribute('href');
+            this.category3LevelLinks.push(category3LevelLink);
+
             const actions = this.driver.actions({ async: true });
             await actions.move({ origin: categories3LevelDivs[0] }).click().perform();
-
-            await new Promise(resolve => setTimeout(resolve, 2000));
             
             const breadcrumb = await this.driver.findElements(By.css('ol[itemscope] li'));
 
@@ -120,116 +228,20 @@ export class ScrapingService {
             const category3LevelNameTemp: string = await breadcrumb[2].getText();
             console.log('path', category1LevelNameTemp, category2LevelNameTemp, category3LevelNameTemp)
 
-            const filters = [];
-
-            const filterDiv = await this.driver.findElement(By.css('div[data-grabber="SearchFilters"]'));
-            const filterDivsBoolean = await filterDiv.findElements(By.css('div[data-filter-type="boolean"]'));
-            const filterDivsEnum = await filterDiv.findElements(By.css('div[data-filter-type="enum"]'));
-            const filterDivsRange = await filterDiv.findElements(By.css('div[data-filter-type="range"]'));
-
-            //бульки
-            for (const filterDivBoolean of filterDivsBoolean) {
-              const filterBooleanName: string = await filterDivBoolean.getText();
-
-              filters.push({
-                name: filterBooleanName,
-                type: 'boolean'
-              })
-            // }
-
-            //рэнжи
-            for (const filterDivRange of filterDivsRange) {
-              const filterDivRangeLegend = await filterDivRange.findElement(By.css('fieldset span'));
-              const filterDivRangeName: string = await filterDivRangeLegend.getText();
-              const filterDivRangeMinLabel = await filterDivRange.findElement(By.css('span[data-auto="filter-range-min"] label:not([for])'));
-              const filterDivRangeMaxLabel = await filterDivRange.findElement(By.css('span[data-auto="filter-range-max"] label:not([for])'));
-
-              const filterDivRangeMinLabelText: string = await filterDivRangeMinLabel.getText();
-              const filterDivRangeMaxLabelText: string = await filterDivRangeMaxLabel.getText();
-
-              const filterDivRangeMinValueStr: string = filterDivRangeMinLabelText.split(' ')[1];
-              const filterDivRangeMaxValueStr: string = filterDivRangeMaxLabelText.split(' ')[1];
-
-              let filterRangeMinValue: number = 0;
-
-              if (filterDivRangeMinValueStr.includes(',')) {
-                filterRangeMinValue = Number.parseFloat(filterDivRangeMinValueStr.replace(',', '.'));
-              } else {
-                filterRangeMinValue = Number.parseInt(filterDivRangeMinValueStr);
-              }
-
-              let filterRangeMaxValue: number = 0;
-
-              if (filterDivRangeMaxValueStr.includes(',')) {
-                filterRangeMaxValue = Number.parseFloat(filterDivRangeMaxValueStr.replace(',', '.'));
-              } else {
-                filterRangeMaxValue = Number.parseInt(filterDivRangeMaxValueStr);
-              }
-
-              filters.push({
-                name: filterDivRangeName,
-                type: 'range',
-                value: [filterRangeMinValue, filterRangeMaxValue]
-              })
-            }
-
-            //енумки
-            for (const filterDivEnum of filterDivsEnum) {
-              const filterDivEnumLegend = await filterDivEnum.findElement(By.css('fieldset legend'));
-              const filterDivEnumName: string = await filterDivEnumLegend.getText();
-
-              await this.driver.manage().setTimeouts( { implicit: 3000 } );
-              const filterEnumFieldsetDivs = await filterDivEnum.findElements(By.css('fieldset > div > div'));
-
-              for (let fieldsetDiv of filterEnumFieldsetDivs) {
-                const moreSpans = await fieldsetDiv.findElements(By.css('span[tabindex="0"]'))
-
-                for (let moreSpan of moreSpans) {
-                  const actions = this.driver.actions({ async: true });
-                  await this.driver.actions().scroll(0, 0, 0, 0, moreSpan).perform()
-                  await actions.move({ origin: moreSpan }).click().perform();
-                  await this.driver.manage().setTimeouts( { implicit: 1000 } );
-                }                
-              }
-              
-              
-              
-
-              const filterEnumValueDivs = await filterDivEnum.findElements(By.css('fieldset div[data-baobab-name="FilterValue"]'));
-              console.log('filterEnumValueDivs', filterEnumValueDivs.length)
-              const filterValues: string[] = [];
-              let count = 0;
-              
-              for (const filterEnumValueDiv of filterEnumValueDivs) {
-                ++count;
-                const filterEnumValue: string = await filterEnumValueDiv.getText();
-                console.log('after', filterEnumValue)
-                if (count === 12) {
-                  await this.driver.actions().scroll(0, 0, 0, 200, filterEnumValueDiv).perform()
-                }
-                
-                console.log('after scroll', count)
-                filterValues.push(filterEnumValue);
-              }
-
-              filters.push({
-                name: filterDivEnumName,
-                type: 'enum',
-                value: filterValues
-              })
-            }
+            const filters = await this.getFilters();
 
             console.log('filters', filters)
-            await new Promise(resolve => setTimeout(resolve, 1330000));
+            console.log('links', this.category3LevelLinks)
             const category3LevelName = await categories3LevelDivs[0].getText();
             category2Level.categories3Level.push({
               name: category3LevelName,
               filters
             })
-          }
+          //}
         }
         
         category1Level.categories2Level.push(category2Level);
+        
       }
 
       categories1Level.push(category1Level)
