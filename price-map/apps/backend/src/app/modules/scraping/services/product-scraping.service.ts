@@ -11,6 +11,7 @@ interface BreadcrumbInfo {
 
 @Injectable()
 export class ProductScrapingService extends BaseScrapingService {
+  //TODO: убрать все any
   private async getCharacteristics(): Promise<any[]> {
     const characteristics: any[] = [];
     const characteristicsDls = await this.driver.findElements(By.css('dl[id]'));

@@ -40,6 +40,7 @@ export class CategoryScrapingService extends BaseScrapingService {
     const filterDivsEnum = await filterDiv.findElements(By.css('div[data-filter-type="enum"]'));
     const filterDivsRange = await filterDiv.findElements(By.css('div[data-filter-type="range"]'));
 
+    //TODO: возможно разделить получение булек, рэнджей и енамов в разные методы
     //бульки
     for (const filterDivBoolean of filterDivsBoolean) {
       const filterBooleanName: string = await filterDivBoolean.getText();

@@ -18,6 +18,7 @@ export abstract class BaseScrapingService {
     await this.driver.manage().window().maximize();
   }
 
+  //TODO: возможно вынести все куки в константу (массив объектов)
   protected async setCookies(): Promise<void> {
     await this.driver.manage().addCookie({name: "_yasc", value: "It7+VfsAEkQQ6+5y2bY/39GDw+x4bK4FrjdHSH6JvdMjCBSKxfB8kOXBcyhvAiVUYYQ=", domain: ".yandex.ru"});
     await this.driver.manage().addCookie({name: "_ym_d", value: "1669101421/yQUXLkON7IOuAkzlnLOutwD3Q", domain: ".yandex.ru"});
