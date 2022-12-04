@@ -20,4 +20,8 @@ export class ScrapingService {
   public async scrapeProducts(productsMap: Map<BreadcrumbInfo, string[]>): Promise<any> {
     return this.productScrapingService.scrape(productsMap);
   }
+
+  public getProductsMap(): Map<BreadcrumbInfo, string[]> {
+    return this.categoryScrapingService.productsMap;
+  }
 } 

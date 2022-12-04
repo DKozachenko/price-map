@@ -2,9 +2,17 @@ import { Injectable } from "@nestjs/common";
 import { By, until } from 'selenium-webdriver';
 import { BaseScrapingService } from "./base-scraping.service";
 
+interface BreadcrumbInfo {
+  [key: string]: string,
+  category1LevelName: string,
+  category2LevelName: string,
+  category3LevelName: string,
+}
+
 @Injectable()
 export class CategoryScrapingService extends BaseScrapingService {
   private readonly category3LevelLinks: Set<string> = new Set<string>();
+  public productsMap: Map<BreadcrumbInfo, string[]> = new Map<BreadcrumbInfo, string[]>();
 
   private async openCatalogPopup(): Promise<void> {
     let actions = this.driver.actions({ async: true });
@@ -135,9 +143,9 @@ export class CategoryScrapingService extends BaseScrapingService {
       
       await this.driver.manage().setTimeouts( { implicit: 1000 } );
 
+      //TODO: не у всех категорий 3 уровня сразу есть товары, у кого-то мб езе категории внутри
       try {
         const breadcrumb = await this.driver.findElements(By.css('ol[itemscope] li'));
-
         const category1LevelName: string = await breadcrumb[0].getText();
         const category2LevelName: string = await breadcrumb[1].getText();
         const category3LevelName: string = await breadcrumb[2].getText();
@@ -151,6 +159,26 @@ export class CategoryScrapingService extends BaseScrapingService {
         if (category3Level) {
           const filters = await this.getFilters();
           category3Level.filters = filters;
+
+          //добавление ссылок на товары в этой категории
+          const links: string[] = [];
+          const productBlocks = await this.driver.findElements(By.css('div[data-baobab-name="$main"]'));
+          const productArticles = await productBlocks[0].findElements(By.css('article'));
+          let count = 0;
+
+          for (let i = 0; i < productArticles.length && count < 5; ++i) {
+            const productA = await productArticles[i].findElement(By.css('a[data-baobab-name="title"]'));
+            const productLink: string = await productA.getAttribute('href');
+            links.push(productLink);
+
+            ++count;
+          }
+
+          this.productsMap.set({
+            category1LevelName,
+            category2LevelName, 
+            category3LevelName
+          }, links)
         } 
 
         ++index;
@@ -176,8 +204,8 @@ export class CategoryScrapingService extends BaseScrapingService {
       const category1LevelA = await this.driver.findElement(By.css('div[role="heading"] > a'));
       const category1LevelName = await category1LevelA.getText();
 
-      if (category1LevelName !== 'Скидки' && count < 2) {    
-        ++count;  
+
+      if (category1LevelName !== 'Скидки' && category1LevelName !== 'Ресейл' && count <= 3 && count > 2) {    
         const category1Level = {
           name: category1LevelName,
           categories2Level: []
@@ -200,7 +228,7 @@ export class CategoryScrapingService extends BaseScrapingService {
             for (const categories3LevelDiv of categories3LevelDivs) {
               const category3LevelA = await categories3LevelDiv.findElement(By.css('a'));
 
-              if (count3Level < 5) {
+              if (count3Level < 4) {
                 const category3LevelLink = await category3LevelA.getAttribute('href');
                 this.category3LevelLinks.add(category3LevelLink);
               }
@@ -219,6 +247,7 @@ export class CategoryScrapingService extends BaseScrapingService {
         }
         categories1Level.push(category1Level)
       }
+      ++count;
     }
 
     return categories1Level;

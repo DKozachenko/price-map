@@ -46,12 +46,12 @@ export class ProductScrapingService extends BaseScrapingService {
   }
 
   private async getProduct(offerDiv: any, info: BreadcrumbInfo, name: string, description: string, characteristics: any[], imagePath: string): Promise<any> {
+    //TODO: не у всех предложений название магазина представлено текстом, у кого-то картинкой
     const offerLinksA = await offerDiv.findElements(By.css('a[data-zone-name="offerLink"]'));
     const shopName: string = await offerLinksA[1].getText();
     
     const priceSpan = await offerDiv.findElement(By.css('span[data-auto="mainPrice"] span'));
     const price: string = await priceSpan.getText();
-    console.log('price', price)
     const priceInt: number = parseInt(price.replaceAll(' ', ''));
 
     const product: any = {
@@ -87,7 +87,7 @@ export class ProductScrapingService extends BaseScrapingService {
     const productImagePath: string = await productImageA.getAttribute('src');
 
     const characteristics: any[] = await this.getCharacteristics();
-
+    //TODO: вариант, что может не быть офферов, или вариант, что нет кнопки показать предложения, тк предложений в целом немного
     const allOffersA = await this.driver.findElement(By.css('div[data-auto="topOffers"] > div > div > a'));
     await this.setCookies();
     //нажатие на "Все предложения"

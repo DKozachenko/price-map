@@ -10,6 +10,7 @@ import { WsModule, ScrapingModule } from './modules';
 import { CategoryScrapingService, ProductScrapingService, ScrapingService } from './modules/scraping/services';
 import * as fs from 'fs';
 
+//TODO: вынести в интерфейсы
 interface BreadcrumbInfo {
   [key: string]: string,
   category1LevelName: string,
@@ -46,21 +47,15 @@ export class AppModule implements OnModuleInit {
 
   public async onModuleInit(): Promise<void> {
     console.time();
-    // const result = await this.scrapingService.scrapeCategories1Level();
-    // const result = await this.scrapingService.scrapeProducts(new Map<BreadcrumbInfo, string[]>([
-    //   [{
-    //     category1LevelName: 'Электроника',
-    //     category2LevelName: 'Смартфоны и гаджеты',
-    //     category3LevelName: 'Смартфоны',
-    //   }, ['https://market.yandex.ru/product--smartfon-apple-iphone-13/1414986413?glfilter=14871214%3A25787190_101446177750&glfilter=23476910%3A26684950_101446177750&glfilter=24938610%3A41821218_101446177750&glfilter=25879492%3A25879630_101446177750&cpc=q11X4-HgA60Qv29cX4EhpfDvMsxmUDMrAT1wq-DBjpLe86-DoPR1vRbecEPzge1r5YlMzPEMnxuSkjFJM9lAQMXWpmY31lxMsblLEyYBlLlFCuXwjTgK6_kWlbEV4bOG2tejqX7EJ0gqKxWlDTwRxJECg6eb8wPTH1WDKLInXZw%2C&sku=101446177750&do-waremd5=SCeDVKKP3js2-1_hg8n0vQ&resale_goods=resale_new&cpa=1&nid=26893750']],
-      
-    // ]));
-    // const result = await this.scrapingService.scrapeCategories();
-    // console.log('result', result)
+    const resultCats = await this.scrapingService.scrapeCategories();
+    const productsMap: Map<BreadcrumbInfo, string[]> = this.scrapingService.getProductsMap();
+    await new Promise(temp => setTimeout(temp, 2000));
+    const result = await this.scrapingService.scrapeProducts(productsMap);
+    console.log('result', result)
+
     // fs.writeFile('test.json', JSON.stringify(result), function(error){
     //   if(error) throw error;
     // });
     console.timeEnd();
-    // console.log(result)
   }
 }
