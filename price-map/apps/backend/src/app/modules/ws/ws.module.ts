@@ -1,10 +1,10 @@
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { Category3Level, Category2Level, Category1Level } from "@price-map/core/entities";
 import { WsGateway } from "./gateways/event.gateway";
-import { BaseEntity } from '../../models/test.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BaseEntity])],
+  imports: [TypeOrmModule.forFeature([Category3Level, Category2Level, Category1Level], 'postgresConnect')],
   providers: [WsGateway]
 })
 export class WsModule {}
