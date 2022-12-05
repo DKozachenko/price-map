@@ -24,6 +24,12 @@ export class Product {
   public description: string;
 
   @Column({
+    type: 'int',
+    nullable: false
+  })
+  public price: string;
+
+  @Column({
     type: 'jsonb',
     nullable: false
   })
