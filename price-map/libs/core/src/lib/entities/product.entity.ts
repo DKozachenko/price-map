@@ -7,7 +7,7 @@ import { ICharacteristic } from './../interfaces';
 })
 export class Product {
   @PrimaryGeneratedColumn('uuid')
-  public id: number;
+  public id: string;
 
   @Column({
     type: 'varchar',

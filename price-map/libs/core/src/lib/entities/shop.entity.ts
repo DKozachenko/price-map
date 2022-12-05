@@ -7,7 +7,7 @@ import { ICoordinates, ISchedule } from '../interfaces';
 })
 export class Shop {
   @PrimaryGeneratedColumn('uuid')
-  public id: number;
+  public id: string;
 
   @Column({
     type: 'varchar',

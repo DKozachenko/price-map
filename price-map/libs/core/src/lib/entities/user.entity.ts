@@ -6,7 +6,7 @@ import { Product } from ".";
 })
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  public id: number;
+  public id: string;
 
   @Column({
     type: 'varchar',

@@ -58,11 +58,11 @@ export class AppModule implements OnModuleInit {
 
   public async onModuleInit(): Promise<void> {
     console.time();
-    const resultCats = await this.scrapingService.scrapeCategories();
-    const productsMap: Map<BreadcrumbInfo, string[]> = this.scrapingService.getProductsMap();
-    await new Promise(temp => setTimeout(temp, 2000));
-    const result = await this.scrapingService.scrapeProducts(productsMap);
-    console.log('result', result)
+    // const resultCats = await this.scrapingService.scrapeCategories();
+    // const productsMap: Map<BreadcrumbInfo, string[]> = this.scrapingService.getProductsMap();
+    // await new Promise(temp => setTimeout(temp, 2000));
+    // const result = await this.scrapingService.scrapeProducts(productsMap);
+    // console.log('result', result)
 
     // fs.writeFile('test.json', JSON.stringify(result), function(error){
     //   if(error) throw error;

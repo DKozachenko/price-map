@@ -7,7 +7,7 @@ import { IFilter } from "../interfaces";
 })
 export class Category3Level {
   @PrimaryGeneratedColumn('uuid')
-  public id: number;
+  public id: string;
 
   @Column({
     type: 'varchar',
