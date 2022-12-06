@@ -7,7 +7,7 @@ import { ICharacteristic } from './../interfaces';
 })
 export class Product {
   @PrimaryGeneratedColumn('uuid')
-  public id: number;
+  public id: string;
 
   @Column({
     type: 'varchar',
@@ -18,10 +18,16 @@ export class Product {
 
   @Column({
     type: 'varchar',
-    length: 500,
+    length: 5000,
     nullable: false
   })
   public description: string;
+
+  @Column({
+    type: 'int',
+    nullable: false
+  })
+  public price: number;
 
   @Column({
     type: 'jsonb',
