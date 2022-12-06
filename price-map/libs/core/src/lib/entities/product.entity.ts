@@ -27,7 +27,7 @@ export class Product {
     type: 'int',
     nullable: false
   })
-  public price: string;
+  public price: number;
 
   @Column({
     type: 'jsonb',
