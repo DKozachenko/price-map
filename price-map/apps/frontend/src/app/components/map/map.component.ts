@@ -8,7 +8,7 @@ import { load } from '@2gis/mapgl';
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit {
-  constructor() {}
+  constructor() { }
 
   ngOnInit(): void {
     this.start();
@@ -19,7 +19,7 @@ export class MapComponent implements OnInit {
 
     const map = new mapglAPI.Map('map__container', {
       center: [
-        55.31878, 
+        55.31878,
         25.23584
       ],
       zoom: 13,
@@ -28,7 +28,7 @@ export class MapComponent implements OnInit {
 
     const marker = new mapglAPI.Marker(map, {
       coordinates: [
-        55.31878, 
+        55.31878,
         25.23584
       ],
       label: {

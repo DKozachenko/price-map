@@ -17,7 +17,7 @@ export class CategoryScrapingService extends BaseScrapingService {
 
   private async openCatalogPopup(): Promise<void> {
     const actions = this.driver.actions({ async: true });
-        
+
     const catalogPopupButton = await this.driver.findElement(By.id('catalogPopupButton'));
     await actions.move({ origin: catalogPopupButton }).click().perform();
 
@@ -51,7 +51,7 @@ export class CategoryScrapingService extends BaseScrapingService {
 
       if (filterBooleanName) {
         filters.push({
-          name: filterBooleanName.replace('\n',''),
+          name: filterBooleanName.replace('\n', ''),
           type: 'boolean'
         });
       }
@@ -92,12 +92,12 @@ export class CategoryScrapingService extends BaseScrapingService {
         filterRangeMaxValue = Number.parseInt(filterDivRangeMaxValueStr);
       }
 
-      if (filterDivRangeName) { 
+      if (filterDivRangeName) {
         filters.push({
           name: filterDivRangeName,
           type: 'range',
           value: [
-            filterRangeMinValue, 
+            filterRangeMinValue,
             filterRangeMaxValue
           ]
         });
@@ -109,7 +109,7 @@ export class CategoryScrapingService extends BaseScrapingService {
       const filterDivEnumLegend = await filterDivEnum.findElement(By.css('fieldset legend'));
       const filterDivEnumName: string = await filterDivEnumLegend.getText();
 
-      await this.driver.manage().setTimeouts( { implicit: 1500 } );
+      await this.driver.manage().setTimeouts({ implicit: 1500 });
       const filterEnumFieldsetDivs = await filterDivEnum.findElements(By.css('fieldset > div > div'));
 
       for (const fieldsetDiv of filterEnumFieldsetDivs) {
@@ -119,8 +119,8 @@ export class CategoryScrapingService extends BaseScrapingService {
           const actions = this.driver.actions({ async: true });
           await this.driver.actions().scroll(0, 0, 0, 0, moreSpan).perform();
           await actions.move({ origin: moreSpan }).click().perform();
-          await this.driver.manage().setTimeouts( { implicit: 1000 } );
-        }                
+          await this.driver.manage().setTimeouts({ implicit: 1000 });
+        }
       }
 
       const filterEnumValueDivs = await filterDivEnum
@@ -128,7 +128,7 @@ export class CategoryScrapingService extends BaseScrapingService {
           'fieldset div[data-baobab-name="FilterValue"]'
         ));
       const filterValues: string[] = [];
-      
+
       for (const filterEnumValueDiv of filterEnumValueDivs) {
         try {
           const filterEnumValue: string = await filterEnumValueDiv.getText();
@@ -157,8 +157,8 @@ export class CategoryScrapingService extends BaseScrapingService {
     while (index < array.length && attemptsToGetUrl < this.MAX_ATTEMPTS_TO_GET_URL) {
       await this.setCookies();
       await this.driver.get(array[index]);
-      
-      await this.driver.manage().setTimeouts( { implicit: 1000 } );
+
+      await this.driver.manage().setTimeouts({ implicit: 1000 });
 
       //TODO: не у всех категорий 3 уровня сразу есть товары, у кого-то мб езе категории внутри
       try {
@@ -166,14 +166,14 @@ export class CategoryScrapingService extends BaseScrapingService {
         const category1LevelName: string = await breadcrumb[0].getText();
         const category2LevelName: string = await breadcrumb[1].getText();
         const category3LevelName: string = await breadcrumb[2].getText();
-        
+
         const category1Level: any = categories1Level.find((item: any) => item.name === category1LevelName);
         const category2Level: any = category1Level?.categories2Level
           ?.find((item: any) => item.name === category2LevelName);
-        const category3Level: any = category2Level?.categories3Level?.find((item: any) => 
-          item.name.toLowerCase().includes(category3LevelName.toLowerCase()) 
+        const category3Level: any = category2Level?.categories3Level?.find((item: any) =>
+          item.name.toLowerCase().includes(category3LevelName.toLowerCase())
           || category3LevelName.toLowerCase().includes(item.name.toLowerCase()));
-  
+
         if (category3Level) {
           const filters = await this.getFilters();
           category3Level.filters = filters;
@@ -194,10 +194,10 @@ export class CategoryScrapingService extends BaseScrapingService {
 
           this.productsMap.set({
             category1LevelName,
-            category2LevelName, 
+            category2LevelName,
             category3LevelName
           }, links);
-        } 
+        }
 
         ++index;
         attemptsToGetUrl = 0;
@@ -213,17 +213,17 @@ export class CategoryScrapingService extends BaseScrapingService {
     //TODO: убрать count
     let count = 0;
     let count3Level = 0;
-    for (const category1LevelLi of category1LevelLis) {      
+    for (const category1LevelLi of category1LevelLis) {
       const actions = this.driver.actions({ async: true });
       await actions.move({ origin: category1LevelLi }).perform();
 
       await this.clickAllMoreSpans();
-      
+
       const category1LevelA = await this.driver.findElement(By.css('div[role="heading"] > a'));
       const category1LevelName = await category1LevelA.getText();
 
 
-      if (category1LevelName !== 'Скидки' && category1LevelName !== 'Ресейл' && count <= 3 && count > 2) {    
+      if (category1LevelName !== 'Скидки' && category1LevelName !== 'Ресейл' && count <= 3 && count > 2) {
         const category1Level = {
           name: category1LevelName,
           categories2Level: []
@@ -233,7 +233,7 @@ export class CategoryScrapingService extends BaseScrapingService {
           .findElements(By.css(
             'div[role="heading"] div div[data-auto="category"]'
           ));
-        
+
         for (const category2LevelDiv of category2LevelDivs) {
           const category2LevelDivHeading = await category2LevelDiv.findElement(By.css('div[role="heading"]'));
           //при переборе не получает элемент
@@ -247,7 +247,7 @@ export class CategoryScrapingService extends BaseScrapingService {
             .findElements(By.css(
               'ul[data-autotest-id="subItems"] li > div'
             ));
-          
+
           if (categories3LevelDivs) {
             for (const categories3LevelDiv of categories3LevelDivs) {
               const category3LevelA = await categories3LevelDiv.findElement(By.css('a'));
@@ -266,7 +266,7 @@ export class CategoryScrapingService extends BaseScrapingService {
               ++count3Level;
             }
           }
-          
+
           category1Level.categories2Level.push(category2Level);
         }
         categories1Level.push(category1Level);
@@ -295,7 +295,7 @@ export class CategoryScrapingService extends BaseScrapingService {
 
       categories1Level = await this.getCategories1Level();
       await this.setFilters(categories1Level);
-      
+
       await this.driver.quit();
     }
 
