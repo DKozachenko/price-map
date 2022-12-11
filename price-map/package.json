@@ -5,9 +5,14 @@
   "scripts": {
     "ng": "nx",
     "postinstall": "node ./decorate-angular-cli.js",
-    "start": "nx serve",
-    "build": "nx build",
-    "test": "nx test"
+    "start:front": "nx serve frontend",
+    "start:back": "nx serve backend",
+    "build:front": "nx build frontend",
+    "build:back": "nx build backend",
+    "lint:front": "nx lint frontend",
+    "lint:back": "nx lint backend",
+    "test:front": "nx test frontend",
+    "test:back": "nx test backend"
   },
   "private": true,
   "dependencies": {
@@ -42,7 +47,7 @@
     "@angular-eslint/eslint-plugin": "~14.0.4",
     "@angular-eslint/eslint-plugin-template": "~14.0.4",
     "@angular-eslint/template-parser": "~14.0.4",
-    "@angular/cli": "~15.0.0",
+    "@angular/cli": "^15.0.0",
     "@angular/compiler-cli": "~15.0.0",
     "@angular/language-service": "~15.0.0",
     "@nestjs/schematics": "^9.0.0",

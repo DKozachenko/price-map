@@ -3,7 +3,11 @@ import { CategoryScrapingService, ScrapingService, ProductScrapingService } from
 
 @Module({
   imports: [],
-  providers: [CategoryScrapingService, ProductScrapingService, ScrapingService],
+  providers: [
+    CategoryScrapingService, 
+    ProductScrapingService, 
+    ScrapingService
+  ],
   exports: [ScrapingService]
 })
 export class ScrapingModule {}

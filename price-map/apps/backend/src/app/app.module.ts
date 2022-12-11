@@ -7,8 +7,7 @@ import { CatsService } from './controllers/cats.service';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { WsModule, ScrapingModule } from './modules';
 import { CategoryScrapingService, ProductScrapingService, ScrapingService } from './modules/scraping/services';
-import { 
-  Organization, 
+import { Organization, 
   Shop, 
   Product, 
   User, 
@@ -40,12 +39,26 @@ interface BreadcrumbInfo {
       username: 'postgres',
       password: 'vkdima03',
       database: 'master_pm',
-      entities: [Organization, Shop, Product, User, Category1Level, Category2Level, Category3Level],
+      entities: [
+        Organization, 
+        Shop, 
+        Product, 
+        User, 
+        Category1Level, 
+        Category2Level, 
+        Category3Level
+      ],
       synchronize: true,
     })
   ],
-  controllers: [AppController, CatsController],
-  providers: [AppService, CatsService],
+  controllers: [
+    AppController, 
+    CatsController
+  ],
+  providers: [
+    AppService, 
+    CatsService
+  ],
 })
 export class AppModule implements OnModuleInit {
   constructor(private readonly scrapingService: ScrapingService) {}

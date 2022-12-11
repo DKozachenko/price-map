@@ -1,5 +1,5 @@
-import { Injectable } from "@nestjs/common";
-import { CategoryScrapingService, ProductScrapingService } from ".";
+import { Injectable } from '@nestjs/common';
+import { CategoryScrapingService, ProductScrapingService } from '.';
 
 interface BreadcrumbInfo {
   [key: string]: string,

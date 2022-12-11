@@ -1,12 +1,10 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  MessageBody,
+import { MessageBody,
   OnGatewayConnection,
   OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
-  WsResponse,
-} from '@nestjs/websockets';
+  WsResponse } from '@nestjs/websockets';
 import { Category2Level, Category3Level, Category1Level } from '@price-map/core/entities';
 import { Repository } from 'typeorm';
 
@@ -41,7 +39,10 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection {
 
     const cat2first = new Category2Level();
     cat2first.name = 'cat 2 first';
-    cat2first.categories3Level = [cat3first, cat3second];
+    cat2first.categories3Level = [
+      cat3first, 
+      cat3second
+    ];
 
     const cat2second = new Category2Level();
     cat2second.name = 'cat 2 second';
@@ -49,38 +50,39 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection {
 
     const cat1first = new Category1Level();
     cat1first.name = 'cat 1 first';
-    cat1first.categories2Level = [cat2first, cat2second];
+    cat1first.categories2Level = [
+      cat2first, 
+      cat2second
+    ];
 
     // await this.repository1.save([cat1first])
 
     const categories1 = await this.repository1.find({
     });
-    console.log('repository1', categories1)
+    console.log('repository1', categories1);
 
     const categories2 = await this.repository2.find({
       relations: {
         category1Level: true
       }
     });
-    console.log('repository2', categories2)
+    console.log('repository2', categories2);
 
     const categories3 = await this.repository3.find({
       relations: {
         category2Level: true
       }
     });
-    console.log('repository3', categories3)
+    console.log('repository3', categories3);
   }
 
   handleConnection(client: any, ...args: any[]) {
-    console.log('CONNECTED')
+    console.log('CONNECTED');
   }
 
   @SubscribeMessage('send')
   public async handleMessage(@MessageBody() data: string): Promise<WsResponse<{ name: string }>> {
-    console.log(data)
+    console.log(data);
     return { event: 'send', data: { name: 'lox' } };
   }
 }
-
-
