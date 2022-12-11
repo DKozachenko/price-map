@@ -11,7 +11,7 @@
     "build:back": "nx build backend",
     "lint:front": "nx lint frontend",
     "lint:back": "nx lint backend",
-    "test:front": "nx test frontend",
+    "test:front": "nx test frontend",dfsdffdsgfsdfg
     "test:back": "nx test backend"
   },
   "private": true,
