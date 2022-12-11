@@ -14,11 +14,9 @@ describe('CatsController', () => {
   });
 
   describe('getData', () => {
-    it('should return "Welcome to backend!"', () => {
+    it('should return "hook"', () => {
       const catsController = cats.get<CatsController>(CatsController);
-      expect(catsController.getData()).toEqual({
-        message: 'Welcome to backend!',
-      });
+      expect(catsController.getData()).toEqual('hook');
     });
   });
 });

@@ -16,8 +16,8 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.form = new FormGroup({
       nickname: new FormControl(undefined, [Validators.required]),
-      password: new FormControl(undefined, [Validators.required])
-    })
+      password: new FormControl(undefined, [Validators.required]),
+    });
   }
 
   public submit(): void {
@@ -25,16 +25,16 @@ export class LoginComponent implements OnInit {
 
     subject.connect();
 
-    subject.on("connect", () => {
-      console.log('connect')
+    subject.on('connect', () => {
+      console.log('connect');
     });
 
 
     subject.emit('send', {data: 'data'});
 
     subject.on('send', (response) => {
-      console.log('on send', response)
-    })
+      console.log('on send', response);
+    });
 
   }
 }

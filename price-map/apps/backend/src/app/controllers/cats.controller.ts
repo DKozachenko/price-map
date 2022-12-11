@@ -1,4 +1,18 @@
-import { Body, Controller, Get, Header, HttpCode, Param, Post, Req, Res, HttpException, UseFilters, ParseIntPipe, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, 
+  Controller, 
+  Get, 
+  Header, 
+  HttpCode, 
+  Param, 
+  Post, 
+  Req, 
+  Res, 
+  HttpException, 
+  UseFilters, 
+  ParseIntPipe, 
+  UseGuards, 
+  UseInterceptors, 
+  Request } from '@nestjs/common';
 import { Observable, of } from 'rxjs';
 import { HttpExceptionFilter } from '../filters/http-exception.filter';
 import { AuthGuard } from '../guards/auth.guard';
@@ -24,7 +38,7 @@ export class CatsController {
 
   @Post('surl')
   surl(@Req() request: Request, @Body() body): string {
-    console.log(body)
+    console.log(body);
     return '34';
   }
 
@@ -43,7 +57,7 @@ export class CatsController {
   @HttpCode(200)
   @Header('Cache-Control', 'none')
   add(@Req() request: Request): string {
-    console.log(request.body)
+    console.log(request.body);
 
     return 'dfgdgdgdfgd';
   }

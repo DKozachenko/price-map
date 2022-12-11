@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable } from '@nestjs/common';
 import { By } from 'selenium-webdriver';
 import { BaseScrapingService } from './base-scraping.service';
 
@@ -38,7 +38,7 @@ export class ProductScrapingService extends BaseScrapingService {
       const characteristic: any = {
         name: dtText,
         value
-      }
+      };
 
       characteristics.push(characteristic);
     }
@@ -46,7 +46,14 @@ export class ProductScrapingService extends BaseScrapingService {
     return characteristics;
   }
 
-  private async getProduct(offerDiv: any, info: BreadcrumbInfo, name: string, description: string, characteristics: any[], imagePath: string): Promise<any> {
+  private async getProduct(
+    offerDiv: any, 
+    info: BreadcrumbInfo, 
+    name: string, 
+    description: string, 
+    characteristics: any[], 
+    imagePath: string
+  ): Promise<any> {
     //TODO: не у всех предложений название магазина представлено текстом, у кого-то картинкой
     const offerLinksA = await offerDiv.findElements(By.css('a[data-zone-name="offerLink"]'));
     const shopName: string = await offerLinksA[1].getText();
@@ -63,7 +70,7 @@ export class ProductScrapingService extends BaseScrapingService {
       imagePath,
       shopName,
       price: priceInt
-    }
+    };
 
     return product;
   }
@@ -81,14 +88,18 @@ export class ProductScrapingService extends BaseScrapingService {
     const productNameH1 = await this.driver.findElement(By.css('h1[data-baobab-name="$name"]'));
     const productName: string = await productNameH1.getText();
     
-    const productDescriptionDiv = await this.driver.findElement(By.css('div[data-auto="product-full-specs"] div:not([class])'));
+    const productDescriptionDiv = await this.driver
+      .findElement(By.css(
+        'div[data-auto="product-full-specs"] div:not([class])'
+      ));
     const productDescription: string = await productDescriptionDiv.getText();
 
     const productImageA = await this.driver.findElement(By.css('div[data-zone-name="picture"] img'));
     const productImagePath: string = await productImageA.getAttribute('src');
 
     const characteristics: any[] = await this.getCharacteristics();
-    //TODO: вариант, что может не быть офферов, или вариант, что нет кнопки показать предложения, тк предложений в целом немного
+    //TODO: вариант, что может не быть офферов, или вариант, 
+    //что нет кнопки показать предложения, тк предложений в целом немного
     const allOffersA = await this.driver.findElement(By.css('div[data-auto="topOffers"] > div > div > a'));
     await this.setCookies();
     //нажатие на "Все предложения"
@@ -99,7 +110,8 @@ export class ProductScrapingService extends BaseScrapingService {
     const offerDivs = await this.driver.findElements(By.css('div[data-zone-name="OfferSnippet"]'));
 
     for (const offerDiv of offerDivs) {
-      const product: any = await this.getProduct(offerDiv, info, productName, productDescription, characteristics, productImagePath);
+      const product: any = 
+        await this.getProduct(offerDiv, info, productName, productDescription, characteristics, productImagePath);
 
       products.push(product);
     }
@@ -110,6 +122,7 @@ export class ProductScrapingService extends BaseScrapingService {
   private async getProducts(productsMap: Map<BreadcrumbInfo, string[]>): Promise<any[]> {
     const products: any[] = [];
 
+    // eslint-disable-next-line array-bracket-newline
     for (const [info, links] of productsMap) {
       let index: number = 0;
       let attemptsToGetUrl: number = 0;
