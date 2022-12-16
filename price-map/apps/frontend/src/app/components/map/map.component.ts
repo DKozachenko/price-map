@@ -37,22 +37,23 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       console.log('A click event has occurred at ' + e.lngLat);
     });
 
-    var markerHeight = 50, markerRadius = 10, linearOffset = 25;
-    var popupOffsets = {
-      'top': [0, 0],
-      'top-left': [0,0],
-      'top-right': [0,0],
-      'bottom': [0, -markerHeight],
-      'bottom-left': [linearOffset, (markerHeight - markerRadius + linearOffset) * -1],
-      'bottom-right': [-linearOffset, (markerHeight - markerRadius + linearOffset) * -1],
-      'left': [markerRadius, (markerHeight - markerRadius) * -1],
-      'right': [-markerRadius, (markerHeight - markerRadius) * -1]
+    const markerHeight = 50, markerRadius = 10, linearOffset = 25;
+    const popupOffsets = {
+      top: <[number, number]>[0, 0],
+      "top-left": <[number, number]>[0,0],
+      "top-right": <[number, number]>[0,0],
+      center: <[number, number]>[0, 0],
+      bottom: <[number, number]>[0, -markerHeight],
+      "bottom-left": <[number, number]>[linearOffset, (markerHeight - markerRadius + linearOffset) * -1],
+      "bottom-right": <[number, number]>[-linearOffset, (markerHeight - markerRadius + linearOffset) * -1],
+      left: <[number, number]>[markerRadius, (markerHeight - markerRadius) * -1],
+      right: <[number, number]>[-markerRadius, (markerHeight - markerRadius) * -1]
     };
-    // var popup = new Popup({offset: popupOffsets, className: 'my-class'})
-    //   .setLngLat([139.7525,35.6846])
-    //   .setHTML("<h1>Hello World!</h1>")
-    //   .setMaxWidth("300px")
-    //   .addTo(this.map);
+    var popup = new Popup({closeButton: false, closeOnMove: true, offset: popupOffsets, className: 'my-class'})
+      .setLngLat([139.7525,35.6846])
+      .setHTML("<h1>Hello World!</h1>")
+      .setMaxWidth("300px")
+      .addTo(this.map);
   }
 
   ngOnDestroy() {
