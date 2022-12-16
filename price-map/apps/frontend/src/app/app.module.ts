@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing-module';
 import { LoginComponent, MapComponent } from './components';
 import { appInitializer } from './initializers';
+import { WebSocketService } from './services';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { appInitializer } from './initializers';
     ReactiveFormsModule
   ],
   providers: [
+    WebSocketService,
     { 
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
