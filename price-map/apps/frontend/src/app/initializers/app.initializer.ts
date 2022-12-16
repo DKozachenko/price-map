@@ -1,7 +1,6 @@
 import { IAppInitializer } from './../models/interfaces';
-import { Observable, of } from "rxjs";
+import { of } from 'rxjs';
+import { WebSocketService } from '../services';
 
-export const appInitializer: IAppInitializer = () => {
-  console.log(12)
-  return () => of(1);
-}
+export const appInitializer: IAppInitializer = (webSocketService: WebSocketService) => 
+  () => of(webSocketService.initSocket());

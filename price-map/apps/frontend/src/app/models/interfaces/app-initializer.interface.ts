@@ -1,5 +1,6 @@
-import { Observable } from "rxjs";
+import { Observable } from 'rxjs';
+import { WebSocketService } from '../../services';
 
 export interface IAppInitializer {
-  (): () => Observable<number>;
+  (webSocketService: WebSocketService): () => Observable<void>;
 }

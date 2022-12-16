@@ -24,8 +24,9 @@ import { WebSocketService } from './services';
     { 
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
+      deps: [WebSocketService],
       multi: true,
-     },
+    },
   ],
   bootstrap: [AppComponent],
 })
