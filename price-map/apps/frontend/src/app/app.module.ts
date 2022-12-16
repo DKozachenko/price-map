@@ -21,12 +21,12 @@ import { WebSocketService } from './services';
   ],
   providers: [
     WebSocketService,
-    { 
-      provide: APP_INITIALIZER,
-      useFactory: appInitializer,
-      deps: [WebSocketService],
-      multi: true,
-    },
+    // { 
+    //   provide: APP_INITIALIZER,
+    //   useFactory: appInitializer,
+    //   deps: [WebSocketService],
+    //   multi: true,
+    // },
   ],
   bootstrap: [AppComponent],
 })
