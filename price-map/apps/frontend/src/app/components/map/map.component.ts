@@ -22,7 +22,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.map = new Map({
       container: this.mapContainer.nativeElement,
-      style: `https://api.maptiler.com/maps/streets-v2/style.json?key=xQmnB8CNEr2OP6dEg5Du`,
+      style: `https://api.maptiler.com/maps/streets/style.json?key=xQmnB8CNEr2OP6dEg5Du`,
       center: [initialState.lng, initialState.lat],
       zoom: initialState.zoom,
     });
@@ -163,7 +163,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         type: 'symbol',
         source: 'places',
         layout: {
-          'icon-image': '{icon}',
+          'icon-image': '{icon}_15',
           'icon-overlap': 'always',
         },
       });
