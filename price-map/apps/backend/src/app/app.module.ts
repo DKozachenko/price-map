@@ -5,12 +5,12 @@ import { AppService } from './app.service';
 import { CatsController } from './controllers/cats.controller';
 import { CatsService } from './controllers/cats.service';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
-import { WsModule, ScrapingModule } from './modules';
+import { WsModule, ScrapingModule, AuthModule, UsersModule } from './modules';
 import { CategoryScrapingService, ProductScrapingService, ScrapingService } from './modules/scraping/services';
-import { Organization, 
-  Shop, 
-  Product, 
-  User, 
+import { Organization,
+  Shop,
+  Product,
+  User,
   Category1Level,
   Category2Level,
   Category3Level } from '@price-map/core/entities';
@@ -27,59 +27,14 @@ interface BreadcrumbInfo {
 
 @Module({
   imports: [
-    WsModule,
-    ScrapingModule,
-    //TODO: Добавить свой логгер
-    //TODO: Миграции
-    TypeOrmModule.forRoot({
-      name: 'postgresConnect',
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'vkdima03',
-      database: 'master_pm',
-      entities: [
-        Organization, 
-        Shop, 
-        Product, 
-        User, 
-        Category1Level, 
-        Category2Level, 
-        Category3Level
-      ],
-      synchronize: true,
-    })
+    AuthModule,
+    UsersModule
   ],
   controllers: [
-    AppController, 
-    CatsController
+    AppController,
   ],
   providers: [
-    AppService, 
-    CatsService
+    AppService,
   ],
 })
-export class AppModule implements OnModuleInit {
-  constructor(private readonly scrapingService: ScrapingService) {}
-
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes(CatsController);
-  }
-
-  public async onModuleInit(): Promise<void> {
-    console.time();
-    // const resultCats = await this.scrapingService.scrapeCategories();
-    // const productsMap: Map<BreadcrumbInfo, string[]> = this.scrapingService.getProductsMap();
-    // await new Promise(temp => setTimeout(temp, 2000));
-    // const result = await this.scrapingService.scrapeProducts(productsMap);
-    // console.log('result', result)
-
-    // fs.writeFile('test.json', JSON.stringify(result), function(error){
-    //   if(error) throw error;
-    // });
-    console.timeEnd();
-  }
-}
+export class AppModule {}

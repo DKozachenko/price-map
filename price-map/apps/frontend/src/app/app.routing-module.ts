@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent, MapComponent } from './components';
+import { LoginComponent, MapComponent, SettingsComponent, UsersReviewComponent } from './components';
 
 const routes: Routes = [
   {
@@ -15,7 +15,15 @@ const routes: Routes = [
   {
     path: 'map',
     component: MapComponent
-  }
+  },
+  {
+    path: 'settings',
+    component: SettingsComponent
+  },
+  {
+    path: 'users-review',
+    component: UsersReviewComponent
+  },
 ];
 
 @NgModule({
