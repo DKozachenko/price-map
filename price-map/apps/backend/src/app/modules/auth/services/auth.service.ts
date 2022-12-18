@@ -22,7 +22,7 @@ export class AuthService {
     const payload = { username: user.username, sub: user.userId };
     return {
       // eslint-disable-next-line camelcase
-      access_token: this.jwtService.sign(payload),
+      token: this.jwtService.sign(payload),
     };
   }
 }
