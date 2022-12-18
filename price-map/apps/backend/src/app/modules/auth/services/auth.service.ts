@@ -9,9 +9,9 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.usersService.findOne(username);
-    if (user && user.password === pass) {
+  async validateUser(nickname: string, password: string): Promise<any> {
+    const user = await this.usersService.findOne(nickname);
+    if (user && user.password === password) {
       const { password, ...result } = user;
       return result;
     }
@@ -19,9 +19,8 @@ export class AuthService {
   }
 
   async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+    const payload = { nickname: user.nickname, userId: user.userId, role: user.role };
     return {
-      // eslint-disable-next-line camelcase
       token: this.jwtService.sign(payload),
     };
   }

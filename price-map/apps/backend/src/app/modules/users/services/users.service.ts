@@ -1,20 +1,22 @@
 import { Injectable } from '@nestjs/common';
+import { Role } from '../../auth/models/enums';
 
-// This should be a real class/interface representing a user entity
 export type User = any;
 
 @Injectable()
 export class UsersService {
-  private readonly users = [
+  private readonly users: any[] = [
     {
       userId: 1,
       nickname: 'john',
       password: 'changeme',
+      role: 'user'
     },
     {
       userId: 2,
       nickname: 'maria',
       password: 'guess',
+      role: 'admin'
     },
   ];
 

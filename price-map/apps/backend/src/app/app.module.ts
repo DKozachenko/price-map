@@ -15,6 +15,8 @@ import { Organization,
   Category2Level,
   Category3Level } from '@price-map/core/entities';
 import * as fs from 'fs';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './modules/auth/guards';
 
 //TODO: вынести в интерфейсы
 interface BreadcrumbInfo {

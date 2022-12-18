@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { AppService } from './app.service';
-import { JwtAuthGuard, LocalAuthGuard } from './modules/auth/guards';
+import { JwtAuthGuard, LocalAuthGuard, RolesGuard } from './modules/auth/guards';
 import { AuthService } from './modules/auth/services';
-import fs = require('fs');
+import { Roles } from './decorators';
+import { Role } from './modules/auth/models/enums';
 
 @Controller()
 export class AppController {
@@ -12,30 +12,27 @@ export class AppController {
 
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
-  async login(@Req() req) {
+  async login(@Req() req: Request) {
     return this.authService.login(req.user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Req() req) {
+  getProfile3(@Req() req) {
     return req.user;
   }
 
-  @Post('rest/edelweiss/data')
-  async test(@Req() req: Request) {
-    // console.log(req);
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('admin')
+  getProfile(@Req() req): any {
+    return req.user;
+  }
 
-    const response: string = JSON.stringify(req.body);
-    console.log(response);
-
-    fs.writeFile('test.json', response, function (err) {
-      if (err) {
-        return console.log(err);
-      }
-      console.log('The file was saved!');
-    });
-
-    return;
+  @Roles(Role.User)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('user')
+  getProfile2(@Req() req) {
+    return req.user;
   }
 }
