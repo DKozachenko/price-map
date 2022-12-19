@@ -8,6 +8,7 @@ import { appInitializer } from './initializers';
 import { TokenService, WebSocketService } from './services';
 import { SettingsComponent } from './components/settings/settings.component';
 import { UsersReviewComponent } from './components/users-review/users-review.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 @NgModule({
   declarations: [AppComponent, LoginComponent, MapComponent, SettingsComponent, UsersReviewComponent, RegisterComponent],

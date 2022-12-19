@@ -23,6 +23,7 @@ export class MapComponent implements OnInit {
       console.log('on get users successed', response);
     });
     
+    this.webSocketSevice.addToken();
     this.webSocketSevice.socket.emit('get users attempt', { temp: 1 })
   }
 

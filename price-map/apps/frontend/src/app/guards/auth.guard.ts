@@ -25,6 +25,7 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
+    //TODO: какие-нибудь параметры для оповещения, что нет токена
     this.router.navigate(['/']);
     return false;
   }
