@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent, MapComponent, RegisterComponent, SettingsComponent, UsersReviewComponent } from './components';
+import { AuthGuard, RolesGuard } from './guards';
 
 const routes: Routes = [
   {
@@ -18,7 +19,11 @@ const routes: Routes = [
   },
   {
     path: 'map',
-    component: MapComponent
+    component: MapComponent,
+    canActivate: [AuthGuard, RolesGuard],
+    data: {
+      roles: ['user']
+    }
   },
   {
     path: 'settings',
