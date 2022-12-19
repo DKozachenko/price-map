@@ -5,11 +5,11 @@ import { io } from 'socket.io-client';
 import { WebSocketService } from '../../services';
 
 @Component({
-  selector: 'price-map-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  selector: 'price-map-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss'],
 })
-export class LoginComponent implements OnInit {
+export class RegisterComponent implements OnInit {
   public form!: FormGroup;
 
   constructor(private router: Router,
@@ -20,20 +20,20 @@ export class LoginComponent implements OnInit {
       nickname: new FormControl(undefined, [Validators.required]),
       password: new FormControl(undefined, [Validators.required]),
     });
+
+    this.webSocketSevice.socket.on('register failed', (response) => {
+      console.log('on register failed', response);
+    });
+
+    this.webSocketSevice.socket.on('register successed', (response) => {
+      console.log('on register successed', response);
+    });
   }
 
   public submit(): void {
-    this.webSocketSevice.socket.emit('login attempt', {
-      nickname: 'john',
-      password: 'changeme'
-    });
-
-    this.webSocketSevice.socket.on('login failed', (response) => {
-      console.log('on login failed', response);
-    });
-
-    this.webSocketSevice.socket.on('login successed', (response) => {
-      console.log('on login successed', response);
+    this.webSocketSevice.socket.emit('register attempt', {
+      ...this.form.value,
+      role: 'user'
     });
   }
 }

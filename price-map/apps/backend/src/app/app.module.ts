@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 import { CatsController } from './controllers/cats.controller';
 import { CatsService } from './controllers/cats.service';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
-import { WsModule, ScrapingModule, AuthModule, UsersModule } from './modules';
+import { WsModule, ScrapingModule, AuthModule, UsersModule, WsAuthModule } from './modules';
 import { CategoryScrapingService, ProductScrapingService, ScrapingService } from './modules/scraping/services';
 import { Organization,
   Shop,
@@ -17,6 +17,8 @@ import { Organization,
 import * as fs from 'fs';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './modules/auth/guards';
+import { JwtService } from '@nestjs/jwt';
+import { OnGatewayConnection, OnGatewayInit } from '@nestjs/websockets';
 
 //TODO: вынести в интерфейсы
 interface BreadcrumbInfo {
@@ -30,13 +32,23 @@ interface BreadcrumbInfo {
 @Module({
   imports: [
     AuthModule,
-    UsersModule
+    UsersModule,
+    WsAuthModule
   ],
   controllers: [
     AppController,
   ],
   providers: [
     AppService,
+    JwtService
   ],
 })
-export class AppModule {}
+export class AppModule implements OnGatewayInit, OnGatewayConnection {
+  public afterInit(server: any) {
+    console.log('Socket INIT')
+  }
+
+  handleConnection(client: any, ...args: any[]) {
+    console.log('Socket CONNECTED');
+  }
+}

@@ -10,7 +10,7 @@ export class AuthService {
   ) {}
 
   async validateUser(nickname: string, password: string): Promise<any> {
-    const user = await this.usersService.findOne(nickname);
+    const user = await this.usersService.getByNickname(nickname);
     if (user && user.password === password) {
       const { password, ...result } = user;
       return result;

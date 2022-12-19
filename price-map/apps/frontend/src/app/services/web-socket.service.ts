@@ -10,7 +10,11 @@ export class WebSocketService {
 
   /** Инициализация сокета */
   public initSocket(): void {
-    this.socket = io('wss://localhost:3000');
+    this.socket = io('http://localhost:3333', {
+      auth: {
+        token: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6ImpvaG4iLCJ1c2VySWQiOjEsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNjcxMzg0NDc1LCJleHAiOjE2NzE0MjA0NzV9.EDquhT2BCHeuWtTC2CdHGUpfUIndQZ29yiQ1h-vgmeA'
+      }
+    });
 
     this.socket.on('connect', () => {
       console.log('Socket connected');
