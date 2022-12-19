@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing-module';
 import { LoginComponent, MapComponent, RegisterComponent } from './components';
 import { appInitializer } from './initializers';
-import { WebSocketService } from './services';
+import { TokenService, WebSocketService } from './services';
 import { SettingsComponent } from './components/settings/settings.component';
 import { UsersReviewComponent } from './components/users-review/users-review.component';
 
@@ -14,6 +14,7 @@ import { UsersReviewComponent } from './components/users-review/users-review.com
   imports: [BrowserModule, AppRoutingModule, FormsModule, ReactiveFormsModule],
   providers: [
     WebSocketService,
+    TokenService,
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,

@@ -1,3 +1,4 @@
+import { JwtService } from '@nestjs/jwt';
 import { UsersService } from './../../users/services/users.service';
 import { JwtAuthGuard } from './../../auth/guards/jwt.guard';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -15,6 +16,7 @@ import { LocalAuthGuard } from '../../auth/guards';
 import { AuthService } from '../../auth/services';
 import { Server } from 'http';
 import * as bcrypt from 'bcrypt';
+import { jwtConstants } from '../models/constants';
 
 @WebSocketGateway({
   cors: {
@@ -22,7 +24,8 @@ import * as bcrypt from 'bcrypt';
   }
 })
 export class AuthGateway {
-  constructor (private readonly usersService: UsersService) {}
+  constructor (private readonly usersService: UsersService,
+    private readonly jwtService: JwtService) {}
 
   @SubscribeMessage('register attempt')
   public async register(@MessageBody() data: any): Promise<WsResponse<{ user: any } | any>> {
@@ -85,6 +88,56 @@ export class AuthGateway {
         }
       }
     }    
+  }
+
+  @SubscribeMessage('login attempt')
+  public async login(@MessageBody() data: any): Promise<WsResponse<{ token: any } | any>> {
+    const userInfo = data;
+    const user = await this.usersService.getByNickname(userInfo.nickname);
+    
+    if (!user) {
+      return { 
+        event: 'login failed', 
+        data: {
+          statusCode: 401,
+          error: true,
+          message: 'User with this nickname does not exist'
+        }
+      }
+    }
+
+    const isMatch = await bcrypt.compare(userInfo.password, user.password);
+
+    if (!isMatch) {
+      return { 
+        event: 'login failed', 
+        data: {
+          statusCode: 400,
+          error: true,
+          message: 'Wrong password'
+        }
+      }
+    }
+
+    const token: string = this.jwtService.sign({
+      userId: user.userId,
+      nickname: user.nickname,
+      role: user.role
+    }, {
+      expiresIn: "10h",
+      secret: jwtConstants.secret
+    })
+
+
+    return { 
+      event: 'login successed', 
+      data: {
+        statusCode: 200,
+        error: false,
+        result: `Bearer ${token}`
+      }
+    }
+
   }
 
 }
