@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 import { CatsController } from './controllers/cats.controller';
 import { CatsService } from './controllers/cats.service';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
-import { WsModule, ScrapingModule, AuthModule, UsersModule, WsAuthModule } from './modules';
+import { WsModule, ScrapingModule, AuthModule, UsersModule } from './modules';
 import { CategoryScrapingService, ProductScrapingService, ScrapingService } from './modules/scraping/services';
 import { Organization,
   Shop,
@@ -16,7 +16,6 @@ import { Organization,
   Category3Level } from '@price-map/core/entities';
 import * as fs from 'fs';
 import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from './modules/auth/guards';
 import { JwtService } from '@nestjs/jwt';
 import { OnGatewayConnection, OnGatewayInit } from '@nestjs/websockets';
 
@@ -33,7 +32,6 @@ interface BreadcrumbInfo {
   imports: [
     AuthModule,
     UsersModule,
-    WsAuthModule
   ],
   controllers: [
     AppController,

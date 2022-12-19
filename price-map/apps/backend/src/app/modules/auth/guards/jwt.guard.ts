@@ -1,52 +1,48 @@
-import { ExecutionContext, Injectable, UnauthorizedException, CanActivate } from '@nestjs/common';
+import { ExecutionContext, Injectable, UnauthorizedException, CanActivate, mixin } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { WsException } from '@nestjs/websockets';
 import { of } from 'rxjs';
+import { jwtConstants } from '../models/constants';
 
-@Injectable()
-export class JwtAuthGuard implements CanActivate {
-  constructor(private readonly jwtServvice: JwtService) { }
+//TODO: вынести в app
+export const JwtAuthGuard = (failedEventName: string) => {
+  @Injectable()
+  class JwtAuthGuardMixin implements CanActivate {
+    constructor(private readonly jwtService: JwtService) { }
 
-  public canActivate(context: ExecutionContext): boolean {
-    const client = context.switchToWs().getClient();
-    console.log(client.handshake.auth)
-    const token: string = client.handshake?.auth?.token;
-    console.log(token)
-    if (!token) {
-      throw new WsException({
-        statusCode: 401,
-        error: true,
-        message: 'Unauthorized'
-      })
+    public canActivate(context: ExecutionContext): boolean {
+      const client = context.switchToWs().getClient();
+      const token: string = client.handshake?.auth?.token;
+
+      if (!token) {
+        client.emit(failedEventName, {
+          statusCode: 401,
+          error: true,
+          message: 'Unauthorized'
+        });
+        return false;
+      }
+
+      const tokenWithoutBearer: string = token.split(' ')?.[1];
+
+      let payload: any;
+      try {
+        payload = this.jwtService.verify(tokenWithoutBearer, {
+          secret: jwtConstants.secret
+        });
+      } catch (e) {
+        client.emit(failedEventName, {
+          statusCode: 408,
+          error: true,
+          message: 'Not verified token'
+        });
+        return false;
+      }
+      
+      return true;
     }
-
-    let decodeToken;
-    try {
-      decodeToken = this.jwtServvice.verify(token);
-    } catch (e) {
-      client.emit('ws-auth-resp', {data: 'error'});
-      return false;
-    }
-    
-
-    console.log(decodeToken)
-    if (!decodeToken) {
-      throw new WsException({
-        statusCode: 403,
-        error: true,
-        message: 'Wrong token'
-      })
-    }
-    // console.log(this.jwtServ.sign({
-    //   name: 'trash',
-    // }))
-    // const cookies: string[] = client.handshake.headers.cookie.split('; ');
-    // const authToken = cookies.find(cookie => cookie.startsWith('jwt')).split('=')[1];
-    // const jwtPayload: JwtPayload = <JwtPayload> this.jwtServ.verify(authToken);
-    // const user: User = await this.authService.validateUser(jwtPayload);
-    // context.switchToWs().getData().user = user;
-    // return Boolean(user);
-    console.log(client.handshake);
-    return true;
   }
+
+  const guard = mixin(JwtAuthGuardMixin);
+  return guard;
 }

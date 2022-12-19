@@ -12,7 +12,7 @@ export class WebSocketService {
   public initSocket(): void {
     this.socket = io('http://localhost:3333', {
       auth: {
-        token: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6ImpvaG4iLCJ1c2VySWQiOjEsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNjcxMzg0NDc1LCJleHAiOjE2NzE0MjA0NzV9.EDquhT2BCHeuWtTC2CdHGUpfUIndQZ29yiQ1h-vgmeA'
+        token: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjMsIm5pY2tuYW1lIjoibG94Iiwicm9sZSI6InVzZXIiLCJpYXQiOjE2NzE0NDg0NTMsImV4cCI6MTY3MTQ4NDQ1M30.PKyc9woT8WOtwcq3X50GaKj0Yv86ZlsAAJCNH59eybE'
       }
     });
 

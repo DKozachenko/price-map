@@ -1,1 +1,0 @@
-export { WsAuthGateway } from './ws-auth.gateway';
