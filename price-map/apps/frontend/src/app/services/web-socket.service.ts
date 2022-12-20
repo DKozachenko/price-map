@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
+import { TokenService } from '.';
 
 @Injectable()
 export class WebSocketService {
@@ -8,9 +9,13 @@ export class WebSocketService {
   private maxConnectAttempts: number = 5;
   public socket!: Socket;
 
+  constructor(private readonly tokenService: TokenService) {
+
+  }
+
   /** Инициализация сокета */
   public initSocket(): void {
-    this.socket = io('wss://localhost:3000');
+    this.socket = io('http://localhost:3333');
 
     this.socket.on('connect', () => {
       console.log('Socket connected');
@@ -31,6 +36,11 @@ export class WebSocketService {
     this.socket.on('disconnect', () => {
       console.log('Socket disconnected');
     });
-    
+  }
+
+  public addToken(): void {
+    this.socket.auth = { 
+      token: this.tokenService.getToken()
+    };
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { io } from 'socket.io-client';
+import { TokenService, WebSocketService } from '../../services';
 
 @Component({
   selector: 'price-map-login',
@@ -11,30 +12,32 @@ import { io } from 'socket.io-client';
 export class LoginComponent implements OnInit {
   public form!: FormGroup;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,
+    private readonly webSocketSevice: WebSocketService,
+    private readonly tokenService: TokenService) {}
 
   ngOnInit(): void {
     this.form = new FormGroup({
       nickname: new FormControl(undefined, [Validators.required]),
       password: new FormControl(undefined, [Validators.required]),
     });
+
+    this.webSocketSevice.socket.on('login failed', (response) => {
+      console.log('on login failed', response);
+      alert('Глаза разуй, дебил, данные чекни');
+    });
+
+    this.webSocketSevice.socket.on('login successed', (response) => {
+      console.log('on login successed', response);
+      this.tokenService.setToken(response.result);
+      // this.router.navigate(['map'], { queryParamsHandling: 'merge' })
+    });
   }
 
   public submit(): void {
-    const subject = io('http://localhost:3333');
-
-    subject.connect();
-
-    subject.on('connect', () => {
-      console.log('connect');
+    this.webSocketSevice.socket.emit('login attempt', {
+      ...this.form.value,
+      role: 'user'
     });
-
-
-    subject.emit('send', {data: 'data'});
-
-    subject.on('send', (response) => {
-      console.log('on send', response);
-    });
-
   }
 }

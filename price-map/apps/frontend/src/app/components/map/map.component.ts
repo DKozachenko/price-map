@@ -1,19 +1,21 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Point } from 'geojson';
 import { Map, NavigationControl, Popup } from 'maplibre-gl';
+import { WebSocketService } from '../../services';
+import { load } from '@2gis/mapgl';
 
 @Component({
   selector: 'price-map-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
-export class MapComponent implements AfterViewInit, OnDestroy {
+export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   map: Map | undefined;
 
   @ViewChild('map')
   private mapContainer!: ElementRef<HTMLElement>;
 
-  constructor() {}
+  constructor(private readonly webSocketSevice: WebSocketService) {}
 
   ngAfterViewInit() {
     const initialState = { lng: -77.038, lat: 38.931, zoom: 14 };
@@ -31,7 +33,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     //Можно юзать вместо маркеров, только заменить loadImage на updateImage
     this.map.loadImage(
       'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/50px-Cat_silhouette.svg.png',
-      (error, image) => {
+      (error: any, image: any) => {
         if (error) throw error;
         if (!this.map?.hasImage('theatre')) {
           if (image) {
@@ -243,7 +245,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.map.addControl(new NavigationControl({}), 'top-right');
     // new Marker({ color: '#FF0000' }).setLngLat([-77.003168, 38.894651]).addTo(this.map);
 
-    this.map.on('click', 'places', (e) => {
+    this.map.on('click', 'places', (e: any) => {
       console.log(e);
       const geometry = e?.features?.[0]?.geometry as unknown as Point;
       const coordinates = <[number, number]>geometry?.coordinates?.slice();
@@ -269,7 +271,23 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (this.map) {
         this.map.getCanvas().style.cursor = '';
       }
+    })
+  }
+
+  ngOnInit(): void {
+    console.log('map component');
+
+    this.webSocketSevice.socket.on('get users failed', (response) => {
+      console.log('on get users failed', response);
+      alert('Глаза разуй, дебил, данные чекни');
     });
+
+    this.webSocketSevice.socket.on('get users successed', (response) => {
+      console.log('on get users successed', response);
+    });
+
+    this.webSocketSevice.addToken();
+    this.webSocketSevice.socket.emit('get users attempt', { temp: 1 });
   }
 
   ngOnDestroy() {
