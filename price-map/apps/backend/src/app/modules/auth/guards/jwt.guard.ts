@@ -38,11 +38,11 @@ export const JwtAuthGuard = (failedEventName: string) => {
         });
         return false;
       }
-      
+
       return true;
     }
   }
 
   const guard = mixin(JwtAuthGuardMixin);
   return guard;
-}
+};

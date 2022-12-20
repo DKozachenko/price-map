@@ -30,7 +30,7 @@ export class UsersService {
       password: user.password,
       role: user.role,
       userId: this.users.length + 1
-    }
+    };
     this.users.push(newUser);
     return newUser;
   }

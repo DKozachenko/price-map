@@ -43,4 +43,4 @@ export const RolesAuthGuard = (failedEventName: string) => {
 
   const guard = mixin(RolesAuthGuardMixin);
   return guard;
-}
+};

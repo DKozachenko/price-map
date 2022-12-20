@@ -28,14 +28,14 @@ import { jwtConstants } from '../../auth/models/constants';
 })
 export class UsersGateway {
   constructor () {}
-  
+
   @Roles(Role.User)
-  @UseGuards(JwtAuthGuard('get users failed'), RolesAuthGuard('get users failed'))  
+  @UseGuards(JwtAuthGuard('get users failed'), RolesAuthGuard('get users failed'))
   @SubscribeMessage('get users attempt')
   public async login(@MessageBody() data: any): Promise<WsResponse<{ test: any } | any>> {
     return {
       event: 'get users successed',
       data: data
-    }
+    };
   }
 }

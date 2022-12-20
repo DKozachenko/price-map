@@ -55,9 +55,7 @@ interface BreadcrumbInfo {
     //   synchronize: true,
     // })
   ],
-  controllers: [
-    AppController,
-  ],
+  controllers: [AppController],
   providers: [
     AppService,
     JwtService
@@ -65,7 +63,7 @@ interface BreadcrumbInfo {
 })
 export class AppModule implements OnGatewayInit, OnGatewayConnection, OnModuleInit {
   public afterInit(server: any) {
-    console.log('Socket INIT')
+    console.log('Socket INIT');
   }
 
   handleConnection(client: any, ...args: any[]) {

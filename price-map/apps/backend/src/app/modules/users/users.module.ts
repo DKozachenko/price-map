@@ -4,7 +4,11 @@ import { UsersService } from './services';
 import { UsersGateway } from './gateways';
 
 @Module({
-  providers: [UsersService, UsersGateway, JwtService],
+  providers: [
+    UsersService,
+    UsersGateway,
+    JwtService
+  ],
   exports: [UsersService]
 })
 export class UsersModule {}

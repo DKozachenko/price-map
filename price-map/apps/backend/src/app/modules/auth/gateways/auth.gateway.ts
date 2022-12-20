@@ -32,14 +32,14 @@ export class AuthGateway {
     const newUser = data;
     const userWithSameNickname = await this.usersService.getByNickname(newUser.nickname);
     if (userWithSameNickname) {
-      return { 
-        event: 'register failed', 
+      return {
+        event: 'register failed',
         data: {
           statusCode: 401,
           error: true,
           message: 'User with this nickname already exists'
         }
-      }
+      };
     }
 
     let salt: string;
@@ -52,71 +52,71 @@ export class AuthGateway {
       //TODO: убрать
       // throw new Error();
     } catch (e) {
-      return { 
-        event: 'register failed', 
+      return {
+        event: 'register failed',
         data: {
           statusCode: 405,
           error: true,
           message: 'Error while hashing password occured'
         }
-      }
+      };
     }
 
     try {
       const savedUser = this.usersService.add({
         ...newUser,
         password: hash
-      })
+      });
 
       //TODO: убрать
       // throw new Error();
-      return { 
-        event: 'register successed', 
+      return {
+        event: 'register successed',
         data: {
           statusCode: 201,
           error: false,
           result: savedUser
         }
-      }
+      };
     } catch (e) {
-      return { 
-        event: 'register failed', 
+      return {
+        event: 'register failed',
         data: {
           statusCode: 500,
           error: true,
           message: 'Error while saving in db'
         }
-      }
-    }    
+      };
+    }
   }
 
   @SubscribeMessage('login attempt')
   public async login(@MessageBody() data: any): Promise<WsResponse<{ token: any } | any>> {
     const userInfo = data;
     const user = await this.usersService.getByNickname(userInfo.nickname);
-    
+
     if (!user) {
-      return { 
-        event: 'login failed', 
+      return {
+        event: 'login failed',
         data: {
           statusCode: 401,
           error: true,
           message: 'User with this nickname does not exist'
         }
-      }
+      };
     }
 
     const isMatch = await bcrypt.compare(userInfo.password, user.password);
 
     if (!isMatch) {
-      return { 
-        event: 'login failed', 
+      return {
+        event: 'login failed',
         data: {
           statusCode: 400,
           error: true,
           message: 'Wrong password'
         }
-      }
+      };
     }
 
     const token: string = this.jwtService.sign({
@@ -124,19 +124,19 @@ export class AuthGateway {
       nickname: user.nickname,
       role: user.role
     }, {
-      expiresIn: "10h",
+      expiresIn: '10h',
       secret: jwtConstants.secret
-    })
+    });
 
 
-    return { 
-      event: 'login successed', 
+    return {
+      event: 'login successed',
       data: {
         statusCode: 200,
         error: false,
         result: `Bearer ${token}`
       }
-    }
+    };
 
   }
 
