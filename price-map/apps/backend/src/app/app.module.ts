@@ -5,16 +5,19 @@ import { AppService } from './app.service';
 import { CatsController } from './controllers/cats.controller';
 import { CatsService } from './controllers/cats.service';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
-import { WsModule, ScrapingModule } from './modules';
+import { WsModule, ScrapingModule, AuthModule, UsersModule } from './modules';
 import { CategoryScrapingService, ProductScrapingService, ScrapingService } from './modules/scraping/services';
-import { Organization, 
-  Shop, 
-  Product, 
-  User, 
+import { Organization,
+  Shop,
+  Product,
+  User,
   Category1Level,
   Category2Level,
   Category3Level } from '@price-map/core/entities';
 import * as fs from 'fs';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
+import { OnGatewayConnection, OnGatewayInit } from '@nestjs/websockets';
 
 //TODO: вынести в интерфейсы
 interface BreadcrumbInfo {
@@ -27,46 +30,44 @@ interface BreadcrumbInfo {
 
 @Module({
   imports: [
-    WsModule,
+    AuthModule,
+    UsersModule,
     ScrapingModule,
     //TODO: Добавить свой логгер
     //TODO: Миграции
-    TypeOrmModule.forRoot({
-      name: 'postgresConnect',
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'vkdima03',
-      database: 'master_pm',
-      entities: [
-        Organization, 
-        Shop, 
-        Product, 
-        User, 
-        Category1Level, 
-        Category2Level, 
-        Category3Level
-      ],
-      synchronize: true,
-    })
+    // TypeOrmModule.forRoot({
+    //   name: 'postgresConnect',
+    //   type: 'postgres',
+    //   host: 'localhost',
+    //   port: 5432,
+    //   username: 'postgres',
+    //   password: 'vkdima03',
+    //   database: 'master_pm',
+    //   entities: [
+    //     Organization,
+    //     Shop,
+    //     Product,
+    //     User,
+    //     Category1Level,
+    //     Category2Level,
+    //     Category3Level
+    //   ],
+    //   synchronize: true,
+    // })
   ],
-  controllers: [
-    AppController, 
-    CatsController
-  ],
+  controllers: [AppController],
   providers: [
-    AppService, 
-    CatsService
+    AppService,
+    JwtService
   ],
 })
-export class AppModule implements OnModuleInit {
-  constructor(private readonly scrapingService: ScrapingService) {}
+export class AppModule implements OnGatewayInit, OnGatewayConnection, OnModuleInit {
+  public afterInit(server: any) {
+    console.log('Socket INIT');
+  }
 
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes(CatsController);
+  handleConnection(client: any, ...args: any[]) {
+    console.log('Socket CONNECTED');
   }
 
   public async onModuleInit(): Promise<void> {
