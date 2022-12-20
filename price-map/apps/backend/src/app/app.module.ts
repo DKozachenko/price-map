@@ -32,6 +32,28 @@ interface BreadcrumbInfo {
   imports: [
     AuthModule,
     UsersModule,
+    ScrapingModule,
+    //TODO: Добавить свой логгер
+    //TODO: Миграции
+    // TypeOrmModule.forRoot({
+    //   name: 'postgresConnect',
+    //   type: 'postgres',
+    //   host: 'localhost',
+    //   port: 5432,
+    //   username: 'postgres',
+    //   password: 'vkdima03',
+    //   database: 'master_pm',
+    //   entities: [
+    //     Organization,
+    //     Shop,
+    //     Product,
+    //     User,
+    //     Category1Level,
+    //     Category2Level,
+    //     Category3Level
+    //   ],
+    //   synchronize: true,
+    // })
   ],
   controllers: [
     AppController,
@@ -41,12 +63,26 @@ interface BreadcrumbInfo {
     JwtService
   ],
 })
-export class AppModule implements OnGatewayInit, OnGatewayConnection {
+export class AppModule implements OnGatewayInit, OnGatewayConnection, OnModuleInit {
   public afterInit(server: any) {
     console.log('Socket INIT')
   }
 
   handleConnection(client: any, ...args: any[]) {
     console.log('Socket CONNECTED');
+  }
+
+  public async onModuleInit(): Promise<void> {
+    console.time();
+    // const resultCats = await this.scrapingService.scrapeCategories();
+    // const productsMap: Map<BreadcrumbInfo, string[]> = this.scrapingService.getProductsMap();
+    // await new Promise(temp => setTimeout(temp, 2000));
+    // const result = await this.scrapingService.scrapeProducts(productsMap);
+    // console.log('result', result)
+
+    // fs.writeFile('test.json', JSON.stringify(result), function(error){
+    //   if(error) throw error;
+    // });
+    console.timeEnd();
   }
 }
