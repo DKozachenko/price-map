@@ -1,9 +1,8 @@
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException, mixin } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { ROLES_KEY } from '../../../decorators';
-import { jwtConstants } from '../models/constants';
-import { Role } from '../models/enums';
+import { Role } from '@price-map/core/enums';
+import { jwtConstant, roleKey } from '../constants';
 
 export const RolesAuthGuard = (failedEventName: string) => {
   @Injectable()
@@ -12,7 +11,7 @@ export const RolesAuthGuard = (failedEventName: string) => {
       private readonly jwtService: JwtService) { }
 
     public canActivate(context: ExecutionContext): boolean {
-      const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
+      const requiredRoles = this.reflector.getAllAndOverride<Role[]>(roleKey, [
         context.getHandler(),
         context.getClass(),
       ]);
@@ -25,7 +24,7 @@ export const RolesAuthGuard = (failedEventName: string) => {
       const token: Role = client.handshake?.auth?.token;
       const tokenWithoutBearer: string = token.split(' ')?.[1];
       const role = this.jwtService.verify(tokenWithoutBearer, {
-        secret: jwtConstants.secret
+        secret: jwtConstant.secret
       })?.role;
 
       if (!requiredRoles.includes(role)) {
