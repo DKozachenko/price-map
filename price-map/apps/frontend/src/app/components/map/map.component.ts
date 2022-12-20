@@ -271,7 +271,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       if (this.map) {
         this.map.getCanvas().style.cursor = '';
       }
-    })
+    });
   }
 
   ngOnInit(): void {
