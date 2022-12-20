@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
 
     this.webSocketSevice.socket.on('register failed', (response) => {
       console.log('on register failed', response);
-      alert('Глаза разуй, дебил, данные чекни')
+      alert('Глаза разуй, дебил, данные чекни');
     });
 
     this.webSocketSevice.socket.on('register successed', (response) => {

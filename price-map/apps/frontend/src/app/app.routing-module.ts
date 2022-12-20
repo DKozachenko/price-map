@@ -20,7 +20,10 @@ const routes: Routes = [
   {
     path: 'map',
     component: MapComponent,
-    canActivate: [AuthGuard, RolesGuard],
+    canActivate: [
+      AuthGuard,
+      RolesGuard
+    ],
     data: {
       roles: ['user']
     }

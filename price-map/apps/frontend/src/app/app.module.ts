@@ -11,8 +11,20 @@ import { UsersReviewComponent } from './components/users-review/users-review.com
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, MapComponent, SettingsComponent, UsersReviewComponent, RegisterComponent],
-  imports: [BrowserModule, AppRoutingModule, FormsModule, ReactiveFormsModule],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    MapComponent,
+    SettingsComponent,
+    UsersReviewComponent,
+    RegisterComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
+  ],
   providers: [
     WebSocketService,
     TokenService,

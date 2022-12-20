@@ -24,12 +24,12 @@ export class LoginComponent implements OnInit {
 
     this.webSocketSevice.socket.on('login failed', (response) => {
       console.log('on login failed', response);
-      alert('Глаза разуй, дебил, данные чекни')
+      alert('Глаза разуй, дебил, данные чекни');
     });
 
     this.webSocketSevice.socket.on('login successed', (response) => {
       console.log('on login successed', response);
-      this.tokenService.setToken(response.result)
+      this.tokenService.setToken(response.result);
       // this.router.navigate(['map'], { queryParamsHandling: 'merge' })
     });
   }

@@ -12,19 +12,19 @@ export class MapComponent implements OnInit {
   constructor(private readonly webSocketSevice: WebSocketService) { }
 
   ngOnInit(): void {
-    console.log('map component')
+    console.log('map component');
 
     this.webSocketSevice.socket.on('get users failed', (response) => {
       console.log('on get users failed', response);
-      alert('Глаза разуй, дебил, данные чекни')
+      alert('Глаза разуй, дебил, данные чекни');
     });
 
     this.webSocketSevice.socket.on('get users successed', (response) => {
       console.log('on get users successed', response);
     });
-    
+
     this.webSocketSevice.addToken();
-    this.webSocketSevice.socket.emit('get users attempt', { temp: 1 })
+    this.webSocketSevice.socket.emit('get users attempt', { temp: 1 });
   }
 
 }

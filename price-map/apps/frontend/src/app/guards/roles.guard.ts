@@ -4,7 +4,7 @@ import {ActivatedRouteSnapshot,
   Router,
   RouterStateSnapshot} from '@angular/router';
 import { TokenService } from '../services';
-import jwtDecode from "jwt-decode";
+import jwtDecode from 'jwt-decode';
 
 /**
  * Гвард для защиты роутов
@@ -30,7 +30,7 @@ export class RolesGuard implements CanActivate {
     if (roles.includes(role)) {
       return true;
     }
-    
+
     this.router.navigate(['/']);
     return false;
   }

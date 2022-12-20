@@ -41,6 +41,6 @@ export class WebSocketService {
   public addToken(): void {
     this.socket.auth = { 
       token: this.tokenService.getToken()
-    } 
+    };
   }
 }
