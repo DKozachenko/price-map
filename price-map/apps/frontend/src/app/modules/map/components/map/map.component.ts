@@ -1,8 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Point } from 'geojson';
 import { Map, NavigationControl, Popup } from 'maplibre-gl';
-import { WebSocketService } from '../../services';
-import { load } from '@2gis/mapgl';
+import { WebSocketService } from '../../../../services';
 
 @Component({
   selector: 'price-map-map',

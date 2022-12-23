@@ -1,24 +1,20 @@
 import { NgModule } from '@angular/core';
+import { MapComponent } from './components';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent, RegisterComponent } from './components';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'map',
     pathMatch: 'full'
   },
   {
-    path: 'login',
-    component: LoginComponent
-  },
-  {
-    path: 'register',
-    component: RegisterComponent
+    path: 'map',
+    component: MapComponent
   },
   {
     path: '**',
-    redirectTo: 'login',
+    redirectTo: 'map',
     pathMatch: 'full'
   },
 ];
@@ -27,4 +23,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AuthRoutingModule { }
+export class MapRoutingModule { }

@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { MapComponent, SettingsComponent, UsersReviewComponent } from './components';
 import { AuthGuard, RolesGuard } from './guards';
 
 const routes: Routes = [
   {
-    path: '**',
+    path: '',
     redirectTo: 'auth',
     pathMatch: 'full'
   },
@@ -51,6 +50,11 @@ const routes: Routes = [
       roles: ['admin']
     },
     loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule)
+  },
+  {
+    path: '**',
+    redirectTo: 'auth',
+    pathMatch: 'full'
   },
 ];
 

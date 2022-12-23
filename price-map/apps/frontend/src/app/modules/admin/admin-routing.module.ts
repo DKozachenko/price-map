@@ -1,24 +1,20 @@
 import { NgModule } from '@angular/core';
+import { AdminComponent } from './components';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent, RegisterComponent } from './components';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'login',
+    redirectTo: 'admin',
     pathMatch: 'full'
   },
   {
-    path: 'login',
-    component: LoginComponent
-  },
-  {
-    path: 'register',
-    component: RegisterComponent
+    path: 'admin',
+    component: AdminComponent
   },
   {
     path: '**',
-    redirectTo: 'login',
+    redirectTo: 'admin',
     pathMatch: 'full'
   },
 ];
@@ -27,4 +23,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AuthRoutingModule { }
+export class AdminRoutingModule { }
