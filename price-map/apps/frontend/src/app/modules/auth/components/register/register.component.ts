@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { io } from 'socket.io-client';
-import { WebSocketService } from '../../services';
+import { WebSocketService } from '../../../../services';
 
 @Component({
   selector: 'price-map-register',
@@ -21,12 +20,12 @@ export class RegisterComponent implements OnInit {
       password: new FormControl(undefined, [Validators.required]),
     });
 
-    this.webSocketSevice.socket.on('register failed', (response) => {
+    this.webSocketSevice.socket.on('register failed', (response: any) => {
       console.log('on register failed', response);
       alert('Глаза разуй, дебил, данные чекни');
     });
 
-    this.webSocketSevice.socket.on('register successed', (response) => {
+    this.webSocketSevice.socket.on('register successed', (response: any) => {
       console.log('on register successed', response);
     });
   }

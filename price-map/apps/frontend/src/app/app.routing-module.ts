@@ -1,40 +1,56 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { LoginComponent, MapComponent, RegisterComponent, SettingsComponent, UsersReviewComponent } from './components';
+import { MapComponent, SettingsComponent, UsersReviewComponent } from './components';
 import { AuthGuard, RolesGuard } from './guards';
 
 const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'login',
+    path: '**',
+    redirectTo: 'auth',
     pathMatch: 'full'
   },
   {
-    path: 'login',
-    component: LoginComponent
-  },
-  {
-    path: 'register',
-    component: RegisterComponent
+    path: 'auth',
+    loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)
   },
   {
     path: 'map',
-    component: MapComponent,
     canActivate: [
       AuthGuard,
       RolesGuard
     ],
     data: {
-      roles: ['user']
-    }
+      roles: [
+        'user',
+        'admin'
+      ]
+    },
+    loadChildren: () => import('./modules/map/map.module').then(m => m.MapModule)
   },
   {
     path: 'settings',
-    component: SettingsComponent
+    canActivate: [
+      AuthGuard,
+      RolesGuard
+    ],
+    data: {
+      roles: [
+        'user',
+        'admin'
+      ]
+    },
+    loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule)
   },
   {
-    path: 'users-review',
-    component: UsersReviewComponent
+    path: 'admin',
+    canActivate: [
+      AuthGuard,
+      RolesGuard
+    ],
+    data: {
+      roles: ['admin']
+    },
+    loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule)
   },
 ];
 

@@ -12,10 +12,10 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   }
 
   public handleConnection(client: any, ...args: any[]) {
-    Logger.log('Socket init', 'AppGateway');
+    Logger.log('Socket connected', 'AppGateway');
   }
 
   public handleDisconnect(client: any) {
-    Logger.log('Socket init', 'AppGateway');
+    Logger.log('Socket disconnected', 'AppGateway');
   }
 }

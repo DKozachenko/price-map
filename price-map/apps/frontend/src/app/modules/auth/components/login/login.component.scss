@@ -1,4 +1,4 @@
-@import "../../../_mixins.scss"; 
+@import "../../../../../_mixins.scss";
 
 .wrapper {
   display: flex;
@@ -69,7 +69,7 @@
   padding: .7rem 1.5rem;
   width: 100%;
   max-width: 15rem;
-  
+
   background-color: white;
 
   transition: color .2s linear, background-color .2s linear;
