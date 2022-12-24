@@ -1,0 +1,91 @@
+@import "../../../../../_mixins.scss";
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 100%;
+}
+
+.auth {
+  border: 1px solid black;
+  border-radius: 1rem;
+  box-shadow: .5rem .5rem 1rem gray;
+
+  padding: 1rem 1.5rem;
+}
+
+.title {
+  @include font(3.5rem, black);
+  text-align: center;
+
+  margin-bottom: 2rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    min-width: 30rem;
+
+    margin-bottom: 2rem;
+
+    label {
+      @include font(2rem, black);
+
+      margin-bottom: .8rem;
+    }
+
+    input {
+      @include font(1.6rem, black);
+
+
+      border: 1px solid black;
+      border-radius: 2.5rem;
+      padding: .7rem 1.6rem;
+
+      transition: border-color .2s linear;
+
+      &:focus {
+        border-color: gray;
+        outline: 1px solid gray;
+      }
+    }
+  }
+}
+
+.button {
+  @include font(1.6rem, black);
+
+  border: 1px solid black;
+  border-radius: 2.5rem;
+  padding: .7rem 1.5rem;
+  width: 100%;
+  max-width: 15rem;
+
+  background-color: white;
+
+  transition: color .2s linear, background-color .2s linear;
+
+  &:hover {
+    background-color: black;
+    color: white;
+  }
+
+  &:disabled {
+    background-color: lightgray;
+    border-color: gray;
+
+    &:hover {
+      color: black;
+      cursor: not-allowed;
+    }
+  }
+}

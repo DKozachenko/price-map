@@ -1,22 +1,11 @@
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from './../../users/services/users.service';
-import { JwtAuthGuard } from './../../auth/guards/jwt.guard';
-import { InjectRepository } from '@nestjs/typeorm';
 import { MessageBody,
-  OnGatewayConnection,
-  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer,
   WsResponse } from '@nestjs/websockets';
-import { Category2Level, Category3Level, Category1Level } from '@price-map/core/entities';
-import { Repository } from 'typeorm';
-import { UseGuards } from '@nestjs/common';
-import { LocalAuthGuard } from '../../auth/guards';
-import { AuthService } from '../../auth/services';
-import { Server } from 'http';
 import * as bcrypt from 'bcrypt';
-import { jwtConstants } from '../models/constants';
+import { jwtConstant } from '../../../constants';
 
 @WebSocketGateway({
   cors: {
@@ -119,16 +108,18 @@ export class AuthGateway {
       };
     }
 
+    // TODO: вынести создание токена в сервис или избавиться от сервиса
     const token: string = this.jwtService.sign({
       userId: user.userId,
       nickname: user.nickname,
       role: user.role
     }, {
       expiresIn: '10h',
-      secret: jwtConstants.secret
+      secret: jwtConstant.secret
     });
 
 
+    // TODO: создать общий для бэка и фронта генератора ответа с ошибкой или с данными
     return {
       event: 'login successed',
       data: {

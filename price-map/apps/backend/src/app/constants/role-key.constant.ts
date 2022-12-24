@@ -1,0 +1,1 @@
+export const roleKey = 'roles';

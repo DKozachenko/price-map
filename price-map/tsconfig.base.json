@@ -16,7 +16,8 @@
     "baseUrl": ".",
     "paths": {
       "@price-map/core": ["libs/core/src/index.ts"],
-      "@price-map/core/entities": ["libs/core/src/lib/entities"]
+      "@price-map/core/entities": ["libs/core/src/lib/entities"],
+      "@price-map/core/enums": ["libs/core/src/lib/enums"]
     }
   },
   "exclude": ["node_modules", "tmp"]

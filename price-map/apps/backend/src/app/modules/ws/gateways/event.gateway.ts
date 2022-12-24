@@ -13,7 +13,7 @@ import { Repository } from 'typeorm';
     origin: '*'
   }
 })
-export class WsGateway implements OnGatewayInit, OnGatewayConnection {
+export class WsGateway {
   @InjectRepository(Category3Level, 'postgresConnect')
   private readonly repository3: Repository<Category3Level>;
 
@@ -40,7 +40,7 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection {
     const cat2first = new Category2Level();
     cat2first.name = 'cat 2 first';
     cat2first.categories3Level = [
-      cat3first, 
+      cat3first,
       cat3second
     ];
 
@@ -51,7 +51,7 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection {
     const cat1first = new Category1Level();
     cat1first.name = 'cat 1 first';
     cat1first.categories2Level = [
-      cat2first, 
+      cat2first,
       cat2second
     ];
 
@@ -74,15 +74,5 @@ export class WsGateway implements OnGatewayInit, OnGatewayConnection {
       }
     });
     console.log('repository3', categories3);
-  }
-
-  handleConnection(client: any, ...args: any[]) {
-    console.log('CONNECTED');
-  }
-
-  @SubscribeMessage('send')
-  public async handleMessage(@MessageBody() data: string): Promise<WsResponse<{ name: string }>> {
-    console.log(data);
-    return { event: 'send', data: { name: 'lox' } };
   }
 }
