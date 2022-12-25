@@ -274,6 +274,6 @@ export class MapService {
   }
 
   public removeMap(): void {
-
+    this.map.remove();
   }
 }

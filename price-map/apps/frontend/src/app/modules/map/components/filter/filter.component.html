@@ -1,0 +1,47 @@
+<div class="filter__wrap">
+  <div class="filter">
+    <h4 class="filter__title">Категории</h4>
+
+    <div *ngFor="let category1Level of categories1Level;" class="category__level">
+      <div class="category__group" (click)="select1LevelCategory(category1Level)">
+        <input type="checkbox" [checked]="category1Level.checked">
+        <label>{{ category1Level.name }}</label>
+      </div>
+
+      <ng-container *ngIf="category1Level.categories2Level.length">
+        <div class="category__dropdown">
+          <div class="arrow" [ngClass]="{ 'up': category1Level.showCategories2Level }"
+            (click)="showCategories2Level(category1Level)"></div>
+        </div>
+        
+        <ng-container *ngIf="category1Level.showCategories2Level">
+          <div *ngFor="let category2Level of category1Level.categories2Level;" class="category__level nested__level">
+            <div class="category__group" (click)="select2LevelCategory(category2Level)">
+              <input type="checkbox" [checked]="category2Level.checked">
+              <label>{{ category2Level.name }}</label>
+            </div>
+
+            <ng-container *ngIf="category2Level.categories3Level.length">
+              <div class="category__dropdown">
+                <div class="arrow" [ngClass]="{ 'up': category2Level.showCategories3Level }"
+                  (click)="showCategories3Level(category2Level)"></div>
+              </div>
+              
+              <ng-container *ngIf="category2Level.showCategories3Level">
+                <div *ngFor="let category3Level of category2Level.categories3Level;" class="category__level nested__level">
+                  <div class="category__group" (click)="select3LevelCategory(category3Level)">
+                    <input type="checkbox" [checked]="category3Level.checked">
+                    <label>{{ category3Level.name }}</label>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-container>
+      </ng-container>
+      
+    </div>
+  </div>
+</div>
+
+

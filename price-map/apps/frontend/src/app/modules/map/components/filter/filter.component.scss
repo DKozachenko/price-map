@@ -1,0 +1,83 @@
+//TODO: перетащить в assets
+@import "../../../../../_mixins.scss";
+
+.map__wrap {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+.map {
+  height: 100%;
+}
+
+.filter__wrap {
+  position: absolute;
+  left: 2rem;
+  top: 2rem;
+  bottom: 2rem;
+  z-index: 5;
+}
+
+.filter {
+  width: 23vw;
+  height: 100%;
+  background-color: white;
+
+  border: 1px solid black;
+  border-radius: 2.5rem;
+  padding: 2rem;
+
+  &__title {
+    @include font(2rem, black);
+
+    margin-bottom: 1rem;
+  }
+}
+
+.category {
+  &__level {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+
+    &.nested__level {
+      padding-left: 2rem;
+    }
+  }
+
+  &__group {
+    label {
+      @include font(1.4rem, black);
+
+      margin-left: 0.8em;
+    }
+  }
+
+  &__dropdown {
+    width: 100%;
+    height: 2rem;
+    background-color: lightgray;
+
+    margin-top: 1rem;
+    border: 1px solid darkgray;
+
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: .4rem .7rem;
+
+    .arrow {
+      border: solid black;
+      border-width: 0 3px 3px 0;
+      display: inline-block;
+      padding: 3px;
+      transform: rotate(45deg);
+
+      cursor: pointer;
+
+      &.up {
+        transform: rotate(-135deg);
+      }
+    }
+  }
+}
