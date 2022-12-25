@@ -9,6 +9,74 @@ import { WebSocketService } from '../../../../services';
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
+  public categories1Level: any[] = [
+    {
+      name: 'cat 1 test 1',
+      categories2Level: [{
+        name: 'cat 2 test 1',
+        categories3Level: [
+          {
+            name: 'cat 3 test 1',
+            filters: []
+          },
+          {
+            name: 'cat 3 test 2',
+            filters: []
+          },
+          {
+            name: 'cat 3 test 3',
+            filters: []
+          }
+        ],
+        showCategories3Level: false
+      }],
+      showCategories2Level: false
+    },
+    {
+      name: 'cat 1 test 2',
+      categories2Level: [
+        {
+          name: 'cat 2 test 2',
+          categories3Level: [
+            {
+              name: 'cat 3 test 4',
+              filters: []
+            },
+          ],
+          showCategories3Level: false
+        },
+        {
+          name: 'cat 2 test 3',
+          categories3Level: [
+            {
+              name: 'cat 3 test 5',
+              filters: []
+            },
+            {
+              name: 'cat 3 test 5',
+              filters: []
+            },
+          ],
+          showCategories3Level: false
+        },
+        {
+          name: 'cat 2 test 4',
+          categories3Level: [],
+          showCategories3Level: false
+        }
+      ],
+      showCategories2Level: false
+    },
+  ]
+
+  public showCategories2Level(category1Level: any): void {
+    category1Level.showCategories2Level = !category1Level.showCategories2Level;
+  }
+
+  public showCategories3Level(category2Level: any): void {
+    category2Level.showCategories3Level = !category2Level.showCategories3Level;
+  }
+
   map: Map | undefined;
 
   @ViewChild('map')
@@ -21,7 +89,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.map = new Map({
       container: this.mapContainer.nativeElement,
-      style: 'https://api.maptiler.com/maps/streets/style.json?key=xQmnB8CNEr2OP6dEg5Du',
+      style: '../../../../../assets/mapLibreStyles.json',
       center: [
         initialState.lng,
         initialState.lat

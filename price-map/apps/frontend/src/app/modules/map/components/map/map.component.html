@@ -1,7 +1,51 @@
-<div class="map-wrap">
-  <a href="https://www.maptiler.com" class="watermark"><img
-      src="https://api.maptiler.com/resources/logo.svg" alt="MapTiler logo"/></a>
+<div class="map__wrap">
   <div class="map" #map></div>
+
+  <div class="filter__wrap">
+    <div class="filter">
+      <h4 class="filter__title">Категории</h4>
+
+      <div *ngFor="let category1Level of categories1Level;" class="category__level">
+        <div class="category__group">
+          <input type="checkbox" [id]="category1Level.name">
+          <label [for]="category1Level.name">{{ category1Level.name }}</label>
+        </div>
+
+        <ng-container *ngIf="category1Level.categories2Level.length">
+          <div class="category__dropdown">
+            <div class="arrow" [ngClass]="{ 'up': category1Level.showCategories2Level }"
+              (click)="showCategories2Level(category1Level)"></div>
+          </div>
+          
+          <ng-container *ngIf="category1Level.showCategories2Level">
+            <div *ngFor="let category2Level of category1Level.categories2Level;" class="category__level nested__level">
+              <div class="category__group">
+                <input type="checkbox" [id]="category2Level.name">
+                <label [for]="category2Level.name">{{ category2Level.name }}</label>
+              </div>
+  
+              <ng-container *ngIf="category2Level.categories3Level.length">
+                <div class="category__dropdown">
+                  <div class="arrow" [ngClass]="{ 'up': category2Level.showCategories3Level }"
+                    (click)="showCategories3Level(category2Level)"></div>
+                </div>
+                
+                <ng-container *ngIf="category2Level.showCategories3Level">
+                  <div *ngFor="let category3Level of category2Level.categories3Level;" class="category__level nested__level">
+                    <div class="category__group">
+                      <input type="checkbox" [id]="category3Level.name">
+                      <label [for]="category3Level.name">{{ category3Level.name }}</label>
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </ng-container>
+        </ng-container>
+        
+      </div>
+    </div>
+  </div>
 </div>
 
 
