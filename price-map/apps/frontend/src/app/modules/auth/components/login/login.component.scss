@@ -1,9 +1,11 @@
+//TODO: перетащить в assets
 @import "../../../../../_mixins.scss";
 
 .wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 
   height: 100%;
 }
@@ -73,6 +75,19 @@
   background-color: white;
 
   transition: color .2s linear, background-color .2s linear;
+
+  &.button__redirect {
+    border-color: #1890ff;
+    text-decoration: underline;
+    color: #1890ff;
+
+    margin-bottom: 2rem;
+
+    &:hover {
+      background-color: white;
+      color: #1890ff;
+    }
+  }
 
   &:hover {
     background-color: black;

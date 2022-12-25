@@ -15,7 +15,6 @@ export class RegisterComponent implements OnInit {
     private readonly webSocketSevice: WebSocketService) {}
 
   ngOnInit(): void {
-    console.log(1);
     this.form = new FormGroup({
       nickname: new FormControl(undefined, [Validators.required]),
       password: new FormControl(undefined, [Validators.required]),
