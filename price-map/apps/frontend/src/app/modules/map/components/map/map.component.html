@@ -33,7 +33,7 @@
                 <ng-container *ngIf="category2Level.showCategories3Level">
                   <div *ngFor="let category3Level of category2Level.categories3Level;" class="category__level nested__level">
                     <div class="category__group">
-                      <input type="checkbox" [id]="category3Level.name">
+                      <input type="checkbox" [id]="category3Level.name" (change)="select3LevelCategory(category3Level, $event)">
                       <label [for]="category3Level.name">{{ category3Level.name }}</label>
                     </div>
                   </div>
