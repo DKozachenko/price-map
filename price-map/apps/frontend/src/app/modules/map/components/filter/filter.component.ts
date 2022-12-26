@@ -61,16 +61,9 @@ export class FilterComponent implements OnInit {
 
       for (const cat3Level of cat2Level.categories3Level) {
         cat3Level.checked = cat.checked;
-
-        if (cat3Level.checked) {
-          this.setChechedCategories13evel.add(cat3Level.id)
-        } else {
-          this.setChechedCategories13evel.delete(cat3Level.id);
-        }
       }
     } 
-
-    this.filterService.chechedCategories3Level$.next(this.setChechedCategories13evel);
+    this.checkSelectedCategories3Level();
   }
 
   public select2LevelCategory(cat: any): void {
@@ -84,16 +77,8 @@ export class FilterComponent implements OnInit {
         cat3Level.showCategories3Level = true;
       }
 
-      if (cat.checked) {
-        this.setChechedCategories13evel.add(cat3Level.id)
-      } else {
-        this.setChechedCategories13evel.delete(cat3Level.id);
-      }
-
       cat3Level.checked = cat.checked;
     } 
-
-    this.filterService.chechedCategories3Level$.next(this.setChechedCategories13evel);
 
     const category1Level =  this.categories1Level.find((cat1Level) => {
       const category2Level = cat1Level.categories2Level.find((cat2Level: any) => {
@@ -107,16 +92,12 @@ export class FilterComponent implements OnInit {
         return cat2.checked;
       });
     }
+
+    this.checkSelectedCategories3Level();
   }
 
   public select3LevelCategory(cat: any): void {
     cat.checked = !cat.checked;
-    if (cat.checked) {
-      this.setChechedCategories13evel.add(cat.id)
-    } else {
-      this.setChechedCategories13evel.delete(cat.id);
-    }
-    this.filterService.chechedCategories3Level$.next(this.setChechedCategories13evel);
 
     const category1Level = this.categories1Level.find((cat1Level) => {
       const category2Level = cat1Level.categories2Level.find((cat2Level: any) => {
@@ -135,6 +116,27 @@ export class FilterComponent implements OnInit {
       category1Level.checked = category1Level.categories2Level.every((cat2: any) => {
         return cat2.checked;
       });
+    }
+
+    this.checkSelectedCategories3Level();
+  }
+
+  public checkSelectedCategories3Level(): void {
+    const setSelected: Set<string> = new Set<string>();
+
+    for (const category1Level of this.categories1Level) {
+      for (const category2Level of category1Level.categories2Level) {
+        for (const category3Level of category2Level.categories3Level) {
+          if (category3Level.checked) {
+            setSelected.add(category3Level.id);
+          }
+        }
+      }
+    }
+
+    if (this.setChechedCategories13evel.size !== setSelected.size) {
+      this.setChechedCategories13evel = setSelected;
+      this.filterService.chechedCategories3Level$.next(this.setChechedCategories13evel);
     }
   }
 }

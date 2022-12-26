@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Point } from 'geojson';
 import { Map, NavigationControl, Popup } from 'maplibre-gl';
+import { distinctUntilChanged } from 'rxjs';
 import { WebSocketService } from '../../../../services';
 import { FilterService, MapService } from '../../services';
 
