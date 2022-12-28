@@ -28,6 +28,9 @@
   border-radius: 2.5rem;
   padding: 2rem;
 
+  position: relative;
+  z-index: 5;
+
   &__title {
     @include font(2rem, black);
 

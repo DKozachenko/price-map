@@ -1,0 +1,47 @@
+<div class="characteristic__filter">
+  <h4 class="characteristic__filter-title">Характеристики</h4>
+
+  <ng-container *ngIf="category3Level.filters.length">   
+    <div *ngFor="let filter of category3Level.filters;" class="category__level">
+      <ng-container [ngSwitch]="filter.type">
+        <div *ngSwitchCase="'boolean'" class="category__group">
+          <p>{{ filter.name }}</p>
+
+          <div class="category__group-radio" (click)="changeBooleanFilter(filter, undefined)">
+            <input type="radio" value="undefined" id="filter.name" [name]="filter.name">
+            <label for="filter.name">Неважно</label>
+          </div>
+
+          <div class="category__group-radio" (click)="changeBooleanFilter(filter, true)">
+            <input type="radio" value="true" id="filter.name" [name]="filter.name">
+            <label for="filter.name">Да</label>
+          </div>
+          
+
+          <div class="category__group-radio" (click)="changeBooleanFilter(filter, false)">
+            <input type="radio" value="false" [name]="filter.name">
+            <label>Нет</label>
+          </div>         
+        </div>
+
+        <div *ngSwitchCase="'range'" class="category__group">
+          <p>{{ filter.name }}</p>
+
+          <input type="number" [placeholder]="filter.values[0]" [min]="+filter.values[0]" [max]="+filter.values[1]" (change)="changeRangeFilter(filter, 'from', $event)">
+          <input type="number" [placeholder]="filter.values[1]" [min]="+filter.values[0]" [max]="+filter.values[1]" (change)="changeRangeFilter(filter, 'to', $event)">
+        </div>
+
+        <div *ngSwitchCase="'enum'" class="category__group">
+          <p>{{ filter.name }}</p>
+
+          <div *ngFor="let value of filter.values" class="category__group" (click)="changeEnumFilter(filter, value)">
+            <input type="checkbox" [id]="value">
+            <label [for]="value">{{ value }}</label>
+          </div>
+        </div>
+
+        <div *ngSwitchDefault>Неизвестный тип фильтра</div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>
