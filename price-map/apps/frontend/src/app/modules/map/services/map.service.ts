@@ -38,6 +38,29 @@ export class MapService {
     );
   }
 
+  public addLineLayer(): void {
+    const lineLayer = this.map?.getLayer('route');
+
+    if (lineLayer) {
+      lineLayer.source = 'route';
+    } else {
+      this.map?.addLayer({
+        id: 'route',
+        type: 'line',
+        source: 'route',
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round'
+        },
+        paint: {
+          'line-color': '#6699ff',
+          'line-width': 8
+        }
+      });
+    }
+  }
+
+
   public addLayer(): void {
     const productsLayer = this.map?.getLayer('products');
 
@@ -60,7 +83,36 @@ export class MapService {
           'text-anchor': 'top'
         },
       });
-    }    
+    }
+  }
+
+  public addLineSource(coordinates: number[][]): void {
+    const productsSource: any = this.map?.getSource('route')
+    if (productsSource) {
+      productsSource.setData({
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates
+        }
+      })
+    } else {
+      this.map?.addSource('route', {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates
+          }
+        }
+      });
+    }
+
+
+    this.addLineLayer();
   }
 
   public addSource(products: any[]): void {
@@ -82,7 +134,7 @@ export class MapService {
           ],
         },
       }
-    
+
     })
 
     const productsSource: any = this.map?.getSource('products')
@@ -100,7 +152,7 @@ export class MapService {
         },
       });
     }
-    
+
 
     this.addLayer();
   }
@@ -160,9 +212,9 @@ export class MapService {
         description,
         id
       });
-      
 
-      new Popup({className: 'product__popup'})
+
+      new Popup({ className: 'product__popup' })
         .setLngLat(coordinates)
         .setDOMContent(content)
         .addTo(this.map ?? new Map({ container: '', style: '' }));
