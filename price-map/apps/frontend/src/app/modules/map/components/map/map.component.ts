@@ -3,7 +3,7 @@ import { Point } from 'geojson';
 import { Map, NavigationControl, Popup } from 'maplibre-gl';
 import { distinctUntilChanged } from 'rxjs';
 import { WebSocketService } from '../../../../services';
-import { FilterService, MapService } from '../../services';
+import { FilterService, MapService, ProductsService } from '../../services';
 
 @Component({
   selector: 'price-map-map',
@@ -16,12 +16,16 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
   constructor(private readonly webSocketSevice: WebSocketService,
     private readonly mapService: MapService,
-    private readonly filterService: FilterService) {}
+    private readonly filterService: FilterService,
+    private readonly productsService: ProductsService) {}
 
   public ngAfterViewInit() {
     this.mapService.initMap(this.mapContainer);
     this.mapService.loadProductImage();
-    this.mapService.loadSource();
+
+    this.mapService.map.on('load', () => {
+      this.mapService.addSource(this.productsService.products)
+    })
     this.mapService.addControl();
     this.mapService.setClicks();
   }
@@ -40,6 +44,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     this.webSocketSevice.socket.emit('get users attempt', { temp: 1 });
 
     this.mapService.clicks$.subscribe((data) => console.log('clicks', data))
+    this.mapService.productIdsToRoute$.subscribe((data) => console.log('productIdsToRoute', data))
 
     this.filterService.chechedCategories3Level$.subscribe((data) => console.log('chechedCategories3Level', data))
 
