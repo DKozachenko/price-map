@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CharacteristicFilterComponent, FilterComponent, MapComponent } from './components';
+import { CharacteristicFilterComponent, FilterComponent, MapComponent, RouteReviewComponent } from './components';
 import { MapRoutingModule } from './map-routing.module';
 import { FilterService, MapService, ProductsService } from './services';
 
@@ -8,7 +8,8 @@ import { FilterService, MapService, ProductsService } from './services';
   declarations: [
     MapComponent,
     FilterComponent,
-    CharacteristicFilterComponent
+    CharacteristicFilterComponent,
+    RouteReviewComponent
   ],
   imports: [
     CommonModule,

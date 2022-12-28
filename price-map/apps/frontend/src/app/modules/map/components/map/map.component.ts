@@ -14,6 +14,9 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   @ViewChild('map')
   private mapContainer!: ElementRef<HTMLElement>;
 
+  public isShowRouteReview: boolean = false;
+  public productIdsForRoute: string[] = [];
+
   constructor(private readonly webSocketSevice: WebSocketService,
     private readonly mapService: MapService,
     private readonly filterService: FilterService,
@@ -41,7 +44,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     this.webSocketSevice.socket.emit('get users attempt', { temp: 1 });
 
     this.mapService.clicks$.subscribe((data) => console.log('clicks', data))
-    this.mapService.productIdsToRoute$.subscribe((data) => console.log('productIdsToRoute', data))
+    this.mapService.productIdsToRoute$.subscribe((data) => {
+      console.log('productIdsToRoute', data)
+      this.isShowRouteReview = data.size > 0;
+      this.productIdsForRoute = [...data];
+    })
 
     this.filterService.chechedCategories3Level$.subscribe((data) => {
       console.log('chechedCategories3Level', data)

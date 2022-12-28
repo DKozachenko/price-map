@@ -20,7 +20,8 @@ export class ProductsService {
         coordinates: {
           latitude: -77.038659,
           longitude: 38.931567
-        }
+        },
+        name: 'shop test 1'
       }
     },
     {
@@ -37,7 +38,8 @@ export class ProductsService {
         coordinates: {
           latitude: -77.003168,
           longitude: 38.894651
-        }
+        },
+        name: 'shop test 2'
       }
     },
     {
@@ -54,7 +56,8 @@ export class ProductsService {
         coordinates: {
           latitude: -77.090372,
           longitude: 38.881189
-        }
+        },
+        name: 'shop test 3'
       }
     },
     {
@@ -71,7 +74,8 @@ export class ProductsService {
         coordinates: {
           latitude: -77.111561,
           longitude: 38.882342
-        }
+        },
+        name: 'shop test 4'
       }
     },
     {
@@ -88,7 +92,8 @@ export class ProductsService {
         coordinates: {
           latitude: -77.052477,
           longitude: 38.943951
-        }
+        },
+        name: 'shop test 5'
       }
     },
     {
@@ -105,7 +110,8 @@ export class ProductsService {
         coordinates: {
           latitude: -76.991011,
           longitude: 38.909218
-        }
+        },
+        name: 'shop test 6'
       }
     },
     {
@@ -122,13 +128,18 @@ export class ProductsService {
         coordinates: {
           latitude: -77.120120,
           longitude: 38.923613
-        }
+        },
+        name: 'shop test 7'
       }
     },
   ]
 
   public getProductsByCategoryId(category3LevelIds: string[]): any[] {
     return this.products.filter((product: any) => category3LevelIds.includes(product.category3Level.id));
+  }
+
+  public getProductsByIds(ids: string[]): any[] {
+    return this.products.filter((product: any) => ids.includes(product.id));
   }
 
 }
