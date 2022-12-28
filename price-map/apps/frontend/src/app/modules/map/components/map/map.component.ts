@@ -22,12 +22,9 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   public ngAfterViewInit() {
     this.mapService.initMap(this.mapContainer);
     this.mapService.loadProductImage();
-
-    this.mapService.map.on('load', () => {
-      this.mapService.addSource(this.productsService.products)
-    })
     this.mapService.addControl();
     this.mapService.setClicks();
+    // console.log(this.mapService.map.loaded())
   }
 
   public ngOnInit(): void {
@@ -46,7 +43,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     this.mapService.clicks$.subscribe((data) => console.log('clicks', data))
     this.mapService.productIdsToRoute$.subscribe((data) => console.log('productIdsToRoute', data))
 
-    this.filterService.chechedCategories3Level$.subscribe((data) => console.log('chechedCategories3Level', data))
+    this.filterService.chechedCategories3Level$.subscribe((data) => {
+      console.log('chechedCategories3Level', data)
+      const filteredProdcuts: any[] = this.productsService.getProductsByCategoryId([...data]);
+      this.mapService.addSource(filteredProdcuts)
+    })
 
     this.filterService.filterValues$.subscribe((data) => console.log('filterValues', data))
   }

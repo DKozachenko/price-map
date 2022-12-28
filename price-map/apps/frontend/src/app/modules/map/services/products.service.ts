@@ -103,8 +103,8 @@ export class ProductsService {
       },
       shop: {
         coordinates: {
-          latitude: -77.111561,
-          longitude: 38.882342
+          latitude: -76.991011,
+          longitude: 38.909218
         }
       }
     },
@@ -120,11 +120,15 @@ export class ProductsService {
       },
       shop: {
         coordinates: {
-          latitude: -77.052477,
-          longitude: 38.943951
+          latitude: -77.120120,
+          longitude: 38.923613
         }
       }
     },
   ]
+
+  public getProductsByCategoryId(category3LevelIds: string[]): any[] {
+    return this.products.filter((product: any) => category3LevelIds.includes(product.category3Level.id));
+  }
 
 }

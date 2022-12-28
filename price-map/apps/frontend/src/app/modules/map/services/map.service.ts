@@ -1,6 +1,6 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { Point } from 'geojson';
-import { Map, Marker, NavigationControl, Popup } from 'maplibre-gl';
+import { Map, Marker, NavigationControl, Popup, Source } from 'maplibre-gl';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable()
@@ -39,22 +39,28 @@ export class MapService {
   }
 
   public addLayer(): void {
-    this.map?.addLayer({
-      id: 'places',
-      type: 'symbol',
-      source: 'places',
-      layout: {
-        'icon-image': '{icon}',
-        'icon-overlap': 'always',
-        'text-field': ['get', 'price'],
-        'text-font': [
-          'Open Sans Semibold',
-        ],
-        'text-size': 18,
-        'text-offset': [0, 0.5],
-        'text-anchor': 'top'
-      },
-    });
+    const productsLayer = this.map?.getLayer('products');
+
+    if (productsLayer) {
+      productsLayer.source = 'products';
+    } else {
+      this.map?.addLayer({
+        id: 'products',
+        type: 'symbol',
+        source: 'products',
+        layout: {
+          'icon-image': '{icon}',
+          'icon-overlap': 'always',
+          'text-field': ['get', 'price'],
+          'text-font': [
+            'Open Sans Semibold',
+          ],
+          'text-size': 18,
+          'text-offset': [0, 0.5],
+          'text-anchor': 'top'
+        },
+      });
+    }    
   }
 
   public addSource(products: any[]): void {
@@ -79,13 +85,22 @@ export class MapService {
     
     })
 
-    this.map?.addSource('places', {
-      type: 'geojson',
-      data: {
+    const productsSource: any = this.map?.getSource('products')
+    if (productsSource) {
+      productsSource.setData({
         type: 'FeatureCollection',
         features
-      },
-    });
+      })
+    } else {
+      this.map?.addSource('products', {
+        type: 'geojson',
+        data: {
+          type: 'FeatureCollection',
+          features
+        },
+      });
+    }
+    
 
     this.addLayer();
   }
@@ -123,7 +138,12 @@ export class MapService {
   }
 
   public setClicks(): void {
-    this.map.on('click', 'places', (e: any) => {
+    this.map.on('click', (e: any) => {
+      console.log(e)
+    })
+
+
+    this.map.on('click', 'products', (e: any) => {
       const geometry = e?.features?.[0]?.geometry as unknown as Point;
       this.clicks$.next(geometry);
       const coordinates = <[number, number]>geometry?.coordinates?.slice();
