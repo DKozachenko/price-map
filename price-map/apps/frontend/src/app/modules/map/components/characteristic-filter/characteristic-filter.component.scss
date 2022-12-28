@@ -1,0 +1,57 @@
+@import "../../../../../_mixins.scss";
+
+.characteristic__filter {
+  position: absolute;
+  right: -80%;
+  top: 0;
+  bottom: 0;
+  z-index: 4;
+  width: 300px;
+  background-color: white;
+
+  border-right: 1px solid black;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  border-top-right-radius: 2.5rem;
+  border-bottom-right-radius: 2.5rem;
+
+  padding: 2rem 2rem 2rem 5rem;
+
+  &-title {
+    @include font(2rem, black);
+
+    margin-bottom: 1rem;
+  }
+}
+
+.category {
+  &__group {
+    margin-bottom: 1.3rem;
+
+    p {
+      @include font(1.4rem, black);
+
+      margin-bottom: 1rem;
+    }
+
+    label {
+      @include font(1.4rem, black);
+      margin-left: 0.8rem;
+    }
+
+    &-radio {
+      margin-bottom: .8rem;
+
+      span {
+        margin-left: 0.8rem;
+      }
+    }
+
+    input[type="number"],
+    input[type="text"] {
+      margin-bottom: 1rem;
+
+      margin-right: 0.6rem;
+    }
+  }
+}

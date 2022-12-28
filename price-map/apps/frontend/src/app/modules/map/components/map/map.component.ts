@@ -18,14 +18,14 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     private readonly mapService: MapService,
     private readonly filterService: FilterService) {}
 
-  ngAfterViewInit() {
+  public ngAfterViewInit() {
     this.mapService.initMap(this.mapContainer);
     this.mapService.loadSource();
     this.mapService.addControl();
     this.mapService.setClicks();
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.webSocketSevice.socket.on('get users failed', (response) => {
       console.log('on get users failed', response);
       alert('Глаза разуй, дебил, данные чекни');
@@ -41,9 +41,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     this.mapService.clicks$.subscribe((data) => console.log('clicks', data))
 
     this.filterService.chechedCategories3Level$.subscribe((data) => console.log('chechedCategories3Level', data))
+
+    this.filterService.filterValues$.subscribe((data) => console.log('filterValues', data))
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     this.mapService.removeMap();
   }
 }

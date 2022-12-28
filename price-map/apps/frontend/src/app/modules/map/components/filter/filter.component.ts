@@ -12,6 +12,11 @@ import { FilterService, MapService } from '../../services';
 export class FilterComponent implements OnInit {
   public categories1Level: any[] = [];
   public setChechedCategories13evel: Set<string> = new Set();
+  public get currentCategory3LevelId() {
+    return [...this.setChechedCategories13evel][0];
+  } 
+
+  public isShowCharacteristics: boolean = false;
 
   constructor(private readonly filterService: FilterService) {}
 
@@ -36,6 +41,11 @@ export class FilterComponent implements OnInit {
         checked: false
       }
     })
+
+    this.filterService.chechedCategories3Level$
+      .subscribe((data: Set<string>) => {
+        this.isShowCharacteristics = data.size === 1;
+      })
   }
 
   public showCategories2Level(category1Level: any): void {
