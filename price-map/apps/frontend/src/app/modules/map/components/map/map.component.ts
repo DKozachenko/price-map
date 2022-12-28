@@ -20,6 +20,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
   public ngAfterViewInit() {
     this.mapService.initMap(this.mapContainer);
+    this.mapService.loadProductImage();
     this.mapService.loadSource();
     this.mapService.addControl();
     this.mapService.setClicks();
