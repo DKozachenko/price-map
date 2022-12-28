@@ -1,0 +1,18 @@
+<div class="route__review-wrap">
+  <div class="route__review">
+    <h4 class="route__review-title">Маршрут</h4>
+
+    <ul>
+      <ol *ngFor="let product of products" class="product">
+        <p>{{ product.name }}</p>
+        <p>{{ product.description }}</p>
+        <p>{{ product.price }} р.</p>
+        <p>Из {{ product.shop.name }}</p>
+      </ol>
+    </ul>
+
+    <button class="button" (click)="buildRoute()">Построить маршрут</button>
+  </div>
+</div>
+
+

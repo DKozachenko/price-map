@@ -1,12 +1,14 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { Point } from 'geojson';
-import { Map, Marker, NavigationControl, Popup } from 'maplibre-gl';
+import { Map, Marker, NavigationControl, Popup, Source } from 'maplibre-gl';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class MapService {
   public clicks$: Subject<Point> = new Subject();
-  private map!: Map;
+  public productIdsToRoute: Set<string> = new Set();
+  public productIdsToRoute$: Subject<Set<string>> = new Subject();
+  public map!: Map;
 
   public initMap(container: ElementRef<HTMLElement>): void {
     const initialState = { lng: -77.038, lat: 38.931, zoom: 14 };
@@ -22,221 +24,165 @@ export class MapService {
     });
   }
 
-  public loadImages(): void {
-    //Можно юзать вместо маркеров, только заменить loadImage на updateImage
+  public loadProductImage(): void {
     this.map.loadImage(
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/50px-Cat_silhouette.svg.png',
+      '../../../../assets/wood.png',
       (error: any, image: any) => {
         if (error) throw error;
-        if (!this.map?.hasImage('theatre')) {
+        if (!this.map?.hasImage('product')) {
           if (image) {
-            this.map?.addImage('theatre', image);
+            this.map?.addImage('product', image);
           }
         }
       },
     );
   }
 
-  public loadSource(): void {
-    this.map.on('load', () => {
-      this.map?.addSource('places', {
+  public addLineLayer(): void {
+    const lineLayer = this.map?.getLayer('route');
+
+    if (lineLayer) {
+      lineLayer.source = 'route';
+    } else {
+      this.map?.addLayer({
+        id: 'route',
+        type: 'line',
+        source: 'route',
+        layout: {
+          'line-join': 'round',
+          'line-cap': 'round'
+        },
+        paint: {
+          'line-color': '#6699ff',
+          'line-width': 8
+        }
+      });
+    }
+  }
+
+
+  public addLayer(): void {
+    const productsLayer = this.map?.getLayer('products');
+
+    if (productsLayer) {
+      productsLayer.source = 'products';
+    } else {
+      this.map?.addLayer({
+        id: 'products',
+        type: 'symbol',
+        source: 'products',
+        layout: {
+          'icon-image': '{icon}',
+          'icon-overlap': 'always',
+          'text-field': ['get', 'price'],
+          'text-font': [
+            'Open Sans Semibold',
+          ],
+          'text-size': 18,
+          'text-offset': [0, 0.5],
+          'text-anchor': 'top'
+        },
+      });
+    }
+  }
+
+  public addLineSource(coordinates: number[][]): void {
+    const productsSource: any = this.map?.getSource('route')
+    if (productsSource) {
+      productsSource.setData({
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates
+        }
+      })
+    } else {
+      this.map?.addSource('route', {
+        type: 'geojson',
+        data: {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'LineString',
+            coordinates
+          }
+        }
+      });
+    }
+
+
+    this.addLineLayer();
+  }
+
+  public addSource(products: any[]): void {
+    const features = products.map((item: any) => {
+      return {
+        type: 'Feature',
+        properties: {
+          id: item.id,
+          price: `${item.price} р.`,
+          name: item.name,
+          description: item.description,
+          icon: 'product',
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [
+            item.shop.coordinates.latitude,
+            item.shop.coordinates.longitude
+          ],
+        },
+      }
+
+    })
+
+    const productsSource: any = this.map?.getSource('products')
+    if (productsSource) {
+      productsSource.setData({
+        type: 'FeatureCollection',
+        features
+      })
+    } else {
+      this.map?.addSource('products', {
         type: 'geojson',
         data: {
           type: 'FeatureCollection',
-          features: [
-            {
-              type: 'Feature',
-              properties: {
-                description:
-                  `<strong>Make it Mount Pleasant</strong>
-                  <p>
-                  <a href="http://www.mtpleasantdc.com/makeitmtpleasant" target="_blank"
-                  title="Opens in a new window">Make it Mount Pleasant</a>
-                  is a handmade and vintage market and afternoon of
-                  live entertainment and kids activities. 12:00-6:00 p.m.</p>`,
-                icon: 'theatre',
-              },
-              geometry: {
-                type: 'Point',
-                coordinates: [
-                  -77.038659,
-                  38.931567
-                ],
-              },
-            },
-            {
-              type: 'Feature',
-              properties: {
-                description:
-                  `<strong>Mad Men Season Five Finale Watch Party</strong>
-                  <p>Head to Lounge 201 (201 Massachusetts Avenue NE) Sunday for a
-                  <a href="http://madmens5finale.eventbrite.com/" target="_blank"
-                  title="Opens in a new window">Mad Men Season Five Finale Watch Party</a>,
-                  complete with 60s costume contest, Mad Men trivia, and retro food and drink.
-                  8:00-11:00 p.m. $10 general admission, $20 admission and two hour open bar.</p>`,
-                icon: 'theatre',
-              },
-              geometry: {
-                type: 'Point',
-                coordinates: [
-                  -77.003168,
-                  38.894651
-                ],
-              },
-            },
-            {
-              type: 'Feature',
-              properties: {
-                description:
-                  `<strong>Big Backyard Beach Bash and Wine Fest</strong>
-                  <p>EatBar (2761 Washington Boulevard Arlington VA) is throwing
-                  a <a href="http://tallulaeatbar.ticketleap.com/2012beachblanket/"
-                  target="_blank" title="Opens in a new window">Big Backyard Beach Bash
-                  and Wine Fest</a> on Saturday, serving up conch fritters, fish tacos
-                  and crab sliders, and Red Apron hot dogs. 12:00-3:00 p.m. $25.grill hot dogs.</p>`,
-                icon: 'bar',
-              },
-              geometry: {
-                type: 'Point',
-                coordinates: [
-                  -77.090372,
-                  38.881189
-                ],
-              },
-            },
-            {
-              type: 'Feature',
-              properties: {
-                description:
-                  `<strong>Ballston Arts & Crafts Market</strong>
-                  <p>The <a href="http://ballstonarts-craftsmarket.blogspot.com/"
-                  target="_blank" title="Opens in a new window">Ballston Arts & Crafts Market</a>
-                  sets up shop next to the Ballston metro this Saturday for the first of
-                  five dates this summer. Nearly 35 artists and crafters will be on hand
-                  selling their wares. 10:00-4:00 p.m.</p>`,
-                icon: 'art-gallery',
-              },
-              geometry: {
-                type: 'Point',
-                coordinates: [
-                  -77.111561,
-                  38.882342
-                ],
-              },
-            },
-            {
-              type: 'Feature',
-              properties: {
-                description:
-                  `<strong>Seersucker Bike Ride and Social</strong>
-                  <p>Feeling dandy? Get fancy, grab your bike, and take part in this year\\'s
-                  <a href="https://ru.wikipedia.org/wiki/%D0%A1%D1%81%D1%8B%D0%BB%D0%BA%D0%B0"
-                  target="_blank" title="Opens in a new window">
-                  Seersucker Social</a> bike ride from Dandies and Quaintrelles.
-                  After the ride enjoy a lawn party at Hillwood with jazz, cocktails,
-                  paper hat-making, and more. 11:00-7:00 p.m.</p>`,
-                icon: 'bicycle',
-              },
-              geometry: {
-                type: 'Point',
-                coordinates: [
-                  -77.052477,
-                  38.943951
-                ],
-              },
-            },
-            {
-              type: 'Feature',
-              properties: {
-                description:
-                  `<strong>Capital Pride Parade</strong><p>The annual
-                  <a href="http://www.capitalpride.org/parade" target="_blank"
-                  title="Opens in a new window">Capital Pride Parade</a>
-                  makes its way through Dupont this Saturday. 4:30 p.m. Free.</p>`,
-                icon: 'rocket',
-              },
-              geometry: {
-                type: 'Point',
-                coordinates: [
-                  -77.043444,
-                  38.909664
-                ],
-              },
-            },
-            {
-              type: 'Feature',
-              properties: {
-                description:
-                  `<strong>Muhsinah</strong><p>Jazz-influenced hip hop artist
-                  <a href="http://www.muhsinah.com" target="_blank"
-                  title="Opens in a new window">Muhsinah</a> plays the
-                  <a href="http://www.blackcatdc.com">Black Cat</a> (1811 14th Street NW) tonight with
-                  <a href="http://www.exitclov.com" target="_blank" title="Opens in a new window">Exit Clov
-                  </a> and <a href="http://godsilla.bandcamp.com" target="_blank"
-                  title="Opens in a new window">Gods’illa</a>. 9:00 p.m. $12.</p>`,
-                icon: 'music',
-              },
-              geometry: {
-                type: 'Point',
-                coordinates: [
-                  -77.031706,
-                  38.914581
-                ],
-              },
-            },
-            {
-              type: 'Feature',
-              properties: {
-                description:
-                  `<strong>A Little Night Music</strong><p>The Arlington Players\\'
-                  production of Stephen Sondheim\\'s
-                  <a href="http://www.thearlingtonplayers.org/drupal-6.20/node/4661/show"
-                  target="_blank" title="Opens in a new window"><em>A Little Night Music</em></a>
-                  comes to the Kogod Cradle at The Mead Center for American Theater
-                  (1101 6th Street SW) this weekend and next. 8:00 p.m.</p>`,
-                icon: 'music',
-              },
-              geometry: {
-                type: 'Point',
-                coordinates: [
-                  -77.020945,
-                  38.878241
-                ],
-              },
-            },
-            {
-              type: 'Feature',
-              properties: {
-                description:
-                  `<strong>Truckeroo</strong><p><a href="http://www.truckeroodc.com/www/"
-                  target="_blank">Truckeroo</a> brings dozens of food trucks, live music,
-                  and games to half and M Street SE (across from Navy Yard Metro Station)
-                  today from 11:00 a.m. to 11:00 p.m.</p>`,
-                icon: 'music',
-              },
-              geometry: {
-                type: 'Point',
-                coordinates: [
-                  -77.007481,
-                  38.876516
-                ],
-              },
-            },
-          ],
+          features
         },
       });
+    }
 
-      this.map?.addLayer({
-        id: 'places',
-        type: 'symbol',
-        source: 'places',
-        layout: {
-          'icon-image': '{icon}_15',
-          'icon-overlap': 'always',
-        },
-      });
-    });
+
+    this.addLayer();
   }
+
+  public createPopupDomContent(productInfo: any): HTMLDivElement {
+    const div = document.createElement('div');
+    const p = document.createElement('p');
+    p.classList.add('product__popup-title');
+    p.textContent = productInfo.name;
+    div.append(p);
+    const p2 = document.createElement('p');
+    p2.classList.add('product__popup-description');
+    p2.textContent = productInfo.description;
+    div.append(p2);
+    const button = document.createElement('button');
+    button.classList.add('product__popup-button');
+    button.textContent = `Добавить в маршрут`;
+    button.addEventListener('click', () => this.addProductIdToRoute(productInfo.id))
+    div.append(button);
+    return div;
+  }
+
+  public addProductIdToRoute(id: string): void {
+    const idInRoute: string | undefined = [...this.productIdsToRoute].find((productId: string) => productId === id);
+    this.productIdsToRoute.add(id);
+    if (!idInRoute) {
+      this.productIdsToRoute$.next(this.productIdsToRoute);
+    }
+  }
+
 
   public addControl(): void {
     this.map.addControl(new NavigationControl({}), 'top-right');
@@ -244,19 +190,33 @@ export class MapService {
   }
 
   public setClicks(): void {
-    this.map.on('click', 'places', (e: any) => {
+    this.map.on('click', (e: any) => {
+      console.log(e)
+    })
+
+
+    this.map.on('click', 'products', (e: any) => {
       const geometry = e?.features?.[0]?.geometry as unknown as Point;
       this.clicks$.next(geometry);
       const coordinates = <[number, number]>geometry?.coordinates?.slice();
       const description = e?.features?.[0]?.properties?.['description'];
+      const name = e?.features?.[0]?.properties?.['name'];
+      const id = e?.features?.[0]?.properties?.['id'];
 
       while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
       }
 
-      new Popup()
+      const content = this.createPopupDomContent({
+        name,
+        description,
+        id
+      });
+
+
+      new Popup({ className: 'product__popup' })
         .setLngLat(coordinates)
-        .setHTML(description)
+        .setDOMContent(content)
         .addTo(this.map ?? new Map({ container: '', style: '' }));
     });
 

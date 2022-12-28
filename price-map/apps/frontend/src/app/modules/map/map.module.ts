@@ -1,22 +1,25 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CharacteristicFilterComponent, FilterComponent, MapComponent } from './components';
+import { CharacteristicFilterComponent, FilterComponent, MapComponent, RouteReviewComponent } from './components';
 import { MapRoutingModule } from './map-routing.module';
-import { FilterService, MapService } from './services';
+import { FilterService, MapService, OsrmService, ProductsService } from './services';
 
 @NgModule({
   declarations: [
     MapComponent,
     FilterComponent,
-    CharacteristicFilterComponent
+    CharacteristicFilterComponent,
+    RouteReviewComponent
   ],
   imports: [
     CommonModule,
-    MapRoutingModule
+    MapRoutingModule,
   ],
   providers: [
     MapService,
-    FilterService
+    FilterService,
+    ProductsService,
+    OsrmService
   ]
 })
 export class MapModule { }
