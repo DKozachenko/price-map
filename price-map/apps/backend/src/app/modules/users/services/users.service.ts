@@ -1,36 +1,30 @@
 import { Injectable } from '@nestjs/common';
-
-export type User = any;
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '@price-map/core/entities';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-  private readonly users: any[] = [
-    {
-      userId: 1,
-      nickname: 'john',
-      password: 'changeme',
-      role: 'user'
-    },
-    {
-      userId: 2,
-      nickname: 'maria',
-      password: 'guess',
-      role: 'admin'
-    },
-  ];
+  @InjectRepository(User, 'postgresConnect')
+  private readonly userRepository: Repository<User>;
 
-  async getByNickname(nickname: string): Promise<User | undefined> {
-    return this.users.find(user => user.nickname === nickname);
+  async getByNickname(nickname: string): Promise<User> {
+    return await this.userRepository.findOne({
+      where: {
+        nickname
+      }
+    });
   }
 
-  async add(user: any): Promise<User> {
-    const newUser = {
-      nickname: user.nickname,
-      password: user.password,
-      role: user.role,
-      userId: this.users.length + 1
-    };
-    this.users.push(newUser);
-    return newUser;
+  async getByMail(mail: string): Promise<User> {
+    return await this.userRepository.findOne({
+      where: {
+        mail
+      }
+    });
+  }
+
+  async add(newUser: Omit<User, 'id'>): Promise<void> {
+    await this.userRepository.insert(newUser);
   }
 }

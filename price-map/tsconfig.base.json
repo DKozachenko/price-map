@@ -17,7 +17,8 @@
     "paths": {
       "@price-map/core": ["libs/core/src/index.ts"],
       "@price-map/core/entities": ["libs/core/src/lib/entities"],
-      "@price-map/core/enums": ["libs/core/src/lib/enums"]
+      "@price-map/core/enums": ["libs/core/src/lib/enums"],
+      "@price-map/core/interfaces": ["libs/core/src/lib/interfaces"]
     }
   },
   "exclude": ["node_modules", "tmp"]

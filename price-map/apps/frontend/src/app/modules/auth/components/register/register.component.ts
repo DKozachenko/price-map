@@ -33,7 +33,9 @@ export class RegisterComponent implements OnInit {
   public submit(): void {
     this.webSocketSevice.socket.emit('register attempt', {
       ...this.form.value,
-      role: 'user'
+      name: 'test name ' + Math.random(),
+      lastName: 'test last name ' + Math.random(),
+      mail: 'test mail ' + Math.random()
     });
   }
 }

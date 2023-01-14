@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from './../../users/services/users.service';
 import { MessageBody,
@@ -6,6 +7,9 @@ import { MessageBody,
   WsResponse } from '@nestjs/websockets';
 import * as bcrypt from 'bcrypt';
 import { jwtConstant } from '../../../constants';
+import { IResponseData, IUserRegisterInfo, IUserLoginInfo } from '@price-map/core/interfaces';
+import { User } from '@price-map/core/entities';
+import { Role, AuthEventNames } from '@price-map/core/enums';
 
 @WebSocketGateway({
   cors: {
@@ -16,17 +20,30 @@ export class AuthGateway {
   constructor (private readonly usersService: UsersService,
     private readonly jwtService: JwtService) {}
 
-  @SubscribeMessage('register attempt')
-  public async register(@MessageBody() data: any): Promise<WsResponse<{ user: any } | any>> {
-    const newUser = data;
-    const userWithSameNickname = await this.usersService.getByNickname(newUser.nickname);
+  @SubscribeMessage(AuthEventNames.RegisterAttemp)
+  public async register(@MessageBody() userRegisterInfo: IUserRegisterInfo): Promise<WsResponse<IResponseData<User>>> {
+    const userWithSameNickname = await this.usersService.getByNickname(userRegisterInfo.nickname);
     if (userWithSameNickname) {
       return {
-        event: 'register failed',
+        event: AuthEventNames.RegisterFailed,
         data: {
           statusCode: 401,
           error: true,
-          message: 'User with this nickname already exists'
+          message: 'Пользователь с таким никнеймом уже существует',
+          data: null
+        }
+      };
+    }
+
+    const userWithSameMail = await this.usersService.getByMail(userRegisterInfo.mail);
+    if (userWithSameMail) {
+      return {
+        event: AuthEventNames.RegisterFailed,
+        data: {
+          statusCode: 401,
+          error: true,
+          message: 'Пользователь с такой почтой уже существует',
+          data: null
         }
       };
     }
@@ -36,81 +53,90 @@ export class AuthGateway {
     let hash: string;
     try {
       salt = await bcrypt.genSalt();
-      password = newUser.password;
+      password = userRegisterInfo.password;
       hash = await bcrypt.hash(password, salt);
-      //TODO: убрать
-      // throw new Error();
-    } catch (e) {
+    } catch (e: any) {
+      Logger.error(e, 'AuthGateway')
       return {
-        event: 'register failed',
+        event: AuthEventNames.RegisterFailed,
         data: {
           statusCode: 405,
           error: true,
-          message: 'Error while hashing password occured'
+          message: 'Ошибка при хэшировании пароля',
+          data: null
         }
       };
     }
 
     try {
-      const savedUser = this.usersService.add({
-        ...newUser,
-        password: hash
+      await this.usersService.add({
+        ...userRegisterInfo,
+        role: Role.User,
+        password: hash,
+        products: []
       });
 
-      //TODO: убрать
-      // throw new Error();
       return {
-        event: 'register successed',
+        event: AuthEventNames.RegisterSuccessed,
         data: {
           statusCode: 201,
           error: false,
-          result: savedUser
+          data: {
+            ...userRegisterInfo,
+            role: Role.User,
+            password: hash,
+            products: [],
+            id: ''
+          },
+          message: 'Пользователь успешно зарегистрирован'
         }
       };
-    } catch (e) {
+    } catch (e: any) {
+      Logger.error(e, 'AuthGateway')
       return {
-        event: 'register failed',
+        event: AuthEventNames.RegisterFailed,
         data: {
           statusCode: 500,
           error: true,
-          message: 'Error while saving in db'
+          data: null,
+          message: 'Ошибка при сохранении в базу данных'
         }
       };
     }
   }
 
-  @SubscribeMessage('login attempt')
-  public async login(@MessageBody() data: any): Promise<WsResponse<{ token: any } | any>> {
-    const userInfo = data;
-    const user = await this.usersService.getByNickname(userInfo.nickname);
+  @SubscribeMessage(AuthEventNames.LoginAttemp)
+  public async login(@MessageBody() userLoginInfo: IUserLoginInfo): Promise<WsResponse<IResponseData<string>>> {
+    const user: User = await this.usersService.getByNickname(userLoginInfo.nickname);
 
     if (!user) {
       return {
-        event: 'login failed',
+        event: AuthEventNames.LoginFailed,
         data: {
           statusCode: 401,
           error: true,
-          message: 'User with this nickname does not exist'
+          data: null,
+          message: 'Пользователь с таким логином не существует'
         }
       };
     }
 
-    const isMatch = await bcrypt.compare(userInfo.password, user.password);
+    const isMatchPassword: boolean = await bcrypt.compare(userLoginInfo.password, user.password);
 
-    if (!isMatch) {
+    if (!isMatchPassword) {
       return {
-        event: 'login failed',
+        event: AuthEventNames.LoginFailed,
         data: {
           statusCode: 400,
           error: true,
-          message: 'Wrong password'
+          data: null,
+          message: 'Указан неверный пароль'
         }
       };
     }
 
-    // TODO: вынести создание токена в сервис или избавиться от сервиса
     const token: string = this.jwtService.sign({
-      userId: user.userId,
+      userId: user.id,
       nickname: user.nickname,
       role: user.role
     }, {
@@ -118,14 +144,13 @@ export class AuthGateway {
       secret: jwtConstant.secret
     });
 
-
-    // TODO: создать общий для бэка и фронта генератора ответа с ошибкой или с данными
     return {
       event: 'login successed',
       data: {
         statusCode: 200,
         error: false,
-        result: `Bearer ${token}`
+        data: `Bearer ${token}`,
+        message: 'Вход успешно произведен'
       }
     };
 

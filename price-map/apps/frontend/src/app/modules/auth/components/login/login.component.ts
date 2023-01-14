@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
 
     this.webSocketSevice.socket.on('login successed', (response: any) => {
       console.log('on login successed', response);
-      this.tokenService.setToken(response.result);
+      this.tokenService.setToken(response.data);
       this.router.navigate(['map'], { queryParamsHandling: 'merge' });
     });
   }
