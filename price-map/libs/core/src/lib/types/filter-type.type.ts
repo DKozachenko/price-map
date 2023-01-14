@@ -1,1 +1,1 @@
-export type FilterType = 'range' | 'checkbox' | 'radio';
+export type FilterType = 'range' | 'enum' | 'boolean';

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { io, Socket } from 'socket.io-client';
+import { io, Socket, Manager } from 'socket.io-client';
 import { TokenService } from '.';
 
 @Injectable()
@@ -39,6 +39,11 @@ export class WebSocketService {
   }
 
   public addToken(): void {
+    // this.socket = io('http://localhost:3333', {
+    //   auth: { 
+    //     token: this.tokenService.getToken()
+    //   }
+    // });
     this.socket.auth = { 
       token: this.tokenService.getToken()
     };

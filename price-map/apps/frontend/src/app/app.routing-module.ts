@@ -14,10 +14,10 @@ const routes: Routes = [
   },
   {
     path: 'map',
-    // canActivate: [
-    //   AuthGuard,
-    //   RolesGuard
-    // ],
+    canActivate: [
+      AuthGuard,
+      RolesGuard
+    ],
     data: {
       roles: [
         'user',

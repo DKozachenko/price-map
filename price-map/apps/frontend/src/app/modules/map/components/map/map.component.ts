@@ -33,7 +33,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   public ngOnInit(): void {
     this.webSocketSevice.socket.on('get users failed', (response) => {
       console.log('on get users failed', response);
-      alert('Глаза разуй, дебил, данные чекни');
     });
 
     this.webSocketSevice.socket.on('get users successed', (response) => {

@@ -25,7 +25,7 @@ export class Organization {
   @Column({
     type: 'varchar',
     length: 200,
-    nullable: false
+    nullable: true
   })
   public imagePath: string;
 
