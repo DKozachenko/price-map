@@ -1,5 +1,6 @@
 import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm"
 import { Product } from ".";
+import { Role } from "../enums";
 
 @Entity({
   name: 'Users'
@@ -21,6 +22,13 @@ export class User {
     nullable: false
   })
   public lastName: string;
+
+  @Column({
+    type: 'varchar',
+    length: 100,
+    nullable: false
+  })
+  public role: Role;
 
   @Column({
     type: 'varchar',
