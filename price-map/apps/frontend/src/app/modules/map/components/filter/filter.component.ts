@@ -14,37 +14,55 @@ export class FilterComponent implements OnInit {
   public setChechedCategories13evel: Set<string> = new Set();
   public get currentCategory3LevelId() {
     return [...this.setChechedCategories13evel][0];
-  } 
+  }
 
   public isShowCharacteristics: boolean = false;
 
-  constructor(private readonly filterService: FilterService) {}
+  constructor(private readonly filterService: FilterService,
+    private readonly webSocketSevice: WebSocketService) {}
 
   ngOnInit(): void {
-    this.categories1Level = this.filterService.categories1Level.map((cat1Level) => {
-      return {
-        ...cat1Level,
-        categories2Level: cat1Level.categories2Level.map((cat2Level: any) => {
-          return {
-            ...cat2Level,
-            showCategories3Level: false,
-            categories3Level: cat2Level.categories3Level.map((cat3Level: any) => {
-              return {
-                ...cat3Level,
-                checked: false
-              }
-            }),
-            checked: false
-          }
-        }),
-        showCategories2Level: false,
-        checked: false
-      }
-    })
+    this.webSocketSevice.socket.on('get categories 1 level failed', (response) => {
+      console.log(123);
+      console.log('on get products failed', response);
+    });
+
+    this.webSocketSevice.socket.on('get categories 1 level successed', (response) => {
+      console.log('on get products successed', response);
+      console.log(response.data)
+
+      this.categories1Level = response.data.map((cat1Level: any) => {
+        return {
+          ...cat1Level,
+          categories2Level: cat1Level.categories2Level.map((cat2Level: any) => {
+            return {
+              ...cat2Level,
+              showCategories3Level: false,
+              categories3Level: cat2Level.categories3Level.map((cat3Level: any) => {
+                return {
+                  ...cat3Level,
+                  checked: false
+                }
+              }),
+              checked: false
+            }
+          }),
+          showCategories2Level: false,
+          checked: false
+        }
+      })
+    });
+
+    this.webSocketSevice.addToken();
+    this.webSocketSevice.socket.emit('get categories 1 level attempt');
+
+
 
     this.filterService.chechedCategories3Level$
       .subscribe((data: Set<string>) => {
         this.isShowCharacteristics = data.size === 1;
+        console.log(this.currentCategory3LevelId);
+        // this.currentCategory3LevelId = this.isShowCharacteristics ? [...data][0] : undefined;
       })
   }
 
@@ -72,7 +90,7 @@ export class FilterComponent implements OnInit {
       for (const cat3Level of cat2Level.categories3Level) {
         cat3Level.checked = cat.checked;
       }
-    } 
+    }
     this.checkSelectedCategories3Level();
   }
 
@@ -88,7 +106,7 @@ export class FilterComponent implements OnInit {
       }
 
       cat3Level.checked = cat.checked;
-    } 
+    }
 
     const category1Level =  this.categories1Level.find((cat1Level) => {
       const category2Level = cat1Level.categories2Level.find((cat2Level: any) => {

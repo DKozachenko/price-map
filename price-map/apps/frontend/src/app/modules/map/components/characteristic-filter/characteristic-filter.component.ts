@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { WebSocketService } from 'apps/frontend/src/app/services';
 import { FilterService } from '../../services';
 
 @Component({
@@ -10,14 +11,29 @@ export class CharacteristicFilterComponent implements OnInit {
   @Input()
   public category3LevelId: string = '';
 
+  @Input()
   public category3Level: any;
 
   public currentFilter: { name: string, value: any }[] = [];
 
-  constructor(private readonly filterService: FilterService) {}
+  constructor(private readonly filterService: FilterService,
+    private readonly webSocketSevice: WebSocketService) {}
 
   public ngOnInit(): void {
-    this.category3Level = this.filterService.getCategory3Level(this.category3LevelId);
+    console.warn(this.category3LevelId);
+    this.webSocketSevice.socket.on('get category 3 level failed', (response) => {
+      console.log(123);
+      console.log('on get products failed', response);
+    });
+
+    this.webSocketSevice.socket.on('get category 3 level successed', (response) => {
+      console.log('on get products successed', response);
+      console.log(response.data)
+      this.category3Level = response.data;
+    })
+
+    this.webSocketSevice.addToken();
+    this.webSocketSevice.socket.emit('get category 3 level attempt', { id: this.category3LevelId });
   }
 
   public changeBooleanFilter(filter: any, value: boolean | undefined): void {
@@ -30,7 +46,7 @@ export class CharacteristicFilterComponent implements OnInit {
         name: filter.name,
         value
       })
-    }  
+    }
 
     this.filterService.filterValues$.next(this.currentFilter);
   }
@@ -71,7 +87,7 @@ export class CharacteristicFilterComponent implements OnInit {
         }
       } else {
         filterElem.value.push(value);
-      } 
+      }
     } else {
       const filterValue: any = {
         name: filter.name,

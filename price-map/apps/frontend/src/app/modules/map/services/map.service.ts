@@ -118,7 +118,7 @@ export class MapService {
 
   public addSource(products: any[]): void {
     const features = products.map((item: any) => {
-      console.log(item, item.shop.coordinates.longitude, item.shop.coordinates.latitude)
+      // console.log(item, item.shop.coordinates.longitude, item.shop.coordinates.latitude)
       return {
         type: 'Feature',
         properties: {

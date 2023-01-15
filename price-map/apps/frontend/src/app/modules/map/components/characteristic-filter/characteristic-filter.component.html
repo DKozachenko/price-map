@@ -1,7 +1,7 @@
-<div class="characteristic__filter">
+<div class="characteristic__filter" *ngIf="category3Level">
   <h4 class="characteristic__filter-title">Характеристики</h4>
 
-  <ng-container *ngIf="category3Level.filters.length">   
+  <ng-container *ngIf="category3Level.filters.length">
     <div *ngFor="let filter of category3Level.filters;" class="category__level">
       <ng-container [ngSwitch]="filter.type">
         <div *ngSwitchCase="'boolean'" class="category__group">
@@ -16,12 +16,12 @@
             <input type="radio" value="true" id="filter.name" [name]="filter.name">
             <label for="filter.name">Да</label>
           </div>
-          
+
 
           <div class="category__group-radio" (click)="changeBooleanFilter(filter, false)">
             <input type="radio" value="false" [name]="filter.name">
             <label>Нет</label>
-          </div>         
+          </div>
         </div>
 
         <div *ngSwitchCase="'range'" class="category__group">
