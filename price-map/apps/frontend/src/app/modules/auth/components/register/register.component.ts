@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { WebSocketService } from '../../../../services';
 
 @Component({
-  selector: 'price-map-register',
+  selector: 'auth-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })

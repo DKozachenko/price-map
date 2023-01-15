@@ -1,0 +1,27 @@
+//TODO: перетащить в assets
+@import "../../../../../_mixins.scss";
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  height: 100%;
+}
+
+.auth {
+  border: 1px solid black;
+  border-radius: 1rem;
+  box-shadow: .5rem .5rem 1rem gray;
+
+  padding: 1rem 1.5rem;
+}
+
+::ng-deep.nb-theme-cosmic .tabset {
+  justify-content: space-evenly;
+}
+
+::ng-deep.nb-theme-cosmic nb-tabset .tab-link {
+  @include font(1.5rem, white);
+}

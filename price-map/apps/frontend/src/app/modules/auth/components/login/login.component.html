@@ -1,28 +1,38 @@
-<nb-layout>
-  <nb-layout-column>
-    <div class="root">
-      <div class="wrapper">
-        <button class="button button__redirect" [routerLink]="['..', 'register']">Регистрация</button>
-        <button nbButton status="success">Success</button>
+<div class="auth">
+  <h3 class="title">Вход</h3>
 
-        <div class="auth">
-          <h3 class="title">Вход</h3>
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+    <input
+      type="text"
+      nbInput
+      fullWidth
+      shape="round"
+      fieldSize="giant"
+      placeholder="Никнейм"
+      formControlName="nickname"
+    >
 
-          <form class="form" [formGroup]="form" (ngSubmit)="submit()">
-            <div class="form__group">
-              <label for="nickname">Никнейм</label>
-              <input type="text" id="nickname" placeholder="Никнейм" formControlName="nickname" />
-            </div>
+    <nb-form-field>
+      <input
+        class="password__field"
+        [type]="toggleInputType()"
+        nbInput
+        fullWidth
+        shape="round"
+        fieldSize="giant"
+        placeholder="Пароль"
+        formControlName="password"
+      >
+      <button nbSuffix nbButton ghost (click)="toggleShowPassword()">
+        <nb-icon
+          [icon]="isShowPassword ? 'eye-outline' : 'eye-off-2-outline'"
+          pack="eva"
+          [attr.aria-label]="isShowPassword ? 'hide password' : 'show password'"
+        >
+        </nb-icon>
+      </button>
+    </nb-form-field>
 
-            <div class="form__group">
-              <label for="password">Пароль</label>
-              <input type="password" id="password" placeholder="Пароль" formControlName="password" />
-            </div>
-
-            <button type="submit" class="button" [disabled]="form.invalid">Войти</button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </nb-layout-column>
-</nb-layout>
+    <button class="button" nbButton hero status="primary" type="submit" [disabled]="form.invalid">Войти</button>
+  </form>
+</div>

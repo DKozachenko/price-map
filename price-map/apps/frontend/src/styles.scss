@@ -14,9 +14,14 @@ body {
   width: 100%;
 }
 
+button {
+  @include font(1.8rem, black, 700);
+  font-family: inherit;
+}
+
 // Стили для попапа на карте
 .product__popup {
-  .mapboxgl-popup-content, 
+  .mapboxgl-popup-content,
   .maplibregl-popup-content {
     padding: 2rem;
   }

@@ -7,6 +7,7 @@ import { appInitializer } from './initializers';
 import { TokenService, WebSocketService } from './services';
 import { HttpClientModule } from '@angular/common/http';
 import { NbThemeModule } from '@nebular/theme';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { NbThemeModule } from '@nebular/theme';
     NbThemeModule.forRoot({
       name: 'cosmic'
     }),
+    NbEvaIconsModule
   ],
   providers: [
     WebSocketService,

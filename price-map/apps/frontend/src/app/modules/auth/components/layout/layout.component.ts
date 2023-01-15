@@ -4,13 +4,11 @@ import { Router } from '@angular/router';
 import { WebSocketService, TokenService } from '../../../../services';
 
 @Component({
-  selector: 'auth-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  selector: 'auth-layout',
+  templateUrl: './layout.component.html',
+  styleUrls: ['./layout.component.scss'],
 })
-export class LoginComponent implements OnInit {
-  public isShowPassword: boolean = true;
-
+export class LayoutComponent implements OnInit {
   public form!: FormGroup;
 
   constructor(private router: Router,
@@ -25,6 +23,7 @@ export class LoginComponent implements OnInit {
 
     this.webSocketSevice.socket.on('login failed', (response: any) => {
       console.log('on login failed', response);
+      alert('Глаза разуй, дебил, данные чекни');
     });
 
     this.webSocketSevice.socket.on('login successed', (response: any) => {
@@ -32,15 +31,6 @@ export class LoginComponent implements OnInit {
       this.tokenService.setToken(response.data);
       this.router.navigate(['map'], { queryParamsHandling: 'merge' });
     });
-  }
-
-
-  public toggleInputType(): string {
-    return this.isShowPassword ? 'text' : 'password';
-  }
-
-  public toggleShowPassword(): void {
-    this.isShowPassword = !this.isShowPassword;
   }
 
   public submit(): void {

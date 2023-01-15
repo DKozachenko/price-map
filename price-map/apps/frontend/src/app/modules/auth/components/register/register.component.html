@@ -1,24 +1,17 @@
-<div class="root">
-  <div class="wrapper">
-    <button class="button button__redirect" [routerLink]="['..', 'login']">Вход</button>
+<div class="auth">
+  <h3 class="title ">Регистрация</h3>
 
-    <div class="auth">
-      <h3 class="title">Регистрация</h3>
-      
-      <form class="form" [formGroup]="form" (ngSubmit)="submit()">
-        <div class="form__group">
-          <label for="nickname">Никнейм</label>
-          <input type="text" id="nickname" placeholder="Никнейм" formControlName="nickname">
-        </div>
-  
-        <div class="form__group">
-          <label for="password">Пароль</label>
-          <input type="password" id="password" placeholder="Пароль" formControlName="password">
-        </div>
-  
-        <button type="submit" class="button" [disabled]="form.invalid">Войти</button>
-      </form>
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form__group">
+      <label for="nickname">Никнейм</label>
+      <input type="text" id="nickname" placeholder="Никнейм" formControlName="nickname" />
     </div>
-    
-  </div>
+
+    <div class="form__group">
+      <label for="password">Пароль</label>
+      <input type="password" id="password" placeholder="Пароль" formControlName="password" />
+    </div>
+
+    <button type="submit" class="button" [disabled]="form.invalid">Войти</button>
+  </form>
 </div>
