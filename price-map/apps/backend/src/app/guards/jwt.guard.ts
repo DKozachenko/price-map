@@ -16,7 +16,7 @@ export const JwtAuthGuard = (failedEventName: string) => {
         client.emit(failedEventName, {
           statusCode: 401,
           error: true,
-          message: 'Unauthorized'
+          message: 'Неавторизированный пользователь'
         });
         return false;
       }
@@ -32,7 +32,7 @@ export const JwtAuthGuard = (failedEventName: string) => {
         client.emit(failedEventName, {
           statusCode: 408,
           error: true,
-          message: 'Not verified token'
+          message: 'Невалидный токен'
         });
         return false;
       }

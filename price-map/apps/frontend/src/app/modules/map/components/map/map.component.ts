@@ -31,16 +31,18 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   public ngOnInit(): void {
-    this.webSocketSevice.socket.on('get users failed', (response) => {
-      console.log('on get users failed', response);
+    this.webSocketSevice.socket.on('get products failed', (response) => {
+      console.log(123);
+      console.log('on get products failed', response);
     });
 
-    this.webSocketSevice.socket.on('get users successed', (response) => {
-      console.log('on get users successed', response);
+    this.webSocketSevice.socket.on('get products successed', (response) => {
+      console.log('on get products successed', response);
+      this.mapService.addSource(response.data);
     });
 
     this.webSocketSevice.addToken();
-    this.webSocketSevice.socket.emit('get users attempt', { temp: 1 });
+    this.webSocketSevice.socket.emit('get products attempt');
 
     this.mapService.clicks$.subscribe((data) => console.log('clicks', data))
     this.mapService.productIdsToRoute$.subscribe((data) => {
@@ -51,8 +53,8 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.filterService.chechedCategories3Level$.subscribe((data) => {
       console.log('chechedCategories3Level', data)
-      const filteredProdcuts: any[] = this.productsService.getProductsByCategoryId([...data]);
-      this.mapService.addSource(filteredProdcuts)
+      // const filteredProdcuts: any[] = this.productsService.getProductsByCategoryId([...data]);
+      // this.mapService.addSource(filteredProdcuts)
     })
 
     this.filterService.filterValues$.subscribe((data) => console.log('filterValues', data))

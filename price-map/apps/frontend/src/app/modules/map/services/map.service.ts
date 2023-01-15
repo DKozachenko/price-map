@@ -11,7 +11,8 @@ export class MapService {
   public map!: Map;
 
   public initMap(container: ElementRef<HTMLElement>): void {
-    const initialState = { lng: -77.038, lat: 38.931, zoom: 14 };
+    const initialState = { lng: 82.936, lat: 55.008, zoom: 12 };
+    // const initialState = { lng: -77.038, lat: 38.931, zoom: 14 };
 
     this.map = new Map({
       container: container.nativeElement,
@@ -117,6 +118,7 @@ export class MapService {
 
   public addSource(products: any[]): void {
     const features = products.map((item: any) => {
+      console.log(item, item.shop.coordinates.longitude, item.shop.coordinates.latitude)
       return {
         type: 'Feature',
         properties: {
@@ -129,8 +131,8 @@ export class MapService {
         geometry: {
           type: 'Point',
           coordinates: [
-            item.shop.coordinates.latitude,
-            item.shop.coordinates.longitude
+            item.shop.coordinates.longitude,
+            item.shop.coordinates.latitude
           ],
         },
       }
