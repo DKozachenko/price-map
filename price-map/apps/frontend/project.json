@@ -18,7 +18,8 @@
         "assets": ["apps/frontend/src/favicon.ico", "apps/frontend/src/assets"],
         "styles": [
           "apps/frontend/src/styles.scss",
-          "apps/frontend/src/assets/reset.scss"
+          "apps/frontend/src/assets/reset.scss",
+          "node_modules/@nebular/theme/styles/themes/_default.scss"
         ],
         "scripts": []
       },

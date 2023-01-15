@@ -6,6 +6,8 @@ import { AppRoutingModule } from './app.routing-module';
 import { appInitializer } from './initializers';
 import { TokenService, WebSocketService } from './services';
 import { HttpClientModule } from '@angular/common/http';
+import { NbThemeModule } from '@nebular/theme';
+import { NbButtonModule } from '@nebular/theme';
 
 @NgModule({
   declarations: [AppComponent],
@@ -15,6 +17,8 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NbThemeModule.forRoot(),
+    NbButtonModule
   ],
   providers: [
     WebSocketService,
