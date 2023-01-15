@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent, RegisterComponent, LayoutComponent } from './components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NbButtonModule, NbCardModule, NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbTabsetModule } from '@nebular/theme';
+import { NbButtonModule,
+  NbCardModule, NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbTabsetModule } from '@nebular/theme';
+import { provideErrorTailorConfig } from '@ngneat/error-tailor';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,18 @@ import { NbButtonModule, NbCardModule, NbFormFieldModule, NbIconModule, NbInputM
     NbTabsetModule,
     NbInputModule,
     NbIconModule,
-    NbFormFieldModule,
+    NbFormFieldModule
+  ],
+  providers: [
+    provideErrorTailorConfig({
+      errors: {
+        useValue: {
+          required: 'Поле является обязательным',
+          minlength: ({ requiredLength, actualLength }) =>
+            `Ожидалось ${requiredLength} символов, но сейчас есть ${actualLength}`,
+        }
+      }
+    })
   ]
 })
 export class AuthModule { }

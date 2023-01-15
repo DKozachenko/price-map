@@ -6,10 +6,10 @@ import { WebSocketService, TokenService } from '../../../../services';
 @Component({
   selector: 'auth-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  public isShowPassword: boolean = true;
+  public isShowPassword: boolean = false;
 
   public form!: FormGroup;
 
@@ -44,9 +44,6 @@ export class LoginComponent implements OnInit {
   }
 
   public submit(): void {
-    this.webSocketSevice.socket.emit('login attempt', {
-      ...this.form.value,
-      role: 'user'
-    });
+    this.webSocketSevice.socket.emit('login attempt', this.form.value);
   }
 }
