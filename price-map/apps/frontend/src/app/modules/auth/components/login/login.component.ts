@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NbIconConfig, NbToastrService } from '@nebular/theme';
 import { WebSocketService, TokenService } from '../../../../services';
 import { IResponseData } from '@price-map/core/interfaces';
 

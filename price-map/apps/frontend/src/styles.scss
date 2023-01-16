@@ -16,12 +16,17 @@ body {
 
 .form__error {
   position: absolute;
-  top: calc(100% + 0.3rem);
-  left: 1rem;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
   z-index: 5;
+  background-color: white;
+  border-radius: 1rem;
+  padding: .6rem;
+  border: 1px solid #a16eff;
 
   .form__error-description {
-    @include font(1.3rem, white, 700);
+    @include font(1.3rem, red, 700);
   }
 }
 

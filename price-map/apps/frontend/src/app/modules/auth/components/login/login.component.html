@@ -13,7 +13,7 @@
         formControlName="nickname"
       >
 
-      <div class="form__error" *ngIf="form.get('nickname')?.errors">
+      <div class="form__error" *ngIf="form.get('nickname')?.touched && form.get('nickname')?.errors">
         <p class="form__error-description"
           *ngIf="(form.get('nickname')?.touched || form.get('nickname')?.dirty) && form.get('nickname')?.errors?.['required']"
         >
@@ -44,7 +44,7 @@
         </button>
       </nb-form-field>
 
-      <div class="form__error" *ngIf="form.get('password')?.errors">
+      <div class="form__error" *ngIf="form.get('password')?.touched && form.get('password')?.errors">
         <p class="form__error-description"
           *ngIf="(form.get('password')?.touched || form.get('password')?.dirty) && form.get('password')?.errors?.['required']"
         >

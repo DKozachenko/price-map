@@ -16,26 +16,19 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = new FormGroup({
-      nickname: new FormControl(undefined, [Validators.required]),
-      password: new FormControl(undefined, [Validators.required]),
-    });
-
-    this.webSocketSevice.socket.on('register failed', (response: any) => {
-      console.log('on register failed', response);
-      alert('Глаза разуй, дебил, данные чекни');
-    });
-
-    this.webSocketSevice.socket.on('register successed', (response: any) => {
-      console.log('on register successed', response);
+      name: new FormControl(undefined, [Validators.required, Validators.maxLength(100)]),
+      lastName: new FormControl(undefined, [Validators.required, Validators.maxLength(100)]),
+      mail: new FormControl(undefined, [Validators.required, Validators.maxLength(150), Validators.email]),
+      nickname: new FormControl(undefined, [Validators.required, Validators.maxLength(150)]),
+      password: new FormControl(undefined, [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.pattern(/(?=.*?[A-ZА-Я])(?=.*?[0-9])(?=.*?[a-zа-я])/)
+      ]),
     });
   }
 
   public submit(): void {
-    this.webSocketSevice.socket.emit('register attempt', {
-      ...this.form.value,
-      name: 'test name ' + Math.random(),
-      lastName: 'test last name ' + Math.random(),
-      mail: 'test mail ' + Math.random()
-    });
+    this.webSocketSevice.socket.emit('register attempt', this.form.value);
   }
 }

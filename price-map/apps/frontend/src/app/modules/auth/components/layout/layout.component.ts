@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NbIconConfig, NbToastrService } from '@nebular/theme';
+import { NbIconConfig, NbTabComponent, NbToastrService } from '@nebular/theme';
 import { WebSocketService, TokenService } from '../../../../services';
 
 @Component({
@@ -51,6 +51,36 @@ export class LayoutComponent implements OnInit {
       this.tokenService.setToken(response.data);
       this.router.navigate(['map'], { queryParamsHandling: 'merge' });
     });
+
+    this.webSocketSevice.socket.on('register failed', (response: any) => {
+      console.log('on register failed', response);
+      const iconConfig: NbIconConfig = { icon: 'minus-circle-outline', pack: 'eva' };
+      this.toastrService.show(response.message, 'Ошибка',
+        {
+          status: 'danger',
+          duration: 2000,
+          destroyByClick: true,
+          icon: iconConfig
+        }
+      )
+    });
+
+    this.webSocketSevice.socket.on('register successed', (response: any) => {
+      console.log('on register successed', response);
+      const iconConfig: NbIconConfig = { icon: 'checkmark-circle-2-outline', pack: 'eva' };
+      this.toastrService.show(response.message, 'Успех',
+        {
+          status: 'success',
+          duration: 2000,
+          destroyByClick: true,
+          icon: iconConfig
+        }
+      );
+    });
+  }
+
+  public changeTab(e: NbTabComponent): void {
+    console.log(e.route);
   }
 
   public submit(): void {
