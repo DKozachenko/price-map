@@ -6,13 +6,15 @@ import { AppRoutingModule } from './app.routing-module';
 import { appInitializer } from './initializers';
 import { TokenService, WebSocketService } from './services';
 import { HttpClientModule } from '@angular/common/http';
-import { NbThemeModule } from '@nebular/theme';
+import { NbThemeModule, NbToastrModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
@@ -20,7 +22,8 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     NbThemeModule.forRoot({
       name: 'cosmic'
     }),
-    NbEvaIconsModule
+    NbEvaIconsModule,
+    NbToastrModule.forRoot()
   ],
   providers: [
     WebSocketService,

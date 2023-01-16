@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NbIconConfig, NbToastrService } from '@nebular/theme';
 import { WebSocketService, TokenService } from '../../../../services';
+import { IResponseData } from '@price-map/core/interfaces';
 
 @Component({
   selector: 'auth-login',
@@ -27,7 +29,7 @@ export class LoginComponent implements OnInit {
       ]),
     });
 
-    this.webSocketSevice.socket.on('login failed', (response: any) => {
+    this.webSocketSevice.socket.on('login failed', (response: IResponseData<string>) => {
       console.log('on login failed', response);
     });
 
