@@ -14,9 +14,15 @@ body {
   width: 100%;
 }
 
-button {
-  @include font(1.8rem, black, 700);
-  font-family: inherit;
+.form__error {
+  position: absolute;
+  top: calc(100% + 0.3rem);
+  left: 1rem;
+  z-index: 5;
+
+  .form__error-description {
+    @include font(1.3rem, white, 700);
+  }
 }
 
 // Стили для попапа на карте

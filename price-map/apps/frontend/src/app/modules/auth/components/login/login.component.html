@@ -1,37 +1,70 @@
 <div class="auth">
   <h3 class="title">Вход</h3>
 
-  <form class="form" [formGroup]="form" (ngSubmit)="submit()" errorTailor>
-    <input
-      type="text"
-      nbInput
-      fullWidth
-      shape="round"
-      fieldSize="giant"
-      placeholder="Никнейм"
-      formControlName="nickname"
-    >
-
-    <nb-form-field>
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form__group">
       <input
-        class="password__field"
-        [type]="toggleInputType()"
+        type="text"
         nbInput
         fullWidth
         shape="round"
         fieldSize="giant"
-        placeholder="Пароль"
-        formControlName="password"
+        placeholder="Никнейм"
+        formControlName="nickname"
       >
-      <button nbSuffix nbButton ghost (click)="toggleShowPassword()">
-        <nb-icon
-          [icon]="isShowPassword ? 'eye-outline' : 'eye-off-2-outline'"
-          pack="eva"
-          [attr.aria-label]="isShowPassword ? 'hide password' : 'show password'"
+
+      <div class="form__error" *ngIf="form.get('nickname')?.errors">
+        <p class="form__error-description"
+          *ngIf="(form.get('nickname')?.touched || form.get('nickname')?.dirty) && form.get('nickname')?.errors?.['required']"
         >
-        </nb-icon>
-      </button>
-    </nb-form-field>
+          Это поле является обязательным
+        </p>
+      </div>
+    </div>
+
+    <div class="form__group">
+      <nb-form-field>
+        <input
+          class="password__field"
+          [type]="toggleInputType()"
+          nbInput
+          fullWidth
+          shape="round"
+          fieldSize="giant"
+          placeholder="Пароль"
+          formControlName="password"
+        >
+        <button nbSuffix nbButton ghost (click)="toggleShowPassword()">
+          <nb-icon
+            [icon]="isShowPassword ? 'eye-outline' : 'eye-off-2-outline'"
+            pack="eva"
+            [attr.aria-label]="isShowPassword ? 'hide password' : 'show password'"
+          >
+          </nb-icon>
+        </button>
+      </nb-form-field>
+
+      <div class="form__error" *ngIf="form.get('password')?.errors">
+        <p class="form__error-description"
+          *ngIf="(form.get('password')?.touched || form.get('password')?.dirty) && form.get('password')?.errors?.['required']"
+        >
+          Это поле является обязательным
+        </p>
+
+        <p class="form__error-description"
+          *ngIf="(form.get('password')?.touched || form.get('password')?.dirty) && form.get('password')?.errors?.['minlength']"
+        >
+          Минимальная длина поля должна быть {{ form.get('password')?.errors?.['minlength']?.['requiredLength'] }} символов
+        </p>
+
+        <p class="form__error-description"
+          *ngIf="(form.get('password')?.touched || form.get('password')?.dirty) && form.get('password')?.errors?.['pattern']"
+        >
+          В пароле должна быть минимум одна строчная буква, одна прописная, одна цифра
+        </p>
+      </div>
+    </div>
+
 
     <button
       class="button"
@@ -41,6 +74,8 @@
       shape="round"
       type="submit"
       [disabled]="form.invalid"
-    >Войти</button>
+    >
+      Войти
+    </button>
   </form>
 </div>

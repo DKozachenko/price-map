@@ -20,7 +20,11 @@ export class LoginComponent implements OnInit {
   public ngOnInit(): void {
     this.form = new FormGroup({
       nickname: new FormControl(undefined, [Validators.required]),
-      password: new FormControl(undefined, [Validators.required]),
+      password: new FormControl(undefined, [
+        Validators.required,
+        Validators.minLength(6),
+        Validators.pattern(/(?=.*?[A-ZА-Я])(?=.*?[0-9])(?=.*?[a-zа-я])/)
+      ]),
     });
 
     this.webSocketSevice.socket.on('login failed', (response: any) => {

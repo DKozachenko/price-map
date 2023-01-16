@@ -8,7 +8,6 @@ import { TokenService, WebSocketService } from './services';
 import { HttpClientModule } from '@angular/common/http';
 import { NbThemeModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { provideErrorTailorConfig  } from '@ngneat/error-tailor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,16 +30,7 @@ import { provideErrorTailorConfig  } from '@ngneat/error-tailor';
       useFactory: appInitializer,
       deps: [WebSocketService],
       multi: true,
-    },
-    provideErrorTailorConfig({
-      errors: {
-        useValue: {
-          required: 'Поле является обязательным',
-          minlength: ({ requiredLength, actualLength }) =>
-            `Ожидалось ${requiredLength} символов, но сейчас есть ${actualLength}`,
-        }
-      }
-    })
+    }
   ],
   bootstrap: [AppComponent],
 })
