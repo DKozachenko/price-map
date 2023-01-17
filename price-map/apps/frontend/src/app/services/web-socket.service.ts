@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket, Manager } from 'socket.io-client';
 import { TokenService } from '.';
+import { IResponseCallback } from '../models/interfaces';
 
 @Injectable()
 export class WebSocketService {
@@ -40,12 +41,20 @@ export class WebSocketService {
 
   public addToken(): void {
     // this.socket = io('http://localhost:3333', {
-    //   auth: { 
+    //   auth: {
     //     token: this.tokenService.getToken()
     //   }
     // });
-    this.socket.auth = { 
+    this.socket.auth = {
       token: this.tokenService.getToken()
     };
+  }
+
+  public emit<T>(eventName: string, data: T): void {
+    this.socket.emit(eventName, data);
+  }
+
+  public on<T>(eventName: string, callback: IResponseCallback<T>) {
+    this.socket.on(eventName, callback);
   }
 }

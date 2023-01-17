@@ -34,7 +34,7 @@
           placeholder="Пароль"
           formControlName="password"
         >
-        <button nbSuffix nbButton ghost (click)="toggleShowPassword()">
+        <button type="button" nbSuffix nbButton ghost (click)="toggleShowPassword()">
           <nb-icon
             [icon]="isShowPassword ? 'eye-outline' : 'eye-off-2-outline'"
             pack="eva"
@@ -49,18 +49,6 @@
           *ngIf="(form.get('password')?.touched || form.get('password')?.dirty) && form.get('password')?.errors?.['required']"
         >
           Это поле является обязательным
-        </p>
-
-        <p class="form__error-description"
-          *ngIf="(form.get('password')?.touched || form.get('password')?.dirty) && form.get('password')?.errors?.['minlength']"
-        >
-          Минимальная длина поля должна быть {{ form.get('password')?.errors?.['minlength']?.['requiredLength'] }} символов
-        </p>
-
-        <p class="form__error-description"
-          *ngIf="(form.get('password')?.touched || form.get('password')?.dirty) && form.get('password')?.errors?.['pattern']"
-        >
-          В пароле должна быть минимум одна строчная буква, одна прописная, одна цифра
         </p>
       </div>
     </div>

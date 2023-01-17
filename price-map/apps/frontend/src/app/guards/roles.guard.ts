@@ -26,7 +26,6 @@ export class RolesGuard implements CanActivate {
     const tokenWithoutBearer = token.split(' ')?.[1];
     const payload: any = jwtDecode(tokenWithoutBearer);
     const role: string = payload.role;
-    console.log('roles', roles, role);
     if (roles.includes(role)) {
       return true;
     }
