@@ -10,9 +10,7 @@ export class WebSocketService {
   private maxConnectAttempts: number = 5;
   public socket!: Socket;
 
-  constructor(private readonly tokenService: TokenService) {
-
-  }
+  constructor(private readonly tokenService: TokenService) {}
 
   /** Инициализация сокета */
   public initSocket(): void {
@@ -40,11 +38,6 @@ export class WebSocketService {
   }
 
   public addToken(): void {
-    // this.socket = io('http://localhost:3333', {
-    //   auth: {
-    //     token: this.tokenService.getToken()
-    //   }
-    // });
     this.socket.auth = {
       token: this.tokenService.getToken()
     };
