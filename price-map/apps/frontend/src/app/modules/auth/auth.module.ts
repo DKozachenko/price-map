@@ -6,8 +6,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NbButtonModule,
   NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbTabsetModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { NotificationService } from '../../services';
 
+/**
+ * Модуль авторизации
+ * @export
+ * @class AuthModule
+ */
 @NgModule({
   declarations: [
     LoginComponent,
@@ -26,7 +30,6 @@ import { NotificationService } from '../../services';
     NbIconModule,
     NbEvaIconsModule,
     NbFormFieldModule
-  ],
-  providers: [NotificationService]
+  ]
 })
 export class AuthModule { }

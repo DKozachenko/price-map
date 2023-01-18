@@ -4,7 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing-module';
 import { appInitializer } from './initializers';
-import { TokenService, WebSocketService } from './services';
+import { NotificationService, TokenService, WebSocketService } from './services';
 import { HttpClientModule } from '@angular/common/http';
 import { NbThemeModule, NbToastrModule, NbToastrService } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
@@ -42,7 +42,8 @@ import { AuthGuard, RolesGuard } from './guards';
       deps: [WebSocketService],
       multi: true,
     },
-    NbToastrService
+    NbToastrService,
+    NotificationService
   ],
   bootstrap: [AppComponent],
 })

@@ -26,7 +26,7 @@
       <nb-form-field>
         <input
           class="password__field"
-          [type]="toggleInputType()"
+          [type]="isShowPassword ? 'text' : 'password'"
           nbInput
           fullWidth
           shape="round"

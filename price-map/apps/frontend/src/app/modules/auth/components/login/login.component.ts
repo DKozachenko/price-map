@@ -6,12 +6,25 @@ import { AuthEventNames } from '@price-map/core/enums';
 import { IResponseCallback } from '../../../../models/interfaces';
 import { Router } from '@angular/router';
 
+/**
+ * Компонет формы логина
+ * @export
+ * @class LoginComponent
+ * @implements {OnInit}
+ */
 @Component({
   selector: 'auth-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  /**
+   * Колбэк, срабатывающий при успешном входе
+   * @private
+   * @param {IResponseData<string>} response ответ от сервера
+   * @type {IResponseCallback<IResponseData<string>>}
+   * @memberof LoginComponent
+   */
   private onLoginSuccessed: IResponseCallback<IResponseData<string>> = (response: IResponseData<string>) => {
     this.form.reset();
     this.notificationService.showSuccess(response.message);
@@ -19,11 +32,29 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['map'], { queryParamsHandling: 'merge' });
   }
 
+  /**
+   * Колбэк, срабатывающий при неудачной попытке входа
+   * @private
+   * @param {IResponseData<null>} response ответ от сервера
+   * @type {IResponseCallback<IResponseData<null>>}
+   * @memberof LoginComponent
+   */
   private onLoginFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
     this.notificationService.showError(response.message);
   }
 
+  /**
+   * Показывать пароль
+   * @type {boolean}
+   * @memberof LoginComponent
+   */
   public isShowPassword: boolean = false;
+  
+  /**
+   * Экземпляр формы
+   * @type {FormGroup}
+   * @memberof LoginComponent
+   */
   public form!: FormGroup;
 
   constructor(private readonly webSocketSevice: WebSocketService,
@@ -41,14 +72,18 @@ export class LoginComponent implements OnInit {
     this.webSocketSevice.socket.on(AuthEventNames.LoginFailed, this.onLoginFailed);
   }
 
-  public toggleInputType(): string {
-    return this.isShowPassword ? 'text' : 'password';
-  }
-
+  /** 
+   * Смена флага, отвечающего за отображения пароля
+   * @memberof LoginComponent
+   */
   public toggleShowPassword(): void {
     this.isShowPassword = !this.isShowPassword;
   }
 
+  /**
+   * Отправка формы
+   * @memberof LoginComponent
+   */
   public submit(): void {
     this.webSocketSevice.emit<IUserLoginInfo>(AuthEventNames.LoginAttemp, this.form.value);
   }
