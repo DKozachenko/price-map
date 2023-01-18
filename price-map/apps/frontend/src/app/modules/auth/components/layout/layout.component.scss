@@ -1,5 +1,4 @@
-//TODO: перетащить в assets
-@import "../../../../../_mixins.scss";
+@import "../../../../../assets/styles/mixins";
 
 .wrapper {
   display: flex;
@@ -8,14 +7,6 @@
   flex-direction: column;
 
   height: 100%;
-}
-
-.auth {
-  border: 1px solid black;
-  border-radius: 1rem;
-  box-shadow: .5rem .5rem 1rem gray;
-
-  padding: 1rem 1.5rem;
 }
 
 ::ng-deep.nb-theme-cosmic .tabset {

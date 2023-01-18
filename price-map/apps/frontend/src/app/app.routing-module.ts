@@ -6,7 +6,7 @@ import { Role } from '@price-map/core/enums';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'auth',
+    redirectTo: 'map',
     pathMatch: 'full'
   },
   {
@@ -54,7 +54,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'auth',
+    redirectTo: 'map',
     pathMatch: 'full'
   },
 ];
