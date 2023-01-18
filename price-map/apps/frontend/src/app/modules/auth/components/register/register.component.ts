@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { IUserRegisterInfo } from '@price-map/core/interfaces';
-import { AuthEventNames } from '@price-map/core/enums';
+import { AuthEvents } from '@price-map/core/enums';
 import { IResponseData } from '@price-map/core/interfaces';
 import { IResponseCallback } from '../../../../models/interfaces';
 import { User } from '@price-map/core/entities';
@@ -65,8 +65,8 @@ export class RegisterComponent implements OnInit {
       ]),
     });
 
-    this.webSocketSevice.socket.on(AuthEventNames.RegisterFailed, this.onRegisterFailed);
-    this.webSocketSevice.socket.on(AuthEventNames.RegisterSuccessed, this.onRegisterSuccessed);
+    this.webSocketSevice.socket.on(AuthEvents.RegisterFailed, this.onRegisterFailed);
+    this.webSocketSevice.socket.on(AuthEvents.RegisterSuccessed, this.onRegisterSuccessed);
   }
 
   /**
@@ -74,6 +74,6 @@ export class RegisterComponent implements OnInit {
    * @memberof RegisterComponent
    */
   public submit(): void {
-    this.webSocketSevice.emit<IUserRegisterInfo>(AuthEventNames.RegisterAttemp, this.form.value);
+    this.webSocketSevice.emit<IUserRegisterInfo>(AuthEvents.RegisterAttemp, this.form.value);
   }
 }

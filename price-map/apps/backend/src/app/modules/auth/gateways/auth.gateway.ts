@@ -9,7 +9,7 @@ import * as bcrypt from 'bcrypt';
 import { jwtConstant } from '../../../constants';
 import { IResponseData, IUserRegisterInfo, IUserLoginInfo } from '@price-map/core/interfaces';
 import { User } from '@price-map/core/entities';
-import { Role, AuthEventNames } from '@price-map/core/enums';
+import { Role, AuthEvents } from '@price-map/core/enums';
 
 @WebSocketGateway({
   cors: {
@@ -20,12 +20,12 @@ export class AuthGateway {
   constructor (private readonly usersService: UsersService,
     private readonly jwtService: JwtService) {}
 
-  @SubscribeMessage(AuthEventNames.RegisterAttemp)
+  @SubscribeMessage(AuthEvents.RegisterAttemp)
   public async register(@MessageBody() userRegisterInfo: IUserRegisterInfo): Promise<WsResponse<IResponseData<User>>> {
     const userWithSameNickname = await this.usersService.getByNickname(userRegisterInfo.nickname);
     if (userWithSameNickname) {
       return {
-        event: AuthEventNames.RegisterFailed,
+        event: AuthEvents.RegisterFailed,
         data: {
           statusCode: 401,
           error: true,
@@ -38,7 +38,7 @@ export class AuthGateway {
     const userWithSameMail = await this.usersService.getByMail(userRegisterInfo.mail);
     if (userWithSameMail) {
       return {
-        event: AuthEventNames.RegisterFailed,
+        event: AuthEvents.RegisterFailed,
         data: {
           statusCode: 401,
           error: true,
@@ -58,7 +58,7 @@ export class AuthGateway {
     } catch (e: any) {
       Logger.error(e, 'AuthGateway')
       return {
-        event: AuthEventNames.RegisterFailed,
+        event: AuthEvents.RegisterFailed,
         data: {
           statusCode: 405,
           error: true,
@@ -77,7 +77,7 @@ export class AuthGateway {
       });
 
       return {
-        event: AuthEventNames.RegisterSuccessed,
+        event: AuthEvents.RegisterSuccessed,
         data: {
           statusCode: 201,
           error: false,
@@ -94,7 +94,7 @@ export class AuthGateway {
     } catch (e: any) {
       Logger.error(e, 'AuthGateway')
       return {
-        event: AuthEventNames.RegisterFailed,
+        event: AuthEvents.RegisterFailed,
         data: {
           statusCode: 500,
           error: true,
@@ -105,13 +105,13 @@ export class AuthGateway {
     }
   }
 
-  @SubscribeMessage(AuthEventNames.LoginAttemp)
+  @SubscribeMessage(AuthEvents.LoginAttemp)
   public async login(@MessageBody() userLoginInfo: IUserLoginInfo): Promise<WsResponse<IResponseData<string>>> {
     const user: User = await this.usersService.getByNickname(userLoginInfo.nickname);
 
     if (!user) {
       return {
-        event: AuthEventNames.LoginFailed,
+        event: AuthEvents.LoginFailed,
         data: {
           statusCode: 401,
           error: true,
@@ -125,7 +125,7 @@ export class AuthGateway {
 
     if (!isMatchPassword) {
       return {
-        event: AuthEventNames.LoginFailed,
+        event: AuthEvents.LoginFailed,
         data: {
           statusCode: 400,
           error: true,

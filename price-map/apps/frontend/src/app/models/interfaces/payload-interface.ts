@@ -4,6 +4,7 @@
  * @interface IPayload
  */
 export interface IPayload {
+  [key: string]: number | string,
   /**
    * Время (timestamp), когда токен станет невалидным
    * @type {number}

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationService, TokenService, WebSocketService } from '../../../../services';
 import { IResponseData, IUserLoginInfo } from '@price-map/core/interfaces';
-import { AuthEventNames } from '@price-map/core/enums';
+import { AuthEvents } from '@price-map/core/enums';
 import { IResponseCallback } from '../../../../models/interfaces';
 import { Router } from '@angular/router';
 
@@ -68,8 +68,8 @@ export class LoginComponent implements OnInit {
       password: new FormControl(undefined, [Validators.required]),
     });
 
-    this.webSocketSevice.socket.on(AuthEventNames.LoginSuccessed, this.onLoginSuccessed);
-    this.webSocketSevice.socket.on(AuthEventNames.LoginFailed, this.onLoginFailed);
+    this.webSocketSevice.socket.on(AuthEvents.LoginSuccessed, this.onLoginSuccessed);
+    this.webSocketSevice.socket.on(AuthEvents.LoginFailed, this.onLoginFailed);
   }
 
   /** 
@@ -85,6 +85,6 @@ export class LoginComponent implements OnInit {
    * @memberof LoginComponent
    */
   public submit(): void {
-    this.webSocketSevice.emit<IUserLoginInfo>(AuthEventNames.LoginAttemp, this.form.value);
+    this.webSocketSevice.emit<IUserLoginInfo>(AuthEvents.LoginAttemp, this.form.value);
   }
 }

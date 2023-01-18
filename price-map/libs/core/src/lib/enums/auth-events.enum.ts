@@ -1,4 +1,9 @@
-export enum AuthEventNames {
+/**
+ * События авторизации
+ * @export
+ * @enum {string}
+ */
+export enum AuthEvents {
   RegisterAttemp = 'register attempt',
   RegisterFailed = 'register failed',
   RegisterSuccessed = 'register successed',

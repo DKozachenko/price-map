@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
+import { DisconnectDescription } from 'socket.io-client/build/esm/socket';
 import { TokenService } from '.';
 import { IResponseCallback } from '../models/interfaces';
 
@@ -52,10 +53,11 @@ export class WebSocketService {
     });
 
     this.socket.on('connect_error', (err: Error) => {
-      console.log('Socket connect error', err);
+      console.error('Socket connect error', err);
 
       ++this.connectAttempts;
       if (this.connectAttempts >= this.maxConnectAttempts) {
+        console.warn('The client stopped trying to connect');
         this.socket.disconnect();
         return;
       }
@@ -65,8 +67,8 @@ export class WebSocketService {
       }, this.reconnectSecs * 1000);
     });
 
-    this.socket.on('disconnect', (reason: any, description: any) => {
-      console.log('Socket disconnected', reason, description);
+    this.socket.on('disconnect', (reason: string, description: DisconnectDescription | undefined) => {
+      console.warn('Socket disconnected', 'reason ', reason, 'description', description);
     });
   }
 
