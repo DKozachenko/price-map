@@ -26,7 +26,7 @@ body {
   border: 1px solid #a16eff;
 
   .form__error-description {
-    @include font(1.3rem, red, 700);
+    @include font(1.3rem, #7a00ff, 700);
   }
 }
 

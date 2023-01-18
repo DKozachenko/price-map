@@ -4,8 +4,9 @@ import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent, RegisterComponent, LayoutComponent } from './components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NbButtonModule,
-  NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbTabsetModule, NbToastrService } from '@nebular/theme';
+  NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbTabsetModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { NotificationService } from '../../services';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,6 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     NbEvaIconsModule,
     NbFormFieldModule
   ],
-  providers: [NbToastrService]
+  providers: [NotificationService]
 })
 export class AuthModule { }

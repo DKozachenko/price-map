@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { WebSocketService } from '../../../../services';
+import { NotificationService, WebSocketService } from '../../../../services';
 import { IUserRegisterInfo } from '@price-map/core/interfaces';
 import { AuthEventNames } from '@price-map/core/enums';
 import { IResponseData } from '@price-map/core/interfaces';
@@ -16,33 +16,17 @@ import { User } from '@price-map/core/entities';
 export class RegisterComponent implements OnInit {
   private onRegisterSuccessed: IResponseCallback<IResponseData<User>> = (response: IResponseData<User>) => {
     this.form.reset();
-    const iconConfig: NbIconConfig = { icon: 'checkmark-circle-2-outline', pack: 'eva' };
-    this.toastrService.show(response.message, 'Успех',
-      {
-        status: 'success',
-        duration: 2000,
-        destroyByClick: true,
-        icon: iconConfig
-      }
-    );
+    this.notificationService.showSuccess(response.message);
   }
 
   private onRegisterFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
-    const iconConfig: NbIconConfig = { icon: 'minus-circle-outline', pack: 'eva' };
-    this.toastrService.show(response.message, 'Ошибка',
-      {
-        status: 'danger',
-        duration: 2000,
-        destroyByClick: true,
-        icon: iconConfig
-      }
-    )
+    this.notificationService.showError(response.message);
   }
 
   public form!: FormGroup;
 
   constructor(private readonly webSocketSevice: WebSocketService,
-    private readonly toastrService: NbToastrService) {}
+    private readonly notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.form = new FormGroup({

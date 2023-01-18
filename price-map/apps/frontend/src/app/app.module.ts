@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app.routing-module';
 import { appInitializer } from './initializers';
 import { TokenService, WebSocketService } from './services';
 import { HttpClientModule } from '@angular/common/http';
-import { NbThemeModule, NbToastrModule } from '@nebular/theme';
+import { NbThemeModule, NbToastrModule, NbToastrService } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -33,7 +33,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       useFactory: appInitializer,
       deps: [WebSocketService],
       multi: true,
-    }
+    },
+    NbToastrService
   ],
   bootstrap: [AppComponent],
 })
