@@ -6,11 +6,12 @@ import {ActivatedRouteSnapshot,
 import { TokenService } from '../services';
 
 /**
- * Гвард для защиты роутов
+ * Гвард для защиты роутов (проверяет наличие токена)
+ * @export
+ * @class AuthGuard
+ * @implements {CanActivate}
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private router: Router,

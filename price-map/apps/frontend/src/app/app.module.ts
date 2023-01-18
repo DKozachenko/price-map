@@ -9,7 +9,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { NbThemeModule, NbToastrModule, NbToastrService } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthGuard, RolesGuard } from './guards';
 
+/**
+ * Главный модуль приложения
+ * @export
+ * @class AppModule
+ */
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -22,10 +28,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     NbThemeModule.forRoot({
       name: 'cosmic'
     }),
-    NbEvaIconsModule,
-    NbToastrModule.forRoot()
+    NbToastrModule.forRoot(),
+    NbEvaIconsModule
   ],
   providers: [
+    AuthGuard,
+    RolesGuard,
     WebSocketService,
     TokenService,
     {
