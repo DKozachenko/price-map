@@ -37,7 +37,7 @@ body {
     padding: 2rem;
   }
 
-  &-title {
+  .product__popup-title {
     @include font(1.8rem, black, 700);
     margin-bottom: 1rem;
   }
