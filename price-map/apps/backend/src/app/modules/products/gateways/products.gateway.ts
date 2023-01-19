@@ -19,7 +19,7 @@ export class ProductsGateway {
   constructor (private readonly productsService: ProductsService) {}
 
   @Roles(Role.User)
-  // @UseGuards(JwtAuthGuard('get products failed'), RolesAuthGuard('get products failed'))
+  @UseGuards(JwtAuthGuard('get products failed'), RolesAuthGuard('get products failed'))
   @SubscribeMessage('get products attempt')
   public async getAll(): Promise<WsResponse<IResponseData<Product[]>>> {
     const products: Product[] = await this.productsService.getAll();

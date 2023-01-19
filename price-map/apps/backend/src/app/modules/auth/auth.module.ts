@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthGateway } from './gateways';
-import { jwtConstant } from '../../constants';
+import { secretKey } from '../../constants';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@price-map/core/entities';
 import { UsersService } from '../users/services';
@@ -14,7 +14,7 @@ import { UsersService } from '../users/services';
     ], 'postgresConnect'),
     PassportModule,
     JwtModule.register({
-      secret: jwtConstant.secret,
+      secret: secretKey,
       signOptions: { expiresIn: '10h' },
     }),
   ],

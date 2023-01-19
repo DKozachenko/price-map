@@ -21,7 +21,12 @@ interface BreadcrumbInfo {
   category3LevelName: string,
 }
 
-
+/**
+ * Главный модуль приложения
+ * @export
+ * @class AppModule
+ * @implements {OnModuleInit}
+ */
 @Module({
   imports: [
     AuthModule,

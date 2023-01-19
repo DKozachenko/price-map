@@ -6,11 +6,16 @@ import { MessageBody,
   WebSocketGateway,
   WsResponse } from '@nestjs/websockets';
 import * as bcrypt from 'bcrypt';
-import { jwtConstant } from '../../../constants';
+import { secretKey } from '../../../constants';
 import { IResponseData, IUserRegisterInfo, IUserLoginInfo } from '@price-map/core/interfaces';
 import { User } from '@price-map/core/entities';
 import { Role, AuthEvents } from '@price-map/core/enums';
 
+/**
+ * Шлюз авторизации
+ * @export
+ * @class AuthGateway
+ */
 @WebSocketGateway({
   cors: {
     origin: '*'
@@ -20,6 +25,12 @@ export class AuthGateway {
   constructor (private readonly usersService: UsersService,
     private readonly jwtService: JwtService) {}
 
+  /**
+   * Событие попытки регистрации
+   * @param {IUserRegisterInfo} userRegisterInfo информация для регистрации
+   * @return {*}  {Promise<WsResponse<IResponseData<User>>>} данные о зарегистрированном пользователе
+   * @memberof AuthGateway
+   */
   @SubscribeMessage(AuthEvents.RegisterAttemp)
   public async register(@MessageBody() userRegisterInfo: IUserRegisterInfo): Promise<WsResponse<IResponseData<User>>> {
     const userWithSameNickname = await this.usersService.getByNickname(userRegisterInfo.nickname);
@@ -105,6 +116,12 @@ export class AuthGateway {
     }
   }
 
+  /**
+   * Событие входа
+   * @param {IUserLoginInfo} userLoginInfo данные для входа
+   * @return {*}  {Promise<WsResponse<IResponseData<string>>>} токен
+   * @memberof AuthGateway
+   */
   @SubscribeMessage(AuthEvents.LoginAttemp)
   public async login(@MessageBody() userLoginInfo: IUserLoginInfo): Promise<WsResponse<IResponseData<string>>> {
     const user: User = await this.usersService.getByNickname(userLoginInfo.nickname);
@@ -141,7 +158,7 @@ export class AuthGateway {
       role: user.role
     }, {
       expiresIn: '10h',
-      secret: jwtConstant.secret
+      secret: secretKey
     });
 
     return {
