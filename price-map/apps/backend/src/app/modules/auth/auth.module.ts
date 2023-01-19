@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthGateway } from './gateways';
 import { secretKey } from '../../constants';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -20,7 +20,8 @@ import { UsersService } from '../users/services';
   ],
   providers: [
     UsersService,
-    AuthGateway
+    AuthGateway,
+    JwtService
   ]
 })
 export class AuthModule {}

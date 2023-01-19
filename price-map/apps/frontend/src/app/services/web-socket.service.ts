@@ -73,7 +73,7 @@ export class WebSocketService {
   }
 
   /**
-   * Добавлен токена к запросу
+   * Добавление токена к запросу
    * @memberof WebSocketService
    */
   public addToken(): void {

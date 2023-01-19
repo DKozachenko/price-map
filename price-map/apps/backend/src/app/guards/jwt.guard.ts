@@ -1,6 +1,7 @@
 import { ExecutionContext, Injectable, CanActivate, mixin, Type } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { secretKey } from '../constants';
+import { IPayload } from '@price-map/core/interfaces';
 
 /**
  * Гвард для защиты роутов (проверяет наличие токена)
@@ -28,13 +29,11 @@ export const JwtAuthGuard = (failedEventName: string): Type<any> => {
 
       const tokenWithoutBearer: string = token.split(' ')?.[1];
 
-      let payload: any;
-      
+      let payload: IPayload;
       try {
         payload = this.jwtService.verify(tokenWithoutBearer, {
           secret: secretKey
         });
-        console.log('payload', payload)
       } catch (e) {
         client.emit(failedEventName, {
           statusCode: 408,
