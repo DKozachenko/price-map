@@ -4,7 +4,6 @@ import {ActivatedRouteSnapshot,
   Router,
   RouterStateSnapshot} from '@angular/router';
 import { TokenService } from '../services';
-import jwtDecode from 'jwt-decode';
 import { IPayload } from '@price-map/core/interfaces';
 
 /**
@@ -23,13 +22,10 @@ export class RolesGuard implements CanActivate {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot
   ): boolean {
-    const roles: string[] = route.data['roles'];
-    const token: string = this.tokenService.getToken();
-    const tokenWithoutBearer: string = token.split(' ')?.[1];
-    
-    const payload: IPayload = jwtDecode(tokenWithoutBearer);
-    const role: string = payload.role;
-    if (roles.includes(role)) {
+    const roles: string[] = route.data['roles'];    
+    const payload: IPayload = this.tokenService.getPayload();
+    const currentRole: string = payload.role;
+    if (roles.includes(currentRole)) {
       return true;
     }
 

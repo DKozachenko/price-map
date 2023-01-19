@@ -1,0 +1,33 @@
+@import "../../../../../assets/styles/mixins";
+
+:host {
+  width: 100%;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+
+  &__link {
+    @include font(1.4rem, white);
+    border: 1px solid white;
+    padding: .4rem 3rem;
+    border-radius: 1rem;
+    text-decoration: none;
+    transition: background-color .2s linear;
+
+    &_icon {
+      padding: .6rem .8rem;
+      border-radius: 1.5rem;
+    }
+  
+    &:not(:last-child) {
+      margin-right: 1rem;
+    }
+  
+    &:hover {
+      cursor: pointer;
+      background-color: #a16eff;
+    }
+  }
+}

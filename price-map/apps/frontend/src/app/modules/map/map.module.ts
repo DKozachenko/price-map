@@ -4,6 +4,7 @@ import { CharacteristicFilterComponent, FilterComponent, MapComponent, RouteRevi
 import { MapRoutingModule } from './map-routing.module';
 import { FilterService, MapService, OsrmService, ProductsService } from './services';
 import { NbIconModule, NbLayoutModule } from '@nebular/theme';
+import { SharedModule } from '..';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { NbIconModule, NbLayoutModule } from '@nebular/theme';
     CommonModule,
     MapRoutingModule,
     NbLayoutModule,
-    NbIconModule
+    NbIconModule,
+    SharedModule
   ],
   providers: [
     MapService,

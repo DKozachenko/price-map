@@ -10,27 +10,6 @@
   height: 100%;
 }
 
-.nav__link {
-  @include font(1.3rem, white);
-  border: 1px solid white;
-  padding: .6rem 3rem;
-  border-radius: 1rem;
-  text-decoration: none;
-
-  &_icon {
-    padding: .6rem .8rem;
-    border-radius: 1.5rem;
-  }
-
-  &:not(:last-child) {
-    margin-right: 1rem;
-  }
-
-  &:hover {
-    cursor: pointer;
-  }
-}
-
 ::ng-deep.nb-theme-cosmic nb-layout .layout .layout-container .content .columns nb-layout-column {
   padding: 0;
 }
