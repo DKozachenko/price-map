@@ -4,6 +4,11 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './components';
 import { RouterModule } from '@angular/router';
 
+/**
+ * Общий модуль
+ * @export
+ * @class SharedModule
+ */
 @NgModule({
   declarations: [HeaderComponent],
   imports: [

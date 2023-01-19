@@ -29,6 +29,11 @@ export class TokenService {
     return localStorage.getItem(TokenKey) ?? '';
   }
 
+  /**
+   * Получение данных из токена
+   * @return {*}  {IPayload} данные
+   * @memberof TokenService
+   */
   public getPayload(): IPayload {
     const token: string = this.getToken();
     const tokenWithoutBearer: string = token.split(' ')?.[1];
