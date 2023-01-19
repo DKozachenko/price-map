@@ -4,7 +4,7 @@ import { MessageBody,
   WsResponse } from '@nestjs/websockets';
 import { UseGuards } from '@nestjs/common';
 import { Roles } from '../../../decorators';
-import { Role } from '@core/enums';
+import { CategoryEvents, Role } from '@core/enums';
 import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
 import { IResponseData, IUserLoginInfo } from '@core/interfaces';
 import { Category1Level, Category3Level } from '@core/entities';
@@ -20,12 +20,12 @@ export class Categories1LevelGateway {
 
   @Roles(Role.User)
   // @UseGuards(JwtAuthGuard('get categories 1 level failed'), RolesAuthGuard('get categories 1 level failed'))
-  @SubscribeMessage('get categories 1 level attempt')
+  @SubscribeMessage(CategoryEvents.GetCategories1LevelAttempt)
   public async getAll(): Promise<WsResponse<IResponseData<Category1Level[]>>> {
     const products: Category1Level[] = await this.productsService.getAll();
 
     return {
-      event: 'get categories 1 level successed',
+      event: CategoryEvents.GetCategories1LevelSuccessed,
       data: {
         statusCode: 200,
         error: false,
@@ -48,7 +48,7 @@ export class Categories1LevelGateway {
         statusCode: 200,
         error: false,
         data: product,
-        message: 'Категории 1 уровня успешно получены'
+        message: 'Категория 3 уровня успешно получена'
       }
     };
   }

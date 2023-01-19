@@ -41,8 +41,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       this.mapService.addSource(response.data);
     });
 
-    this.webSocketSevice.addToken();
-    this.webSocketSevice.socket.emit('get products attempt');
+    this.webSocketSevice.emit<null>('get products attempt');
 
     this.mapService.clicks$.subscribe((data) => console.log('clicks', data));
     this.mapService.productIdsToRoute$.subscribe((data) => {

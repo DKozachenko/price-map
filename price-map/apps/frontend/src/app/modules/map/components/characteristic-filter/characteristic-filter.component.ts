@@ -32,7 +32,7 @@ export class CharacteristicFilterComponent implements OnInit {
       this.category3Level = response.data;
     });
 
-    this.webSocketSevice.addToken();
+    // this.webSocketSevice.addToken();
     this.webSocketSevice.socket.emit('get category 3 level attempt', { id: this.category3LevelId });
   }
 

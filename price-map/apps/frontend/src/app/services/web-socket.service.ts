@@ -42,6 +42,16 @@ export class WebSocketService {
   constructor(private readonly tokenService: TokenService) {}
 
   /**
+   * Добавление токена к запросу
+   * @memberof WebSocketService
+   */
+  private addToken(): void {
+    this.socket.auth = {
+      token: this.tokenService.getToken()
+    };
+  }
+
+  /**
    * Инициализация сокета
    * @memberof WebSocketService
    */
@@ -72,16 +82,6 @@ export class WebSocketService {
     });
   }
 
-  /**
-   * Добавление токена к запросу
-   * @memberof WebSocketService
-   */
-  public addToken(): void {
-    this.socket.auth = {
-      token: this.tokenService.getToken()
-    };
-  }
-
   /** 
    * Отправка данных
    * @template T тип отправляемых данных
@@ -89,7 +89,8 @@ export class WebSocketService {
    * @param {T} data данные
    * @memberof WebSocketService
    */
-  public emit<T>(eventName: string, data: T): void {
+  public emit<T>(eventName: string, data?: T): void {
+    this.addToken();
     this.socket.emit(eventName, data);
   }
 
