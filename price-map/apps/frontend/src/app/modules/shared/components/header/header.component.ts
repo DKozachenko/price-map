@@ -1,6 +1,5 @@
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { Role } from '@price-map/core/enums';
 import { IPayload } from '@price-map/core/interfaces';
 import { TokenService } from '../../../../services';
 
@@ -10,14 +9,13 @@ import { TokenService } from '../../../../services';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  public userRole: Role;
+  public payload: IPayload;
 
   constructor(private readonly tokenService: TokenService,
     private readonly router: Router) {}
 
   public ngOnInit(): void {
-    const payload: IPayload = this.tokenService.getPayload();
-    this.userRole = payload.role;
+    this.payload = this.tokenService.getPayload();
   }
 
   public logout(): void {

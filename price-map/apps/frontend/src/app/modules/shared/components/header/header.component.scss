@@ -7,9 +7,10 @@
 .nav {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   &__link {
-    @include font(1.4rem, white);
+    @include font(1.4rem, white, 500);
     border: 1px solid white;
     padding: .4rem 3rem;
     border-radius: 1rem;
@@ -17,12 +18,8 @@
     transition: background-color .2s linear;
 
     &_icon {
-      padding: .6rem .8rem;
+      padding: .6rem 1rem;
       border-radius: 1.5rem;
-    }
-  
-    &:not(:last-child) {
-      margin-right: 1rem;
     }
   
     &:hover {
@@ -30,4 +27,37 @@
       background-color: #a16eff;
     }
   }
+
+  .routes,
+  .logout {
+    display: flex;
+    align-items: center;
+
+    .nav__link {
+      &:not(:last-child) {
+        margin-right: 1rem;
+      }
+    }
+  }
+}
+
+::ng-deep.nb-theme-cosmic nb-user .user-picture {
+  border-color: white;
+}
+
+::ng-deep.nb-theme-cosmic nb-user.size-medium .user-name {
+  @include font(1.3rem, white);
+}
+
+::ng-deep.nb-theme-cosmic nb-user.size-medium .user-title {
+  @include font(1.2rem, white);
+}
+
+::ng-deep.nb-theme-cosmic nb-layout-header nav {
+  height: auto;
+  padding: .9rem 1.25rem;
+}
+
+::ng-deep.info-container {
+  margin-left: 1rem!important;
 }

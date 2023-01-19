@@ -1,13 +1,19 @@
-<div *ngIf="userRole" class="nav">
+<div *ngIf="payload" class="nav">
   <div class="logout">
     <a class="nav__link" (click)="logout()">Выход</a>
   </div>
 
   <div class="routes">
-    <a *ngIf="userRole === 'admin'" class="nav__link" [routerLink]="['/admin']">Пользователи</a>
-    <a *ngIf="userRole === 'user' || userRole === 'admin'" class="nav__link">Избранное</a>
-    <a *ngIf="userRole === 'user' || userRole === 'admin'" class="nav__link nav__link_icon" [routerLink]="['/settings']">
-      <nb-icon icon="person-outline"></nb-icon>
+    <a *ngIf="payload.role === 'admin'" class="nav__link" [routerLink]="['/admin']">Пользователи</a>
+    <a *ngIf="payload.role === 'user' || payload.role === 'admin'" class="nav__link">Избранное</a>
+    <a *ngIf="payload.role === 'user' || payload.role === 'admin'" class="nav__link nav__link_icon" [routerLink]="['/settings']">
+      <nb-user size="large"
+        [name]="payload.nickname"
+        [title]="payload.role"
+        picture="../../../../../assets/user-icon.svg"
+        size="medium"  
+      >
+    </nb-user>
     </a>
   </div>
   
