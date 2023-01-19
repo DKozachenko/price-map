@@ -2,9 +2,9 @@ name: Backend CI
 
 on:
   push:
-    branches: [ "task/*", "bugfix/*", "conf/*"]
+    branches: [ "task/*", "bugfix/*", "conf/*", "feature/*" ]
   pull_request:
-    branches: [ "master", "develop", "release/*", "feature/*" ]
+    branches: [ "master", "develop" ]
 
 jobs:
   start-on-ubuntu:
@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
       - name: Start lint
         run: npm run lint:back
       - name: Start test
