@@ -29,7 +29,7 @@ export class FilterComponent implements OnInit {
 
     this.webSocketSevice.socket.on('get categories 1 level successed', (response) => {
       console.log('on get products successed', response);
-      console.log(response.data)
+      console.log(response.data);
 
       this.categories1Level = response.data.map((cat1Level: any) => {
         return {
@@ -42,15 +42,15 @@ export class FilterComponent implements OnInit {
                 return {
                   ...cat3Level,
                   checked: false
-                }
+                };
               }),
               checked: false
-            }
+            };
           }),
           showCategories2Level: false,
           checked: false
-        }
-      })
+        };
+      });
     });
 
     this.webSocketSevice.addToken();
@@ -63,7 +63,7 @@ export class FilterComponent implements OnInit {
         this.isShowCharacteristics = data.size === 1;
         console.log(this.currentCategory3LevelId);
         // this.currentCategory3LevelId = this.isShowCharacteristics ? [...data][0] : undefined;
-      })
+      });
   }
 
   public showCategories2Level(category1Level: any): void {
@@ -110,10 +110,10 @@ export class FilterComponent implements OnInit {
 
     const category1Level =  this.categories1Level.find((cat1Level) => {
       const category2Level = cat1Level.categories2Level.find((cat2Level: any) => {
-        return cat2Level.id === cat.id
+        return cat2Level.id === cat.id;
       });
       return category2Level;
-    })
+    });
 
     if (category1Level) {
       category1Level.checked = category1Level.categories2Level.every((cat2: any) => {
@@ -130,15 +130,15 @@ export class FilterComponent implements OnInit {
     const category1Level = this.categories1Level.find((cat1Level) => {
       const category2Level = cat1Level.categories2Level.find((cat2Level: any) => {
         return cat2Level.categories3Level.find((cat3Level: any) => {
-          return cat3Level.id === cat.id
-        })
+          return cat3Level.id === cat.id;
+        });
       });
       if (category2Level) {
         category2Level.checked = category2Level.categories3Level.every((cat3: any) => cat3.checked);
         return cat1Level;
       }
       return undefined;
-    })
+    });
 
     if (category1Level) {
       category1Level.checked = category1Level.categories2Level.every((cat2: any) => {
@@ -155,6 +155,7 @@ export class FilterComponent implements OnInit {
     for (const category1Level of this.categories1Level) {
       for (const category2Level of category1Level.categories2Level) {
         for (const category3Level of category2Level.categories3Level) {
+          // eslint-disable-next-line max-depth
           if (category3Level.checked) {
             setSelected.add(category3Level.id);
           }

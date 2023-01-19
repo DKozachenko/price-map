@@ -44,20 +44,20 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     this.webSocketSevice.addToken();
     this.webSocketSevice.socket.emit('get products attempt');
 
-    this.mapService.clicks$.subscribe((data) => console.log('clicks', data))
+    this.mapService.clicks$.subscribe((data) => console.log('clicks', data));
     this.mapService.productIdsToRoute$.subscribe((data) => {
-      console.log('productIdsToRoute', data)
+      console.log('productIdsToRoute', data);
       this.isShowRouteReview = data.size > 0;
       this.productIdsForRoute = [...data];
-    })
+    });
 
     this.filterService.chechedCategories3Level$.subscribe((data) => {
-      console.log('chechedCategories3Level', data)
+      console.log('chechedCategories3Level', data);
       // const filteredProdcuts: any[] = this.productsService.getProductsByCategoryId([...data]);
       // this.mapService.addSource(filteredProdcuts)
-    })
+    });
 
-    this.filterService.filterValues$.subscribe((data) => console.log('filterValues', data))
+    this.filterService.filterValues$.subscribe((data) => console.log('filterValues', data));
   }
 
   public ngOnDestroy() {

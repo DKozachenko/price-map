@@ -6,9 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@price-map/core/entities';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([
-    User
-  ], 'postgresConnect')],
+  imports: [TypeOrmModule.forFeature([User], 'postgresConnect')],
   providers: [
     UsersService,
     UsersGateway,

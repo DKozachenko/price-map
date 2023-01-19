@@ -75,12 +75,16 @@ export class MapService {
         layout: {
           'icon-image': '{icon}',
           'icon-overlap': 'always',
-          'text-field': ['get', 'price'],
-          'text-font': [
-            'Open Sans Semibold',
+          'text-field': [
+            'get', 
+            'price'
           ],
+          'text-font': ['Open Sans Semibold'],
           'text-size': 18,
-          'text-offset': [0, 0.5],
+          'text-offset': [
+            0, 
+            0.5
+          ],
           'text-anchor': 'top'
         },
       });
@@ -88,7 +92,7 @@ export class MapService {
   }
 
   public addLineSource(coordinates: number[][]): void {
-    const productsSource: any = this.map?.getSource('route')
+    const productsSource: any = this.map?.getSource('route');
     if (productsSource) {
       productsSource.setData({
         type: 'Feature',
@@ -97,7 +101,7 @@ export class MapService {
           type: 'LineString',
           coordinates
         }
-      })
+      });
     } else {
       this.map?.addSource('route', {
         type: 'geojson',
@@ -135,16 +139,16 @@ export class MapService {
             item.shop.coordinates.latitude
           ],
         },
-      }
+      };
 
-    })
+    });
 
-    const productsSource: any = this.map?.getSource('products')
+    const productsSource: any = this.map?.getSource('products');
     if (productsSource) {
       productsSource.setData({
         type: 'FeatureCollection',
         features
-      })
+      });
     } else {
       this.map?.addSource('products', {
         type: 'geojson',
@@ -171,8 +175,8 @@ export class MapService {
     div.append(p2);
     const button = document.createElement('button');
     button.classList.add('product__popup-button');
-    button.textContent = `Добавить в маршрут`;
-    button.addEventListener('click', () => this.addProductIdToRoute(productInfo.id))
+    button.textContent = 'Добавить в маршрут';
+    button.addEventListener('click', () => this.addProductIdToRoute(productInfo.id));
     div.append(button);
     return div;
   }
@@ -193,8 +197,8 @@ export class MapService {
 
   public setClicks(): void {
     this.map.on('click', (e: any) => {
-      console.log(e)
-    })
+      console.log(e);
+    });
 
 
     this.map.on('click', 'products', (e: any) => {

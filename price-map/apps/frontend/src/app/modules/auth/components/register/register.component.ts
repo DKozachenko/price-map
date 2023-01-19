@@ -20,6 +20,13 @@ import { User } from '@price-map/core/entities';
 })
 export class RegisterComponent implements OnInit {
   /**
+   * Экземпляр формы
+   * @type {FormGroup}
+   * @memberof RegisterComponent
+   */
+  public form!: FormGroup;
+
+  /**
    * Колбэк, срабатывающий при успешной регистрации
    * @private
    * @param {IResponseData<User>} response ответ от сервера
@@ -29,7 +36,7 @@ export class RegisterComponent implements OnInit {
   private onRegisterSuccessed: IResponseCallback<IResponseData<User>> = (response: IResponseData<User>) => {
     this.form.reset();
     this.notificationService.showSuccess(response.message);
-  }
+  };
 
   /**
    * Колбэк, срабатывающий при неудачной регистрации
@@ -40,24 +47,30 @@ export class RegisterComponent implements OnInit {
    */
   private onRegisterFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
     this.notificationService.showError(response.message);
-  }
-
-  /**
-   * Экземпляр формы
-   * @type {FormGroup}
-   * @memberof RegisterComponent
-   */
-  public form!: FormGroup;
+  };
 
   constructor(private readonly webSocketSevice: WebSocketService,
     private readonly notificationService: NotificationService) {}
 
   ngOnInit(): void {
     this.form = new FormGroup({
-      name: new FormControl(undefined, [Validators.required, Validators.maxLength(100)]),
-      lastName: new FormControl(undefined, [Validators.required, Validators.maxLength(100)]),
-      mail: new FormControl(undefined, [Validators.required, Validators.maxLength(150), Validators.email]),
-      nickname: new FormControl(undefined, [Validators.required, Validators.maxLength(150)]),
+      name: new FormControl(undefined, [
+        Validators.required,
+        Validators.maxLength(100)
+      ]),
+      lastName: new FormControl(undefined, [
+        Validators.required, 
+        Validators.maxLength(100)
+      ]),
+      mail: new FormControl(undefined, [
+        Validators.required, 
+        Validators.maxLength(150), 
+        Validators.email
+      ]),
+      nickname: new FormControl(undefined, [
+        Validators.required, 
+        Validators.maxLength(150)
+      ]),
       password: new FormControl(undefined, [
         Validators.required,
         Validators.minLength(6),

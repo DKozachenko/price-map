@@ -21,7 +21,13 @@ export class NotificationService {
    * @param {number} duration задержка
    * @memberof NotificationService
    */
-  private showNotification(message: string, title: string, iconName: string, status: NbComponentStatus, duration: number): void {
+  private showNotification(
+    message: string, 
+    title: string, 
+    iconName: string, 
+    status: NbComponentStatus, 
+    duration: number
+  ): void {
     const iconConfig: NbIconConfig = { icon: iconName, pack: 'eva' };
     this.toastrService.show(message, title,
       {
@@ -30,7 +36,7 @@ export class NotificationService {
         destroyByClick: true,
         icon: iconConfig
       }
-    )
+    );
   }
 
   /**

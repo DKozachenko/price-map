@@ -67,7 +67,7 @@ export class AuthGateway {
       password = userRegisterInfo.password;
       hash = await bcrypt.hash(password, salt);
     } catch (e: any) {
-      Logger.error(e, 'AuthGateway')
+      Logger.error(e, 'AuthGateway');
       return {
         event: AuthEvents.RegisterFailed,
         data: {
@@ -103,7 +103,7 @@ export class AuthGateway {
         }
       };
     } catch (e: any) {
-      Logger.error(e, 'AuthGateway')
+      Logger.error(e, 'AuthGateway');
       return {
         event: AuthEvents.RegisterFailed,
         data: {

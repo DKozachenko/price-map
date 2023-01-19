@@ -6,9 +6,7 @@ import { Product } from '@price-map/core/entities';
 import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([
-    Product
-  ], 'postgresConnect')],
+  imports: [TypeOrmModule.forFeature([Product], 'postgresConnect')],
   providers: [
     JwtService,
     ProductsGateway,

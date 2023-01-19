@@ -41,13 +41,11 @@ export class FilterService {
         {
           id: 'd344ee16-13c5-481a-b5fc-e7af70213ca8',
           name: 'cat 2 test 2',
-          categories3Level: [
-            {
-              id: 'ddaa8a1f-c83d-4f56-a33d-761a964f65c8',
-              name: 'cat 3 test 4',
-              filters: []
-            },
-          ],
+          categories3Level: [{
+            id: 'ddaa8a1f-c83d-4f56-a33d-761a964f65c8',
+            name: 'cat 3 test 4',
+            filters: []
+          }],
         },
         {
           id: '30b6a275-4d92-4923-b137-0029d87baa2f',
@@ -72,7 +70,7 @@ export class FilterService {
         }
       ],
     },
-  ]
+  ];
 
   public getCategory3Level(id: string): any {
     return {
@@ -123,7 +121,7 @@ export class FilterService {
           ]
         }
       ]
-    }
-  }
+    };
+  };
 
 }

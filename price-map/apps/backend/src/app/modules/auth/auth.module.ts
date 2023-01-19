@@ -9,9 +9,7 @@ import { UsersService } from '../users/services';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      User
-    ], 'postgresConnect'),
+    TypeOrmModule.forFeature([User], 'postgresConnect'),
     PassportModule,
     JwtModule.register({
       secret: secretKey,

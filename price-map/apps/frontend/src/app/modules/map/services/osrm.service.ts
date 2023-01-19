@@ -12,9 +12,9 @@ export class OsrmService {
     let result = '';
     for (let i = 0; i < coordinates.length; ++i) {
       if (i === coordinates.length - 1) {
-        result += `${coordinates[i].lat},${coordinates[i].lon}`
+        result += `${coordinates[i].lat},${coordinates[i].lon}`;
       } else {
-        result += `${coordinates[i].lat},${coordinates[i].lon};`
+        result += `${coordinates[i].lat},${coordinates[i].lon};`;
       }
     }
 
@@ -22,8 +22,9 @@ export class OsrmService {
   }
 
   public buildRoute(coordinates: { lat: number, lon: number }[]): Observable<any> {
-    const query: string = `http://router.project-osrm.org/route/v1/driving/${this.createQuery(coordinates)}?geometries=geojson&overview=full`;
-    console.log(query)
+    const query: string = 'http://router.project-osrm.org/route/v1/driving/'
+      + `${this.createQuery(coordinates)}?geometries=geojson&overview=full`;
+    console.log(query);
     return this.http.get(query);
   }
 

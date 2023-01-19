@@ -19,31 +19,6 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   /**
-   * Колбэк, срабатывающий при успешном входе
-   * @private
-   * @param {IResponseData<string>} response ответ от сервера
-   * @type {IResponseCallback<IResponseData<string>>}
-   * @memberof LoginComponent
-   */
-  private onLoginSuccessed: IResponseCallback<IResponseData<string>> = (response: IResponseData<string>) => {
-    this.form.reset();
-    this.notificationService.showSuccess(response.message);
-    this.tokenService.setToken(response.data ?? '');
-    this.router.navigate(['map'], { queryParamsHandling: 'merge' });
-  }
-
-  /**
-   * Колбэк, срабатывающий при неудачной попытке входа
-   * @private
-   * @param {IResponseData<null>} response ответ от сервера
-   * @type {IResponseCallback<IResponseData<null>>}
-   * @memberof LoginComponent
-   */
-  private onLoginFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
-    this.notificationService.showError(response.message);
-  }
-
-  /**
    * Показывать пароль
    * @type {boolean}
    * @memberof LoginComponent
@@ -56,6 +31,31 @@ export class LoginComponent implements OnInit {
    * @memberof LoginComponent
    */
   public form!: FormGroup;
+  
+  /**
+   * Колбэк, срабатывающий при успешном входе
+   * @private
+   * @param {IResponseData<string>} response ответ от сервера
+   * @type {IResponseCallback<IResponseData<string>>}
+   * @memberof LoginComponent
+   */
+  private onLoginSuccessed: IResponseCallback<IResponseData<string>> = (response: IResponseData<string>) => {
+    this.form.reset();
+    this.notificationService.showSuccess(response.message);
+    this.tokenService.setToken(response.data ?? '');
+    this.router.navigate(['map'], { queryParamsHandling: 'merge' });
+  };
+
+  /**
+   * Колбэк, срабатывающий при неудачной попытке входа
+   * @private
+   * @param {IResponseData<null>} response ответ от сервера
+   * @type {IResponseCallback<IResponseData<null>>}
+   * @memberof LoginComponent
+   */
+  private onLoginFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
+    this.notificationService.showError(response.message);
+  };
 
   constructor(private readonly webSocketSevice: WebSocketService,
     private readonly notificationService: NotificationService,

@@ -132,7 +132,7 @@ export class ProductsService {
         name: 'shop test 7'
       }
     },
-  ]
+  ];
 
   public getProductsByCategoryId(category3LevelIds: string[]): any[] {
     return this.products.filter((product: any) => category3LevelIds.includes(product.category3Level.id));

@@ -24,7 +24,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "price-map",
+            "prefix": ["price-map", ""],
             "style": "kebab-case"
           }
         ]
