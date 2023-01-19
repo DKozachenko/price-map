@@ -1,5 +1,5 @@
 import { CustomDecorator, SetMetadata } from '@nestjs/common';
-import { Role } from '@price-map/core/enums';
+import { Role } from '@core/enums';
 import { roleKey } from '../constants';
 
 /**

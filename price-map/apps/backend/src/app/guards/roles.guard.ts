@@ -1,7 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException, mixin } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { Role } from '@price-map/core/enums';
+import { Role } from '@core/enums';
 import { secretKey, roleKey } from '../constants';
 
 /**

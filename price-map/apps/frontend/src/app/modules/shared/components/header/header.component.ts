@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { IPayload } from '@price-map/core/interfaces';
+import { IPayload } from '@core/interfaces';
 import { TokenService } from '../../../../services';
 
 /**

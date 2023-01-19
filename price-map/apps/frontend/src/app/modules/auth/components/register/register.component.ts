@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationService, WebSocketService } from '../../../../services';
-import { IUserRegisterInfo } from '@price-map/core/interfaces';
-import { AuthEvents } from '@price-map/core/enums';
-import { IResponseData } from '@price-map/core/interfaces';
+import { IUserRegisterInfo } from '@core/interfaces';
+import { AuthEvents } from '@core/enums';
+import { IResponseData } from '@core/interfaces';
 import { IResponseCallback } from '../../../../models/interfaces';
-import { User } from '@price-map/core/entities';
+import { User } from '@core/entities';
 
 /**
  * Компонент формы регистрации

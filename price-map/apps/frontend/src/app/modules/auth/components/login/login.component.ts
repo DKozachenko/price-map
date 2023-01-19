@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationService, TokenService, WebSocketService } from '../../../../services';
-import { IResponseData, IUserLoginInfo } from '@price-map/core/interfaces';
-import { AuthEvents } from '@price-map/core/enums';
+import { IResponseData, IUserLoginInfo } from '@core/interfaces';
+import { AuthEvents } from '@core/enums';
 import { IResponseCallback } from '../../../../models/interfaces';
 import { Router } from '@angular/router';
 

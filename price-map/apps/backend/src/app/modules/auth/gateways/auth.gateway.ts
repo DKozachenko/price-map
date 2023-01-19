@@ -7,9 +7,9 @@ import { MessageBody,
   WsResponse } from '@nestjs/websockets';
 import * as bcrypt from 'bcrypt';
 import { secretKey } from '../../../constants';
-import { IResponseData, IUserRegisterInfo, IUserLoginInfo } from '@price-map/core/interfaces';
-import { User } from '@price-map/core/entities';
-import { Role, AuthEvents } from '@price-map/core/enums';
+import { IResponseData, IUserRegisterInfo, IUserLoginInfo } from '@core/interfaces';
+import { User } from '@core/entities';
+import { Role, AuthEvents } from '@core/enums';
 
 /**
  * Шлюз авторизации

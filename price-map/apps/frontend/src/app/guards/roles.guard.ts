@@ -4,7 +4,7 @@ import {ActivatedRouteSnapshot,
   Router,
   RouterStateSnapshot} from '@angular/router';
 import { TokenService } from '../services';
-import { IPayload } from '@price-map/core/interfaces';
+import { IPayload } from '@core/interfaces';
 
 /**
  * Гвард для защиты роутов (проверяет соответствие ролей)

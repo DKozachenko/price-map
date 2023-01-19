@@ -1,7 +1,7 @@
 import { ExecutionContext, Injectable, CanActivate, mixin, Type } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { secretKey } from '../constants';
-import { IPayload } from '@price-map/core/interfaces';
+import { IPayload } from '@core/interfaces';
 
 /**
  * Гвард для защиты роутов (проверяет наличие токена)

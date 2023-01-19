@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 import { UsersService } from './services';
 import { UsersGateway } from './gateways';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '@price-map/core/entities';
+import { User } from '@core/entities';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User], 'postgresConnect')],

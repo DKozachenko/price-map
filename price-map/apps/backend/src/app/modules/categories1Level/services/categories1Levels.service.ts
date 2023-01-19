@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Category3Level, Category1Level } from '@price-map/core/entities';
+import { Category3Level, Category1Level } from '@core/entities';
 import { Repository } from 'typeorm';
 
 @Injectable()

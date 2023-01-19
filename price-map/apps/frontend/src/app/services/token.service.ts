@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TokenKey } from './../models/constants';
 import jwtDecode from 'jwt-decode';
-import { IPayload } from '@price-map/core/interfaces';
+import { IPayload } from '@core/interfaces';
 
 //TODO: перейти на хранение в куки
 /**

@@ -4,10 +4,10 @@ import { MessageBody,
   WsResponse } from '@nestjs/websockets';
 import { UseGuards } from '@nestjs/common';
 import { Roles } from '../../../decorators';
-import { Role } from '@price-map/core/enums';
+import { Role } from '@core/enums';
 import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
-import { IResponseData } from '@price-map/core/interfaces';
-import { Product } from '@price-map/core/entities';
+import { IResponseData } from '@core/interfaces';
+import { Product } from '@core/entities';
 import { ProductsService } from '../services';
 
 @WebSocketGateway({

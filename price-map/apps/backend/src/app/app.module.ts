@@ -8,7 +8,7 @@ import { Organization,
   User,
   Category1Level,
   Category2Level,
-  Category3Level } from '@price-map/core/entities';
+  Category3Level } from '@core/entities';
 import * as fs from 'fs';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AppGateway } from './gateways';
