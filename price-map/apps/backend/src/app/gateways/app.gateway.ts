@@ -1,6 +1,14 @@
 import { Logger } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, WebSocketGateway } from '@nestjs/websockets';
 
+/**
+ * Главный шлюз приложения
+ * @export
+ * @class AppGateway
+ * @implements {OnGatewayInit}
+ * @implements {OnGatewayConnection}
+ * @implements {OnGatewayDisconnect}
+ */
 @WebSocketGateway({
   cors: {
     origin: '*'

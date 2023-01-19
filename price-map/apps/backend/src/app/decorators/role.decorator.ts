@@ -1,5 +1,10 @@
-import { SetMetadata } from '@nestjs/common';
+import { CustomDecorator, SetMetadata } from '@nestjs/common';
 import { Role } from '@price-map/core/enums';
 import { roleKey } from '../constants';
 
-export const Roles = (...roles: Role[]) => SetMetadata(roleKey, roles);
+/**
+ * Декоратор для требуемых полей
+ * @export
+ * @type { (...roles: Role[]): CustomDecorator<string> }
+ */
+export const Roles = (...roles: Role[]): CustomDecorator<string> => SetMetadata(roleKey, roles);

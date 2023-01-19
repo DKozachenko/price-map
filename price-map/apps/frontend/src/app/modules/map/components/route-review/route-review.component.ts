@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { Point } from 'geojson';
 import { Map, NavigationControl, Popup } from 'maplibre-gl';
 import { WebSocketService } from '../../../../services';
@@ -29,8 +29,8 @@ export class RouteReviewComponent implements OnChanges {
       return {
         lat: product.shop.coordinates.latitude,
         lon: product.shop.coordinates.longitude
-      }
-    })
+      };
+    });
   }
 
   public buildRoute(): void {
@@ -39,7 +39,7 @@ export class RouteReviewComponent implements OnChanges {
     this.osrmService.buildRoute(coordinates)
       .subscribe((data) => {
         const coordinates: number[][] = data.routes[0].geometry.coordinates;
-        this.mapService.addLineSource(coordinates)
-      })
+        this.mapService.addLineSource(coordinates);
+      });
   }
 }

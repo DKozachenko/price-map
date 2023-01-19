@@ -1,4 +1,4 @@
-@import "../../../../../_mixins.scss";
+@import "../../../../../assets/styles/mixins";
 
 .wrapper {
   display: flex;
@@ -10,18 +10,18 @@
 }
 
 .auth {
-  border: 1px solid black;
+  margin-top: 2rem;
+  border: 2px solid #a16eff;
   border-radius: 1rem;
-  box-shadow: .5rem .5rem 1rem gray;
 
-  padding: 1rem 1.5rem;
-}
+  padding: 2rem 1.5rem;
 
-.title {
-  @include font(3.5rem, black);
-  text-align: center;
+  &__title {
+    @include font(3.5rem, #a16eff);
+    text-align: center;
 
-  margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
+  }
 }
 
 .form {
@@ -30,76 +30,46 @@
   align-items: center;
 
   &__group {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-
-    min-width: 30rem;
-
     margin-bottom: 2rem;
+    min-width: 28rem;
 
-    label {
-      @include font(2rem, black);
+    position: relative;
+  }
 
-      margin-bottom: .8rem;
+  input {
+    @include font(1.6rem, white);
+
+    &::placeholder {
+      @include font(1.6rem, white);
+      opacity: 0.5;
     }
+  }
 
-    input {
-      @include font(1.6rem, black);
-
-
-      border: 1px solid black;
-      border-radius: 2.5rem;
-      padding: .7rem 1.6rem;
-
-      transition: border-color .2s linear;
-
-      &:focus {
-        border-color: gray;
-        outline: 1px solid gray;
-      }
-    }
+  .password__field {
+    margin-bottom: 0;
   }
 }
 
 .button {
-  @include font(1.6rem, black);
-
-  border: 1px solid black;
-  border-radius: 2.5rem;
-  padding: .7rem 1.5rem;
+  margin-top: 0;
   width: 100%;
-  max-width: 15rem;
+  max-width: 25rem;
+}
 
-  background-color: white;
+::ng-deep.nb-theme-cosmic [nbButton].size-medium, .nb-theme-cosmic .size-medium[nbButtonToggle] {
+  @include font(1.6rem, white);
+  font-family: inherit;
+  padding: .7rem 1.5rem;
+  letter-spacing: .2rem;
+  font-family: 'Consolas', sans-serif;
+}
 
-  transition: color .2s linear, background-color .2s linear;
-
-  &.button__redirect {
-    border-color: #1890ff;
-    text-decoration: underline;
-    color: #1890ff;
-
-    margin-bottom: 2rem;
-
-    &:hover {
-      background-color: white;
-      color: #1890ff;
-    }
+::ng-deep.nb-theme-cosmic nb-toast {
+  .title {
+    @include font(1.8rem, white, 700);
   }
 
-  &:hover {
-    background-color: black;
-    color: white;
-  }
-
-  &:disabled {
-    background-color: lightgray;
-    border-color: gray;
-
-    &:hover {
-      color: black;
-      cursor: not-allowed;
-    }
+  .message {
+    @include font(1.4rem, white, 700);
   }
 }

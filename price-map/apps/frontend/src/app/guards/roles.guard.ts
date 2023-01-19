@@ -5,13 +5,15 @@ import {ActivatedRouteSnapshot,
   RouterStateSnapshot} from '@angular/router';
 import { TokenService } from '../services';
 import jwtDecode from 'jwt-decode';
+import { IPayload } from '@price-map/core/interfaces';
 
 /**
- * Гвард для защиты роутов
+ * Гвард для защиты роутов (проверяет соответствие ролей)
+ * @export
+ * @class RolesGuard
+ * @implements {CanActivate}
  */
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class RolesGuard implements CanActivate {
   constructor(
     private router: Router,
@@ -22,16 +24,16 @@ export class RolesGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot
   ): boolean {
     const roles: string[] = route.data['roles'];
-    const token = this.tokenService.getToken();
-    const tokenWithoutBearer = token.split(' ')?.[1];
-    const payload: any = jwtDecode(tokenWithoutBearer);
+    const token: string = this.tokenService.getToken();
+    const tokenWithoutBearer: string = token.split(' ')?.[1];
+    
+    const payload: IPayload = jwtDecode(tokenWithoutBearer);
     const role: string = payload.role;
-    console.log('roles', roles, role);
     if (roles.includes(role)) {
       return true;
     }
 
-    this.router.navigate(['/']);
+    this.router.navigate(['/auth']);
     return false;
   }
 }

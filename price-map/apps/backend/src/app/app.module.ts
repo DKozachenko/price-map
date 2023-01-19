@@ -10,8 +10,9 @@ import { Organization,
   Category2Level,
   Category3Level } from '@price-map/core/entities';
 import * as fs from 'fs';
-import { JwtService } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AppGateway } from './gateways';
+import { secretKey } from './constants';
 
 //TODO: вынести в интерфейсы
 interface BreadcrumbInfo {
@@ -21,7 +22,12 @@ interface BreadcrumbInfo {
   category3LevelName: string,
 }
 
-
+/**
+ * Главный модуль приложения
+ * @export
+ * @class AppModule
+ * @implements {OnModuleInit}
+ */
 @Module({
   imports: [
     AuthModule,
@@ -49,11 +55,15 @@ interface BreadcrumbInfo {
         Category3Level
       ],
       synchronize: true,
-    })
+    }),
+    JwtModule.register({
+      secret: secretKey,
+      signOptions: { expiresIn: '10h' },
+    }),
   ],
   providers: [
     JwtService,
-    AppGateway
+    AppGateway,
   ],
 })
 export class AppModule implements OnModuleInit {

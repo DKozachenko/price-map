@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { WebSocketService } from 'apps/frontend/src/app/services';
+import { WebSocketService } from '../../../../services';
 import { FilterService } from '../../services';
 
 @Component({
@@ -28,9 +28,9 @@ export class CharacteristicFilterComponent implements OnInit {
 
     this.webSocketSevice.socket.on('get category 3 level successed', (response) => {
       console.log('on get products successed', response);
-      console.log(response.data)
+      console.log(response.data);
       this.category3Level = response.data;
-    })
+    });
 
     this.webSocketSevice.addToken();
     this.webSocketSevice.socket.emit('get category 3 level attempt', { id: this.category3LevelId });
@@ -45,7 +45,7 @@ export class CharacteristicFilterComponent implements OnInit {
       this.currentFilter.push({
         name: filter.name,
         value
-      })
+      });
     }
 
     this.filterService.filterValues$.next(this.currentFilter);
@@ -64,10 +64,10 @@ export class CharacteristicFilterComponent implements OnInit {
           from: undefined,
           to: undefined
         }
-      }
+      };
 
       filterValue.value[key] = +value;
-      this.currentFilter.push(filterValue)
+      this.currentFilter.push(filterValue);
     }
 
     this.filterService.filterValues$.next(this.currentFilter);
@@ -92,9 +92,9 @@ export class CharacteristicFilterComponent implements OnInit {
       const filterValue: any = {
         name: filter.name,
         value: [value]
-      }
+      };
 
-      this.currentFilter.push(filterValue)
+      this.currentFilter.push(filterValue);
     }
 
     this.filterService.filterValues$.next(this.currentFilter);

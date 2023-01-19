@@ -2,9 +2,14 @@ import { Injectable, CanActivate, ExecutionContext, ForbiddenException, mixin } 
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '@price-map/core/enums';
-import { jwtConstant, roleKey } from '../constants';
+import { secretKey, roleKey } from '../constants';
 
-export const RolesAuthGuard = (failedEventName: string) => {
+/**
+ * Гвард для защиты роутов (проверяет соответствие ролей)
+ * @export
+ * @type { (failedEventName: string): Type<any> }
+ */
+export const RolesAuthGuard = (failedEventName: string): any => {
   @Injectable()
   class RolesAuthGuardMixin implements CanActivate {
     constructor(private reflector: Reflector,
@@ -24,7 +29,7 @@ export const RolesAuthGuard = (failedEventName: string) => {
       const token: Role = client.handshake?.auth?.token;
       const tokenWithoutBearer: string = token.split(' ')?.[1];
       const role = this.jwtService.verify(tokenWithoutBearer, {
-        secret: jwtConstant.secret
+        secret: secretKey
       })?.role;
 
       if (!requiredRoles.includes(role)) {

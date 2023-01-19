@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard, RolesGuard } from './guards';
+import { Role } from '@price-map/core/enums';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'auth',
+    redirectTo: 'map',
     pathMatch: 'full'
   },
   {
@@ -20,8 +21,8 @@ const routes: Routes = [
     ],
     data: {
       roles: [
-        'user',
-        'admin'
+        Role.User,
+        Role.Admin
       ]
     },
     loadChildren: () => import('./modules/map/map.module').then(m => m.MapModule)
@@ -34,8 +35,8 @@ const routes: Routes = [
     ],
     data: {
       roles: [
-        'user',
-        'admin'
+        Role.User,
+        Role.Admin
       ]
     },
     loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule)
@@ -47,13 +48,13 @@ const routes: Routes = [
       RolesGuard
     ],
     data: {
-      roles: ['admin']
+      roles: [Role.Admin]
     },
     loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule)
   },
   {
     path: '**',
-    redirectTo: 'auth',
+    redirectTo: 'map',
     pathMatch: 'full'
   },
 ];

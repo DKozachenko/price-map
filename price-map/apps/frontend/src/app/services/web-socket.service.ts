@@ -1,19 +1,50 @@
 import { Injectable } from '@angular/core';
-import { io, Socket, Manager } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
+import { DisconnectDescription } from 'socket.io-client/build/esm/socket';
 import { TokenService } from '.';
+import { IResponseCallback } from '../models/interfaces';
 
+/**
+ * Сервис общения с сервером по webSocket'у
+ * @export
+ * @class WebSocketService 
+ */
 @Injectable()
 export class WebSocketService {
+  /**
+   * Количество попыток подключения
+   * @private
+   * @type {number}
+   * @memberof WebSocketService
+   */
   private connectAttempts: number = 0;
-  private timeoutSecs: number = 2;
+  /**
+   * Максимальное количество попыток подключения
+   * @private
+   * @type {number}
+   * @memberof WebSocketService
+   */
   private maxConnectAttempts: number = 5;
+  /**
+   * Количество секунд, через которое происходит попытка переподключения
+   * @private
+   * @type {number}
+   * @memberof WebSocketService
+   */
+  private reconnectSecs: number = 2;
+  /**
+   * Экзепляр сокета
+   * @type {Socket}
+   * @memberof WebSocketService
+   */
   public socket!: Socket;
 
-  constructor(private readonly tokenService: TokenService) {
+  constructor(private readonly tokenService: TokenService) {}
 
-  }
-
-  /** Инициализация сокета */
+  /**
+   * Инициализация сокета
+   * @memberof WebSocketService
+   */
   public initSocket(): void {
     this.socket = io('http://localhost:3333');
 
@@ -21,31 +52,55 @@ export class WebSocketService {
       console.log('Socket connected');
     });
 
-    this.socket.on('connect_error', () => {
+    this.socket.on('connect_error', (err: Error) => {
+      console.error('Socket connect error', err);
+
       ++this.connectAttempts;
       if (this.connectAttempts >= this.maxConnectAttempts) {
+        console.warn('The client stopped trying to connect');
         this.socket.disconnect();
         return;
       }
 
       setTimeout(() => {
         this.socket.connect();
-      }, this.timeoutSecs * 1000);
+      }, this.reconnectSecs * 1000);
     });
 
-    this.socket.on('disconnect', () => {
-      console.log('Socket disconnected');
+    this.socket.on('disconnect', (reason: string, description: DisconnectDescription | undefined) => {
+      console.warn('Socket disconnected', 'reason ', reason, 'description', description);
     });
   }
 
+  /**
+   * Добавление токена к запросу
+   * @memberof WebSocketService
+   */
   public addToken(): void {
-    // this.socket = io('http://localhost:3333', {
-    //   auth: { 
-    //     token: this.tokenService.getToken()
-    //   }
-    // });
-    this.socket.auth = { 
+    this.socket.auth = {
       token: this.tokenService.getToken()
     };
+  }
+
+  /** 
+   * Отправка данных
+   * @template T тип отправляемых данных
+   * @param {string} eventName название события
+   * @param {T} data данные
+   * @memberof WebSocketService
+   */
+  public emit<T>(eventName: string, data: T): void {
+    this.socket.emit(eventName, data);
+  }
+
+  /**
+   * Подписка на событие
+   * @template T тип данных ответа от сервера
+   * @param {string} eventName название события
+   * @param {IResponseCallback<T>} callback колбэк 
+   * @memberof WebSocketService
+   */
+  public on<T>(eventName: string, callback: IResponseCallback<T>) {
+    this.socket.on(eventName, callback);
   }
 }

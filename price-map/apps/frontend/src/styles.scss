@@ -1,5 +1,5 @@
 @import '~maplibre-gl/dist/maplibre-gl.css';
-@import '_mixins';
+@import "./assets/styles/mixins";
 
 html {
   font-size: 10px!important;
@@ -10,13 +10,29 @@ body {
 }
 
 .root {
-  height: 100vh;
+  height: 100%;
   width: 100%;
+}
+
+.form__error {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  z-index: 5;
+  background-color: white;
+  border-radius: 1rem;
+  padding: .6rem;
+  border: 1px solid #a16eff;
+
+  .form__error-description {
+    @include font(1.3rem, #7a00ff, 700);
+  }
 }
 
 // Стили для попапа на карте
 .product__popup {
-  .mapboxgl-popup-content, 
+  .mapboxgl-popup-content,
   .maplibregl-popup-content {
     padding: 2rem;
   }

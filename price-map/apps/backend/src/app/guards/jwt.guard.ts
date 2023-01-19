@@ -1,15 +1,21 @@
-import { ExecutionContext, Injectable, CanActivate, mixin } from '@nestjs/common';
+import { ExecutionContext, Injectable, CanActivate, mixin, Type } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { jwtConstant } from '../constants';
+import { secretKey } from '../constants';
+import { IPayload } from '@price-map/core/interfaces';
 
-export const JwtAuthGuard = (failedEventName: string) => {
+/**
+ * Гвард для защиты роутов (проверяет наличие токена)
+ * @export
+ * @type { (failedEventName: string): Type<any> }
+ */
+export const JwtAuthGuard = (failedEventName: string): Type<any> => {
   @Injectable()
   class JwtAuthGuardMixin implements CanActivate {
     constructor(private readonly jwtService: JwtService) { }
 
     public canActivate(context: ExecutionContext): boolean {
       const client = context.switchToWs().getClient();
-      console.log(client.handshake)
+      console.log(client.handshake);
       const token: string = client.handshake?.auth?.token;
 
       if (!token) {
@@ -23,10 +29,10 @@ export const JwtAuthGuard = (failedEventName: string) => {
 
       const tokenWithoutBearer: string = token.split(' ')?.[1];
 
-      let payload: any;
+      let payload: IPayload;
       try {
         payload = this.jwtService.verify(tokenWithoutBearer, {
-          secret: jwtConstant.secret
+          secret: secretKey
         });
       } catch (e) {
         client.emit(failedEventName, {

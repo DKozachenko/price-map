@@ -6,3 +6,4 @@ export { ISchedule } from './schedule.interface';
 export { IResponseData } from './response-data.interface';
 export { IUserRegisterInfo } from './user-register-info.interface';
 export { IUserLoginInfo } from './user-login-info.interface';
+export { IPayload } from './payload-interface';

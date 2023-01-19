@@ -1,0 +1,18 @@
+@import "../../../../../assets/styles/mixins";
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  height: 100%;
+}
+
+::ng-deep.nb-theme-cosmic .tabset {
+  justify-content: space-evenly;
+}
+
+::ng-deep.nb-theme-cosmic nb-tabset .tab-link {
+  @include font(1.6rem, white);
+}

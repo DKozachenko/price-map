@@ -18,7 +18,7 @@ import { ProductsService } from '../services';
 export class ProductsGateway {
   constructor (private readonly productsService: ProductsService) {}
 
-  @Roles(Role.User)
+  @Roles(Role.User, Role.Admin)
   // @UseGuards(JwtAuthGuard('get products failed'), RolesAuthGuard('get products failed'))
   @SubscribeMessage('get products attempt')
   public async getAll(): Promise<WsResponse<IResponseData<Product[]>>> {

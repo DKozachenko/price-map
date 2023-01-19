@@ -4,19 +4,36 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing-module';
 import { appInitializer } from './initializers';
-import { TokenService, WebSocketService } from './services';
+import { NotificationService, TokenService, WebSocketService } from './services';
 import { HttpClientModule } from '@angular/common/http';
+import { NbThemeModule, NbToastrModule, NbToastrService } from '@nebular/theme';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AuthGuard, RolesGuard } from './guards';
 
+/**
+ * Главный модуль приложения
+ * @export
+ * @class AppModule
+ */
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NbThemeModule.forRoot({
+      name: 'cosmic'
+    }),
+    NbToastrModule.forRoot(),
+    NbEvaIconsModule
   ],
   providers: [
+    AuthGuard,
+    RolesGuard,
     WebSocketService,
     TokenService,
     {
@@ -25,6 +42,8 @@ import { HttpClientModule } from '@angular/common/http';
       deps: [WebSocketService],
       multi: true,
     },
+    NbToastrService,
+    NotificationService
   ],
   bootstrap: [AppComponent],
 })
