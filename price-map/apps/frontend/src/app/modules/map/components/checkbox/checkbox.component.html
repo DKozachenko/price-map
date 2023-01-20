@@ -1,0 +1,11 @@
+<label class="label">
+  <input type="checkbox" class="native-input visually-hidden"
+        [checked]="checked"
+        (click)="$event.stopPropagation()">
+  <span [class.checked]="checked" class="custom-checkbox">
+    <nb-icon *ngIf="checked" icon="checkmark-bold-outline" pack="nebular-essentials" class="custom-checkbox-icon"></nb-icon>
+  </span>
+  <span class="text">
+    {{ text }}
+  </span>
+</label>

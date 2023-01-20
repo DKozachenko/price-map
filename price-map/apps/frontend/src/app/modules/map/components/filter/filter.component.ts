@@ -48,7 +48,6 @@ export class FilterComponent implements OnInit {
   }
 
   private mapData(categories1Level: Category1Level): ICategory1LevelForView {
-    console.log(categories1Level)
     return {
       ...categories1Level,
       categories2Level: categories1Level.categories2Level.map((category2Level: Category2Level) => {
@@ -78,6 +77,7 @@ export class FilterComponent implements OnInit {
   }
 
   public select1LevelCategory(category1Level: ICategory1LevelForView): void {
+    console.log(123)
     category1Level.checked = !category1Level.checked;
     if (category1Level.checked) {
       category1Level.showCategories2Level = true;

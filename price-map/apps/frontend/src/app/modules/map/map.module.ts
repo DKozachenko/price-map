@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CharacteristicFilterComponent, FilterComponent, MapComponent, RouteReviewComponent } from './components';
+import { CharacteristicFilterComponent, CheckboxComponent, FilterComponent, MapComponent, RouteReviewComponent } from './components';
 import { MapRoutingModule } from './map-routing.module';
 import { FilterService, MapService, OsrmService, ProductsService } from './services';
-import { NbIconModule, NbLayoutModule } from '@nebular/theme';
+import { NbCardModule, NbCheckboxModule, NbIconModule, NbLayoutModule } from '@nebular/theme';
 import { SharedModule } from '..';
 
 @NgModule({
@@ -11,13 +11,16 @@ import { SharedModule } from '..';
     MapComponent,
     FilterComponent,
     CharacteristicFilterComponent,
-    RouteReviewComponent
+    RouteReviewComponent,
+    CheckboxComponent
   ],
   imports: [
     CommonModule,
     MapRoutingModule,
     NbLayoutModule,
     NbIconModule,
+    NbCardModule,
+    NbCheckboxModule,
     SharedModule
   ],
   providers: [

@@ -3,7 +3,7 @@
 .container {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 5.7rem);
 }
 
 .map {
@@ -16,4 +16,8 @@
 
 ::ng-deep.nb-theme-cosmic nb-layout-header nav {
   justify-content: flex-end!important;
+}
+
+::ng-deep.nb-theme-cosmic nb-layout-header ~ .layout-container {
+  min-height: auto;
 }
