@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CharacteristicFilterComponent, CheckboxComponent, FilterComponent, MapComponent, RouteReviewComponent } from './components';
 import { MapRoutingModule } from './map-routing.module';
 import { FilterService, MapService, OsrmService, ProductsService } from './services';
-import { NbCardModule, NbCheckboxModule, NbIconModule, NbLayoutModule } from '@nebular/theme';
+import { NbCardModule, NbCheckboxModule, NbIconModule, NbInputModule, NbLayoutModule, NbRadioModule, NbSelectModule } from '@nebular/theme';
 import { SharedModule } from '..';
 
 @NgModule({
@@ -21,6 +21,9 @@ import { SharedModule } from '..';
     NbIconModule,
     NbCardModule,
     NbCheckboxModule,
+    NbRadioModule,
+    NbInputModule,
+    NbSelectModule,
     SharedModule
   ],
   providers: [

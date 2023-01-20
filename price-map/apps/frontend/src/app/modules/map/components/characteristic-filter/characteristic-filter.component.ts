@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { RangeFilterKey } from 'libs/core/src/lib/types';
 import { WebSocketService } from '../../../../services';
 import { FilterService } from '../../services';
 
@@ -36,7 +37,7 @@ export class CharacteristicFilterComponent implements OnInit {
     this.webSocketSevice.socket.emit('get category 3 level attempt', { id: this.category3LevelId });
   }
 
-  public changeBooleanFilter(filter: any, value: boolean | undefined): void {
+  public changeBooleanFilter(filter: any, value: boolean | null): void {
     const filterElem: any = this.currentFilter.find((currentFilterElem: any) => currentFilterElem.name === filter.name);
 
     if (filterElem) {
@@ -51,18 +52,18 @@ export class CharacteristicFilterComponent implements OnInit {
     this.filterService.filterValues$.next(this.currentFilter);
   }
 
-  public changeRangeFilter(filter: any, key: 'from' | 'to', event: Event): void {
+  public changeRangeFilter(filter: any, key: RangeFilterKey, event: Event): void {
     const filterElem: any = this.currentFilter.find((currentFilterElem: any) => currentFilterElem.name === filter.name);
     const value = (event.target as HTMLInputElement).value;
 
     if (filterElem) {
-      filterElem.value[key] = +value;
+      filterElem.value[key] = value ? +value : null;
     } else {
       const filterValue: any = {
         name: filter.name,
         value: {
-          from: undefined,
-          to: undefined
+          from: null,
+          to: null
         }
       };
 

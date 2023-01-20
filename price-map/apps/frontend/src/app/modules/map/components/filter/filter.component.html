@@ -1,6 +1,6 @@
 <nb-card class="filter__wrap">
   <nb-card-header>Категории</nb-card-header>
-  
+
   <nb-card-body class="filter" *ngIf="categories1Level.length">
     <div *ngFor="let category1Level of categories1Level;" class="category__level">
       <div class="category__group">
@@ -30,13 +30,13 @@
           </ng-container>
         </div>
       </ng-container>
-    </div>
+    </div>    
   </nb-card-body>
-
-  <price-map-characteristic-filter
-    *ngIf="isShowCharacteristics"
-    [category3LevelId]="currentCategory3LevelId"
-  ></price-map-characteristic-filter>
 </nb-card>
+
+<price-map-characteristic-filter
+  *ngIf="isShowCharacteristics"
+  [category3LevelId]="currentCategory3LevelId"
+></price-map-characteristic-filter>
 
 
