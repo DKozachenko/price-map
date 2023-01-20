@@ -1,39 +1,34 @@
 <nb-card class="filter__wrap">
   <nb-card-header>Категории</nb-card-header>
+  
   <nb-card-body class="filter" *ngIf="categories1Level.length">
     <div *ngFor="let category1Level of categories1Level;" class="category__level">
       <div class="category__group">
         <map-checkbox [checked]="category1Level.checked" [text]="category1Level.name" (click)="select1LevelCategory(category1Level)"></map-checkbox>
+
+        <div *ngIf="category1Level.categories2Level.length" class="category__dropdown" [ngClass]="{ 'up': category1Level.showCategories2Level }">
+          <nb-icon icon="arrow-ios-downward-outline" (click)="showCategories2Level(category1Level)"></nb-icon>
+        </div>
       </div>
 
-      <ng-container *ngIf="category1Level.categories2Level.length">
-        <div class="category__dropdown">
-          <div class="arrow" [ngClass]="{ 'up': category1Level.showCategories2Level }"
-            (click)="showCategories2Level(category1Level)"></div>
-        </div>
-        
-        <ng-container *ngIf="category1Level.showCategories2Level">
-          <div *ngFor="let category2Level of category1Level.categories2Level;" class="category__level nested__level">
-            <div class="category__group">
-              <map-checkbox [checked]="category2Level.checked" [text]="category2Level.name" (click)="select2LevelCategory(category2Level)"></map-checkbox>
-            </div>
+      <ng-container *ngIf="category1Level.categories2Level.length && category1Level.showCategories2Level"> 
+        <div *ngFor="let category2Level of category1Level.categories2Level;" class="category__level nested__level">
+          <div class="category__group">
+            <map-checkbox [checked]="category2Level.checked" [text]="category2Level.name" (click)="select2LevelCategory(category2Level)"></map-checkbox>
 
-            <ng-container *ngIf="category2Level.categories3Level.length">
-              <div class="category__dropdown">
-                <div class="arrow" [ngClass]="{ 'up': category2Level.showCategories3Level }"
-                  (click)="showCategories3Level(category2Level)"></div>
-              </div>
-              
-              <ng-container *ngIf="category2Level.showCategories3Level">
-                <div *ngFor="let category3Level of category2Level.categories3Level;" class="category__level nested__level">
-                  <div class="category__group">
-                    <map-checkbox [checked]="category3Level.checked" [text]="category3Level.name" (click)="select3LevelCategory(category3Level)"></map-checkbox>
-                  </div>
-                </div>
-              </ng-container>
-            </ng-container>
+            <div *ngIf="category2Level.categories3Level.length" class="category__dropdown" [ngClass]="{ 'up': category2Level.showCategories3Level }">
+              <nb-icon icon="arrow-ios-downward-outline" (click)="showCategories3Level(category2Level)"></nb-icon>
+            </div>
           </div>
-        </ng-container>
+
+          <ng-container *ngIf="category2Level.categories3Level.length && category2Level.showCategories3Level">
+            <div *ngFor="let category3Level of category2Level.categories3Level;" class="category__level nested__level">
+              <div class="category__group">
+                <map-checkbox [checked]="category3Level.checked" [text]="category3Level.name" (click)="select3LevelCategory(category3Level)"></map-checkbox>
+              </div>
+            </div>
+          </ng-container>
+        </div>
       </ng-container>
     </div>
   </nb-card-body>
