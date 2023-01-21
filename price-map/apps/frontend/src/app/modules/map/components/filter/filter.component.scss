@@ -1,41 +1,11 @@
 @import "../../../../../assets/styles/mixins";
 
-.filter__wrap {
-  position: absolute;
-  left: 2rem;
-  top: 2rem;
-  bottom: 2rem;
-  z-index: 5;
-  border-radius: 1.5rem;
-  margin-bottom: 0;
-}
-
 .filter {
-  width: 23vw;
-  height: 100%;
-  padding: 2rem;
+  left: 2rem;
 
-  position: relative;
-  z-index: 5;
-
-  // &::-webkit-scrollbar {
-  //   width: 4px;            
-  // }
-  
-  // &::-webkit-scrollbar-track {
-  //   background: #323259;
-  //   border-radius: 20px;
-  // }
-  
-  // &::-webkit-scrollbar-thumb {
-  //   background-color: white; 
-  //   border-radius: 20px; 
-  //   border: 3px solid white;  
-
-  //   &:hover {
-  //     border-color: darken(white, 10%);
-  //   }
-  // }
+  &__body {
+    width: 23vw;
+  }
 }
 
 .category {
@@ -45,7 +15,7 @@
       margin-top: 1rem;
     }
 
-    &.nested__level {
+    &_nested {
       padding-left: 2rem;
     }
   }
@@ -65,7 +35,7 @@
     transform-origin: center center;
     transition: transform .2s linear;
 
-    &.up {
+    &_up {
       transform: rotate(-180deg) translateY(2px);
     }
 
@@ -73,12 +43,4 @@
       font-size: 1.65rem;
     }
   }
-}
-
-::ng-deep.nb-theme-cosmic nb-card-header {
-  @include font(1.8rem, white);
-}
-
-::ng-deep.nb-theme-cosmic nb-checkbox .text {
-  @include font(1.4rem, white);
 }

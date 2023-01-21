@@ -1,11 +1,11 @@
-<nb-card *ngIf="category3Level" class="characteristic__filter">
+<nb-card *ngIf="category3Level" class="characteristic__filter custom__map-card">
   <nb-card-header>Характеристики</nb-card-header>
 
-  <nb-card-body class="characteristic">
+  <nb-card-body class="custom__scroll custom__map-card__body">
     <ng-container *ngIf="category3Level.filters.length">
-      <div *ngFor="let filter of category3Level.filters;" class="category__level">
+      <div *ngFor="let filter of category3Level.filters;">
         <ng-container [ngSwitch]="filter.type">
-          <div *ngSwitchCase="'boolean'" class="category__group">
+          <div *ngSwitchCase="'boolean'" class="characteristic__group">
             <p>{{ filter.name }}</p>
 
             <nb-radio-group status="primary">
@@ -17,7 +17,7 @@
             </nb-radio-group>
           </div>
   
-          <div *ngSwitchCase="'range'" class="category__group range">
+          <div *ngSwitchCase="'range'" class="characteristic__group characteristic__group_range">
             <p>{{ filter.name }}</p>
   
             <input 
@@ -47,7 +47,7 @@
             >
           </div>
   
-          <div *ngSwitchCase="'enum'" class="category__group">
+          <div *ngSwitchCase="'enum'" class="characteristic__group">
             <p>{{ filter.name }}</p>
  
             <nb-select placeholder="Выберите" hero multiple fullWidth status="primary" shape="round" size="medium">

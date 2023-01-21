@@ -1,39 +1,19 @@
 @import "../../../../../assets/styles/mixins";
 
 .characteristic__filter {
-  position: absolute;
   left: 21.5vw;
-  top: 2rem;
-  bottom: 2rem;
   z-index: 4;
   width: 300px;
 
-  border-right: 1px solid black;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-  border-top-right-radius: 2.5rem;
-  border-bottom-right-radius: 2.5rem;
-
   padding-left: 5rem;
-  margin-bottom: 0;
   animation: slideIn .3s linear;
-
-  &-title {
-    @include font(2rem, white);
-
-    margin-bottom: 1rem;
-  }
 }
 
 .characteristic {
-  padding: 2rem;
-}
-
-.category {
   &__group {
     margin-bottom: 1.3rem;
 
-    &.range {
+    &_range {
       input {
         width: 40%;
 
@@ -65,51 +45,59 @@
 }
 
 ::ng-deep {
-  .nb-theme-cosmic nb-radio .outer-circle, 
-  .nb-theme-cosmic nb-radio .inner-circle {
-    width: 1.55rem;
-    height: 1.55rem;
+  .characteristic__filter {
+    nb-radio {
+      .outer-circle,
+      .inner-circle {
+        width: 1.55rem;
+        height: 1.55rem;
+      }
+      
+      .text {
+        @include font(1.4rem, white);
+        padding-left: 1.4rem!important;
+      }
+
+      label {
+        padding: .6rem 0!important;
+      }
+    }
+
+    [nbInput].size-medium {
+      @include font(1.1rem, white);
+    
+      &::placeholder {
+        @include font(1.1rem, white);
+        opacity: .6;
+      }
+    }
+
+    nb-select {
+      &.size-medium .select-button {
+        @include font(1.25rem, white);
+        padding-right: 2.5rem;
+      } 
+    }
   }
 }
 
-::ng-deep.nb-theme-cosmic nb-radio .text {
-  @include font(1.4rem, white);
-  padding-left: 1.4rem!important;
-}
-
-::ng-deep.nb-theme-cosmic nb-radio label {
-  padding: .6rem 0!important;
-}
-
-::ng-deep.nb-theme-cosmic [nbInput].size-medium {
-  @include font(1.1rem, white);
-
-  &::placeholder {
-    @include font(1.1rem, white);
-    opacity: .6;
+::ng-deep.nb-theme-cosmic {
+  nb-option-list {
+    border-color: #a16eff;
+  
+    &.size-medium nb-option {
+      @include font(1.25rem, white);
+      padding: 0.6rem 1rem!important;
+      align-items: center;
+    }
+  
+    &.position-bottom {
+      border-top-color: #a16eff;
+    }
   }
-}
 
-::ng-deep.nb-theme-cosmic nb-select.size-medium .select-button {
-  @include font(1.25rem, white);
-  padding-right: 2.5rem;
-} 
-
-::ng-deep.nb-theme-cosmic nb-option-list.size-medium nb-option {
-  @include font(1.25rem, white);
-  padding: 0.6rem 1rem;
-  align-items: center;
-}
-
-::ng-deep.nb-theme-cosmic nb-option-list {
-  border-color: #a16eff;
-}
-
-::ng-deep.nb-theme-cosmic nb-option-list.position-bottom {
-  border-top-color: #a16eff;
-}
-
-::ng-deep.nb-theme-cosmic nb-checkbox .custom-checkbox {
-  width: 1.35rem;
-  height: 1.35rem;
+  nb-checkbox .custom-checkbox {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
 }

@@ -69,7 +69,7 @@ body {
 }
 
 //Кастомные скролл
-.custom-scroll {
+.custom__scroll {
   &::-webkit-scrollbar {
     width: 4px;            
   }
@@ -87,5 +87,24 @@ body {
     &:hover {
       border-color: darken(white, 10%);
     }
+  }
+}
+
+//Кастомные стили для карточек на карте
+.custom__map-card {
+  position: absolute;
+  margin-bottom: 0!important;
+  z-index: 5;
+  top: 2rem;
+  bottom: 2rem;
+  border-radius: 1.5rem!important;
+
+  nb-card-header {
+    @include font(1.8rem, white);
+  }
+
+  &__body {
+    padding: 2rem!important;
+    height: 100%;
   }
 }
