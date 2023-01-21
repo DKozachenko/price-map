@@ -18,24 +18,24 @@
   position: relative;
   z-index: 5;
 
-  &::-webkit-scrollbar {
-    width: 4px;            
-  }
+  // &::-webkit-scrollbar {
+  //   width: 4px;            
+  // }
   
-  &::-webkit-scrollbar-track {
-    background: #323259;
-    border-radius: 20px;
-  }
+  // &::-webkit-scrollbar-track {
+  //   background: #323259;
+  //   border-radius: 20px;
+  // }
   
-  &::-webkit-scrollbar-thumb {
-    background-color: white; 
-    border-radius: 20px; 
-    border: 3px solid white;  
+  // &::-webkit-scrollbar-thumb {
+  //   background-color: white; 
+  //   border-radius: 20px; 
+  //   border: 3px solid white;  
 
-    &:hover {
-      border-color: darken(white, 10%);
-    }
-  }
+  //   &:hover {
+  //     border-color: darken(white, 10%);
+  //   }
+  // }
 }
 
 .category {

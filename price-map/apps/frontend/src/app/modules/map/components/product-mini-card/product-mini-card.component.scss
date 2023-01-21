@@ -1,0 +1,23 @@
+@import "../../../../../assets/styles/mixins";
+
+.product {
+  border: 1px solid white;
+  margin-bottom: 2rem;
+
+  p {
+    @include font(1.3rem, white, 400);
+  }
+}
+
+::ng-deep .product {
+  nb-card-header {
+    @include font(1.4rem, white, 700);
+    border-bottom-color: white;
+  }
+
+  nb-card-footer {
+    @include font(1.3rem, white, 400);
+    border-top-color: white;
+  }
+}
+

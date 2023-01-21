@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Product } from '@core/entities';
 import { Point } from 'geojson';
 import { Map, NavigationControl, Popup } from 'maplibre-gl';
 import { WebSocketService } from '../../../../services';
@@ -13,7 +14,7 @@ export class RouteReviewComponent implements OnChanges {
   @Input()
   public productIds: string[] = [];
 
-  public products: any = [];
+  public products: Product[] = [];
 
   constructor(private readonly productsService: ProductsService,
     private readonly osrmService: OsrmService,
@@ -22,6 +23,7 @@ export class RouteReviewComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges): void {
     this.products = this.productsService.getProductsByIds(this.productIds);
+    console.log(this.products)
   }
 
   public getCoordinates(): { lat: number, lon: number }[] {

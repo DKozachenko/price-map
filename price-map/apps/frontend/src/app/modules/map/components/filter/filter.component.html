@@ -1,7 +1,7 @@
 <nb-card class="filter__wrap">
   <nb-card-header>Категории</nb-card-header>
 
-  <nb-card-body class="filter" *ngIf="categories1Level.length">
+  <nb-card-body class="filter custom-scroll" *ngIf="categories1Level.length">
     <div *ngFor="let category1Level of categories1Level;" class="category__level">
       <div class="category__group">
         <map-checkbox [checked]="category1Level.checked" [text]="category1Level.name" (click)="select1LevelCategory(category1Level)"></map-checkbox>

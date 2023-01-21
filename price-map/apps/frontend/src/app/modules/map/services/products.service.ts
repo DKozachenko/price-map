@@ -139,7 +139,7 @@ export class ProductsService {
   }
 
   public getProductsByIds(ids: string[]): any[] {
-    return this.products.filter((product: any) => ids.includes(product.id));
+    return this.products;
   }
 
 }

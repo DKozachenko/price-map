@@ -1,0 +1,12 @@
+<nb-card *ngIf="product" class="product">
+  <nb-card-header>{{ product.name }}</nb-card-header>
+
+  <nb-card-body class="">
+    <p>{{ product.description }}</p>
+    <p>Из {{ product.shop.name }}</p>
+  </nb-card-body>
+
+  <nb-card-footer>{{ product.price }} р.</nb-card-footer>
+</nb-card>
+
+
