@@ -68,8 +68,8 @@ export class LoginComponent implements OnInit {
       password: new FormControl(undefined, [Validators.required]),
     });
 
-    this.webSocketSevice.socket.on(AuthEvents.LoginSuccessed, this.onLoginSuccessed);
-    this.webSocketSevice.socket.on(AuthEvents.LoginFailed, this.onLoginFailed);
+    this.webSocketSevice.on(AuthEvents.LoginSuccessed, this.onLoginSuccessed);
+    this.webSocketSevice.on(AuthEvents.LoginFailed, this.onLoginFailed);
   }
 
   /** 

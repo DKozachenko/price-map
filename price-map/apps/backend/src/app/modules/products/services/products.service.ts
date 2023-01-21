@@ -16,4 +16,16 @@ export class ProductsService {
       }
     });
   }
+
+  async getById(id: string): Promise<Product> {
+    return await this.productRepository.findOne({
+      where: {
+        id
+      },
+      relations: {
+        shop: true,
+        category3Level: true
+      }
+    });
+  }
 }

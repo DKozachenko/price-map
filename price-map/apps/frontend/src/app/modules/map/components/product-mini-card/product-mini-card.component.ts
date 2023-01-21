@@ -1,9 +1,5 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Product } from '@core/entities';
-import { Point } from 'geojson';
-import { Map, NavigationControl, Popup } from 'maplibre-gl';
-import { WebSocketService } from '../../../../services';
-import { FilterService, MapService, OsrmService, ProductsService } from '../../services';
+import { Component, Input } from '@angular/core';
+import { ProductService } from '../../services';
 
 @Component({
   selector: 'map-product-mini-card',
@@ -11,8 +7,11 @@ import { FilterService, MapService, OsrmService, ProductsService } from '../../s
   styleUrls: ['./product-mini-card.component.scss'],
 })
 export class ProductMiniCardComponent {
-  @Input()
-  public product: any;
+  @Input() public product: any;
 
-  constructor() {}
+  constructor(private readonly productService: ProductService) {}
+
+  public deleteProductFromRoute(): void {
+    this.productService.removeProductIdFromRoute(this.product.id);
+  }
 }

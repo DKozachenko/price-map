@@ -18,8 +18,16 @@
     }
   
     nb-card-footer {
-      @include font(1.3rem, white, 400);
       border-top-color: white;
+      transition: background-color .2s linear;
+
+      display: flex;
+      justify-content: center;
+
+      &:hover {
+        background-color: darken(#323259, 10%);
+        cursor: pointer;
+      }
     }
   }
 }

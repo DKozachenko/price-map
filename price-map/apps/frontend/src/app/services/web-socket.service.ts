@@ -104,4 +104,13 @@ export class WebSocketService {
   public on<T>(eventName: string, callback: IResponseCallback<T>) {
     this.socket.on(eventName, callback);
   }
+
+  /**
+   * Удаление слушателя события
+   * @param {string} eventName название события
+   * @memberof WebSocketService
+   */
+  public removeEventListener(eventName: string): void {
+    this.socket.off(eventName);
+  }
 }

@@ -78,8 +78,8 @@ export class RegisterComponent implements OnInit {
       ]),
     });
 
-    this.webSocketSevice.socket.on(AuthEvents.RegisterFailed, this.onRegisterFailed);
-    this.webSocketSevice.socket.on(AuthEvents.RegisterSuccessed, this.onRegisterSuccessed);
+    this.webSocketSevice.on(AuthEvents.RegisterFailed, this.onRegisterFailed);
+    this.webSocketSevice.on(AuthEvents.RegisterSuccessed, this.onRegisterSuccessed);
   }
 
   /**

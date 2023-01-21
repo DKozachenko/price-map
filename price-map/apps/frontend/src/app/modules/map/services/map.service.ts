@@ -2,13 +2,16 @@ import { ElementRef, Injectable } from '@angular/core';
 import { Point } from 'geojson';
 import { Map, Marker, NavigationControl, Popup, Source } from 'maplibre-gl';
 import { Observable, Subject } from 'rxjs';
+import { ProductService } from '.';
 
 @Injectable()
 export class MapService {
   public clicks$: Subject<Point> = new Subject();
-  public productIdsToRoute: Set<string> = new Set();
-  public productIdsToRoute$: Subject<Set<string>> = new Subject();
+  // public productIdsToRoute: Set<string> = new Set();
+  // public productIdsToRoute$: Subject<Set<string>> = new Subject();
   public map!: Map;
+
+  constructor(private readonly productService: ProductService) {}
 
   public initMap(container: ElementRef<HTMLElement>): void {
     const initialState = { lng: 82.936, lat: 55.008, zoom: 12 };
@@ -182,11 +185,7 @@ export class MapService {
   }
 
   public addProductIdToRoute(id: string): void {
-    const idInRoute: string | undefined = [...this.productIdsToRoute].find((productId: string) => productId === id);
-    this.productIdsToRoute.add(id);
-    if (!idInRoute) {
-      this.productIdsToRoute$.next(this.productIdsToRoute);
-    }
+    this.productService.addProductIdToRoute(id);
   }
 
 

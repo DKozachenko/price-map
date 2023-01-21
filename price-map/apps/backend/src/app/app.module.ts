@@ -13,6 +13,8 @@ import * as fs from 'fs';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AppGateway } from './gateways';
 import { secretKey } from './constants';
+import { AppService } from './services';
+import { HttpModule } from '@nestjs/axios';
 
 //TODO: вынести в интерфейсы
 interface BreadcrumbInfo {
@@ -30,11 +32,13 @@ interface BreadcrumbInfo {
  */
 @Module({
   imports: [
+    
     AuthModule,
     UsersModule,
     ProductsModule,
     Categories1LevelModule,
     ScrapingModule,
+    HttpModule,
     //TODO: Добавить свой логгер
     //TODO: Миграции
     TypeOrmModule.forRoot({
@@ -64,6 +68,7 @@ interface BreadcrumbInfo {
   providers: [
     JwtService,
     AppGateway,
+    AppService
   ],
 })
 export class AppModule implements OnModuleInit {

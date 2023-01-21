@@ -34,4 +34,21 @@ export class ProductsGateway {
       }
     };
   }
+
+  @Roles(Role.User, Role.Admin)
+  // @UseGuards(JwtAuthGuard('get product failed'), RolesAuthGuard('get product failed'))
+  @SubscribeMessage('get product attempt')
+  public async getById(@MessageBody() id: string): Promise<WsResponse<IResponseData<Product>>> {
+    const product: Product = await this.productsService.getById(id);
+
+    return {
+      event: 'get product successed',
+      data: {
+        statusCode: 200,
+        error: false,
+        data: product,
+        message: 'Товар успешно получен'
+      }
+    };
+  }
 }
