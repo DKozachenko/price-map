@@ -1,13 +1,13 @@
-<nb-card *ngIf="product" class="product">
+<nb-card class="product">
   <nb-card-header>{{ product.name }}</nb-card-header>
 
   <nb-card-body class="product__body">
-    <p>Из {{ product.shop.name }}</p>
+    <p>Из {{ product.shop?.name }}</p>
     <p>За {{ product.price }} р.</p>
   </nb-card-body>
 
   <nb-card-footer (click)="deleteProductFromRoute()">
-    <nb-icon icon="close-circle-outline"></nb-icon>
+    <nb-icon icon="close-outline"></nb-icon>
   </nb-card-footer>
 </nb-card>
 

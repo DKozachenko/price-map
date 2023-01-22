@@ -25,9 +25,6 @@ export class FilterComponent implements OnInit {
 
   public categories1Level: ICategory1LevelForView[] = [];
   public setChechedCategories13evel: Set<string> = new Set();
-  public get currentCategory3LevelId() {
-    return [...this.setChechedCategories13evel][0];
-  }
 
   public isShowCharacteristics: boolean = false;
 

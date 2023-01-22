@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Product } from '@core/entities';
 import { NotificationService, WebSocketService } from '../../../../services';
-import { MapService, ProductService } from '../../services';
+import { ProductService } from '../../services';
 import { ICoordinates, IResponseData } from '@core/interfaces';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { IResponseCallback } from '../../../../models/interfaces';
-import { Coordinates } from 'maplibre-gl';
 
 /**
  * Компонент отображения товаров, по которым нужно построить маршрут
@@ -21,12 +20,39 @@ import { Coordinates } from 'maplibre-gl';
   styleUrls: ['./route-review.component.scss'],
 })
 export class RouteReviewComponent implements OnInit, OnDestroy {
+  /**
+   * Колбэк, срабатывающий при успешном получении товара
+   * @private
+   * @param {IResponseData<Product>} response ответ сервера
+   * @type {IResponseCallback<IResponseData<Product>>}
+   * @memberof RouteReviewComponent
+   */
   private onGetProductSuccessed: IResponseCallback<IResponseData<Product>> = (response: IResponseData<Product>) => {
     this.products.push(response.data);
   }
 
+  /**
+   * Колбэк, срабатывающий при успешном получении товара
+   * @private
+   * @param {IResponseData<null>} response ответ сервера
+   * @type {IResponseCallback<IResponseData<null>>}
+   * @memberof RouteReviewComponent
+   */
   private onGetProductFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
     this.notificationService.showError(response.message);
+  }
+
+  /**
+   * Получение массива координат
+   * @private
+   * @return {*}  {ICoordinates[]} массив координат
+   * @memberof RouteReviewComponent
+   */
+  private getCoordinates(): ICoordinates[] {
+    return this.products.map((product: Product) => ({
+      latitude: product.shop.coordinates.longitude,
+      longitude: product.shop.coordinates.latitude
+    }));
   }
 
   /**
@@ -65,18 +91,12 @@ export class RouteReviewComponent implements OnInit, OnDestroy {
     this.webSocketService.removeEventListener('get product successed');
   }
 
-  public getCoordinates(): ICoordinates[] {
-    return this.products.map((product: Product) => {
-      return {
-        latitude: product.shop.coordinates.longitude,
-        longitude: product.shop.coordinates.latitude
-      };
-    });
-  }
-
+  /**
+   * Построение маршрута
+   * @memberof RouteReviewComponent
+   */
   public buildRoute(): void {
     const coordinates: ICoordinates[] = this.getCoordinates();
-
     this.webSocketService.emit<ICoordinates[]>('build route attempt', coordinates);
   }
 }

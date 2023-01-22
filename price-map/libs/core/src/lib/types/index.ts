@@ -1,2 +1,2 @@
 export { FilterType } from './filter-type.type';
-export { RangeFilterKey } from './range-filter-key.type';
+export { RangeFilterIndex } from './range-filter-index.type';

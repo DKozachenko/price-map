@@ -4,7 +4,7 @@ import { Category3Level, Category1Level } from '@core/entities';
 import { Repository } from 'typeorm';
 
 @Injectable()
-export class Categories1LevelService {
+export class CategoriesService {
   @InjectRepository(Category1Level, 'postgresConnect')
   private readonly category1LevelRepository: Repository<Category1Level>;
 

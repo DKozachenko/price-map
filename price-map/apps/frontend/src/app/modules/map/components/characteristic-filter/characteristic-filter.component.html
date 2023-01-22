@@ -1,6 +1,7 @@
 <nb-card *ngIf="category3Level" class="characteristic__filter custom__map-card">
   <nb-card-header>Характеристики</nb-card-header>
 
+  <!-- TODO: trackBy -->
   <nb-card-body class="custom__scroll custom__map-card__body">
     <ng-container *ngIf="category3Level.filters.length">
       <div *ngFor="let filter of category3Level.filters;">
@@ -9,15 +10,27 @@
             <p>{{ filter.name }}</p>
 
             <nb-radio-group status="primary">
-              <nb-radio [value]="null" (click)="changeBooleanFilter(filter, null)">Неважно</nb-radio>
+              <nb-radio 
+                [value]="null" 
+                (click)="changeBooleanFilter(filter, null)"
+              >Неважно</nb-radio>
 
-              <nb-radio [value]="true" (click)="changeBooleanFilter(filter, true)">Да</nb-radio>
+              <nb-radio 
+                [value]="true" 
+                (click)="changeBooleanFilter(filter, true)"
+              >Да</nb-radio>
 
-              <nb-radio [value]="false" (click)="changeBooleanFilter(filter, false)">Нет</nb-radio>
+              <nb-radio 
+                [value]="false" 
+                (click)="changeBooleanFilter(filter, false)"
+              >Нет</nb-radio>
             </nb-radio-group>
           </div>
   
-          <div *ngSwitchCase="'range'" class="characteristic__group characteristic__group_range">
+          <div 
+            *ngSwitchCase="'range'" 
+            class="characteristic__group characteristic__group_range"
+          >
             <p>{{ filter.name }}</p>
   
             <input 
@@ -30,7 +43,7 @@
               [placeholder]="filter.values[0]" 
               [min]="+filter.values[0]" 
               [max]="+filter.values[1]"
-              (change)="changeRangeFilter(filter, 'from', $event)"
+              (change)="changeRangeFilter(filter, 0, $event)"
             >
 
             <input 
@@ -43,15 +56,27 @@
               [placeholder]="filter.values[1]" 
               [min]="+filter.values[0]" 
               [max]="+filter.values[1]"
-              (change)="changeRangeFilter(filter, 'to', $event)"
+              (change)="changeRangeFilter(filter, 1, $event)"
             >
           </div>
   
           <div *ngSwitchCase="'enum'" class="characteristic__group">
             <p>{{ filter.name }}</p>
  
-            <nb-select placeholder="Выберите" hero multiple fullWidth status="primary" shape="round" size="medium">
-              <nb-option *ngFor="let value of filter.values" [value]="value" (click)="changeEnumFilter(filter, value)">{{ value }}</nb-option>
+            <nb-select 
+              placeholder="Выберите" 
+              hero 
+              multiple 
+              fullWidth 
+              status="primary" 
+              shape="round"
+              size="medium"
+            >
+              <nb-option 
+                *ngFor="let value of filter.values" 
+                [value]="value" 
+                (click)="changeEnumFilter(filter, value)"
+              >{{ value }}</nb-option>
             </nb-select>
           </div>
   

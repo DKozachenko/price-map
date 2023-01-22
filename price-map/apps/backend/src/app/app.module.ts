@@ -1,6 +1,6 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ScrapingModule, AuthModule, UsersModule, ProductsModule, Categories1LevelModule } from './modules';
+import { ScrapingModule, AuthModule, UsersModule, ProductsModule, CategoriesModule } from './modules';
 import { ScrapingService } from './modules/scraping/services';
 import { Organization,
   Shop,
@@ -32,11 +32,10 @@ interface BreadcrumbInfo {
  */
 @Module({
   imports: [
-    
     AuthModule,
     UsersModule,
     ProductsModule,
-    Categories1LevelModule,
+    CategoriesModule,
     ScrapingModule,
     HttpModule,
     //TODO: Добавить свой логгер

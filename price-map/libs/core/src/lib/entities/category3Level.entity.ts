@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 import { Category2Level, Product } from ".";
 import { IFilter } from "../interfaces";
 
+//TODO: сделать некоторые поля необязательными
 /**
  * Сущность категории 3 уровня
  * @export

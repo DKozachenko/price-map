@@ -14,7 +14,7 @@ export class ProductService {
     this.addProductIdToRoute$.next(id);
   }
 
-  public removeProductIdFromRoute(id: string): void {
+  public deleteProductIdFromRoute(id: string): void {
     this.productIdsToRoute.delete(id);
     this.productIdsToRoute$.next(this.productIdsToRoute);
     this.deleteProductIdFromRoute$.next(id);

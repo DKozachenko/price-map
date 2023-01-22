@@ -52,6 +52,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             data: {
               statusCode: 200,
               error: false,
+              //TODO: разобраться в кои-то веке с долготой и широтой
               data: data.map((value: number[]) => {
                 const temp = value[0];
                 value[0] = value[1];

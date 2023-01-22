@@ -8,21 +8,21 @@ import { CategoryEvents, Role } from '@core/enums';
 import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
 import { IResponseData, IUserLoginInfo } from '@core/interfaces';
 import { Category1Level, Category3Level } from '@core/entities';
-import { Categories1LevelService } from '../services';
+import { CategoriesService } from '../services';
 
 @WebSocketGateway({
   cors: {
     origin: '*'
   }
 })
-export class Categories1LevelGateway {
-  constructor (private readonly productsService: Categories1LevelService) {}
+export class CategoriesGateway {
+  constructor (private readonly categoriesService: CategoriesService) {}
 
   @Roles(Role.User)
   // @UseGuards(JwtAuthGuard('get categories 1 level failed'), RolesAuthGuard('get categories 1 level failed'))
   @SubscribeMessage(CategoryEvents.GetCategories1LevelAttempt)
   public async getAll(): Promise<WsResponse<IResponseData<Category1Level[]>>> {
-    const products: Category1Level[] = await this.productsService.getAll();
+    const products: Category1Level[] = await this.categoriesService.getAll();
 
     return {
       event: CategoryEvents.GetCategories1LevelSuccessed,
@@ -35,15 +35,16 @@ export class Categories1LevelGateway {
     };
   }
 
+  //TODO: переписать роуты на Observable
   @Roles(Role.User)
   // @UseGuards(JwtAuthGuard('get categories 1 level failed'), RolesAuthGuard('get categories 1 level failed'))
-  @SubscribeMessage('get category 3 level attempt')
-  public async getCategory3Level(@MessageBody() data: { id: string }):
+  @SubscribeMessage(CategoryEvents.GetCategory3LevelAttempt)
+  public async getCategory3Level(@MessageBody() id: string):
     Promise<WsResponse<IResponseData<Category3Level>>> {
-    const product: Category3Level = await this.productsService.getById(data.id);
+    const product: Category3Level = await this.categoriesService.getById(id);
 
     return {
-      event: 'get category 3 level successed',
+      event: CategoryEvents.GetCategory3LevelSuccessed,
       data: {
         statusCode: 200,
         error: false,
