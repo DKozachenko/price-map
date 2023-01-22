@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category3Level, Category2Level, Category1Level } from '@core/entities';
 import { Repository } from 'typeorm';
+import { from, Observable } from 'rxjs';
 
 /**
  * Сервис категорий (всех уровней)
@@ -57,11 +58,11 @@ export class CategoriesService {
    * @return {*}  {Promise<Category3Level>} категория 3 уровня
    * @memberof CategoriesService
    */
-  public async getCategory3LevelById(id: string): Promise<Category3Level> {
-    return this.category3LevelRepository.findOne({
+  public getCategory3LevelById(id: string): Observable<Category3Level> {
+    return from(this.category3LevelRepository.findOne({
       where: {
         id
       }
-    });
+    }));
   }
 }

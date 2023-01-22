@@ -1,3 +1,4 @@
+import { Observable, of, switchMap } from 'rxjs';
 import { MessageBody,
   SubscribeMessage,
   WebSocketGateway,
@@ -58,7 +59,7 @@ export class CategoriesGateway {
     };
   }
 
-  //TODO: переписать роуты на Observable
+  //TODO: переписать роуты на Observable все как тут
   /**
    * Получение категории 3 уровня по id 
    * @param {string} id id записи
@@ -68,31 +69,44 @@ export class CategoriesGateway {
   @Roles(Role.User, Role.Admin)
   // @UseGuards(JwtAuthGuard('get categories 1 level failed'), RolesAuthGuard('get categories 1 level failed'))
   @SubscribeMessage(CategoryEvents.GetCategory3LevelAttempt)
-  public async getCategory3LevelById(@MessageBody() id: string): Promise<WsResponse<IResponseData<Category3Level>>> {
-    let category3Level: Category3Level;
+  public getCategory3LevelById(@MessageBody() id: string): Observable<WsResponse<IResponseData<Category3Level>>> {
+    return this.categoriesService.getCategory3LevelById(id)
+      .pipe(
+        switchMap((category3Level: Category3Level) => {
+          return of({
+            event: CategoryEvents.GetCategory3LevelSuccessed,
+            data: {
+              statusCode: 200,
+              error: false,
+              data: category3Level,
+              message: 'Категория 3 уровня успешно получена'
+            }
+          })
+        })
+      )
 
-    try {
-      category3Level = await this.categoriesService.getCategory3LevelById(id);
-    } catch (err: any) {
-      return {
-        event: CategoryEvents.GetCategory3LevelFailed,
-        data: {
-          statusCode: 500,
-          error: true,
-          data: null,
-          message: 'Ошибка при получении категории 3 уровня из базы'
-        }
-      };
-    }
+    // try {
+    //   category3Level = await this.categoriesService.getCategory3LevelById(id);
+    // } catch (err: any) {
+    //   return {
+    //     event: CategoryEvents.GetCategory3LevelFailed,
+    //     data: {
+    //       statusCode: 500,
+    //       error: true,
+    //       data: null,
+    //       message: 'Ошибка при получении категории 3 уровня из базы'
+    //     }
+    //   };
+    // }
 
-    return {
-      event: CategoryEvents.GetCategory3LevelSuccessed,
-      data: {
-        statusCode: 200,
-        error: false,
-        data: category3Level,
-        message: 'Категория 3 уровня успешно получена'
-      }
-    };
+    // return {
+    //   event: CategoryEvents.GetCategory3LevelSuccessed,
+    //   data: {
+    //     statusCode: 200,
+    //     error: false,
+    //     data: category3Level,
+    //     message: 'Категория 3 уровня успешно получена'
+    //   }
+    // };
   }
 }
