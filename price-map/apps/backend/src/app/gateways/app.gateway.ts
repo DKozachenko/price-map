@@ -1,4 +1,4 @@
-import { Role } from '@core/enums';
+import { AppEvents, Role } from '@core/enums';
 import { ICoordinates, IResponseData } from '@core/interfaces';
 import { Logger } from '@nestjs/common';
 import { MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WsResponse } from '@nestjs/websockets';
@@ -35,20 +35,24 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     Logger.log('Socket disconnected', 'AppGateway');
   }
 
+  /**
+   * Событие построения маршрута 
+   * @param {ICoordinates[]} coordinates коодинаты
+   * @return {*}  {Observable<WsResponse<IResponseData<number[][]>>>}
+   * @memberof AppGateway
+   */
   @Roles(Role.User, Role.Admin)
   // @UseGuards(JwtAuthGuard('get product failed'), RolesAuthGuard('get product failed'))
-  @SubscribeMessage('build route attempt')
-  public getById(@MessageBody() coordinates: ICoordinates[]): Observable<WsResponse<IResponseData<number[][]>>> {
-    console.time()
+  @SubscribeMessage(AppEvents.BuildRouteAttempt)
+  public buildRoute(@MessageBody() coordinates: ICoordinates[]): Observable<WsResponse<IResponseData<number[][]>>> {
     return this.appService.buildRoute(coordinates)
       .pipe(
+        //TODO: интерфейс для данных от OSRM
         switchMap((osrmData: any) => {
           const poly: string = osrmData.data.routes[0].geometry;
           const data: number[][] = polyline.decode(poly);
-          console.log('daa', data)
-          // Logger.debug(JSON.stringify(data));
           return of({
-            event: 'build route successed',
+            event: AppEvents.BuildRouteSuccessed,
             data: {
               statusCode: 200,
               error: false,
@@ -64,11 +68,9 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
           })
         }),
         catchError((err: Error) => {
-          console.log(err, 123);
-          console.timeEnd()
           Logger.error(err, 'AppGateway');
           return of({
-            event: 'build route failed',
+            event: AppEvents.BuildRouteFailed,
             data: {
               statusCode: 400,
               error: false,

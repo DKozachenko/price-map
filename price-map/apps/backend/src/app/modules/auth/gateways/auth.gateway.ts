@@ -26,7 +26,7 @@ export class AuthGateway {
     private readonly jwtService: JwtService) {}
 
   /**
-   * Событие попытки регистрации
+   * Событие регистрации
    * @param {IUserRegisterInfo} userRegisterInfo информация для регистрации
    * @return {*}  {Promise<WsResponse<IResponseData<User>>>} данные о зарегистрированном пользователе
    * @memberof AuthGateway

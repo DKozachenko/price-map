@@ -2,12 +2,18 @@ import { Module } from '@nestjs/common';
 import { CategoriesService } from './services';
 import { CategoriesGateway } from './gateways';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Category1Level, Category3Level } from '@core/entities';
+import { Category1Level, Category2Level, Category3Level } from '@core/entities';
 import { JwtService } from '@nestjs/jwt';
 
+/**
+ * Модуль категорий (всех уровней)
+ * @export
+ * @class CategoriesModule
+ */
 @Module({
   imports: [TypeOrmModule.forFeature([
     Category1Level,
+    Category2Level,
     Category3Level
   ], 'postgresConnect')],
   providers: [
@@ -15,6 +21,7 @@ import { JwtService } from '@nestjs/jwt';
     CategoriesGateway,
     CategoriesService,
   ],
+  //TODO: вопрос на миллион - зачем нам экспортировать сервис, если мы юзаем его только тут
   exports: [CategoriesService]
 })
 export class CategoriesModule {}

@@ -7,6 +7,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@core/entities';
 import { UsersService } from '../users/services';
 
+/**
+ * Модуль авторизации
+ * @export
+ * @class AuthModule
+ */
 @Module({
   imports: [
     TypeOrmModule.forFeature([User], 'postgresConnect'),

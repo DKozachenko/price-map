@@ -10,7 +10,7 @@ import { NbThemeModule, NbToastrModule, NbToastrService, NbIconModule, NbLayoutM
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthGuard, RolesGuard } from './guards';
-import { SharedModule } from './modules';
+
 /**
  * Главный модуль приложения
  * @export
