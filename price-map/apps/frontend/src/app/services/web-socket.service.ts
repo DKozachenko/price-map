@@ -4,6 +4,7 @@ import { DisconnectDescription } from 'socket.io-client/build/esm/socket';
 import { TokenService } from '.';
 import { IResponseCallback } from '../models/interfaces';
 
+//TODO: можно как-то написать на Observable
 /**
  * Сервис общения с сервером по webSocket'у
  * @export

@@ -64,7 +64,7 @@ export class CharacteristicFilterComponent implements OnInit {
     private readonly notificationService: NotificationService) {}
 
   public ngOnInit(): void {
-    this.filterService.chechedCategories3Level$.subscribe((set: Set<string>) => {
+    this.filterService.chechedCategory3LevelIds$.subscribe((set: Set<string>) => {
       const id: string = [...set][0];
       this.webSocketSevice.emit<string>(CategoryEvents.GetCategory3LevelAttempt, id);
     })

@@ -1,11 +1,24 @@
-import { ElementRef, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { IUserFilter } from '@core/interfaces';
-import { Point } from 'geojson';
-import { Map, Marker, NavigationControl, Popup } from 'maplibre-gl';
-import { Observable, Subject, ReplaySubject } from 'rxjs';
+import { Subject, ReplaySubject } from 'rxjs';
 
+/**
+ * Сервис фильтра
+ * @export
+ * @class FilterService
+ */
 @Injectable()
 export class FilterService {
-  public chechedCategories3Level$: ReplaySubject<Set<string>> = new ReplaySubject(1);
-  public filterValues$: Subject<IUserFilter[]> = new Subject();
+  /**
+   * Id выбранных категорий 3 уровня
+   * @type {ReplaySubject<Set<string>>}
+   * @memberof FilterService
+   */
+  public chechedCategory3LevelIds$: ReplaySubject<Set<string>> = new ReplaySubject<Set<string>>(1);
+  /**
+   * Значения фильтров
+   * @type {Subject<IUserFilter[]>}
+   * @memberof FilterService
+   */
+  public filterValues$: Subject<IUserFilter[]> = new Subject<IUserFilter[]>();
 }

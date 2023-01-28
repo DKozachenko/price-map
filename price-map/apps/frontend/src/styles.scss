@@ -34,37 +34,7 @@ body {
 .product__popup {
   .mapboxgl-popup-content,
   .maplibregl-popup-content {
-    padding: 2rem;
-  }
-
-  .product__popup-title {
-    @include font(1.8rem, black, 700);
-    margin-bottom: 1rem;
-  }
-
-  &-description {
-    @include font(1.5rem, black);
-
-    margin-bottom: 1rem;
-  }
-
-  &-button {
-    @include font(1.6rem, black);
-
-    border: 1px solid black;
-    border-radius: 2.5rem;
-    padding: .7rem 1.5rem;
-    width: 100%;
-    max-width: 25rem;
-
-    background-color: white;
-
-    transition: color .2s linear, background-color .2s linear;
-
-    &:hover {
-      background-color: black;
-      color: white;
-    }
+    padding: 0;
   }
 }
 

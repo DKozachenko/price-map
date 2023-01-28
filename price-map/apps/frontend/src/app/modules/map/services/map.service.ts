@@ -1,4 +1,6 @@
-import { ElementRef, Injectable } from '@angular/core';
+import { FilterService } from './filter.service';
+import { ProductPopupComponent } from './../components/product-popup/product-popup.component';
+import { ComponentFactory, ComponentFactoryResolver, ComponentRef, createComponent, ElementRef, Injectable, Injector, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { Point } from 'geojson';
 import { Map, Marker, NavigationControl, Popup, Source } from 'maplibre-gl';
 import { Observable, Subject } from 'rxjs';
@@ -11,7 +13,9 @@ export class MapService {
   // public productIdsToRoute$: Subject<Set<string>> = new Subject();
   public map!: Map;
 
-  constructor(private readonly productService: ProductService) {}
+  constructor(private readonly productService: ProductService,
+    private readonly resolver: ComponentFactoryResolver,
+    private readonly injector: Injector) {}
 
   public initMap(container: ElementRef<HTMLElement>): void {
     const initialState = { lng: 82.936, lat: 55.008, zoom: 12 };
@@ -167,21 +171,15 @@ export class MapService {
   }
 
   public createPopupDomContent(productInfo: any): HTMLDivElement {
-    const div = document.createElement('div');
-    const p = document.createElement('p');
-    p.classList.add('product__popup-title');
-    p.textContent = productInfo.name;
-    div.append(p);
-    const p2 = document.createElement('p');
-    p2.classList.add('product__popup-description');
-    p2.textContent = productInfo.description;
-    div.append(p2);
-    const button = document.createElement('button');
-    button.classList.add('product__popup-button');
-    button.textContent = 'Добавить в маршрут';
-    button.addEventListener('click', () => this.addProductIdToRoute(productInfo.id));
-    div.append(button);
-    return div;
+    const componentFactory = this.resolver.resolveComponentFactory(ProductPopupComponent);
+    // const injector = Injector.create({ providers: [{provide: ProductService, deps: []}] } );
+    // const component = componentFactory.create(this.injector);
+    const component = componentFactory.create(Injector.create([]));
+    component.instance.productInfo = productInfo;
+    //Своеобразный DI, тк через через конструктор не вышло
+    component.instance.productService = this.productService;
+    component.changeDetectorRef.detectChanges();
+    return <HTMLDivElement>component.location.nativeElement;
   }
 
   public addProductIdToRoute(id: string): void {

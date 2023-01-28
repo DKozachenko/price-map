@@ -75,7 +75,7 @@ export class FilterComponent implements OnInit {
 
     this.webSocketSevice.emit(CategoryEvents.GetCategories1LevelAttempt);
 
-    this.filterService.chechedCategories3Level$
+    this.filterService.chechedCategory3LevelIds$
       .subscribe((data: Set<string>) => {
         this.isShowCharacteristics = data.size === 1;
       });
@@ -234,7 +234,7 @@ export class FilterComponent implements OnInit {
 
     if (this.setChechedCategory3LevelIds.size !== setSelected.size) {
       this.setChechedCategory3LevelIds = setSelected;
-      this.filterService.chechedCategories3Level$.next(this.setChechedCategory3LevelIds);
+      this.filterService.chechedCategory3LevelIds$.next(this.setChechedCategory3LevelIds);
     }
   }
 }

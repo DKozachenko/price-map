@@ -4,3 +4,4 @@ export { CharacteristicFilterComponent } from './characteristic-filter/character
 export { RouteReviewComponent } from './route-review/route-review.component';
 export { CheckboxComponent } from './checkbox/chekbox.component';
 export { ProductMiniCardComponent } from './product-mini-card/product-mini-card.component';
+export { ProductPopupComponent } from './product-popup/product-popup.component';
