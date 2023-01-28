@@ -77,6 +77,7 @@ export class Product {
   })
   public imagePath: string;
 
+  //TODO: nullable поля сделать необязательными
   /**
    * Магазин, в котором он находится
    * @type {Shop}

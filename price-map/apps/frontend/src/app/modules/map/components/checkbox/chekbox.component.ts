@@ -1,5 +1,10 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
+/**
+ * Компонент чекбокса (в отличие от библиотечного может принимать входной параметр checked)
+ * @export
+ * @class CheckboxComponent
+ */
 @Component({
   selector: 'map-checkbox',
   templateUrl: './checkbox.component.html',
@@ -7,6 +12,16 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckboxComponent {
-  @Input() text: string = '';
-  @Input() checked: boolean = true;
+  /**
+   * Текст
+   * @type {string}
+   * @memberof CheckboxComponent
+   */
+  @Input() public text: string = '';
+  /**
+   * Выбран ли чекбокс
+   * @type {boolean}
+   * @memberof CheckboxComponent
+   */
+  @Input() public checked: boolean = true;
 }

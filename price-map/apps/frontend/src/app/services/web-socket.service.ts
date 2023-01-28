@@ -86,10 +86,10 @@ export class WebSocketService {
    * Отправка данных
    * @template T тип отправляемых данных
    * @param {string} eventName название события
-   * @param {T} data данные
+   * @param {T} [data] данные
    * @memberof WebSocketService
    */
-  public emit<T>(eventName: string, data?: T): void {
+  public emit<T = null>(eventName: string, data?: T): void {
     this.addToken();
     this.socket.emit(eventName, data);
   }
