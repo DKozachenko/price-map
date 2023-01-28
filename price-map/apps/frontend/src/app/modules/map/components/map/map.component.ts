@@ -44,7 +44,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       this.mapService.addLineSource(response.data);
     });
 
-    this.mapService.clicks$.subscribe((data) => console.log('clicks', data));
+    // this.mapService.clicks$.subscribe((data) => console.log('clicks', data));
     this.productService.productIdsToRoute$.subscribe((data) => {
       console.log('productIdsToRoute', data);
       this.isShowRouteReview = data.size > 0;

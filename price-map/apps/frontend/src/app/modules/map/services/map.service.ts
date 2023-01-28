@@ -2,7 +2,7 @@ import { FilterService } from './filter.service';
 import { ProductPopupComponent } from './../components/product-popup/product-popup.component';
 import { ComponentFactory, ComponentFactoryResolver, ComponentRef, createComponent, ElementRef, Injectable, Injector, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import { Point } from 'geojson';
-import { Map, Marker, NavigationControl, Popup, Source } from 'maplibre-gl';
+import { FeatureIndex, GeoJSONSource, GeolocateControl, Map, Marker, NavigationControl, Popup, Source } from 'maplibre-gl';
 import { Observable, Subject } from 'rxjs';
 import { ProductService } from '.';
 
@@ -15,12 +15,11 @@ export class MapService {
 
   constructor(private readonly productService: ProductService,
     private readonly resolver: ComponentFactoryResolver,
-    private readonly injector: Injector) {}
+    private readonly injector: Injector) { }
 
   public initMap(container: ElementRef<HTMLElement>): void {
     const initialState = { lng: 82.936, lat: 55.008, zoom: 12 };
-    // const initialState = { lng: -77.038, lat: 38.931, zoom: 14 };
-
+    // const initialState = { lng: -73, lat: -45, zoom: 14 };
     this.map = new Map({
       container: container.nativeElement,
       style: '../../../../../assets/mapLibreStyles.json',
@@ -68,6 +67,94 @@ export class MapService {
     }
   }
 
+  public addClusterLayers(): void {
+    this.map.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'products',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': [
+          'step',
+          ['get', 'point_count'],
+          '#51bbd6',
+          100,
+          '#f1f075',
+          750,
+          '#f28cb1'
+        ],
+        'circle-radius': [
+          'step',
+          ['get', 'point_count'],
+          20,
+          100,
+          30,
+          750,
+          40
+        ]
+      }
+    });
+
+    this.map.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'products',
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+        'text-size': 12
+      }
+    });
+
+    this.map.addLayer({
+      id: 'unclustered-point',
+      type: 'circle',
+      source: 'products',
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+        'circle-color': '#11b4da',
+        'circle-radius': 4,
+        'circle-stroke-width': 1,
+        'circle-stroke-color': '#fff'
+      }
+    });
+
+    // inspect a cluster on click
+    this.map.on('click', 'clusters', (e) => {
+      console.log('cluster click', e);
+      var features = this.map.queryRenderedFeatures(e.point, {
+        layers: ['clusters']
+      });
+      console.log('features', features)
+      var clusterId = features[0].properties['cluster_id'];
+      const source: GeoJSONSource = <GeoJSONSource>this.map?.getSource('products');
+      source?.getClusterExpansionZoom(
+        clusterId,
+        (err: any, zoom: any) => {
+          if (err) return;
+
+          const geometry = features?.[0]?.geometry as unknown as Point;
+          const coordinates = <[number, number]>geometry?.coordinates?.slice();
+          this.map.easeTo({
+            center: coordinates,
+            zoom: zoom
+          });
+        }
+      );
+    });
+
+    this.map.on('click', 'unclustered-point', function (e) {
+      console.log('uncluster click', e?.features);
+      const geometry = e?.features?.[0]?.geometry as unknown as Point;
+      const coordinates = <[number, number]>geometry?.coordinates?.slice();
+
+      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+      }
+    });
+  }
+
 
   public addLayer(): void {
     const productsLayer = this.map?.getLayer('products');
@@ -75,25 +162,36 @@ export class MapService {
     if (productsLayer) {
       productsLayer.source = 'products';
     } else {
-      this.map?.addLayer({
-        id: 'products',
-        type: 'symbol',
-        source: 'products',
-        layout: {
-          'icon-image': '{icon}',
-          'icon-overlap': 'always',
-          'text-field': [
-            'get', 
-            'price'
-          ],
-          'text-font': ['Open Sans Semibold'],
-          'text-size': 18,
-          'text-offset': [
-            0, 
-            0.5
-          ],
-          'text-anchor': 'top'
+      //   this.map?.addLayer({
+      //     id: 'products',
+      //     type: 'symbol',
+      //     source: 'products',
+      //     layout: {
+      //       'icon-image': '{icon}',
+      //       'icon-overlap': 'always',
+      //       'text-field': [
+      //         'get',
+      //         'price'
+      //       ],
+      //       'text-font': ['Open Sans Semibold'],
+      //       'text-size': 18,
+      //       'text-offset': [
+      //         0,
+      //         0.5
+      //       ],
+      //       'text-anchor': 'top'
+      //     },
+      //   });
+      // }
+      this.map.addLayer({
+        'id': 'park-volcanoes',
+        'type': 'circle',
+        'source': 'products',
+        'paint': {
+          'circle-radius': 6,
+          'circle-color': '#B42222'
         },
+        'filter': ['==', '$type', 'Point']
       });
     }
   }
@@ -128,7 +226,7 @@ export class MapService {
   }
 
   public addSource(products: any[]): void {
-    const features = products.map((item: any) => {
+    let features = products.map((item: any) => {
       // console.log(item, item.shop.coordinates.longitude, item.shop.coordinates.latitude)
       return {
         type: 'Feature',
@@ -149,6 +247,8 @@ export class MapService {
       };
 
     });
+    features = [features[5], features[6]]
+    console.log(features)
 
     const productsSource: any = this.map?.getSource('products');
     if (productsSource) {
@@ -157,16 +257,50 @@ export class MapService {
         features
       });
     } else {
-      this.map?.addSource('products', {
+      //rigth
+      // this.map?.addSource('products', {
+      //   type: 'geojson',
+      //   data: {
+      //     type: 'FeatureCollection',
+      //     features
+      //   },
+      //   cluster: true,
+      //   clusterMaxZoom: 14,
+      //   clusterRadius: 0
+      // });
+
+      this.map.addSource('products', {
+        // cluster: true,
+        // clusterMaxZoom: 14,
+        // clusterRadius: 0,
         type: 'geojson',
         data: {
           type: 'FeatureCollection',
-          features
-        },
-      });
+          features: [
+            {
+              type: 'Feature', properties: {},
+              geometry:
+              {
+                type: 'GeometryCollection',
+                geometries: [
+                  {
+                    
+                    type: 'Point',
+                    coordinates: features[0].geometry.coordinates
+                  },
+                  {
+                    type: 'Point',
+                    coordinates: features[1].geometry.coordinates
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      })
     }
 
-
+    this.addClusterLayers();
     this.addLayer();
   }
 
@@ -189,6 +323,14 @@ export class MapService {
 
   public addControl(): void {
     this.map.addControl(new NavigationControl({}), 'top-right');
+    this.map.addControl(
+      new GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true
+        },
+        trackUserLocation: true
+      })
+    );
     // new Marker({ color: '#FF0000' }).setLngLat([-77.003168, 38.894651]).addTo(this.map);
   }
 
@@ -199,6 +341,7 @@ export class MapService {
 
 
     this.map.on('click', 'products', (e: any) => {
+      console.log('product click', e?.features);
       const geometry = e?.features?.[0]?.geometry as unknown as Point;
       this.clicks$.next(geometry);
       const coordinates = <[number, number]>geometry?.coordinates?.slice();
@@ -209,6 +352,11 @@ export class MapService {
       while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
       }
+      // console.log({
+      //   name,
+      //   description,
+      //   id
+      // })
 
       const content = this.createPopupDomContent({
         name,
