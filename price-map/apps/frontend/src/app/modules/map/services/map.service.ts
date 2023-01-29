@@ -1,7 +1,7 @@
 import { FilterService } from './filter.service';
 import { ProductPopupComponent } from './../components/product-popup/product-popup.component';
 import { ComponentFactory, ComponentFactoryResolver, ComponentRef, createComponent, ElementRef, Injectable, Injector, Type, ViewChild, ViewContainerRef } from '@angular/core';
-import { Point } from 'geojson';
+import { FeatureCollection, Point } from 'geojson';
 import { FeatureIndex, GeoJSONSource, GeolocateControl, Map, Marker, NavigationControl, Popup, Source } from 'maplibre-gl';
 import { Observable, Subject } from 'rxjs';
 import { ProductService } from '.';
@@ -68,67 +68,95 @@ export class MapService {
   }
 
   public addClusterLayers(): void {
-    this.map.addLayer({
-      id: 'clusters',
-      type: 'circle',
-      source: 'products',
-      filter: ['has', 'point_count'],
-      paint: {
-        'circle-color': [
-          'step',
-          ['get', 'point_count'],
-          '#51bbd6',
-          100,
-          '#f1f075',
-          750,
-          '#f28cb1'
-        ],
-        'circle-radius': [
-          'step',
-          ['get', 'point_count'],
-          20,
-          100,
-          30,
-          750,
-          40
-        ]
-      }
-    });
+    const clustersLayer = this.map?.getLayer('clusters');
 
-    this.map.addLayer({
-      id: 'cluster-count',
-      type: 'symbol',
-      source: 'products',
-      filter: ['has', 'point_count'],
-      layout: {
-        'text-field': '{point_count_abbreviated}',
-        'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-        'text-size': 12
-      }
-    });
+    if (clustersLayer) {
+      clustersLayer.source = 'products';
+    } else {
+      this.map.addLayer({
+        id: 'clusters',
+        type: 'circle',
+        source: 'products',
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-color': [
+            'step',
+            ['get', 'point_count'],
+            '#51bbd6',
+            100,
+            '#f1f075',
+            750,
+            '#f28cb1'
+          ],
+          'circle-radius': [
+            'step',
+            ['get', 'point_count'],
+            20,
+            100,
+            30,
+            750,
+            40
+          ]
+        }
+      });
+    }
 
-    this.map.addLayer({
-      id: 'unclustered-point',
-      type: 'circle',
-      source: 'products',
-      filter: ['!', ['has', 'point_count']],
-      paint: {
-        'circle-color': '#11b4da',
-        'circle-radius': 4,
-        'circle-stroke-width': 1,
-        'circle-stroke-color': '#fff'
-      }
-    });
+    const clusterCountLayer = this.map?.getLayer('cluster-count');
 
-    // inspect a cluster on click
+    if (clusterCountLayer) {
+      clusterCountLayer.source = 'products';
+    } else {
+      this.map.addLayer({
+        id: 'cluster-count',
+        type: 'symbol',
+        source: 'products',
+        filter: ['has', 'point_count'],
+        layout: {
+          'text-field': '{point_count_abbreviated}',
+          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+          'text-size': 12
+        }
+      });
+    }
+
+    const unclasteredLayer = this.map?.getLayer('unclustered-point');
+
+    if (unclasteredLayer) {
+      unclasteredLayer.source  = 'products';
+    } else {
+      this.map?.addLayer({
+        id: 'unclustered-point',
+        type: 'symbol',
+        source: 'products',
+        filter: ['!', ['has', 'point_count']],
+        layout: {
+          'icon-image': '{icon}',
+          'icon-overlap': 'always',
+          'text-field': [
+            'get',
+            'price'
+          ],
+          'text-font': ['Open Sans Semibold'],
+          'text-size': 18,
+          'text-offset': [
+            0,
+            0.5
+          ],
+          'text-anchor': 'top'
+        },
+      });
+  
+    }
+    
     this.map.on('click', 'clusters', (e) => {
-      console.log('cluster click', e);
-      var features = this.map.queryRenderedFeatures(e.point, {
+      console.log('cluster click', e, e.point);
+      const features = this.map.queryRenderedFeatures(e.point, {
         layers: ['clusters']
       });
       console.log('features', features)
-      var clusterId = features[0].properties['cluster_id'];
+      const clusterId = features[0].properties['cluster_id'];
       const source: GeoJSONSource = <GeoJSONSource>this.map?.getSource('products');
+      console.log(source)
       source?.getClusterExpansionZoom(
         clusterId,
         (err: any, zoom: any) => {
@@ -143,57 +171,11 @@ export class MapService {
         }
       );
     });
-
-    this.map.on('click', 'unclustered-point', function (e) {
-      console.log('uncluster click', e?.features);
-      const geometry = e?.features?.[0]?.geometry as unknown as Point;
-      const coordinates = <[number, number]>geometry?.coordinates?.slice();
-
-      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-      }
-    });
   }
 
 
   public addLayer(): void {
-    const productsLayer = this.map?.getLayer('products');
-
-    if (productsLayer) {
-      productsLayer.source = 'products';
-    } else {
-      //   this.map?.addLayer({
-      //     id: 'products',
-      //     type: 'symbol',
-      //     source: 'products',
-      //     layout: {
-      //       'icon-image': '{icon}',
-      //       'icon-overlap': 'always',
-      //       'text-field': [
-      //         'get',
-      //         'price'
-      //       ],
-      //       'text-font': ['Open Sans Semibold'],
-      //       'text-size': 18,
-      //       'text-offset': [
-      //         0,
-      //         0.5
-      //       ],
-      //       'text-anchor': 'top'
-      //     },
-      //   });
-      // }
-      this.map.addLayer({
-        'id': 'park-volcanoes',
-        'type': 'circle',
-        'source': 'products',
-        'paint': {
-          'circle-radius': 6,
-          'circle-color': '#B42222'
-        },
-        'filter': ['==', '$type', 'Point']
-      });
-    }
+    
   }
 
   public addLineSource(coordinates: number[][]): void {
@@ -227,7 +209,6 @@ export class MapService {
 
   public addSource(products: any[]): void {
     let features = products.map((item: any) => {
-      // console.log(item, item.shop.coordinates.longitude, item.shop.coordinates.latitude)
       return {
         type: 'Feature',
         properties: {
@@ -247,8 +228,6 @@ export class MapService {
       };
 
     });
-    features = [features[5], features[6]]
-    console.log(features)
 
     const productsSource: any = this.map?.getSource('products');
     if (productsSource) {
@@ -257,51 +236,19 @@ export class MapService {
         features
       });
     } else {
-      //rigth
-      // this.map?.addSource('products', {
-      //   type: 'geojson',
-      //   data: {
-      //     type: 'FeatureCollection',
-      //     features
-      //   },
-      //   cluster: true,
-      //   clusterMaxZoom: 14,
-      //   clusterRadius: 0
-      // });
-
-      this.map.addSource('products', {
-        // cluster: true,
-        // clusterMaxZoom: 14,
-        // clusterRadius: 0,
+      this.map?.addSource('products', {
         type: 'geojson',
         data: {
           type: 'FeatureCollection',
-          features: [
-            {
-              type: 'Feature', properties: {},
-              geometry:
-              {
-                type: 'GeometryCollection',
-                geometries: [
-                  {
-                    
-                    type: 'Point',
-                    coordinates: features[0].geometry.coordinates
-                  },
-                  {
-                    type: 'Point',
-                    coordinates: features[1].geometry.coordinates
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      })
+          features
+        },
+        cluster: true,
+        clusterMaxZoom: 14,
+        clusterRadius: 50
+      });
     }
 
     this.addClusterLayers();
-    this.addLayer();
   }
 
   public createPopupDomContent(productInfo: any): HTMLDivElement {
@@ -323,14 +270,17 @@ export class MapService {
 
   public addControl(): void {
     this.map.addControl(new NavigationControl({}), 'top-right');
-    this.map.addControl(
-      new GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true
-        },
-        trackUserLocation: true
-      })
-    );
+    const geoControl = new GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true
+      },
+      trackUserLocation: true
+    })
+    this.map.addControl(geoControl);
+
+    geoControl.on('geolocate', (e) => {
+      console.log('A geolocate event has occurred.', e.coords.latitude, e.coords.longitude)
+    });
     // new Marker({ color: '#FF0000' }).setLngLat([-77.003168, 38.894651]).addTo(this.map);
   }
 
@@ -340,11 +290,21 @@ export class MapService {
     });
 
 
-    this.map.on('click', 'products', (e: any) => {
+    this.map.on('click', 'unclustered-point', (e: any) => {
       console.log('product click', e?.features);
+      const source = <GeoJSONSource>this.map.getSource('products');
+      console.log('source data', source._data)
       const geometry = e?.features?.[0]?.geometry as unknown as Point;
       this.clicks$.next(geometry);
       const coordinates = <[number, number]>geometry?.coordinates?.slice();
+      coordinates[0] = +coordinates[0].toFixed(6);
+      coordinates[1] = +coordinates[1].toFixed(6);
+      //Гоняем по сурцам слоя, чтобы выцепить еще фичи с такими координатами
+      const features = (<FeatureCollection>source._data)?.features?.filter((feature: any) => {
+        // console.log(feature.geometry.coordinates, coordinates)
+        return feature.geometry.coordinates[0] === coordinates[0] && feature.geometry.coordinates[1] === coordinates[1]
+      })
+      console.log('features', 123, features)
       const description = e?.features?.[0]?.properties?.['description'];
       const name = e?.features?.[0]?.properties?.['name'];
       const id = e?.features?.[0]?.properties?.['id'];

@@ -50,8 +50,9 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       this.isShowRouteReview = data.size > 0;
     });
 
-    this.filterService.chechedCategory3LevelIds$.subscribe((data) => {
+    this.filterService.chechedCategory3LevelIds$.subscribe((data: Set<string>) => {
       console.log('chechedCategories3Level', data);
+      this.webSocketSevice.emit<string[]>('get products attempt', [...data]);
     });
 
     this.filterService.filterValues$.subscribe((data) => console.log('filterValues', data));

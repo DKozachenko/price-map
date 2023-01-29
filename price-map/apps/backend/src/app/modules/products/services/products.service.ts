@@ -1,15 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '@core/entities';
-import { Repository } from 'typeorm';
+import { Any, In, Repository } from 'typeorm';
 
 @Injectable()
 export class ProductsService {
   @InjectRepository(Product, 'postgresConnect')
   private readonly productRepository: Repository<Product>;
 
-  async getAll(): Promise<Product[]> {
+  async getAll(query: any): Promise<Product[]> {
+    console.log(query)
     return await this.productRepository.find({
+      where: {
+        category3Level: {
+          id: In(query)
+        }
+      },
       relations: {
         shop: true,
         category3Level: true

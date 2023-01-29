@@ -21,8 +21,8 @@ export class ProductsGateway {
   @Roles(Role.User, Role.Admin)
   // @UseGuards(JwtAuthGuard('get products failed'), RolesAuthGuard('get products failed'))
   @SubscribeMessage('get products attempt')
-  public async getAll(): Promise<WsResponse<IResponseData<Product[]>>> {
-    const products: Product[] = await this.productsService.getAll();
+  public async getAll(@MessageBody() query: any): Promise<WsResponse<IResponseData<Product[]>>> {
+    const products: Product[] = await this.productsService.getAll(query ? query : []);
 
     return {
       event: 'get products successed',
