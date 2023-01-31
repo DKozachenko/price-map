@@ -10,8 +10,7 @@ import { FilterService, MapService, ProductService } from '../../services';
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
-  @ViewChild('map')
-  private mapContainer!: ElementRef<HTMLElement>;
+  @ViewChild('map') private mapContainer!: ElementRef<HTMLElement>;
 
   public isShowRouteReview: boolean = false;
 
@@ -22,10 +21,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
   public ngAfterViewInit() {
     this.mapService.initMap(this.mapContainer);
-    // this.mapService.loadProductImage();
-    // this.mapService.addControls();
-    // this.mapService.setClicks();
-    // console.log(this.mapService.map.loaded())
   }
 
   public ngOnInit(): void {
@@ -36,17 +31,14 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.webSocketSevice.socket.on('get products successed', (response: IResponseData<Product[]>) => {
       console.log('on get products successed', response);
-      this.mapService.addProductsSource(response.data);
+      this.mapService.addProducts(response.data);
     });
-
-    // this.webSocketSevice.emit<null>('get products attempt');
 
     this.webSocketSevice.socket.on('build route successed', (response) => {
       console.log('resp', response)
-      this.mapService.addLineSource(response.data);
+      this.mapService.addRoute(response.data);
     });
 
-    // this.mapService.clicks$.subscribe((data) => console.log('clicks', data));
     this.productService.productIdsToRoute$.subscribe((data) => {
       console.log('productIdsToRoute', data);
       this.isShowRouteReview = data.size > 0;
