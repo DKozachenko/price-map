@@ -1,87 +1,179 @@
-import { FilterService } from './filter.service';
 import { ProductPopupComponent } from './../components/product-popup/product-popup.component';
-import { ComponentFactory, ComponentFactoryResolver, ComponentRef, createComponent, ElementRef, Injectable, Injector, Type, ViewChild, ViewContainerRef } from '@angular/core';
-import { FeatureCollection, Point } from 'geojson';
-import { FeatureIndex, GeoJSONSource, GeolocateControl, Map, Marker, NavigationControl, Popup, Source } from 'maplibre-gl';
+import {
+  ComponentFactory,
+  ComponentFactoryResolver,
+  ComponentRef,
+  createComponent,
+  ElementRef,
+  Injectable,
+  Injector,
+  Type,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
+import { FeatureCollection, Point, Feature, GeoJsonProperties } from 'geojson';
+import {
+  CircleStyleLayer,
+  FeatureIndex,
+  GeoJSONSource,
+  GeoJSONSourceSpecification,
+  GeolocateControl,
+  LineLayerSpecification,
+  LineStyleLayer,
+  LngLatLike,
+  Map,
+  MapGeoJSONFeature,
+  MapLayerMouseEvent,
+  MapMouseEvent,
+  Marker,
+  NavigationControl,
+  Point2D,
+  Popup,
+  Source,
+  SymbolStyleLayer,
+} from 'maplibre-gl';
 import { Observable, Subject } from 'rxjs';
 import { ProductService } from '.';
+import { Product } from '@core/entities';
+import { IProductInfo } from '../models/interfaces';
 
 @Injectable()
 export class MapService {
+  private map!: Map;
+
+  private initialPoint: LngLatLike = [82.936, 55.008];
+
+  private productsSourceName: string = 'products';
+  private routeSourceName: string = 'route';
+
   public clicks$: Subject<Point> = new Subject();
-  // public productIdsToRoute: Set<string> = new Set();
-  // public productIdsToRoute$: Subject<Set<string>> = new Subject();
-  public map!: Map;
 
-  constructor(private readonly productService: ProductService,
-    private readonly resolver: ComponentFactoryResolver,
-    private readonly injector: Injector) { }
+  constructor(
+    private readonly productService: ProductService,
+    private readonly resolver: ComponentFactoryResolver
+  ) {}
 
-  public initMap(container: ElementRef<HTMLElement>): void {
-    const initialState = { lng: 82.936, lat: 55.008, zoom: 12 };
-    // const initialState = { lng: -73, lat: -45, zoom: 14 };
+  private onGeolocate(position: GeolocationPosition): void {
+    console.log('GEOLOCATE', position.coords.latitude, position.coords.longitude);
+  }
+
+  private setMap(container: ElementRef<HTMLElement>): void {
     this.map = new Map({
       container: container.nativeElement,
       style: '../../../../../assets/mapLibreStyles.json',
-      center: [
-        initialState.lng,
-        initialState.lat
-      ],
-      zoom: initialState.zoom,
+      center: this.initialPoint,
+      zoom: 12,
     });
   }
 
-  public loadProductImage(): void {
-    this.map.loadImage(
-      '../../../../assets/wood.png',
-      (error: any, image: any) => {
-        if (error) throw error;
-        if (!this.map?.hasImage('product')) {
-          if (image) {
-            this.map?.addImage('product', image);
-          }
-        }
+  private addControls(): void {
+    const navigationContol: NavigationControl = new NavigationControl({
+      showCompass: true,
+    });
+    this.map.addControl(navigationContol, 'top-right');
+    const geoControl: GeolocateControl = new GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true,
       },
-    );
+      trackUserLocation: true,
+    });
+    this.map.addControl(geoControl);
+
+    geoControl.on('geolocate', this.onGeolocate);
   }
 
-  public addLineLayer(): void {
-    const lineLayer = this.map?.getLayer('route');
+  private mapProducts(product: Product): Feature<Point, IProductInfo> {
+    return {
+      type: 'Feature',
+      properties: {
+        id: product.id,
+        price: `${product.price} р.`,
+        name: product.name,
+        description: product.description
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [
+          product.shop.coordinates.longitude,
+          product.shop.coordinates.latitude
+        ],
+      },
+    };
+  }
+
+  private setFeaturesToJsonSource(features: Feature[]): GeoJSONSourceSpecification {
+    return {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features,
+      },
+      cluster: true,
+      clusterMaxZoom: 14,
+      clusterRadius: 50,
+    };
+  }
+
+  private setCoordinatesToLineSource(coordinates: number[][]): GeoJSONSourceSpecification {
+    return {
+      type: 'geojson',
+      data: {
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'LineString',
+          coordinates,
+        },
+      },
+    }
+  }
+
+
+
+  private addLineLayer(): void {
+    const lineLayer: LineStyleLayer = <LineStyleLayer>this.map?.getLayer(this.routeSourceName);
 
     if (lineLayer) {
-      lineLayer.source = 'route';
+      lineLayer.source = this.routeSourceName;
     } else {
       this.map?.addLayer({
         id: 'route',
         type: 'line',
-        source: 'route',
+        source: this.routeSourceName,
         layout: {
           'line-join': 'round',
-          'line-cap': 'round'
+          'line-cap': 'round',
         },
         paint: {
           'line-color': '#6699ff',
-          'line-width': 8
-        }
+          'line-width': 8,
+        },
       });
     }
   }
 
-  public addClusterLayers(): void {
-    const clustersLayer = this.map?.getLayer('clusters');
+  //TODO: стили поковырять
+  private addClusterLayer(): void {
+    const clustersLayer: CircleStyleLayer = <CircleStyleLayer>this.map?.getLayer('clusters');
 
     if (clustersLayer) {
-      clustersLayer.source = 'products';
+      clustersLayer.source = this.productsSourceName;
     } else {
       this.map.addLayer({
         id: 'clusters',
         type: 'circle',
-        source: 'products',
-        filter: ['has', 'point_count'],
+        source: this.productsSourceName,
+        filter: [
+          'has',
+          'point_count'
+        ],
         paint: {
           'circle-color': [
             'step',
-            ['get', 'point_count'],
+            [
+              'get',
+              'point_count'
+            ],
             '#51bbd6',
             100,
             '#f1f075',
@@ -90,45 +182,64 @@ export class MapService {
           ],
           'circle-radius': [
             'step',
-            ['get', 'point_count'],
+            [
+              'get',
+              'point_count'
+            ],
             20,
             100,
             30,
             750,
             40
-          ]
-        }
+          ],
+        },
       });
     }
+  }
 
-    const clusterCountLayer = this.map?.getLayer('cluster-count');
+  private addClusterCountLayer(): void {
+    const clusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map?.getLayer('cluster-count');
 
     if (clusterCountLayer) {
-      clusterCountLayer.source = 'products';
+      clusterCountLayer.source = this.productsSourceName;
     } else {
       this.map.addLayer({
         id: 'cluster-count',
         type: 'symbol',
-        source: 'products',
-        filter: ['has', 'point_count'],
+        source: this.productsSourceName,
+        filter: [
+          'has',
+          'point_count'
+        ],
         layout: {
           'text-field': '{point_count_abbreviated}',
-          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-          'text-size': 12
-        }
+          'text-font': [
+            'DIN Offc Pro Medium',
+            'Arial Unicode MS Bold'
+          ],
+          'text-size': 12,
+        },
       });
     }
+  }
 
-    const unclasteredLayer = this.map?.getLayer('unclustered-point');
+  private addUnclusteredPointLayer(): void {
+    const unclasteredPointLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer('unclustered-point');
 
-    if (unclasteredLayer) {
-      unclasteredLayer.source  = 'products';
+    if (unclasteredPointLayer) {
+      unclasteredPointLayer.source = this.productsSourceName;
     } else {
       this.map?.addLayer({
         id: 'unclustered-point',
         type: 'symbol',
-        source: 'products',
-        filter: ['!', ['has', 'point_count']],
+        source: this.productsSourceName,
+        filter: [
+          '!',
+          [
+            'has',
+            'point_count'
+          ]
+        ],
         layout: {
           'icon-image': '{icon}',
           'icon-overlap': 'always',
@@ -142,116 +253,89 @@ export class MapService {
             0,
             0.5
           ],
-          'text-anchor': 'top'
+          'text-anchor': 'top',
         },
       });
-  
     }
-    
-    this.map.on('click', 'clusters', (e) => {
+  }
+
+  private setClusterClick(): void {
+    this.map.on('click', 'clusters', (e: MapMouseEvent) => {
       console.log('cluster click', e, e.point);
-      const features = this.map.queryRenderedFeatures(e.point, {
-        layers: ['clusters']
+      const features: MapGeoJSONFeature[] = this.map.queryRenderedFeatures(e.point, {
+        layers: ['clusters'],
       });
-      console.log('features', features)
-      const clusterId = features[0].properties['cluster_id'];
-      const source: GeoJSONSource = <GeoJSONSource>this.map?.getSource('products');
-      console.log(source)
-      source?.getClusterExpansionZoom(
-        clusterId,
-        (err: any, zoom: any) => {
-          if (err) return;
+      console.log('features', features);
+      const clusterId: number = features[0].properties['cluster_id'];
+      const source: GeoJSONSource = <GeoJSONSource>this.map?.getSource(this.productsSourceName);
+      console.log(source);
+      source?.getClusterExpansionZoom(clusterId, (err: any, zoom: any) => {
+        if (err) return;
 
-          const geometry = features?.[0]?.geometry as unknown as Point;
-          const coordinates = <[number, number]>geometry?.coordinates?.slice();
-          this.map.easeTo({
-            center: coordinates,
-            zoom: zoom
-          });
-        }
-      );
+        const geometry: Point = <Point>features?.[0]?.geometry;
+        const coordinates: LngLatLike = <LngLatLike>geometry?.coordinates?.slice();
+        this.map.easeTo({
+          center: coordinates,
+          zoom: zoom,
+        });
+      });
     });
   }
 
-
-  public addLayer(): void {
-    
-  }
-
-  public addLineSource(coordinates: number[][]): void {
-    const productsSource: any = this.map?.getSource('route');
-    if (productsSource) {
-      productsSource.setData({
-        type: 'Feature',
-        properties: {},
-        geometry: {
-          type: 'LineString',
-          coordinates
-        }
-      });
-    } else {
-      this.map?.addSource('route', {
-        type: 'geojson',
-        data: {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'LineString',
-            coordinates
-          }
-        }
-      });
-    }
-
-
-    this.addLineLayer();
-  }
-
-  public addSource(products: any[]): void {
-    let features = products.map((item: any) => {
-      return {
-        type: 'Feature',
-        properties: {
-          id: item.id,
-          price: `${item.price} р.`,
-          name: item.name,
-          description: item.description,
-          icon: 'product',
-        },
-        geometry: {
-          type: 'Point',
-          coordinates: [
-            item.shop.coordinates.longitude,
-            item.shop.coordinates.latitude
-          ],
-        },
-      };
-
+  private setClusterCountClick(): void {
+    this.map.on('click', 'cluster-count', (e) => {
+      console.log('cluster-count click', e);
     });
-
-    const productsSource: any = this.map?.getSource('products');
-    if (productsSource) {
-      productsSource.setData({
-        type: 'FeatureCollection',
-        features
-      });
-    } else {
-      this.map?.addSource('products', {
-        type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features
-        },
-        cluster: true,
-        clusterMaxZoom: 14,
-        clusterRadius: 50
-      });
-    }
-
-    this.addClusterLayers();
   }
 
-  public createPopupDomContent(productInfo: any): HTMLDivElement {
+  private setUnclusteredPointClick(): void {
+    this.map.on('click', 'unclustered-point', (e: MapLayerMouseEvent) => {
+      console.log('unclustered-point', e)
+      console.log('product click', e?.features);
+      const source = <GeoJSONSource>this.map.getSource(this.productsSourceName);
+      console.log('source data', source._data);
+      const geometry: Point = <Point>e.features?.[0]?.geometry;
+      this.clicks$.next(geometry);
+      const coordinates: [number, number] = <[number, number]>geometry?.coordinates?.slice();
+      coordinates[0] = +coordinates[0].toFixed(6);
+      coordinates[1] = +coordinates[1].toFixed(6);
+      //Гоняем по сурцам слоя, чтобы выцепить еще фичи с такими координатами
+      const features = (<FeatureCollection<Point, GeoJsonProperties>>source._data)?.features?.filter((feature: Feature<Point, GeoJsonProperties>) => {
+        // console.log(feature.geometry.coordinates, coordinates)
+        return feature.geometry.coordinates[0] === coordinates[0] && feature.geometry.coordinates[1] === coordinates[1];
+      });
+      console.log('features', 123, features);
+      const description = e.features?.[0]?.properties?.['description'];
+      const price = e.features?.[0]?.properties?.['price'];
+      const name = e.features?.[0]?.properties?.['name'];
+      const id = e.features?.[0]?.properties?.['id'];
+
+      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+      }
+
+      const content = this.createPopupDomContent({
+        name,
+        description,
+        id,
+        price
+      });
+
+      const popup: Popup = new Popup({ className: 'product__popup' })
+        .setLngLat(coordinates)
+        .setDOMContent(content);
+
+      popup.addTo(this.map);
+    });
+  }
+
+  private addClusterLayers(): void {
+    this.addClusterLayer();
+    this.addClusterCountLayer();
+    this.addUnclusteredPointLayer();
+  }
+
+  private createPopupDomContent(productInfo: IProductInfo): HTMLDivElement {
     const componentFactory = this.resolver.resolveComponentFactory(ProductPopupComponent);
     // const injector = Injector.create({ providers: [{provide: ProductService, deps: []}] } );
     // const component = componentFactory.create(this.injector);
@@ -263,85 +347,44 @@ export class MapService {
     return <HTMLDivElement>component.location.nativeElement;
   }
 
-  public addProductIdToRoute(id: string): void {
-    this.productService.addProductIdToRoute(id);
+  private setClicks(): void {
+    this.setClusterClick();
+    this.setClusterCountClick();
+    this.setUnclusteredPointClick();
   }
 
+  public addProductsSource(products: Product[]): void {
+    const features: Feature[] = products.map((product: Product) => this.mapProducts(product));
+    const actualSource: GeoJSONSourceSpecification =  this.setFeaturesToJsonSource(features);
 
-  public addControl(): void {
-    this.map.addControl(new NavigationControl({}), 'top-right');
-    const geoControl = new GeolocateControl({
-      positionOptions: {
-        enableHighAccuracy: true
-      },
-      trackUserLocation: true
-    })
-    this.map.addControl(geoControl);
+    const productsSource: GeoJSONSource | undefined = <GeoJSONSource | undefined>this.map.getSource(this.productsSourceName);
 
-    geoControl.on('geolocate', (e) => {
-      console.log('A geolocate event has occurred.', e.coords.latitude, e.coords.longitude)
-    });
-    // new Marker({ color: '#FF0000' }).setLngLat([-77.003168, 38.894651]).addTo(this.map);
+    if (productsSource) {
+      productsSource.setData(<GeoJSON.GeoJSON>actualSource.data);
+    } else {
+      this.map.addSource(this.productsSourceName, actualSource);
+    }
+
+    this.addClusterLayers();
   }
 
-  public setClicks(): void {
-    this.map.on('click', (e: any) => {
-      console.log(e);
-    });
+  public addLineSource(coordinates: number[][]): void {
+    const actualSource: GeoJSONSourceSpecification = this.setCoordinatesToLineSource(coordinates);
 
+    const routeSource: GeoJSONSource | undefined = <GeoJSONSource | undefined>this.map.getSource(this.routeSourceName);
+    if (routeSource) {
+      routeSource.setData(<GeoJSON.GeoJSON>actualSource.data);
+    } else {
+      this.map.addSource(this.routeSourceName, actualSource);
+    }
 
-    this.map.on('click', 'unclustered-point', (e: any) => {
-      console.log('product click', e?.features);
-      const source = <GeoJSONSource>this.map.getSource('products');
-      console.log('source data', source._data)
-      const geometry = e?.features?.[0]?.geometry as unknown as Point;
-      this.clicks$.next(geometry);
-      const coordinates = <[number, number]>geometry?.coordinates?.slice();
-      coordinates[0] = +coordinates[0].toFixed(6);
-      coordinates[1] = +coordinates[1].toFixed(6);
-      //Гоняем по сурцам слоя, чтобы выцепить еще фичи с такими координатами
-      const features = (<FeatureCollection>source._data)?.features?.filter((feature: any) => {
-        // console.log(feature.geometry.coordinates, coordinates)
-        return feature.geometry.coordinates[0] === coordinates[0] && feature.geometry.coordinates[1] === coordinates[1]
-      })
-      console.log('features', 123, features)
-      const description = e?.features?.[0]?.properties?.['description'];
-      const name = e?.features?.[0]?.properties?.['name'];
-      const id = e?.features?.[0]?.properties?.['id'];
+    this.addLineLayer();
+  }
 
-      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-      }
-      // console.log({
-      //   name,
-      //   description,
-      //   id
-      // })
-
-      const content = this.createPopupDomContent({
-        name,
-        description,
-        id
-      });
-
-
-      new Popup({ className: 'product__popup' })
-        .setLngLat(coordinates)
-        .setDOMContent(content)
-        .addTo(this.map ?? new Map({ container: '', style: '' }));
-    });
-
-    this.map.on('mouseenter', 'places', () => {
-      if (this.map) {
-        this.map.getCanvas().style.cursor = 'pointer';
-      }
-    });
-
-    this.map.on('mouseleave', 'places', () => {
-      if (this.map) {
-        this.map.getCanvas().style.cursor = '';
-      }
-    });
+  public initMap(container: ElementRef<HTMLElement>): void {
+    this.setMap(container);
+    this.addControls();
+    this.setClicks();
   }
 
   public removeMap(): void {

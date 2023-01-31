@@ -12,7 +12,8 @@
     "lint:front": "nx lint frontend",
     "lint:back": "nx lint backend",
     "test:front": "nx test frontend",
-    "test:back": "nx test backend"
+    "test:back": "nx test backend",
+    "start": "npm run start:back && npm run start:front"
   },
   "private": true,
   "dependencies": {

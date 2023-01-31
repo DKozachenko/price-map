@@ -1,4 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
+import { Product } from '@core/entities';
+import { IResponseData } from '@core/interfaces';
 import { WebSocketService } from '../../../../services';
 import { FilterService, MapService, ProductService } from '../../services';
 
@@ -20,9 +22,9 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
   public ngAfterViewInit() {
     this.mapService.initMap(this.mapContainer);
-    this.mapService.loadProductImage();
-    this.mapService.addControl();
-    this.mapService.setClicks();
+    // this.mapService.loadProductImage();
+    // this.mapService.addControls();
+    // this.mapService.setClicks();
     // console.log(this.mapService.map.loaded())
   }
 
@@ -32,12 +34,12 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       console.log('on get products failed', response);
     });
 
-    this.webSocketSevice.socket.on('get products successed', (response) => {
+    this.webSocketSevice.socket.on('get products successed', (response: IResponseData<Product[]>) => {
       console.log('on get products successed', response);
-      this.mapService.addSource(response.data);
+      this.mapService.addProductsSource(response.data);
     });
 
-    this.webSocketSevice.emit<null>('get products attempt');
+    // this.webSocketSevice.emit<null>('get products attempt');
 
     this.webSocketSevice.socket.on('build route successed', (response) => {
       console.log('resp', response)
