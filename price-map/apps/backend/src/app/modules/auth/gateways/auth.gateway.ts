@@ -6,10 +6,11 @@ import { MessageBody,
   WebSocketGateway,
   WsResponse } from '@nestjs/websockets';
 import * as bcrypt from 'bcrypt';
-import { secretKey } from '../../../constants';
+import { secretKey } from '../../../models/constants';
 import { IResponseData, IUserRegisterInfo, IUserLoginInfo } from '@core/interfaces';
 import { User } from '@core/entities';
 import { Role, AuthEvents } from '@core/enums';
+import { AuthErrorCode } from '@core/types';
 
 /**
  * Шлюз авторизации
@@ -32,16 +33,17 @@ export class AuthGateway {
    * @memberof AuthGateway
    */
   @SubscribeMessage(AuthEvents.RegisterAttemp)
-  public async register(@MessageBody() userRegisterInfo: IUserRegisterInfo): Promise<WsResponse<IResponseData<User>>> {
+  public async register(@MessageBody() userRegisterInfo: IUserRegisterInfo): Promise<WsResponse<IResponseData<User | null, AuthErrorCode | null>>> {
     const userWithSameNickname = await this.usersService.getByNickname(userRegisterInfo.nickname);
     if (userWithSameNickname) {
       return {
         event: AuthEvents.RegisterFailed,
         data: {
-          statusCode: 401,
-          error: true,
-          message: 'Пользователь с таким никнеймом уже существует',
-          data: null
+          statusCode: 400,
+          errorCode: 'EXISTED_NICKNAME',
+          isError: true,
+          data: null,
+          message: 'Пользователь с таким никнеймом уже существует'
         }
       };
     }
@@ -51,10 +53,11 @@ export class AuthGateway {
       return {
         event: AuthEvents.RegisterFailed,
         data: {
-          statusCode: 401,
-          error: true,
-          message: 'Пользователь с такой почтой уже существует',
-          data: null
+          statusCode: 400,
+          errorCode: 'EXISTED_MAIL',
+          isError: true,
+          data: null,
+          message: 'Пользователь с такой почтой уже существует'
         }
       };
     }
@@ -71,10 +74,11 @@ export class AuthGateway {
       return {
         event: AuthEvents.RegisterFailed,
         data: {
-          statusCode: 405,
-          error: true,
-          message: 'Ошибка при хэшировании пароля',
-          data: null
+          statusCode: 500,
+          errorCode: 'HASH_ERROR',
+          isError: true,
+          data: null,
+          message: 'Ошибка при регистрации'
         }
       };
     }
@@ -91,7 +95,8 @@ export class AuthGateway {
         event: AuthEvents.RegisterSuccessed,
         data: {
           statusCode: 201,
-          error: false,
+          errorCode: null,
+          isError: false,
           data: {
             ...userRegisterInfo,
             role: Role.User,
@@ -108,9 +113,10 @@ export class AuthGateway {
         event: AuthEvents.RegisterFailed,
         data: {
           statusCode: 500,
-          error: true,
+          errorCode: 'DB_ERROR',
+          isError: true,
           data: null,
-          message: 'Ошибка при сохранении в базу данных'
+          message: 'Ошибка при регистрации'
         }
       };
     }
@@ -123,15 +129,16 @@ export class AuthGateway {
    * @memberof AuthGateway
    */
   @SubscribeMessage(AuthEvents.LoginAttemp)
-  public async login(@MessageBody() userLoginInfo: IUserLoginInfo): Promise<WsResponse<IResponseData<string>>> {
+  public async login(@MessageBody() userLoginInfo: IUserLoginInfo): Promise<WsResponse<IResponseData<string | null, AuthErrorCode | null>>> {
     const user: User = await this.usersService.getByNickname(userLoginInfo.nickname);
 
     if (!user) {
       return {
         event: AuthEvents.LoginFailed,
         data: {
-          statusCode: 401,
-          error: true,
+          statusCode: 400,
+          errorCode: 'NON_EXISTENT_LOGIN',
+          isError: true,
           data: null,
           message: 'Пользователь с таким логином не существует'
         }
@@ -145,9 +152,10 @@ export class AuthGateway {
         event: AuthEvents.LoginFailed,
         data: {
           statusCode: 400,
-          error: true,
+          errorCode: 'WRONG_PASSWORD',
+          isError: true,
           data: null,
-          message: 'Указан неверный пароль'
+          message: 'Неверный пароль'
         }
       };
     }
@@ -165,7 +173,8 @@ export class AuthGateway {
       event: 'login successed',
       data: {
         statusCode: 200,
-        error: false,
+        errorCode: null,
+        isError: false,
         data: `Bearer ${token}`,
         message: 'Вход успешно произведен'
       }

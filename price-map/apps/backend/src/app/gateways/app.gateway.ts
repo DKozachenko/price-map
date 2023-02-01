@@ -12,6 +12,7 @@ import { catchError, Observable, of, switchMap } from 'rxjs';
 import { Roles } from '../decorators';
 import { AppService } from '../services';
 import * as polyline  from '@mapbox/polyline';
+import { AppErrorCode } from '@core/types';
 
 /**
  * Главный шлюз приложения
@@ -44,13 +45,13 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   /**
    * Событие построения маршрута 
    * @param {ICoordinates[]} coordinates коодинаты
-   * @return {*}  {Observable<WsResponse<IResponseData<number[][]>>>}
+   * @return {*}  {(Observable<WsResponse<IResponseData<number[][] | null, AppErrorCode | null>>>)} ответ
    * @memberof AppGateway
    */
   @Roles(Role.User, Role.Admin)
   // @UseGuards(JwtAuthGuard('get product failed'), RolesAuthGuard('get product failed'))
   @SubscribeMessage(AppEvents.BuildRouteAttempt)
-  public buildRoute(@MessageBody() coordinates: ICoordinates[]): Observable<WsResponse<IResponseData<number[][]>>> {
+  public buildRoute(@MessageBody() coordinates: ICoordinates[]): Observable<WsResponse<IResponseData<number[][] | null, AppErrorCode | null>>> {
     return this.appService.buildRoute(coordinates)
       .pipe(
         switchMap((osrmData: any) => {
@@ -60,7 +61,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             event: AppEvents.BuildRouteSuccessed,
             data: {
               statusCode: 200,
-              error: false,
+              errorCode: null,
+              isError: false,
               data: data.map((value: number[]) => {
                 const temp = value[0];
                 value[0] = value[1];
@@ -76,10 +78,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
           return of({
             event: AppEvents.BuildRouteFailed,
             data: {
-              statusCode: 400,
-              error: false,
+              statusCode: 503,
+              errorCode: <AppErrorCode>'BUILD_ROUTE_FAILED',
+              isError: false,
               data: null,
-              message: 'Во время построения маршрута произошла ошибка'
+              message: 'Ошибка во время постоения маршрута'
             }
           });
         })

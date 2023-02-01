@@ -12,7 +12,7 @@ import { Organization,
 import * as fs from 'fs';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AppGateway } from './gateways';
-import { secretKey } from './constants';
+import { secretKey } from './models/constants';
 import { AppService } from './services';
 import { HttpModule } from '@nestjs/axios';
 

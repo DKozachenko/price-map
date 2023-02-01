@@ -41,7 +41,6 @@ export class AppService {
   public buildRoute(coordinates: ICoordinates[]): Observable<any> {
     const query: string = 'http://router.project-osrm.org/route/v1/driving/'
       + `${this.createCoordinatesQuery(coordinates)}?overview=full`;
-    Logger.debug(query);
     return this.httpService.get<any>(query);
   }
 }
