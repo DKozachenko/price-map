@@ -20,7 +20,6 @@ import { JwtService } from '@nestjs/jwt';
     JwtService,
     CategoriesGateway,
     CategoriesService,
-  ],
-  exports: [CategoriesService]
+  ]
 })
 export class CategoriesModule {}

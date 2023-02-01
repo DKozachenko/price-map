@@ -16,7 +16,6 @@ import { JwtService } from '@nestjs/jwt';
     JwtService,
     ProductsGateway,
     ProductsService,
-  ],
-  exports: [ProductsService]
+  ]
 })
 export class ProductsModule {}
