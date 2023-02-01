@@ -1,7 +1,13 @@
 import { AppEvents, Role } from '@core/enums';
 import { ICoordinates, IResponseData } from '@core/interfaces';
 import { Logger } from '@nestjs/common';
-import { MessageBody, OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WsResponse } from '@nestjs/websockets';
+import { MessageBody, 
+  OnGatewayConnection, 
+  OnGatewayDisconnect, 
+  OnGatewayInit, 
+  SubscribeMessage, 
+  WebSocketGateway, 
+  WsResponse } from '@nestjs/websockets';
 import { catchError, Observable, of, switchMap } from 'rxjs';
 import { Roles } from '../decorators';
 import { AppService } from '../services';
@@ -61,11 +67,11 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
                 const temp = value[0];
                 value[0] = value[1];
                 value[1] = temp;
-                return value
+                return value;
               }),
               message: 'Маршрут успешно построен'
             }
-          })
+          });
         }),
         catchError((err: Error) => {
           Logger.error(err, 'AppGateway');
@@ -77,9 +83,8 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
               data: null,
               message: 'Во время построения маршрута произошла ошибка'
             }
-          })
+          });
         })
-      )
-    
+      );
   }
 }

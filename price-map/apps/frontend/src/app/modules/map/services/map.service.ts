@@ -1,13 +1,10 @@
 import { ProductPopupComponent } from './../components/product-popup/product-popup.component';
-import {
-  ComponentFactoryResolver,
+import {ComponentFactoryResolver,
   ElementRef,
   Injectable,
-  Injector,
-} from '@angular/core';
+  Injector } from '@angular/core';
 import { FeatureCollection, Point, Feature } from 'geojson';
-import {
-  CircleStyleLayer,
+import { CircleStyleLayer,
   GeoJSONSource,
   GeoJSONSourceSpecification,
   GeolocateControl,
@@ -19,8 +16,7 @@ import {
   MapMouseEvent,
   NavigationControl,
   Popup,
-  SymbolStyleLayer,
-} from 'maplibre-gl';
+  SymbolStyleLayer } from 'maplibre-gl';
 import { ProductService } from '.';
 import { Product } from '@core/entities';
 import { IProductInfo } from '../models/interfaces';
@@ -46,7 +42,10 @@ export class MapService {
    * @type {LngLatLike}
    * @memberof MapService
    */
-  private initialPoint: LngLatLike = [82.936, 55.008];
+  private initialPoint: LngLatLike = [
+    82.936, 
+    55.008
+  ];
 
   /**
    * Название источника данных для товаров
@@ -272,7 +271,10 @@ export class MapService {
       },
       geometry: {
         type: 'Point',
-        coordinates: [product.shop.coordinates.longitude, product.shop.coordinates.latitude],
+        coordinates: [
+          product.shop.coordinates.longitude, 
+          product.shop.coordinates.latitude
+        ],
       },
     };
   }
@@ -313,10 +315,35 @@ export class MapService {
         id: this.clusterLayerId,
         type: 'circle',
         source: this.productsSourceName,
-        filter: ['has', 'point_count'],
+        filter: [
+          'has', 
+          'point_count'
+        ],
         paint: {
-          'circle-color': ['step', ['get', 'point_count'], '#51bbd6', 100, '#f1f075', 750, '#f28cb1'],
-          'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
+          'circle-color': [
+            'step', 
+            [
+              'get', 
+              'point_count'
+            ], 
+            '#51bbd6', 
+            100, 
+            '#f1f075', 
+            750, 
+            '#f28cb1'
+          ],
+          'circle-radius': [
+            'step', 
+            [
+              'get', 
+              'point_count'
+            ], 
+            20, 
+            100, 
+            30, 
+            750, 
+            40
+          ],
         },
       });
     }
@@ -337,10 +364,16 @@ export class MapService {
         id: this.clusterCountLayerId,
         type: 'symbol',
         source: this.productsSourceName,
-        filter: ['has', 'point_count'],
+        filter: [
+          'has', 
+          'point_count'
+        ],
         layout: {
           'text-field': '{point_count_abbreviated}',
-          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+          'text-font': [
+            'DIN Offc Pro Medium',
+            'Arial Unicode MS Bold'
+          ],
           'text-size': 12,
         },
       });
@@ -362,14 +395,26 @@ export class MapService {
         id: this.unclusterPointLayerId,
         type: 'symbol',
         source: this.productsSourceName,
-        filter: ['!', ['has', 'point_count']],
+        filter: [
+          '!', 
+          [
+            'has', 
+            'point_count'
+          ]
+        ],
         layout: {
           'icon-image': '{icon}',
           'icon-overlap': 'always',
-          'text-field': ['get', 'price'],
+          'text-field': [
+            'get', 
+            'price'
+          ],
           'text-font': ['Open Sans Semibold'],
           'text-size': 18,
-          'text-offset': [0, 0.5],
+          'text-offset': [
+            0, 
+            0.5
+          ],
           'text-anchor': 'top',
         },
       });

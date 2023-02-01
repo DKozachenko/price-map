@@ -1,5 +1,5 @@
-import { Category2Level } from "@core/entities"
-import { ICategory3LevelForView } from "."
+import { Category2Level } from '@core/entities';
+import { ICategory3LevelForView } from '.';
 
 /**
  * Интрефейс категории 2 уровня

@@ -20,29 +20,6 @@ import { IResponseCallback } from '../../../../models/interfaces';
   styleUrls: ['./filter.component.scss'],
 })
 export class FilterComponent implements OnInit {
-  //TODO: есть ощущение, что TS пофиг на типизацию, есть смысли тогда переписать на обычные методы
-  /**
-   * Колбэк, срабатывающий при успешном получении категорий 1 уровня
-   * @private
-   * @param {IResponseData<Category1Level[]>} response ответ от сервера
-   * @type {IResponseCallback<IResponseData<Category1Level[]>>}
-   * @memberof FilterComponent
-   */
-  private onGetCategories1LevelSuccessed: IResponseCallback<IResponseData<Category1Level[]>> = (response: IResponseData<Category1Level[]>) => {
-    this.categories1Level = response.data.map(this.mapData);
-  };
-
-  /**
-   * Колбэк, срабатывающий при неудачной попытке получения категорий 1 уровня
-   * @private
-   * @param {IResponseData<null>} response ответ от сервера
-   * @type {IResponseCallback<IResponseData<null>>}
-   * @memberof FilterComponent
-   */
-  private onGetCategories1LevelFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
-    this.notificationService.showError(response.message);
-  };
-
   /**
    * Сет из id выбранных категорий 3 уровня
    * @private
@@ -64,6 +41,30 @@ export class FilterComponent implements OnInit {
    * @memberof FilterComponent
    */
   public isShowCharacteristics: boolean = false;
+
+  //TODO: есть ощущение, что TS пофиг на типизацию, есть смысли тогда переписать на обычные методы
+  /**
+   * Колбэк, срабатывающий при успешном получении категорий 1 уровня
+   * @private
+   * @param {IResponseData<Category1Level[]>} response ответ от сервера
+   * @type {IResponseCallback<IResponseData<Category1Level[]>>}
+   * @memberof FilterComponent
+   */
+  private onGetCategories1LevelSuccessed: IResponseCallback<IResponseData<Category1Level[]>> 
+    = (response: IResponseData<Category1Level[]>) => {
+      this.categories1Level = response.data.map(this.mapData);
+    };
+
+  /**
+   * Колбэк, срабатывающий при неудачной попытке получения категорий 1 уровня
+   * @private
+   * @param {IResponseData<null>} response ответ от сервера
+   * @type {IResponseCallback<IResponseData<null>>}
+   * @memberof FilterComponent
+   */
+  private onGetCategories1LevelFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
+    this.notificationService.showError(response.message);
+  };
 
   constructor(private readonly filterService: FilterService,
     private readonly webSocketSevice: WebSocketService,

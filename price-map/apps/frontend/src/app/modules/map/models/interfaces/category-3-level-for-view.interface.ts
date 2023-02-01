@@ -1,4 +1,4 @@
-import { Category3Level } from "@core/entities"
+import { Category3Level } from '@core/entities';
 
 /**
  * Интерфейс категории 3 уровня

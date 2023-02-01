@@ -22,15 +22,31 @@ import { FilterService, MapService, ProductService } from '../../services';
 })
 export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   /**
+   * Ссылка на компонент карты
+   * @private
+   * @type {ElementRef<HTMLElement>}
+   * @memberof MapComponent
+   */
+  @ViewChild('map') private mapContainer!: ElementRef<HTMLElement>;
+
+  /**
+   * Показывать ли компонент маршрута
+   * @type {boolean}
+   * @memberof MapComponent
+   */
+  public isShowRouteReview: boolean = false;
+
+  /**
    * Колбэк, срабатывающий при удачном получении товаров
    * @private
    * @param {IResponseData<Product[]>} response ответ от сервера
    * @type {IResponseCallback<IResponseData<Product[]>>}
    * @memberof MapComponent
    */
-  private onGetProductsSuccessed: IResponseCallback<IResponseData<Product[]>> = (response: IResponseData<Product[]>) => {
-    this.mapService.addProducts(response.data);
-  }; 
+  private onGetProductsSuccessed: IResponseCallback<IResponseData<Product[]>> 
+    = (response: IResponseData<Product[]>) => {
+      this.mapService.addProducts(response.data);
+    }; 
 
   /**
    * Колбэк, срабатывающий при неудачной попытке получении товаров
@@ -50,9 +66,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
    * @type {IResponseCallback<IResponseData<number[][]>>}
    * @memberof MapComponent
    */
-  private onBuildRouteSuccessed: IResponseCallback<IResponseData<number[][]>> = (response: IResponseData<number[][]>) => {
-    this.mapService.addRoute(response.data);
-  };
+  private onBuildRouteSuccessed: IResponseCallback<IResponseData<number[][]>> 
+    = (response: IResponseData<number[][]>) => {
+      this.mapService.addRoute(response.data);
+    };
 
   /**
    * Колбэк, срабатывающий при неудачном построении маршрута
@@ -64,21 +81,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   private onBuildRouteFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
     this.notificationService.showError(response.message);
   };
-
-  /**
-   * Ссылка на компонент карты
-   * @private
-   * @type {ElementRef<HTMLElement>}
-   * @memberof MapComponent
-   */
-  @ViewChild('map') private mapContainer!: ElementRef<HTMLElement>;
-
-  /**
-   * Показывать ли компонент маршрута
-   * @type {boolean}
-   * @memberof MapComponent
-   */
-  public isShowRouteReview: boolean = false;
 
   constructor(private readonly webSocketSevice: WebSocketService,
     private readonly mapService: MapService,

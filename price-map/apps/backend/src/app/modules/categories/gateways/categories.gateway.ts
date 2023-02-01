@@ -81,9 +81,9 @@ export class CategoriesGateway {
               data: category3Level,
               message: 'Категория 3 уровня успешно получена'
             }
-          })
+          });
         })
-      )
+      );
 
     // try {
     //   category3Level = await this.categoriesService.getCategory3LevelById(id);

@@ -1,9 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CharacteristicFilterComponent, CheckboxComponent, FilterComponent, MapComponent, RouteReviewComponent, ProductMiniCardComponent, ProductPopupComponent } from './components';
+import { CharacteristicFilterComponent, 
+  CheckboxComponent, 
+  FilterComponent, 
+  MapComponent, 
+  RouteReviewComponent, 
+  ProductMiniCardComponent, 
+  ProductPopupComponent } from './components';
 import { MapRoutingModule } from './map-routing.module';
 import { FilterService, MapService, ProductService } from './services';
-import { NbCardModule, NbCheckboxModule, NbIconModule, NbInputModule, NbLayoutModule, NbRadioModule, NbSelectModule, NbButtonModule } from '@nebular/theme';
+import { NbCardModule, 
+  NbCheckboxModule, 
+  NbIconModule, 
+  NbInputModule, 
+  NbLayoutModule, 
+  NbRadioModule, 
+  NbSelectModule, 
+  NbButtonModule } from '@nebular/theme';
 import { SharedModule } from '..';
 
 @NgModule({

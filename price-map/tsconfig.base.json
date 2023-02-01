@@ -18,7 +18,8 @@
       "@core": ["libs/core/src/index.ts"],
       "@core/entities": ["libs/core/src/lib/entities"],
       "@core/enums": ["libs/core/src/lib/enums"],
-      "@core/interfaces": ["libs/core/src/lib/interfaces"]
+      "@core/interfaces": ["libs/core/src/lib/interfaces"],
+      "@core/types": ["libs/core/src/lib/types"]
     }
   },
   "exclude": ["node_modules", "tmp"]

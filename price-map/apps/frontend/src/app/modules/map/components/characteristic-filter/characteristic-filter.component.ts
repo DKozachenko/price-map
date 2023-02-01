@@ -1,6 +1,6 @@
 import { IFilter, IResponseData, IUserFilter } from '@core/interfaces';
 import { Component, OnInit } from '@angular/core';
-import { RangeFilterIndex } from 'libs/core/src/lib/types';
+import { RangeFilterIndex } from '@core/types';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService } from '../../services';
 import { Category3Level } from '@core/entities';
@@ -20,29 +20,6 @@ import { IResponseCallback } from '../../../../models/interfaces';
 })
 export class CharacteristicFilterComponent implements OnInit {
   /**
-   * Колбэк, срабатывающий при успешном получении категории
-   * @private
-   * @param {IResponseData<Category3Level>} response
-   * @type {IResponseCallback<IResponseData<Category3Level>>}
-   * @memberof CharacteristicFilterComponent
-   */
-  private onGetCategory3LevelSuccessed: IResponseCallback<IResponseData<Category3Level>> = (response: IResponseData<Category3Level>) => {
-    this.category3Level = response.data;
-  }
-
-  //TODO: очень похожая логика везде при неудачной попытке
-  /**
-   * Колбэк срабатывающий при неудачном получении категории
-   * @private
-   * @param {IResponseData<null>} response
-   * @type {IResponseCallback<IResponseData<null>>}
-   * @memberof CharacteristicFilterComponent
-   */
-  private onGetCategory3LevelFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
-    this.notificationService.showError(response.message);
-  }
-
-  /**
    * Текущий фильтр
    * @private
    * @type {IUserFilter[]}
@@ -58,6 +35,30 @@ export class CharacteristicFilterComponent implements OnInit {
    */
   public category3Level: any;
 
+  /**
+   * Колбэк, срабатывающий при успешном получении категории
+   * @private
+   * @param {IResponseData<Category3Level>} response
+   * @type {IResponseCallback<IResponseData<Category3Level>>}
+   * @memberof CharacteristicFilterComponent
+   */
+  private onGetCategory3LevelSuccessed: IResponseCallback<IResponseData<Category3Level>> 
+    = (response: IResponseData<Category3Level>) => {
+      this.category3Level = response.data;
+    };
+
+  //TODO: очень похожая логика везде при неудачной попытке
+  /**
+   * Колбэк срабатывающий при неудачном получении категории
+   * @private
+   * @param {IResponseData<null>} response
+   * @type {IResponseCallback<IResponseData<null>>}
+   * @memberof CharacteristicFilterComponent
+   */
+  private onGetCategory3LevelFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
+    this.notificationService.showError(response.message);
+  };
+
   //TODO: подумать над выносом webSocketSevice и notificationService в базовый класс какой-нить (и возможно также обернуть его в UntilDestroyed)
   constructor(private readonly filterService: FilterService,
     private readonly webSocketSevice: WebSocketService,
@@ -67,7 +68,7 @@ export class CharacteristicFilterComponent implements OnInit {
     this.filterService.chechedCategory3LevelIds$.subscribe((set: Set<string>) => {
       const id: string = [...set][0];
       this.webSocketSevice.emit<string>(CategoryEvents.GetCategory3LevelAttempt, id);
-    })
+    });
 
     this.webSocketSevice.on(CategoryEvents.GetCategory3LevelFailed, this.onGetCategory3LevelFailed);
     this.webSocketSevice.on(CategoryEvents.GetCategory3LevelSuccessed, this.onGetCategory3LevelSuccessed);
@@ -80,7 +81,8 @@ export class CharacteristicFilterComponent implements OnInit {
    * @memberof CharacteristicFilterComponent
    */
   public changeBooleanFilter(filter: IFilter, value: boolean | null): void {
-    const filterElem: IUserFilter | undefined = this.currentFilter.find((currentFilterElem: IUserFilter) => currentFilterElem.name === filter.name);
+    const filterElem: IUserFilter | undefined = this.currentFilter.find((currentFilterElem: IUserFilter) =>
+      currentFilterElem.name === filter.name);
 
     if (filterElem) {
       filterElem.value = value;
@@ -102,7 +104,8 @@ export class CharacteristicFilterComponent implements OnInit {
    * @memberof CharacteristicFilterComponent
    */
   public changeRangeFilter(filter: IFilter, index: RangeFilterIndex, event: Event): void {
-    const filterElem: IUserFilter | undefined = this.currentFilter.find((currentFilterElem: IUserFilter) => currentFilterElem.name === filter.name);
+    const filterElem: IUserFilter | undefined = this.currentFilter.find((currentFilterElem: IUserFilter) => 
+      currentFilterElem.name === filter.name);
     const value: string = (event.target as HTMLInputElement).value;
 
     if (filterElem) {
@@ -111,7 +114,10 @@ export class CharacteristicFilterComponent implements OnInit {
     } else {
       const filterValue: any = {
         name: filter.name,
-        value: [null, null]
+        value: [
+          null, 
+          null
+        ]
       };
 
       filterValue.value[index] = +value;
@@ -128,10 +134,11 @@ export class CharacteristicFilterComponent implements OnInit {
    * @memberof CharacteristicFilterComponent
    */
   public changeEnumFilter(filter: IFilter, value: string): void {
-    const filterElem: IUserFilter | undefined = this.currentFilter.find((currentFilterElem: IUserFilter) => currentFilterElem.name === filter.name);
+    const filterElem: IUserFilter | undefined = this.currentFilter.find((currentFilterElem: IUserFilter) => 
+      currentFilterElem.name === filter.name);
 
     if (filterElem) {
-      const filterValue: string | undefined = (filterElem.value as Array<string>)?.find((item: string) => item === value);
+      const filterValue: string | undefined = (<string[]>filterElem.value)?.find((item: string) => item === value);
 
       if (filterValue) {
         filterElem.value = <string[]>(filterElem.value as Array<string>)?.filter((item: string) => item !== value);

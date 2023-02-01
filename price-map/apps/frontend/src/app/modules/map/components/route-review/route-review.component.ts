@@ -21,6 +21,13 @@ import { IResponseCallback } from '../../../../models/interfaces';
 })
 export class RouteReviewComponent implements OnInit, OnDestroy {
   /**
+   * Товары, по которым нужно построить маршрут
+   * @type {Product[]}
+   * @memberof RouteReviewComponent
+   */
+  public products: Product[] = [];
+
+  /**
    * Колбэк, срабатывающий при успешном получении товара
    * @private
    * @param {IResponseData<Product>} response ответ сервера
@@ -29,7 +36,7 @@ export class RouteReviewComponent implements OnInit, OnDestroy {
    */
   private onGetProductSuccessed: IResponseCallback<IResponseData<Product>> = (response: IResponseData<Product>) => {
     this.products.push(response.data);
-  }
+  };
 
   /**
    * Колбэк, срабатывающий при успешном получении товара
@@ -40,7 +47,7 @@ export class RouteReviewComponent implements OnInit, OnDestroy {
    */
   private onGetProductFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
     this.notificationService.showError(response.message);
-  }
+  };
 
   /**
    * Получение массива координат
@@ -55,20 +62,13 @@ export class RouteReviewComponent implements OnInit, OnDestroy {
     }));
   }
 
-  /**
-   * Товары, по которым нужно построить маршрут
-   * @type {Product[]}
-   * @memberof RouteReviewComponent
-   */
-  public products: Product[] = [];
-
   constructor(private readonly productsService: ProductService,
     private readonly webSocketService: WebSocketService,
     private readonly notificationService: NotificationService) {}
 
   public ngOnInit(): void {
-    this.webSocketService.on('get product successed', this.onGetProductSuccessed)
-    this.webSocketService.on('get product failed', this.onGetProductFailed)
+    this.webSocketService.on('get product successed', this.onGetProductSuccessed);
+    this.webSocketService.on('get product failed', this.onGetProductFailed);
 
     this.productsService.addProductIdToRoute$
       .pipe(
@@ -76,7 +76,7 @@ export class RouteReviewComponent implements OnInit, OnDestroy {
       )
       .subscribe((id: string) => {
         this.webSocketService.emit<string>('get product attempt', id);
-      })
+      });
 
     this.productsService.deleteProductIdFromRoute$
       .pipe(
@@ -84,7 +84,7 @@ export class RouteReviewComponent implements OnInit, OnDestroy {
       )
       .subscribe((id: string) => {
         this.products = this.products.filter((product: Product) => product.id !== id);
-      })
+      });
   }
 
   public ngOnDestroy(): void {

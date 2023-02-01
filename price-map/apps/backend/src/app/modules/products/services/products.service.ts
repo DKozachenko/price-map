@@ -9,7 +9,7 @@ export class ProductsService {
   private readonly productRepository: Repository<Product>;
 
   async getAll(query: any): Promise<Product[]> {
-    console.log(query)
+    console.log(query);
     return await this.productRepository.find({
       where: {
         category3Level: {
