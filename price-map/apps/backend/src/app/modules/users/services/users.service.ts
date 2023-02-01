@@ -53,7 +53,7 @@ export class UsersService {
    * @return {*}  {Promise<void>}
    * @memberof UsersService
    */
-  public async add(newUser: Omit<User, 'id'>): Promise<void> {
-    await this.userRepository.insert(newUser);
+  public async add(newUser: Omit<User, 'id'>): Promise<User> {
+    return await this.userRepository.save(newUser);
   }
 }

@@ -84,7 +84,7 @@ export class AuthGateway {
     }
 
     try {
-      await this.usersService.add({
+      const newUser: User = await this.usersService.add({
         ...userRegisterInfo,
         role: Role.User,
         password: hash,
@@ -97,13 +97,7 @@ export class AuthGateway {
           statusCode: 201,
           errorCode: null,
           isError: false,
-          data: {
-            ...userRegisterInfo,
-            role: Role.User,
-            password: hash,
-            products: [],
-            id: ''
-          },
+          data: newUser,
           message: 'Пользователь успешно зарегистрирован'
         }
       };
