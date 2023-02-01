@@ -13,7 +13,6 @@ import { ProductService } from '../../services';
   styleUrls: ['./product-mini-card.component.scss'],
 })
 export class ProductMiniCardComponent {
-  //TODO: почему-то ломается, если оставить просто Product
   /**
    * Товар
    * @type {Product}

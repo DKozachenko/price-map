@@ -36,7 +36,6 @@ export class CategoriesGateway {
     try {
       categories1Level = await this.categoriesService.getAllCategories1Level();
     } catch (err: any) {
-      //TODO: возможно сделать ошибка для пользователя, ошибка для погромиста и код ошибки
       return {
         event: CategoryEvents.GetCategories1LevelFailed,
         data: {
@@ -59,7 +58,6 @@ export class CategoriesGateway {
     };
   }
 
-  //TODO: переписать роуты на Observable все как тут
   /**
    * Получение категории 3 уровня по id 
    * @param {string} id id записи

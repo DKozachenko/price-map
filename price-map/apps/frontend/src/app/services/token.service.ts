@@ -3,7 +3,6 @@ import { TokenKey } from './../models/constants';
 import jwtDecode from 'jwt-decode';
 import { IPayload } from '@core/interfaces';
 
-//TODO: перейти на хранение в куки
 /**
  * Сервис работы с токеном (хранит его в localStorage)
  * @export

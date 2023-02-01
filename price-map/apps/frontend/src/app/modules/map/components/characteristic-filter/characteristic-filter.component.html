@@ -1,7 +1,6 @@
 <nb-card *ngIf="category3Level" class="characteristic__filter custom__map-card">
   <nb-card-header>Характеристики</nb-card-header>
 
-  <!-- TODO: trackBy -->
   <nb-card-body class="custom__scroll custom__map-card__body">
     <ng-container *ngIf="category3Level.filters.length">
       <div *ngFor="let filter of category3Level.filters;">

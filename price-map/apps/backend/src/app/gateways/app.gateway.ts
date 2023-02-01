@@ -53,7 +53,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   public buildRoute(@MessageBody() coordinates: ICoordinates[]): Observable<WsResponse<IResponseData<number[][]>>> {
     return this.appService.buildRoute(coordinates)
       .pipe(
-        //TODO: интерфейс для данных от OSRM
         switchMap((osrmData: any) => {
           const poly: string = osrmData.data.routes[0].geometry;
           const data: number[][] = polyline.decode(poly);
@@ -62,7 +61,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
             data: {
               statusCode: 200,
               error: false,
-              //TODO: разобраться в кои-то веке с долготой и широтой
               data: data.map((value: number[]) => {
                 const temp = value[0];
                 value[0] = value[1];

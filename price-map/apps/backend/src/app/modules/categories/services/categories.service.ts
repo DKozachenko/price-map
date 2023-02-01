@@ -45,7 +45,6 @@ export class CategoriesService {
    */
   public async getAllCategories1Level(): Promise<Category1Level[]> {
     return this.category1LevelRepository.find({
-      //TODO: с учетом настроек, возможно сам подтянет
       relations: {
         categories2Level: true,
       }

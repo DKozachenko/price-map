@@ -21,7 +21,6 @@ import { JwtService } from '@nestjs/jwt';
     CategoriesGateway,
     CategoriesService,
   ],
-  //TODO: вопрос на миллион - зачем нам экспортировать сервис, если мы юзаем его только тут
   exports: [CategoriesService]
 })
 export class CategoriesModule {}

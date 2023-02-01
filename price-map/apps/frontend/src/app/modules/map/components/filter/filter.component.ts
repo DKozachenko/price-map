@@ -7,7 +7,6 @@ import { IResponseData } from '@core/interfaces';
 import { CategoryEvents } from '@core/enums';
 import { IResponseCallback } from '../../../../models/interfaces';
 
-//TODO: untilDestroy
 /**
  * Компонент фильтра
  * @export
@@ -42,7 +41,6 @@ export class FilterComponent implements OnInit {
    */
   public isShowCharacteristics: boolean = false;
 
-  //TODO: есть ощущение, что TS пофиг на типизацию, есть смысли тогда переписать на обычные методы
   /**
    * Колбэк, срабатывающий при успешном получении категорий 1 уровня
    * @private
@@ -128,7 +126,6 @@ export class FilterComponent implements OnInit {
     category2Level.showCategories3Level = !category2Level.showCategories3Level;
   }
 
-  //TODO: переписать на рекурсию
   /**
    * Выбрать категорию 1 уровня
    * @param {ICategory1LevelForView} category1Level категория 1 уровня

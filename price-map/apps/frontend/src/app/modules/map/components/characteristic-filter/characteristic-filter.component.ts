@@ -27,7 +27,6 @@ export class CharacteristicFilterComponent implements OnInit {
    */
   private currentFilter: IUserFilter[] = [];
 
-  //TODO: Та же проблема, ломается если тип задать
   /**
    * Категория 3 уровня, для которой нужны фильтры
    * @type {*}
@@ -47,7 +46,6 @@ export class CharacteristicFilterComponent implements OnInit {
       this.category3Level = response.data;
     };
 
-  //TODO: очень похожая логика везде при неудачной попытке
   /**
    * Колбэк срабатывающий при неудачном получении категории
    * @private
@@ -59,7 +57,6 @@ export class CharacteristicFilterComponent implements OnInit {
     this.notificationService.showError(response.message);
   };
 
-  //TODO: подумать над выносом webSocketSevice и notificationService в базовый класс какой-нить (и возможно также обернуть его в UntilDestroyed)
   constructor(private readonly filterService: FilterService,
     private readonly webSocketSevice: WebSocketService,
     private readonly notificationService: NotificationService) {}

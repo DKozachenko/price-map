@@ -16,7 +16,6 @@ import { secretKey } from './constants';
 import { AppService } from './services';
 import { HttpModule } from '@nestjs/axios';
 
-//TODO: вынести в интерфейсы
 interface BreadcrumbInfo {
   [key: string]: string,
   category1LevelName: string,
