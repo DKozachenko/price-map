@@ -69,7 +69,7 @@ export class FilterComponent implements OnInit {
     private readonly webSocketSevice: WebSocketService,
     private readonly notificationService: NotificationService) {}
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.webSocketSevice.on(CategoryEvents.GetCategories1LevelFailed, this.onGetCategories1LevelFailed);
     this.webSocketSevice.on(CategoryEvents.GetCategories1LevelSuccessed, this.onGetCategories1LevelSuccessed);
 

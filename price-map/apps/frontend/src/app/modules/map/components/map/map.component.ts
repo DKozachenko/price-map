@@ -1,55 +1,122 @@
+import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Product } from '@core/entities';
 import { IResponseData } from '@core/interfaces';
-import { WebSocketService } from '../../../../services';
+import { IResponseCallback } from '../../../../models/interfaces';
+import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService, MapService, ProductService } from '../../services';
 
+/**
+ * Компонент карты
+ * @export
+ * @class MapComponent
+ * @implements {AfterViewInit}
+ * @implements {OnDestroy}
+ * @implements {OnInit}
+ */
+@UntilDestroy()
 @Component({
   selector: 'price-map-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
+  /**
+   * Колбэк, срабатывающий при удачном получении товаров
+   * @private
+   * @param {IResponseData<Product[]>} response ответ от сервера
+   * @type {IResponseCallback<IResponseData<Product[]>>}
+   * @memberof MapComponent
+   */
+  private onGetProductsSuccessed: IResponseCallback<IResponseData<Product[]>> = (response: IResponseData<Product[]>) => {
+    this.mapService.addProducts(response.data);
+  }; 
+
+  /**
+   * Колбэк, срабатывающий при неудачной попытке получении товаров
+   * @private
+   * @param {IResponseData<null[]>} response ответ от сервера
+   * @type {IResponseCallback<IResponseData<null[]>>}
+   * @memberof MapComponent
+   */
+  private onGetProductsFailed: IResponseCallback<IResponseData<null[]>> = (response: IResponseData<null[]>) => {
+    this.notificationService.showError(response.message);
+  };
+
+  /**
+   * Колбэк, срабатывающий при удачном построении маршрута
+   * @private
+   * @param {IResponseData<number[][]>} response ответ от сервера
+   * @type {IResponseCallback<IResponseData<number[][]>>}
+   * @memberof MapComponent
+   */
+  private onBuildRouteSuccessed: IResponseCallback<IResponseData<number[][]>> = (response: IResponseData<number[][]>) => {
+    this.mapService.addRoute(response.data);
+  };
+
+  /**
+   * Колбэк, срабатывающий при неудачном построении маршрута
+   * @private
+   * @param {IResponseData<null>} response
+   * @type {IResponseCallback<IResponseData<null>>}
+   * @memberof MapComponent
+   */
+  private onBuildRouteFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
+    this.notificationService.showError(response.message);
+  };
+
+  /**
+   * Ссылка на компонент карты
+   * @private
+   * @type {ElementRef<HTMLElement>}
+   * @memberof MapComponent
+   */
   @ViewChild('map') private mapContainer!: ElementRef<HTMLElement>;
 
+  /**
+   * Показывать ли компонент маршрута
+   * @type {boolean}
+   * @memberof MapComponent
+   */
   public isShowRouteReview: boolean = false;
 
   constructor(private readonly webSocketSevice: WebSocketService,
     private readonly mapService: MapService,
     private readonly filterService: FilterService,
-    private readonly productService: ProductService) {}
+    private readonly productService: ProductService,
+    private readonly notificationService: NotificationService) {}
+
+  public ngOnInit(): void {
+    this.webSocketSevice.on('get products failed', this.onGetProductsFailed);
+    this.webSocketSevice.on('get products successed', this.onGetProductsSuccessed);
+    this.webSocketSevice.on('build route successed', this.onBuildRouteSuccessed);
+    this.webSocketSevice.on('build route failed', this.onBuildRouteFailed);
+
+    this.productService.productIdsToRoute$
+      .pipe(
+        untilDestroyed(this)
+      )
+      .subscribe((data) => {
+        this.isShowRouteReview = data.size > 0;
+      });
+
+    this.filterService.chechedCategory3LevelIds$
+      .pipe(
+        untilDestroyed(this)
+      )
+      .subscribe((data: Set<string>) => {
+        this.webSocketSevice.emit<string[]>('get products attempt', [...data]);
+      });
+
+    this.filterService.filterValues$
+      .pipe(
+        untilDestroyed(this)
+      )
+      .subscribe((data) => console.log('filterValues', data));
+  }
 
   public ngAfterViewInit() {
     this.mapService.initMap(this.mapContainer);
-  }
-
-  public ngOnInit(): void {
-    this.webSocketSevice.socket.on('get products failed', (response) => {
-      console.log(123);
-      console.log('on get products failed', response);
-    });
-
-    this.webSocketSevice.socket.on('get products successed', (response: IResponseData<Product[]>) => {
-      console.log('on get products successed', response);
-      this.mapService.addProducts(response.data);
-    });
-
-    this.webSocketSevice.socket.on('build route successed', (response) => {
-      console.log('resp', response)
-      this.mapService.addRoute(response.data);
-    });
-
-    this.productService.productIdsToRoute$.subscribe((data) => {
-      console.log('productIdsToRoute', data);
-      this.isShowRouteReview = data.size > 0;
-    });
-
-    this.filterService.chechedCategory3LevelIds$.subscribe((data: Set<string>) => {
-      console.log('chechedCategories3Level', data);
-      this.webSocketSevice.emit<string[]>('get products attempt', [...data]);
-    });
-
-    this.filterService.filterValues$.subscribe((data) => console.log('filterValues', data));
   }
 
   public ngOnDestroy() {

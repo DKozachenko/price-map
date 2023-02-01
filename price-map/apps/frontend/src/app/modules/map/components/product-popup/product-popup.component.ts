@@ -1,11 +1,13 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { Product } from '@core/entities';
-import { NotificationService, WebSocketService } from '../../../../services';
+import { IProductInfo } from './../../models/interfaces/product-info.interface';
+import { Component } from '@angular/core';
 import { ProductService } from '../../services';
-import { ICoordinates, IResponseData } from '@core/interfaces';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { IResponseCallback } from '../../../../models/interfaces';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
+/**
+ * Компонент попапа товара на карте
+ * @export
+ * @class ProductPopupComponent
+ */
 @UntilDestroy()
 @Component({
   selector: 'price-map-product-popup',
@@ -13,14 +15,24 @@ import { IResponseCallback } from '../../../../models/interfaces';
   styleUrls: ['./product-popup.component.scss']
 })
 export class ProductPopupComponent {
-  public productInfo: any = {
-    id: '',
-    name: '',
-    description: ''
-  };
+  /**
+   * Информация о товара
+   * @type {IProductInfo}
+   * @memberof ProductPopupComponent
+   */
+  public productInfo: IProductInfo;
 
+  /**
+   * Сервис товаров
+   * @type {ProductService}
+   * @memberof ProductPopupComponent
+   */
   public productService: ProductService; 
 
+  /**
+   * Добавление id товара в маршрут
+   * @memberof ProductPopupComponent
+   */
   public addProductIdToRoute(): void {
     this.productService.addProductIdToRoute(this.productInfo.id);
   }

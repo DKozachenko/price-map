@@ -328,7 +328,7 @@ export class MapService {
    * @memberof MapService
    */
   private addClusterCountLayer(): void {
-    const clusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map?.getLayer(this.clusterCountLayerId);
+    const clusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.clusterCountLayerId);
 
     if (clusterCountLayer) {
       clusterCountLayer.source = this.productsSourceName;
@@ -358,7 +358,7 @@ export class MapService {
     if (unclasteredPointLayer) {
       unclasteredPointLayer.source = this.productsSourceName;
     } else {
-      this.map?.addLayer({
+      this.map.addLayer({
         id: this.unclusterPointLayerId,
         type: 'symbol',
         source: this.productsSourceName,
@@ -435,12 +435,12 @@ export class MapService {
    * @memberof MapService
    */
   private addRouteLayer(): void {
-    const lineLayer: LineStyleLayer = <LineStyleLayer>this.map?.getLayer(this.routeSourceName);
+    const lineLayer: LineStyleLayer = <LineStyleLayer>this.map.getLayer(this.routeSourceName);
 
     if (lineLayer) {
       lineLayer.source = this.routeSourceName;
     } else {
-      this.map?.addLayer({
+      this.map.addLayer({
         id: this.routeLayerId,
         type: 'line',
         source: this.routeSourceName,
