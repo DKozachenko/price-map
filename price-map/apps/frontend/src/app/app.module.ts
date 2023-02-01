@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app.routing-module';
 import { appInitializer } from './initializers';
 import { NotificationService, TokenService, WebSocketService } from './services';
 import { HttpClientModule } from '@angular/common/http';
-import { NbThemeModule, NbToastrModule, NbToastrService } from '@nebular/theme';
+import { NbThemeModule, NbToastrModule, NbToastrService, NbIconModule, NbLayoutModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthGuard, RolesGuard } from './guards';
@@ -29,7 +29,9 @@ import { AuthGuard, RolesGuard } from './guards';
       name: 'cosmic'
     }),
     NbToastrModule.forRoot(),
-    NbEvaIconsModule
+    NbEvaIconsModule,
+    NbIconModule,
+    NbLayoutModule
   ],
   providers: [
     AuthGuard,

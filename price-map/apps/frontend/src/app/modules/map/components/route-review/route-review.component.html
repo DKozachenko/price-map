@@ -1,18 +1,26 @@
-<div class="route__review-wrap">
-  <div class="route__review">
-    <h4 class="route__review-title">Маршрут</h4>
+<nb-card class="route__review custom__map-card">
+  <nb-card-header>Маршрут</nb-card-header>
 
-    <ul>
-      <ol *ngFor="let product of products" class="product">
-        <p>{{ product.name }}</p>
-        <p>{{ product.description }}</p>
-        <p>{{ product.price }} р.</p>
-        <p>Из {{ product.shop.name }}</p>
-      </ol>
-    </ul>
+  <nb-card-body class="route__review-body custom__scroll custom__map-card__body">
+    <div class="products">
+      <map-product-mini-card 
+        *ngFor="let product of products" 
+        [product]="product"
+      ></map-product-mini-card>
+    </div>
 
-    <button class="button" (click)="buildRoute()">Построить маршрут</button>
-  </div>
-</div>
+    <button
+      class="button"
+      nbButton
+      hero
+      status="primary"
+      shape="round"
+      type="button"
+      (click)="buildRoute()"
+    >
+      Построить маршрут
+    </button>
+  </nb-card-body>
+</nb-card>
 
 

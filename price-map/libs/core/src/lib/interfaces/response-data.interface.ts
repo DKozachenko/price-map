@@ -23,7 +23,7 @@ export interface IResponseData<T = any> {
    * @type {(T | null)}
    * @memberof IResponseData
    */
-  data: T | null,
+  data: T,
   /**
    * Сообщение
    * @type {string}

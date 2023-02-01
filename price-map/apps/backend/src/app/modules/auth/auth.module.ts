@@ -4,9 +4,14 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthGateway } from './gateways';
 import { secretKey } from '../../constants';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '@price-map/core/entities';
+import { User } from '@core/entities';
 import { UsersService } from '../users/services';
 
+/**
+ * Модуль авторизации
+ * @export
+ * @class AuthModule
+ */
 @Module({
   imports: [
     TypeOrmModule.forFeature([User], 'postgresConnect'),

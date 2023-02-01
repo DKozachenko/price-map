@@ -1,12 +1,17 @@
-<div class="map__wrap">
-  <div class="map" #map></div>
-
-  <price-map-filter></price-map-filter>
-
-  <price-map-route-review
-    *ngIf="isShowRouteReview"
-    [productIds]="productIdsForRoute"
-  ></price-map-route-review>
-</div>
-
-
+<nb-layout>
+  <nb-layout-header>
+    <app-header></app-header>
+  </nb-layout-header>
+  <nb-layout-column class="colored-column-warning">
+    <div class="container">
+      <div class="map" #map></div>
+  
+      <price-map-filter></price-map-filter>
+  
+      <price-map-route-review 
+        *ngIf="isShowRouteReview"
+      ></price-map-route-review>
+    </div>
+  </nb-layout-column>
+</nb-layout>
+<ng-template #dynamic></ng-template>

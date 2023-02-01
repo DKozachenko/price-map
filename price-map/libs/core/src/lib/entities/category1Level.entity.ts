@@ -29,8 +29,7 @@ export class Category1Level {
     nullable: false
   })
   public name: string;
-
-  //TODO: Возможно убрать лишнюю подгрузку через eager
+  
   /**
    * Категории 2 уровня
    * @type {Category2Level[]}

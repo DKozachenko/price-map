@@ -15,10 +15,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@price-map/core": ["libs/core/src/index.ts"],
-      "@price-map/core/entities": ["libs/core/src/lib/entities"],
-      "@price-map/core/enums": ["libs/core/src/lib/enums"],
-      "@price-map/core/interfaces": ["libs/core/src/lib/interfaces"]
+      "@core": ["libs/core/src/index.ts"],
+      "@core/entities": ["libs/core/src/lib/entities"],
+      "@core/enums": ["libs/core/src/lib/enums"],
+      "@core/interfaces": ["libs/core/src/lib/interfaces"],
+      "@core/types": ["libs/core/src/lib/types"]
     }
   },
   "exclude": ["node_modules", "tmp"]

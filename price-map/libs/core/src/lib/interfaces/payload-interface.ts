@@ -1,3 +1,5 @@
+import { Role } from "../enums";
+
 /**
  * Интерфейс данных, хранящихся в токене
  * @export
@@ -25,10 +27,10 @@ export interface IPayload {
   nickname: string,
   /**
    * Роль пользователя
-   * @type {string}
+   * @type {Role}
    * @memberof IPayload
    */
-  role: string,
+  role: Role,
   /**
    * Id пользователя
    * @type {string}

@@ -1,7 +1,7 @@
 @mixin font($size, $color, $weight: 400) {
-  font-size: $size;
-  color: $color;
-  font-weight: $weight;
-  line-height: 1;
-  font-family: 'Consolas', sans-serif;
+  font-size: $size!important;
+  color: $color!important;
+  font-weight: $weight!important;
+  line-height: 1!important;
+  font-family: 'Consolas', sans-serif!important;
 }

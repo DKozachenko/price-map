@@ -24,5 +24,5 @@ export interface IFilter {
    * @type {(string[] | number[])}
    * @memberof IFilter
    */
-  values: string[] | number[]
+  values: number[] | string[]
 }

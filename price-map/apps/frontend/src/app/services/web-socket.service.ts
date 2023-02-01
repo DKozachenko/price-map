@@ -42,6 +42,16 @@ export class WebSocketService {
   constructor(private readonly tokenService: TokenService) {}
 
   /**
+   * Добавление токена к запросу
+   * @memberof WebSocketService
+   */
+  private addToken(): void {
+    this.socket.auth = {
+      token: this.tokenService.getToken()
+    };
+  }
+
+  /**
    * Инициализация сокета
    * @memberof WebSocketService
    */
@@ -72,24 +82,15 @@ export class WebSocketService {
     });
   }
 
-  /**
-   * Добавление токена к запросу
-   * @memberof WebSocketService
-   */
-  public addToken(): void {
-    this.socket.auth = {
-      token: this.tokenService.getToken()
-    };
-  }
-
   /** 
    * Отправка данных
    * @template T тип отправляемых данных
    * @param {string} eventName название события
-   * @param {T} data данные
+   * @param {T} [data] данные
    * @memberof WebSocketService
    */
-  public emit<T>(eventName: string, data: T): void {
+  public emit<T = null>(eventName: string, data?: T): void {
+    this.addToken();
     this.socket.emit(eventName, data);
   }
 
@@ -102,5 +103,14 @@ export class WebSocketService {
    */
   public on<T>(eventName: string, callback: IResponseCallback<T>) {
     this.socket.on(eventName, callback);
+  }
+
+  /**
+   * Удаление слушателя события
+   * @param {string} eventName название события
+   * @memberof WebSocketService
+   */
+  public removeEventListener(eventName: string): void {
+    this.socket.off(eventName);
   }
 }

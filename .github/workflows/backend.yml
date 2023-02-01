@@ -1,32 +1,92 @@
 name: Backend CI
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "task/*", "bugfix/*", "conf/*", "feature/*" ]
   pull_request:
     branches: [ "master", "develop" ]
 
 jobs:
-  start-on-ubuntu:
-    runs-on: ubuntu-latest
+  lint:
+    runs-on: ${{ matrix.os }}
     defaults:
-        run:
-          working-directory: ./price-map
+      run:
+        working-directory: ./price-map
     strategy:
       matrix:
-        node-version: [16.x]
+        os: [ubuntu-latest, windows-latest]
+        node-version: [12.x, 14.x, 16.x]
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Get repository code
+        uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Cache deps
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
       - name: Start lint
         run: npm run lint:back
+
+  test:
+    needs: [lint]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./price-map
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [12.x, 14.x, 16.x]
+
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache deps
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
       - name: Start test
         run: npm run test:back
+
+  build:
+    needs: [test]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./price-map
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [12.x, 14.x, 16.x]
+
+    steps:
+      - name: Get repository code
+        uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache deps
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
       - name: Start build
         run: npm run build:back

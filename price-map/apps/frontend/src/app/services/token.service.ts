@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { TokenKey } from './../models/constants';
+import jwtDecode from 'jwt-decode';
+import { IPayload } from '@core/interfaces';
 
-//TODO: перейти на хранение в куки
 /**
  * Сервис работы с токеном (хранит его в localStorage)
  * @export
@@ -25,6 +26,18 @@ export class TokenService {
    */
   public getToken(): string {
     return localStorage.getItem(TokenKey) ?? '';
+  }
+
+  /**
+   * Получение данных из токена
+   * @return {*}  {IPayload} данные
+   * @memberof TokenService
+   */
+  public getPayload(): IPayload {
+    const token: string = this.getToken();
+    const tokenWithoutBearer: string = token.split(' ')?.[1];
+    const payload: IPayload = jwtDecode(tokenWithoutBearer);
+    return payload;
   }
 
   /**

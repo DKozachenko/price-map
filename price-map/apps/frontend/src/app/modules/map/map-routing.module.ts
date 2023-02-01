@@ -5,16 +5,11 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'map',
-    pathMatch: 'full'
-  },
-  {
-    path: 'map',
     component: MapComponent
   },
   {
     path: '**',
-    redirectTo: 'map',
+    redirectTo: '',
     pathMatch: 'full'
   },
 ];
