@@ -1,15 +1,15 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ICoordinates } from '@core/interfaces';
-import { Observable } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+import { Observable } from 'rxjs';
 
 /**
- * Главный сервис
+ * Сервис для внешнего взаимодействия
  * @export
- * @class AppService
+ * @class ExternalService
  */
 @Injectable()
-export class AppService {
+export class ExternalService {
   constructor(private readonly httpService: HttpService) {}
 
   /**

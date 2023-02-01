@@ -1,6 +1,6 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ScrapingModule, AuthModule, UsersModule, ProductsModule, CategoriesModule } from './modules';
+import { ScrapingModule, AuthModule, UsersModule, ProductsModule, CategoriesModule, ExternalModule } from './modules';
 import { ScrapingService } from './modules/scraping/services';
 import { Organization,
   Shop,
@@ -13,8 +13,6 @@ import * as fs from 'fs';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AppGateway } from './gateways';
 import { secretKey } from './models/constants';
-import { AppService } from './services';
-import { HttpModule } from '@nestjs/axios';
 
 interface BreadcrumbInfo {
   [key: string]: string,
@@ -36,7 +34,7 @@ interface BreadcrumbInfo {
     ProductsModule,
     CategoriesModule,
     ScrapingModule,
-    HttpModule,
+    ExternalModule,
     //TODO: Добавить свой логгер
     //TODO: Миграции
     TypeOrmModule.forRoot({
@@ -65,8 +63,7 @@ interface BreadcrumbInfo {
   ],
   providers: [
     JwtService,
-    AppGateway,
-    AppService
+    AppGateway
   ],
 })
 export class AppModule implements OnModuleInit {
