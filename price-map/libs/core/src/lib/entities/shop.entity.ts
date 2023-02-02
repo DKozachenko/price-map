@@ -52,7 +52,7 @@ export class Shop {
     length: 200,
     nullable: true
   })
-  public imagePath: string;
+  public imagePath?: string;
 
   /**
    * Координаты
@@ -61,7 +61,7 @@ export class Shop {
    */
   @Column({
     type: 'jsonb',
-    nullable: true
+    nullable: false
   })
   public coordinates: ICoordinates;
 

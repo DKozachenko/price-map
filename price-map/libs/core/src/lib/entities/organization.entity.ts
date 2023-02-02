@@ -52,7 +52,7 @@ export class Organization {
     length: 200,
     nullable: true
   })
-  public imagePath: string;
+  public imagePath?: string;
 
   /**
    * Ссылка на веб-сайт
@@ -64,7 +64,7 @@ export class Organization {
     length: 200,
     nullable: true
   })
-  public website: string;
+  public website?: string;
 
   /**
    * Магазины (филиалы) этой организации

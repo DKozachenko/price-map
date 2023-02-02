@@ -75,7 +75,7 @@ export class Product {
     length: 200,
     nullable: true
   })
-  public imagePath: string;
+  public imagePath?: string;
 
   /**
    * Магазин, в котором он находится
