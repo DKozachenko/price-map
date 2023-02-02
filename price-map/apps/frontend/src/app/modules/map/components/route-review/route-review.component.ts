@@ -5,6 +5,7 @@ import { ProductService } from '../../services';
 import { ICoordinates, IResponseData } from '@core/interfaces';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { IResponseCallback } from '../../../../models/interfaces';
+import { ExternalEvents, ProductEvents } from '@core/enums';
 
 /**
  * Компонент отображения товаров, по которым нужно построить маршрут
@@ -67,15 +68,15 @@ export class RouteReviewComponent implements OnInit, OnDestroy {
     private readonly notificationService: NotificationService) {}
 
   public ngOnInit(): void {
-    this.webSocketService.on('get product successed', this.onGetProductSuccessed);
-    this.webSocketService.on('get product failed', this.onGetProductFailed);
+    this.webSocketService.on(ProductEvents.GetProductSuccessed, this.onGetProductSuccessed);
+    this.webSocketService.on(ProductEvents.GetProductFailed, this.onGetProductFailed);
 
     this.productsService.addProductIdToRoute$
       .pipe(
         untilDestroyed(this)
       )
       .subscribe((id: string) => {
-        this.webSocketService.emit<string>('get product attempt', id);
+        this.webSocketService.emit<string>(ProductEvents.GetProductAttempt, id);
       });
 
     this.productsService.deleteProductIdFromRoute$
@@ -88,7 +89,7 @@ export class RouteReviewComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
-    this.webSocketService.removeEventListener('get product successed');
+    this.webSocketService.removeEventListener(ProductEvents.GetProductSuccessed);
   }
 
   /**
@@ -97,6 +98,6 @@ export class RouteReviewComponent implements OnInit, OnDestroy {
    */
   public buildRoute(): void {
     const coordinates: ICoordinates[] = this.getCoordinates();
-    this.webSocketService.emit<ICoordinates[]>('build route attempt', coordinates);
+    this.webSocketService.emit<ICoordinates[]>(ExternalEvents.BuildRouteAttempt, coordinates);
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '@core/entities';
 import { Any, In, Repository } from 'typeorm';
+import { from, Observable } from 'rxjs';
 
 /**
  * Сервис товаров
@@ -22,11 +23,11 @@ export class ProductsService {
   /**
    * Получение всех товаров в определенных категориях 3 уровня
    * @param {string[]} ids id категорий 3 уровня
-   * @return {*}  {Promise<Product[]>} товары
+   * @return {*}  {Observable<Product[]>} товары
    * @memberof ProductsService
    */
-  public async getAll(ids: string[]): Promise<Product[]> {
-    return await this.productRepository.find({
+  public getAll(ids: string[]): Observable<Product[]> {
+    return from(this.productRepository.find({
       where: {
         category3Level: {
           id: In(ids)
@@ -36,17 +37,17 @@ export class ProductsService {
         shop: true,
         category3Level: true
       }
-    });
+    }));
   }
 
   /**
    * Получение товара по id
    * @param {string} id id
-   * @return {*}  {Promise<Product>} товар
+   * @return {*}  {Observable<Product | null>} товар
    * @memberof ProductsService
    */
-  public async getById(id: string): Promise<Product | null> {
-    return await this.productRepository.findOne({
+  public getById(id: string): Observable<Product | null> {
+    return from(this.productRepository.findOne({
       where: {
         id
       },
@@ -54,6 +55,6 @@ export class ProductsService {
         shop: true,
         category3Level: true
       }
-    });
+    }));
   }
 }

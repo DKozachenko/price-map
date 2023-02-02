@@ -40,21 +40,21 @@ export class CategoriesService {
 
   /**
    * Получений всех категорий 1 уровня
-   * @return {*}  {Promise<Category1Level[]>} все категории 1 уровня
+   * @return {*}  {Observable<Category1Level[]>} все категории 1 уровня
    * @memberof CategoriesService
    */
-  public async getAllCategories1Level(): Promise<Category1Level[]> {
-    return this.category1LevelRepository.find({
+  public getAllCategories1Level(): Observable<Category1Level[]> {
+    return from(this.category1LevelRepository.find({
       relations: {
         categories2Level: true,
       }
-    });
+    }));
   }
 
   /**
    * Получение категории 3 уровня по id
    * @param {string} id id записи
-   * @return {*}  {Promise<Category3Level>} категория 3 уровня
+   * @return {*}  {Observable<Category3Level>} категория 3 уровня
    * @memberof CategoriesService
    */
   public getCategory3LevelById(id: string): Observable<Category3Level> {

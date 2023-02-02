@@ -5,6 +5,7 @@ import { IResponseData } from '@core/interfaces';
 import { IResponseCallback } from '../../../../models/interfaces';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService, MapService, ProductService } from '../../services';
+import { ExternalEvents, ProductEvents } from '@core/enums';
 
 /**
  * Компонент карты
@@ -89,10 +90,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     private readonly notificationService: NotificationService) {}
 
   public ngOnInit(): void {
-    this.webSocketSevice.on('get products failed', this.onGetProductsFailed);
-    this.webSocketSevice.on('get products successed', this.onGetProductsSuccessed);
-    this.webSocketSevice.on('build route successed', this.onBuildRouteSuccessed);
-    this.webSocketSevice.on('build route failed', this.onBuildRouteFailed);
+    this.webSocketSevice.on(ProductEvents.GetProductsFailed, this.onGetProductsFailed);
+    this.webSocketSevice.on(ProductEvents.GetProductsSuccessed, this.onGetProductsSuccessed);
+    this.webSocketSevice.on(ExternalEvents.BuildRouteSuccessed, this.onBuildRouteSuccessed);
+    this.webSocketSevice.on(ExternalEvents.BuildRouteFailed, this.onBuildRouteFailed);
 
     this.productService.productIdsToRoute$
       .pipe(
@@ -107,7 +108,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
         untilDestroyed(this)
       )
       .subscribe((data: Set<string>) => {
-        this.webSocketSevice.emit<string[]>('get products attempt', [...data]);
+        this.webSocketSevice.emit<string[]>(ProductEvents.GetProductsAttempt, [...data]);
       });
 
     this.filterService.filterValues$

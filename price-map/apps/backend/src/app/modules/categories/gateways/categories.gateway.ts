@@ -26,46 +26,47 @@ export class CategoriesGateway {
 
   /**
    * Получение всех категорий 1 уровня
-   * @return {*}  {Promise<WsResponse<IResponseData<Category1Level[]>>>}
+   * @return {*}  {Observable<WsResponse<IResponseData<Category1Level[] | null, DbErrorCode | null>>>}
    * @memberof CategoriesGateway
    */
   @Roles(Role.User, Role.Admin)
   // @UseGuards(JwtAuthGuard('get categories 1 level failed'), RolesAuthGuard('get categories 1 level failed'))
   @SubscribeMessage(CategoryEvents.GetCategories1LevelAttempt)
-  public async getAllCategories1Level(): Promise<WsResponse<IResponseData<Category1Level[] | null, DbErrorCode | null>>> {
-    let categories1Level: Category1Level[] = []; 
-
-    try {
-      categories1Level = await this.categoriesService.getAllCategories1Level();
-    } catch (err: any) {
-      return {
-        event: CategoryEvents.GetCategories1LevelFailed,
-        data: {
-          statusCode: 500,
-          errorCode: 'DB_ERROR',
-          isError: true,
-          data: null,
-          message: 'Ошибка при получении категорий 1 уровня'
-        }
-      };
-    }
-
-    return {
-      event: CategoryEvents.GetCategories1LevelSuccessed,
-      data: {
-        statusCode: 200,
-        errorCode: null,
-        isError: false,
-        data: categories1Level,
-        message: 'Категории 1 уровня успешно получены'
-      }
-    };
+  public getAllCategories1Level(): Observable<WsResponse<IResponseData<Category1Level[] | null, DbErrorCode | null>>> {
+    return this.categoriesService.getAllCategories1Level()
+      .pipe(
+        switchMap((categories1Level: Category1Level[]) => {
+          return of({
+            event: CategoryEvents.GetCategories1LevelSuccessed,
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: categories1Level,
+              message: 'Категории 1 уровня успешно получены'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'CategoriesGateway');
+          return of({
+            event: CategoryEvents.GetCategories1LevelFailed,
+            data: {
+              statusCode: 500,
+              errorCode: <DbErrorCode>'DB_ERROR',
+              isError: false,
+              data: null,
+              message: 'Ошибка при получении категорий 1 уровня'
+            }
+          });
+        })
+      );
   }
 
   /**
    * Получение категории 3 уровня по id 
    * @param {string} id id записи
-   * @return {*}  {Promise<WsResponse<IResponseData<Category3Level>>>}
+   * @return {*}  {Observable<WsResponse<IResponseData<Category3Level | null, DbErrorCode | null>>>}
    * @memberof CategoriesGateway
    */
   @Roles(Role.User, Role.Admin)
@@ -86,12 +87,12 @@ export class CategoriesGateway {
             }
           });
         }),
-        catchError((err: Error) => {
-          Logger.error(err, 'CategoriesGateway');
+        catchError((e: Error) => {
+          Logger.error(e, 'CategoriesGateway');
           return of({
             event: CategoryEvents.GetCategory3LevelFailed,
             data: {
-              statusCode: 503,
+              statusCode: 500,
               errorCode: <DbErrorCode>'DB_ERROR',
               isError: false,
               data: null,
