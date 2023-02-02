@@ -66,7 +66,8 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.filterService.chechedCategory3LevelIds$
       .pipe(untilDestroyed(this))
-      .subscribe((data: Set<string>) => this.webSocketService.emit<string[]>(ProductEvents.GetProductsAttempt, [...data]));
+      .subscribe((data: Set<string>) => 
+        this.webSocketService.emit<string[]>(ProductEvents.GetProductsAttempt, [...data]));
 
     this.filterService.filterValues$
       .pipe(

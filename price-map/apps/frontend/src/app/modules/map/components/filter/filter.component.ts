@@ -53,7 +53,8 @@ export class FilterComponent implements OnInit {
 
     this.webSocketSevice.on<IResponseData<Category1Level[]>>(CategoryEvents.GetCategories1LevelSuccessed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<Category1Level[]>) => this.categories1Level = response.data.map(this.mapData));
+      .subscribe((response: IResponseData<Category1Level[]>) => 
+        this.categories1Level = response.data.map(this.mapData));
 
     this.webSocketSevice.emit(CategoryEvents.GetCategories1LevelAttempt);
 

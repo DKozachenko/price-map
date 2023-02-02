@@ -85,7 +85,13 @@ export class WebSocketService implements OnDestroy {
    */
   private subcribeOnDisconnect(): void {
     this.disconnectSub = this.on<[string, DisconnectDescription | undefined]>('disconnect')
-      .subscribe(([reason, description]: [string, DisconnectDescription | undefined]) => 
+      .subscribe(([
+        reason, 
+        description
+      ]: [
+        string, 
+        DisconnectDescription | undefined
+      ]) => 
         console.warn('Socket disconnected', 'reason ', reason, 'description', description)
       );
   }

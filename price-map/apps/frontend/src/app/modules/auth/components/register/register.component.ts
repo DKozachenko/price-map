@@ -32,7 +32,7 @@ export class RegisterComponent implements OnInit {
    * @type {EventEmitter<void>}
    * @memberof RegisterComponent
    */
-  @Output() public onRegisterSuccessed: EventEmitter<void> = new EventEmitter<void>();
+  @Output() public registerSuccessed: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private readonly webSocketSevice: WebSocketService,
     private readonly notificationService: NotificationService) {}
@@ -72,7 +72,7 @@ export class RegisterComponent implements OnInit {
       .subscribe((response: IResponseData<User>) => {
         this.form.reset();
         this.notificationService.showSuccess(response.message);
-        this.onRegisterSuccessed.emit();
+        this.registerSuccessed.emit();
       });
   }
 
