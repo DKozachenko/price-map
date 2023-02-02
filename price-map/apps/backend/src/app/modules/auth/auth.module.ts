@@ -6,6 +6,7 @@ import { secretKey } from '../../models/constants';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@core/entities';
 import { UsersService } from '../users/services';
+import { HashService } from './services';
 
 /**
  * Модуль авторизации
@@ -23,6 +24,7 @@ import { UsersService } from '../users/services';
   ],
   providers: [
     UsersService,
+    HashService,
     AuthGateway,
     JwtService
   ]
