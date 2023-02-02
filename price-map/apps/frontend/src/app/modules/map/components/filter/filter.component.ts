@@ -1,3 +1,4 @@
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Component, OnInit } from '@angular/core';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService } from '../../services';
@@ -5,7 +6,6 @@ import { Category1Level, Category2Level, Category3Level } from '@core/entities';
 import { ICategory1LevelForView, ICategory2LevelForView, ICategory3LevelForView } from '../../models/interfaces';
 import { IResponseData } from '@core/interfaces';
 import { CategoryEvents } from '@core/enums';
-import { IResponseCallback } from '../../../../models/interfaces';
 
 /**
  * Компонент фильтра
@@ -13,6 +13,7 @@ import { IResponseCallback } from '../../../../models/interfaces';
  * @class FilterComponent
  * @implements {OnInit}
  */
+@UntilDestroy()
 @Component({
   selector: 'price-map-filter',
   templateUrl: './filter.component.html',
@@ -41,47 +42,40 @@ export class FilterComponent implements OnInit {
    */
   public isShowCharacteristics: boolean = false;
 
-  /**
-   * Колбэк, срабатывающий при успешном получении категорий 1 уровня
-   * @private
-   * @param {IResponseData<Category1Level[]>} response ответ от сервера
-   * @type {IResponseCallback<IResponseData<Category1Level[]>>}
-   * @memberof FilterComponent
-   */
-  private onGetCategories1LevelSuccessed: IResponseCallback<IResponseData<Category1Level[]>> 
-    = (response: IResponseData<Category1Level[]>) => {
-      this.categories1Level = response.data.map(this.mapData);
-    };
-
-  /**
-   * Колбэк, срабатывающий при неудачной попытке получения категорий 1 уровня
-   * @private
-   * @param {IResponseData<null>} response ответ от сервера
-   * @type {IResponseCallback<IResponseData<null>>}
-   * @memberof FilterComponent
-   */
-  private onGetCategories1LevelFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
-    this.notificationService.showError(response.message);
-  };
-
   constructor(private readonly filterService: FilterService,
     private readonly webSocketSevice: WebSocketService,
     private readonly notificationService: NotificationService) {}
 
   public ngOnInit(): void {
-    this.webSocketSevice.on(CategoryEvents.GetCategories1LevelFailed, this.onGetCategories1LevelFailed);
-    this.webSocketSevice.on(CategoryEvents.GetCategories1LevelSuccessed, this.onGetCategories1LevelSuccessed);
+    this.webSocketSevice.on<IResponseData<null>>(CategoryEvents.GetCategories1LevelFailed)
+      .pipe(
+        untilDestroyed(this)
+      )
+      .subscribe((response: IResponseData<null>) => {
+        this.notificationService.showError(response.message);
+      });
+
+    this.webSocketSevice.on<IResponseData<Category1Level[]>>(CategoryEvents.GetCategories1LevelSuccessed)
+      .pipe(
+        untilDestroyed(this)
+      )
+      .subscribe((response: IResponseData<Category1Level[]>) => {
+        this.categories1Level = response.data.map(this.mapData);
+      });
 
     this.webSocketSevice.emit(CategoryEvents.GetCategories1LevelAttempt);
 
     this.filterService.chechedCategory3LevelIds$
+      .pipe(
+        untilDestroyed(this)
+      )
       .subscribe((data: Set<string>) => {
         this.isShowCharacteristics = data.size === 1;
       });
   }
 
   /**
-   * Преобрзование данных из БД в данные для отображения
+   * Преобразование данных из БД в данные для отображения
    * @private
    * @param {Category1Level} categories1Level категория 1 уровня из БД
    * @return {*}  {ICategory1LevelForView} категория 1 уровня для отображения

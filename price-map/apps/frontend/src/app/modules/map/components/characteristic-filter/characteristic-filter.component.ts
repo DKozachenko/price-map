@@ -1,3 +1,4 @@
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { IFilter, IResponseData, IUserFilter } from '@core/interfaces';
 import { Component, OnInit } from '@angular/core';
 import { RangeFilterIndex } from '@core/types';
@@ -5,7 +6,6 @@ import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService } from '../../services';
 import { Category3Level } from '@core/entities';
 import { CategoryEvents } from '@core/enums';
-import { IResponseCallback } from '../../../../models/interfaces';
 
 /**
  * Компонент фильтра для определенной категории 3 уровня
@@ -13,6 +13,7 @@ import { IResponseCallback } from '../../../../models/interfaces';
  * @class CharacteristicFilterComponent
  * @implements {OnInit}
  */
+@UntilDestroy()
 @Component({
   selector: 'price-map-characteristic-filter',
   templateUrl: './characteristic-filter.component.html',
@@ -34,41 +35,36 @@ export class CharacteristicFilterComponent implements OnInit {
    */
   public category3Level: any;
 
-  /**
-   * Колбэк, срабатывающий при успешном получении категории
-   * @private
-   * @param {IResponseData<Category3Level>} response
-   * @type {IResponseCallback<IResponseData<Category3Level>>}
-   * @memberof CharacteristicFilterComponent
-   */
-  private onGetCategory3LevelSuccessed: IResponseCallback<IResponseData<Category3Level>> 
-    = (response: IResponseData<Category3Level>) => {
-      this.category3Level = response.data;
-    };
-
-  /**
-   * Колбэк срабатывающий при неудачном получении категории
-   * @private
-   * @param {IResponseData<null>} response
-   * @type {IResponseCallback<IResponseData<null>>}
-   * @memberof CharacteristicFilterComponent
-   */
-  private onGetCategory3LevelFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
-    this.notificationService.showError(response.message);
-  };
-
   constructor(private readonly filterService: FilterService,
     private readonly webSocketSevice: WebSocketService,
     private readonly notificationService: NotificationService) {}
 
   public ngOnInit(): void {
-    this.filterService.chechedCategory3LevelIds$.subscribe((set: Set<string>) => {
-      const id: string = [...set][0];
-      this.webSocketSevice.emit<string>(CategoryEvents.GetCategory3LevelAttempt, id);
-    });
+    this.filterService.chechedCategory3LevelIds$
+      .pipe(
+        untilDestroyed(this)
+      )  
+      .subscribe((set: Set<string>) => {
+        const id: string = [...set][0];
+        this.webSocketSevice.emit<string>(CategoryEvents.GetCategory3LevelAttempt, id);
+      });
 
-    this.webSocketSevice.on(CategoryEvents.GetCategory3LevelFailed, this.onGetCategory3LevelFailed);
-    this.webSocketSevice.on(CategoryEvents.GetCategory3LevelSuccessed, this.onGetCategory3LevelSuccessed);
+    this.webSocketSevice.on<IResponseData<null>>(CategoryEvents.GetCategory3LevelFailed)
+      .pipe(
+        untilDestroyed(this)
+      )  
+      .subscribe((response: IResponseData<null>) => {
+        this.notificationService.showError(response.message);
+      });
+
+    
+    this.webSocketSevice.on<IResponseData<Category3Level>>(CategoryEvents.GetCategory3LevelSuccessed)
+      .pipe(
+        untilDestroyed(this)
+      )  
+      .subscribe((response: IResponseData<Category3Level>) => {
+        this.category3Level = response.data;
+      });
   }
 
   /**

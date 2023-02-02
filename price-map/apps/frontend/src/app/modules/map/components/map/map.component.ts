@@ -2,7 +2,6 @@ import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Product } from '@core/entities';
 import { IResponseData } from '@core/interfaces';
-import { IResponseCallback } from '../../../../models/interfaces';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService, MapService, ProductService } from '../../services';
 import { ExternalEvents, ProductEvents } from '@core/enums';
@@ -37,63 +36,47 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
    */
   public isShowRouteReview: boolean = false;
 
-  /**
-   * Колбэк, срабатывающий при удачном получении товаров
-   * @private
-   * @param {IResponseData<Product[]>} response ответ от сервера
-   * @type {IResponseCallback<IResponseData<Product[]>>}
-   * @memberof MapComponent
-   */
-  private onGetProductsSuccessed: IResponseCallback<IResponseData<Product[]>> 
-    = (response: IResponseData<Product[]>) => {
-      this.mapService.addProducts(response.data);
-    }; 
-
-  /**
-   * Колбэк, срабатывающий при неудачной попытке получении товаров
-   * @private
-   * @param {IResponseData<null[]>} response ответ от сервера
-   * @type {IResponseCallback<IResponseData<null[]>>}
-   * @memberof MapComponent
-   */
-  private onGetProductsFailed: IResponseCallback<IResponseData<null[]>> = (response: IResponseData<null[]>) => {
-    this.notificationService.showError(response.message);
-  };
-
-  /**
-   * Колбэк, срабатывающий при удачном построении маршрута
-   * @private
-   * @param {IResponseData<number[][]>} response ответ от сервера
-   * @type {IResponseCallback<IResponseData<number[][]>>}
-   * @memberof MapComponent
-   */
-  private onBuildRouteSuccessed: IResponseCallback<IResponseData<number[][]>> 
-    = (response: IResponseData<number[][]>) => {
-      this.mapService.addRoute(response.data);
-    };
-
-  /**
-   * Колбэк, срабатывающий при неудачном построении маршрута
-   * @private
-   * @param {IResponseData<null>} response
-   * @type {IResponseCallback<IResponseData<null>>}
-   * @memberof MapComponent
-   */
-  private onBuildRouteFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
-    this.notificationService.showError(response.message);
-  };
-
-  constructor(private readonly webSocketSevice: WebSocketService,
+  constructor(private readonly webSocketService: WebSocketService,
+    private readonly notificationService: NotificationService,
     private readonly mapService: MapService,
     private readonly filterService: FilterService,
-    private readonly productService: ProductService,
-    private readonly notificationService: NotificationService) {}
+    private readonly productService: ProductService) {}
 
   public ngOnInit(): void {
-    this.webSocketSevice.on(ProductEvents.GetProductsFailed, this.onGetProductsFailed);
-    this.webSocketSevice.on(ProductEvents.GetProductsSuccessed, this.onGetProductsSuccessed);
-    this.webSocketSevice.on(ExternalEvents.BuildRouteSuccessed, this.onBuildRouteSuccessed);
-    this.webSocketSevice.on(ExternalEvents.BuildRouteFailed, this.onBuildRouteFailed);
+    this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductsFailed)
+      .pipe(
+        untilDestroyed(this)
+      )
+      .subscribe((response: IResponseData<null>) => {
+        this.notificationService.showError(response.message);
+      });
+
+    
+    this.webSocketService.on<IResponseData<Product[]>>(ProductEvents.GetProductsSuccessed)
+      .pipe(
+        untilDestroyed(this)
+      )
+      .subscribe((response: IResponseData<Product[]>) => {
+        this.mapService.addProducts(response.data);
+      });
+
+    
+    this.webSocketService.on<IResponseData<number[][]>>(ExternalEvents.BuildRouteSuccessed)
+      .pipe(
+        untilDestroyed(this)
+      )
+      .subscribe((response: IResponseData<number[][]>) => {
+        this.mapService.addRoute(response.data);
+      });
+
+    
+    this.webSocketService.on<IResponseData<null>>(ExternalEvents.BuildRouteFailed)
+      .pipe(
+        untilDestroyed(this)
+      )
+      .subscribe((response: IResponseData<null>) => {
+        this.notificationService.showError(response.message);
+      });
 
     this.productService.productIdsToRoute$
       .pipe(
@@ -108,7 +91,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
         untilDestroyed(this)
       )
       .subscribe((data: Set<string>) => {
-        this.webSocketSevice.emit<string[]>(ProductEvents.GetProductsAttempt, [...data]);
+        this.webSocketService.emit<string[]>(ProductEvents.GetProductsAttempt, [...data]);
       });
 
     this.filterService.filterValues$

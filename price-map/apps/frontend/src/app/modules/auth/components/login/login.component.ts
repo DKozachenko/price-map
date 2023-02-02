@@ -1,9 +1,9 @@
+import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationService, TokenService, WebSocketService } from '../../../../services';
 import { IResponseData, IUserLoginInfo } from '@core/interfaces';
 import { AuthEvents } from '@core/enums';
-import { IResponseCallback } from '../../../../models/interfaces';
 import { Router } from '@angular/router';
 
 /**
@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
  * @class LoginComponent
  * @implements {OnInit}
  */
+@UntilDestroy()
 @Component({
   selector: 'auth-login',
   templateUrl: './login.component.html',
@@ -31,31 +32,6 @@ export class LoginComponent implements OnInit {
    * @memberof LoginComponent
    */
   public form!: FormGroup;
-  
-  /**
-   * Колбэк, срабатывающий при успешном входе
-   * @private
-   * @param {IResponseData<string>} response ответ от сервера
-   * @type {IResponseCallback<IResponseData<string>>}
-   * @memberof LoginComponent
-   */
-  private onLoginSuccessed: IResponseCallback<IResponseData<string>> = (response: IResponseData<string>) => {
-    this.form.reset();
-    this.notificationService.showSuccess(response.message);
-    this.tokenService.setToken(response.data ?? '');
-    this.router.navigate(['map'], { queryParamsHandling: 'merge' });
-  };
-
-  /**
-   * Колбэк, срабатывающий при неудачной попытке входа
-   * @private
-   * @param {IResponseData<null>} response ответ от сервера
-   * @type {IResponseCallback<IResponseData<null>>}
-   * @memberof LoginComponent
-   */
-  private onLoginFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
-    this.notificationService.showError(response.message);
-  };
 
   constructor(private readonly webSocketSevice: WebSocketService,
     private readonly notificationService: NotificationService,
@@ -68,8 +44,24 @@ export class LoginComponent implements OnInit {
       password: new FormControl(undefined, [Validators.required]),
     });
 
-    this.webSocketSevice.on(AuthEvents.LoginSuccessed, this.onLoginSuccessed);
-    this.webSocketSevice.on(AuthEvents.LoginFailed, this.onLoginFailed);
+    this.webSocketSevice.on<IResponseData<string>>(AuthEvents.LoginSuccessed)
+      .pipe(
+        untilDestroyed(this)
+      )
+      .subscribe((response: IResponseData<string>) => {
+        this.form.reset();
+        this.notificationService.showSuccess(response.message);
+        this.tokenService.setToken(response.data ?? '');
+        this.router.navigate(['map'], { queryParamsHandling: 'merge' });
+      });
+    
+    this.webSocketSevice.on<IResponseData<null>>(AuthEvents.LoginFailed)
+      .pipe(
+        untilDestroyed(this)
+      )
+      .subscribe((response: IResponseData<null>) => {
+        this.notificationService.showError(response.message);
+      });
   }
 
   /** 
