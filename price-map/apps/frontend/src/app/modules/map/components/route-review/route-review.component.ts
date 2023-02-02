@@ -5,6 +5,7 @@ import { ProductService } from '../../services';
 import { ICoordinates, IResponseData } from '@core/interfaces';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ExternalEvents, ProductEvents } from '@core/enums';
+import { delay } from 'rxjs';
 
 /**
  * Компонент отображения товаров, по которым нужно построить маршрут
@@ -50,7 +51,7 @@ export class RouteReviewComponent implements OnInit {
       .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
 
     this.webSocketService.on<IResponseData<Product>>(ProductEvents.GetProductSuccessed)
-      .pipe(untilDestroyed(this))
+      .pipe(untilDestroyed(this), delay(2000))
       .subscribe((response: IResponseData<Product>) => this.products.push(response.data));
 
     this.productsService.addProductIdToRoute$

@@ -6,7 +6,6 @@ import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService } from '../../services';
 import { Category3Level } from '@core/entities';
 import { CategoryEvents } from '@core/enums';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 /**
  * Компонент фильтра для определенной категории 3 уровня

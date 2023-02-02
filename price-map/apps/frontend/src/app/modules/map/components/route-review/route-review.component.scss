@@ -1,7 +1,8 @@
 @import "../../../../../assets/styles/mixins";
 
 .route__review {
-  right: 2rem;
+  right: 0;
+  border: none;
 
   &-body {
     width: 15vw;

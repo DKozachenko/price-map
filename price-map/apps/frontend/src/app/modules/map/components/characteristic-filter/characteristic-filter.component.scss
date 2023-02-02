@@ -1,9 +1,10 @@
 @import "../../../../../assets/styles/mixins";
 
 .characteristic__filter {
-  left: 21.5vw;
+  left: 17.5vw;
   z-index: 4;
-  width: 300px;
+  width: 30rem;
+  border: none;
 
   padding-left: 5rem;
   animation: slideIn .3s linear;

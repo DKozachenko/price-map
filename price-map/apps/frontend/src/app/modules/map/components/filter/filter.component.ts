@@ -1,4 +1,3 @@
-import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Component, OnInit } from '@angular/core';
 import { NotificationService, WebSocketService } from '../../../../services';
@@ -59,11 +58,7 @@ export class FilterComponent implements OnInit {
     this.webSocketSevice.emit(CategoryEvents.GetCategories1LevelAttempt);
 
     this.filterService.chechedCategory3LevelIds$
-      .pipe(
-        debounceTime(400),
-        distinctUntilChanged(),
-        untilDestroyed(this)
-      )
+      .pipe(untilDestroyed(this))
       .subscribe((data: Set<string>) => this.isShowCharacteristics = data.size === 1);
   }
 

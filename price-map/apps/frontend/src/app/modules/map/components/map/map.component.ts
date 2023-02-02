@@ -1,4 +1,3 @@
-import { IUserFilter } from './../../../../../../../../libs/core/src/lib/interfaces/user-filter.interface';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Product } from '@core/entities';
@@ -6,7 +5,7 @@ import { IResponseData } from '@core/interfaces';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService, MapService, ProductService } from '../../services';
 import { ExternalEvents, ProductEvents } from '@core/enums';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { debounceTime } from 'rxjs';
 
 /**
  * Компонент карты
@@ -66,11 +65,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       .subscribe((data) => this.isShowRouteReview = data.size > 0);
 
     this.filterService.chechedCategory3LevelIds$
-      .pipe(
-        debounceTime(400),
-        distinctUntilChanged(),
-        untilDestroyed(this)
-      )
+      .pipe(untilDestroyed(this))
       .subscribe((data: Set<string>) => this.webSocketService.emit<string[]>(ProductEvents.GetProductsAttempt, [...data]));
 
     this.filterService.filterValues$
