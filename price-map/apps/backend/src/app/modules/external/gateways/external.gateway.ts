@@ -66,7 +66,7 @@ export class ExternalGateway {
               errorCode: <ExternalErrorCode>'BUILD_ROUTE_FAILED',
               isError: true,
               data: null,
-              message: 'Ошибка во время постоения маршрута'
+              message: 'Ошибка во время построения маршрута'
             }
           });
         })

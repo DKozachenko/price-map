@@ -99,7 +99,7 @@ export class User {
    * @memberof User
    */
   @ManyToMany(() => Product, (product: Product) => product.users, {
-    eager: true,
+    eager: false,
     cascade: true,
   })
   @JoinTable({

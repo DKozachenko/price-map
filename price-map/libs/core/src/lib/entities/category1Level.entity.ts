@@ -36,7 +36,7 @@ export class Category1Level {
    * @memberof Category1Level
    */
   @OneToMany(() => Category2Level, (category: Category2Level) => category.category1Level, {
-    eager: true,
+    eager: false,
     cascade: true
   })
   public categories2Level: Category2Level[]

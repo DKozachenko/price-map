@@ -72,7 +72,7 @@ export class Organization {
    * @memberof Organization
    */
   @OneToMany(() => Shop, (shop: Shop) => shop.organization, {
-    eager: true,
+    eager: false,
     cascade: true,
   })
   public shops: Shop[]
