@@ -36,25 +36,38 @@ export class AuthGateway {
    * @memberof AuthGateway
    */
   @SubscribeMessage(AuthEvents.RegisterAttemp)
-  public register(@MessageBody() userRegisterInfo: IUserRegisterInfo): Observable<WsResponse<IResponseData<User | null, AuthErrorCode | null>>> {
+  public register(@MessageBody() userRegisterInfo: IUserRegisterInfo): 
+    Observable<WsResponse<IResponseData<User | null, AuthErrorCode | null>>> {
     let errorCode: AuthErrorCode;
     const errorCodePartialDataMap: Map<AuthErrorCode, IPartialData> = new Map<AuthErrorCode, IPartialData>([
-      ['EXISTED_NICKNAME', {
-        statusCode: 400,
-        message: 'Пользователь с таким никнеймом уже существует'
-      }],
-      ['EXISTED_MAIL', {
-        statusCode: 400,
-        message: 'Пользователь с такой почтой уже существует'
-      }],
-      ['HASH_ERROR', {
-        statusCode: 500,
-        message: 'Ошибка при регистрации'
-      }],
-      ['DB_ERROR', {
-        statusCode: 500,
-        message: 'Ошибка при регистрации'
-      }]
+      [
+        'EXISTED_NICKNAME', 
+        {
+          statusCode: 400,
+          message: 'Пользователь с таким никнеймом уже существует'
+        }
+      ],
+      [
+        'EXISTED_MAIL', 
+        {
+          statusCode: 400,
+          message: 'Пользователь с такой почтой уже существует'
+        }
+      ],
+      [
+        'HASH_ERROR', 
+        {
+          statusCode: 500,
+          message: 'Ошибка при регистрации'
+        }
+      ],
+      [
+        'DB_ERROR', 
+        {
+          statusCode: 500,
+          message: 'Ошибка при регистрации'
+        }
+      ]
     ]);
 
     return this.usersService.getByNickname(userRegisterInfo.nickname)
@@ -62,7 +75,7 @@ export class AuthGateway {
         switchMap((userWithSameNickname: User | null) => {
           if (userWithSameNickname) {
             errorCode = 'EXISTED_NICKNAME';
-            return throwError(() => new Error(`Error code: ${errorCode}, nickname: ${userRegisterInfo.nickname}`));         
+            return throwError(() => new Error(`Error code: ${errorCode}, nickname: ${userRegisterInfo.nickname}`));
           }
           return this.usersService.getByMail(userRegisterInfo.mail);
         }),
@@ -78,7 +91,7 @@ export class AuthGateway {
                 errorCode = 'HASH_ERROR';
                 return throwError(() => new Error(`Error code: ${errorCode}, error: ${e}`)); 
               }),
-            )
+            );
         }),
         switchMap((hashedPassword: string) => {
           return this.usersService.add({
@@ -92,7 +105,7 @@ export class AuthGateway {
                 errorCode = 'DB_ERROR';
                 return throwError(() => new Error(`Error code: ${errorCode}, error: ${e}`)); 
               }),
-            )
+            );
         }),
         switchMap((newUser: User) => {
           return of({
@@ -130,17 +143,24 @@ export class AuthGateway {
    * @memberof AuthGateway
    */
   @SubscribeMessage(AuthEvents.LoginAttemp)
-  public login(@MessageBody() userLoginInfo: IUserLoginInfo): Observable<WsResponse<IResponseData<string | null, AuthErrorCode | null>>> {
+  public login(@MessageBody() userLoginInfo: IUserLoginInfo): 
+    Observable<WsResponse<IResponseData<string | null, AuthErrorCode | null>>> {
     let errorCode: AuthErrorCode;
     const errorCodePartialDataMap: Map<AuthErrorCode, IPartialData> = new Map<AuthErrorCode, IPartialData>([
-      ['NON_EXISTENT_LOGIN', {
-        statusCode: 400,
-        message: 'Пользователь с таким логином не существует'
-      }],
-      ['WRONG_PASSWORD', {
-        statusCode: 400,
-        message: 'Неверный пароль'
-      }]
+      [
+        'NON_EXISTENT_LOGIN', 
+        {
+          statusCode: 400,
+          message: 'Пользователь с таким логином не существует'
+        }
+      ],
+      [
+        'WRONG_PASSWORD', 
+        {
+          statusCode: 400,
+          message: 'Неверный пароль'
+        }
+      ]
     ]);
     let currentUser: User;
 
@@ -153,7 +173,7 @@ export class AuthGateway {
           }
           currentUser = user;
 
-          return this.hashService.isMatchPasswords(userLoginInfo.password, user.password)
+          return this.hashService.isMatchPasswords(userLoginInfo.password, user.password);
         }),      
         switchMap((isMatch: boolean) => {
           if (!isMatch) {
@@ -194,7 +214,7 @@ export class AuthGateway {
             }
           });
         })
-      )
+      );
   }
 
 }

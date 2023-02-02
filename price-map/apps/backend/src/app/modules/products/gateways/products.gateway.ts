@@ -33,7 +33,8 @@ export class ProductsGateway {
   @Roles(Role.User, Role.Admin)
   // @UseGuards(JwtAuthGuard('get products failed'), RolesAuthGuard('get products failed'))
   @SubscribeMessage(ProductEvents.GetProductsAttempt)
-  public getAll(@MessageBody() query: any): Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>> {
+  public getAll(@MessageBody() query: any): 
+    Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>> {
     return this.productsService.getAll(query ? query : [])
       .pipe(
         switchMap((products: Product[]) => {

@@ -9,9 +9,7 @@ import { HttpModule } from '@nestjs/axios';
  * @class ExternalModule
  */
 @Module({
-  imports: [
-    HttpModule
-  ],
+  imports: [HttpModule],
   providers: [
     ExternalService,
     ExternalGateway,

@@ -72,7 +72,8 @@ export class CategoriesGateway {
   @Roles(Role.User, Role.Admin)
   // @UseGuards(JwtAuthGuard('get categories 1 level failed'), RolesAuthGuard('get categories 1 level failed'))
   @SubscribeMessage(CategoryEvents.GetCategory3LevelAttempt)
-  public getCategory3LevelById(@MessageBody() id: string): Observable<WsResponse<IResponseData<Category3Level | null, DbErrorCode | null>>> {
+  public getCategory3LevelById(@MessageBody() id: string): 
+    Observable<WsResponse<IResponseData<Category3Level | null, DbErrorCode | null>>> {
     return this.categoriesService.getCategory3LevelById(id)
       .pipe(
         switchMap((category3Level: Category3Level) => {

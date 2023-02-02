@@ -1,9 +1,7 @@
-import {
-  MessageBody,
+import { MessageBody,
   SubscribeMessage,
   WebSocketGateway,
-  WsResponse
-} from '@nestjs/websockets';
+  WsResponse } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Roles } from '../../../decorators';
 import { ExternalEvents, Role } from '@core/enums';
@@ -35,7 +33,8 @@ export class ExternalGateway {
   @Roles(Role.User, Role.Admin)
   // @UseGuards(JwtAuthGuard('get product failed'), RolesAuthGuard('get product failed'))
   @SubscribeMessage(ExternalEvents.BuildRouteAttempt)
-  public buildRoute(@MessageBody() coordinates: ICoordinates[]): Observable<WsResponse<IResponseData<number[][] | null, ExternalErrorCode | null>>> {
+  public buildRoute(@MessageBody() coordinates: ICoordinates[]): 
+    Observable<WsResponse<IResponseData<number[][] | null, ExternalErrorCode | null>>> {
     return this.externalService.buildRoute(coordinates)
       .pipe(
         switchMap((osrmData: any) => {

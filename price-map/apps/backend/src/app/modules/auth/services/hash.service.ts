@@ -21,7 +21,7 @@ export class HashService {
     return from(bcrypt.genSalt())
       .pipe(
         switchMap((salt: string) => from(bcrypt.hash(password, salt)))
-      )
+      );
   } 
 
   /**
