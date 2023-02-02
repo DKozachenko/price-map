@@ -52,7 +52,7 @@ export class Shop {
     length: 200,
     nullable: true
   })
-  public imagePath: string;
+  public imagePath?: string;
 
   /**
    * Координаты
@@ -61,7 +61,7 @@ export class Shop {
    */
   @Column({
     type: 'jsonb',
-    nullable: true
+    nullable: false
   })
   public coordinates: ICoordinates;
 
@@ -82,7 +82,7 @@ export class Shop {
    * @memberof Shop
    */
   @OneToMany(() => Product, (product: Product) => product.shop, {
-    eager: true,
+    eager: false,
     cascade: true,
   })
   public products: Product[]

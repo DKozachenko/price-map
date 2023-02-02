@@ -1,0 +1,1 @@
+export { BreadcrumbInfo } from './breadcrumb-info.interface';

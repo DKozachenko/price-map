@@ -3,7 +3,7 @@
 
   <nb-card-body class="custom__scroll custom__map-card__body">
     <ng-container *ngIf="category3Level.filters.length">
-      <div *ngFor="let filter of category3Level.filters;">
+      <div *ngFor="let filter of category3Level.filters; trackBy: trackByFilterFn">
         <ng-container [ngSwitch]="filter.type">
           <div *ngSwitchCase="'boolean'" class="characteristic__group">
             <p>{{ filter.name }}</p>
@@ -72,7 +72,7 @@
               size="medium"
             >
               <nb-option 
-                *ngFor="let value of filter.values" 
+                *ngFor="let value of $any(filter.values); trackBy: trackByValueFn" 
                 [value]="value" 
                 (click)="changeEnumFilter(filter, value)"
               >{{ value }}</nb-option>

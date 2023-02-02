@@ -1,6 +1,6 @@
 import { CustomDecorator, SetMetadata } from '@nestjs/common';
 import { Role } from '@core/enums';
-import { roleKey } from '../constants';
+import { roleKey } from '../models/constants';
 
 /**
  * Декоратор для требуемых полей

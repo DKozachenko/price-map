@@ -2,10 +2,11 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthGateway } from './gateways';
-import { secretKey } from '../../constants';
+import { secretKey } from '../../models/constants';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@core/entities';
 import { UsersService } from '../users/services';
+import { HashService } from './services';
 
 /**
  * Модуль авторизации
@@ -23,6 +24,7 @@ import { UsersService } from '../users/services';
   ],
   providers: [
     UsersService,
+    HashService,
     AuthGateway,
     JwtService
   ]

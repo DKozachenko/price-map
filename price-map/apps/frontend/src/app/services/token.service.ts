@@ -2,21 +2,24 @@ import { Injectable } from '@angular/core';
 import { TokenKey } from './../models/constants';
 import jwtDecode from 'jwt-decode';
 import { IPayload } from '@core/interfaces';
+import { CookieService } from 'ngx-cookie-service';
 
 /**
- * Сервис работы с токеном (хранит его в localStorage)
+ * Сервис работы с токеном (хранит его в Cookie)
  * @export
  * @class TokenService
  */
 @Injectable()
 export class TokenService {
+  constructor(private readonly cookieService: CookieService) {}
+
   /**
-   * Установка токен
+   * Установка токена
    * @param {string} token токен
    * @memberof TokenService
    */
   public setToken(token: string): void {
-    localStorage.setItem(TokenKey, token);
+    this.cookieService.set(TokenKey, token);
   }
 
   /**
@@ -25,7 +28,7 @@ export class TokenService {
    * @memberof TokenService
    */
   public getToken(): string {
-    return localStorage.getItem(TokenKey) ?? '';
+    return this.cookieService.get(TokenKey) ?? '';
   }
 
   /**
@@ -45,12 +48,12 @@ export class TokenService {
    * @memberof TokenService
    */
   public deleteToken(): void {
-    localStorage.removeItem(TokenKey);
+    this.cookieService.delete(TokenKey);
   }
 
   /**
    * Есть ли токен
-   * @return {*}  {boolean} true / false
+   * @return {*}  {boolean}
    * @memberof TokenService
    */
   public hasToken(): boolean {

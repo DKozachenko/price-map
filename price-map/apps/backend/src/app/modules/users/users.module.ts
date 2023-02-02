@@ -5,6 +5,11 @@ import { UsersGateway } from './gateways';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@core/entities';
 
+/**
+ * Модуль пользователей
+ * @export
+ * @class UsersModule
+ */
 @Module({
   imports: [TypeOrmModule.forFeature([User], 'postgresConnect')],
   providers: [

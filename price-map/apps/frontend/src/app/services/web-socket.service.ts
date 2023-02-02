@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
+import { fromEvent, Observable, Subscription } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { DisconnectDescription } from 'socket.io-client/build/esm/socket';
 import { TokenService } from '.';
-import { IResponseCallback } from '../models/interfaces';
 
 /**
  * Сервис общения с сервером по webSocket'у
@@ -10,7 +10,7 @@ import { IResponseCallback } from '../models/interfaces';
  * @class WebSocketService 
  */
 @Injectable()
-export class WebSocketService {
+export class WebSocketService implements OnDestroy {
   /**
    * Количество попыток подключения
    * @private
@@ -32,6 +32,10 @@ export class WebSocketService {
    * @memberof WebSocketService
    */
   private reconnectSecs: number = 2;
+
+  private connectSub: Subscription;
+  private connectErrorSub: Subscription;
+  private disconnectSub: Subscription;
   /**
    * Экзепляр сокета
    * @type {Socket}
@@ -40,6 +44,57 @@ export class WebSocketService {
   public socket!: Socket;
 
   constructor(private readonly tokenService: TokenService) {}
+
+  /**
+   * Подписка на установку соединения
+   * @private
+   * @memberof WebSocketService
+   */
+  private subscribeOnConnect(): void {
+    this.connectSub = this.on<null>('connect')
+      .subscribe(() => console.log('Socket connected'));
+  }
+
+  /**
+   * Подписка на попытку установки соединения
+   * @private
+   * @memberof WebSocketService
+   */
+  private subscribeOnErrorConnect(): void {
+    this.connectErrorSub = this.on<Error>('connect_error')
+      .subscribe((err: Error) => {
+        console.error('Socket connect error', err);
+
+        ++this.connectAttempts;
+        if (this.connectAttempts >= this.maxConnectAttempts) {
+          console.warn('The client stopped trying to connect');
+          this.socket.disconnect();
+          return;
+        }
+
+        setTimeout(() => {
+          this.socket.connect();
+        }, this.reconnectSecs * 1000);
+      });
+  }
+
+  /**
+   * Подписка на разрыв соединения
+   * @private
+   * @memberof WebSocketService
+   */
+  private subcribeOnDisconnect(): void {
+    this.disconnectSub = this.on<[string, DisconnectDescription | undefined]>('disconnect')
+      .subscribe(([
+        reason, 
+        description
+      ]: [
+        string, 
+        DisconnectDescription | undefined
+      ]) => 
+        console.warn('Socket disconnected', 'reason ', reason, 'description', description)
+      );
+  }
 
   /**
    * Добавление токена к запросу
@@ -58,28 +113,9 @@ export class WebSocketService {
   public initSocket(): void {
     this.socket = io('http://localhost:3333');
 
-    this.socket.on('connect', () => {
-      console.log('Socket connected');
-    });
-
-    this.socket.on('connect_error', (err: Error) => {
-      console.error('Socket connect error', err);
-
-      ++this.connectAttempts;
-      if (this.connectAttempts >= this.maxConnectAttempts) {
-        console.warn('The client stopped trying to connect');
-        this.socket.disconnect();
-        return;
-      }
-
-      setTimeout(() => {
-        this.socket.connect();
-      }, this.reconnectSecs * 1000);
-    });
-
-    this.socket.on('disconnect', (reason: string, description: DisconnectDescription | undefined) => {
-      console.warn('Socket disconnected', 'reason ', reason, 'description', description);
-    });
+    this.subscribeOnConnect();
+    this.subscribeOnErrorConnect();
+    this.subcribeOnDisconnect();
   }
 
   /** 
@@ -98,19 +134,16 @@ export class WebSocketService {
    * Подписка на событие
    * @template T тип данных ответа от сервера
    * @param {string} eventName название события
-   * @param {IResponseCallback<T>} callback колбэк 
+   * @return {*}  {Observable<T>} данные от сервера
    * @memberof WebSocketService
    */
-  public on<T>(eventName: string, callback: IResponseCallback<T>) {
-    this.socket.on(eventName, callback);
+  public on<T>(eventName: string): Observable<T> {
+    return fromEvent<T>(this.socket, eventName);
   }
 
-  /**
-   * Удаление слушателя события
-   * @param {string} eventName название события
-   * @memberof WebSocketService
-   */
-  public removeEventListener(eventName: string): void {
-    this.socket.off(eventName);
+  public ngOnDestroy(): void {
+    this.connectSub.unsubscribe();
+    this.connectErrorSub.unsubscribe();
+    this.disconnectSub.unsubscribe();
   }
 }

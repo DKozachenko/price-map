@@ -1,11 +1,10 @@
 @import "../../../../../assets/styles/mixins";
 
 .filter {
-  left: 2rem;
-
-  &__body {
-    width: 23vw;
-  }
+  left: 0;
+  border: none;
+  border-right: 1px solid #13132b;
+  width: 20.5vw;
 }
 
 .category {

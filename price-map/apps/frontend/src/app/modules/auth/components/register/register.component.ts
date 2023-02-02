@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { IUserRegisterInfo } from '@core/interfaces';
 import { AuthEvents } from '@core/enums';
 import { IResponseData } from '@core/interfaces';
-import { IResponseCallback } from '../../../../models/interfaces';
 import { User } from '@core/entities';
 
 /**
@@ -13,6 +13,7 @@ import { User } from '@core/entities';
  * @class RegisterComponent
  * @implements {OnInit}
  */
+@UntilDestroy()
 @Component({
   selector: 'auth-register',
   templateUrl: './register.component.html',
@@ -27,27 +28,11 @@ export class RegisterComponent implements OnInit {
   public form!: FormGroup;
 
   /**
-   * Колбэк, срабатывающий при успешной регистрации
-   * @private
-   * @param {IResponseData<User>} response ответ от сервера
-   * @type {IResponseCallback<IResponseData<User>>}
+   * Емитер успешной регистрации
+   * @type {EventEmitter<void>}
    * @memberof RegisterComponent
    */
-  private onRegisterSuccessed: IResponseCallback<IResponseData<User>> = (response: IResponseData<User>) => {
-    this.form.reset();
-    this.notificationService.showSuccess(response.message);
-  };
-
-  /**
-   * Колбэк, срабатывающий при неудачной регистрации
-   * @private
-   * @param {IResponseData<null>} response ответ от сервера
-   * @type {IResponseCallback<IResponseData<null>>}
-   * @memberof RegisterComponent
-   */
-  private onRegisterFailed: IResponseCallback<IResponseData<null>> = (response: IResponseData<null>) => {
-    this.notificationService.showError(response.message);
-  };
+  @Output() public registerSuccessed: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private readonly webSocketSevice: WebSocketService,
     private readonly notificationService: NotificationService) {}
@@ -78,8 +63,17 @@ export class RegisterComponent implements OnInit {
       ]),
     });
 
-    this.webSocketSevice.on(AuthEvents.RegisterFailed, this.onRegisterFailed);
-    this.webSocketSevice.on(AuthEvents.RegisterSuccessed, this.onRegisterSuccessed);
+    this.webSocketSevice.on<IResponseData<null>>(AuthEvents.RegisterFailed)
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+
+    this.webSocketSevice.on<IResponseData<User>>(AuthEvents.RegisterSuccessed)
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<User>) => {
+        this.form.reset();
+        this.notificationService.showSuccess(response.message);
+        this.registerSuccessed.emit();
+      });
   }
 
   /**

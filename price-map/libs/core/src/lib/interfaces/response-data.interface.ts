@@ -3,9 +3,10 @@
  * @export
  * @interface IResponseData
  * @template T тип данных ответа
+ * @template K тип кода ошибки
  */
-export interface IResponseData<T = any> {
-  [key: string]: number | boolean | T | null | string,
+export interface IResponseData<T = any, K = any> {
+  [key: string]: number | boolean | T | null | string | any,
   /**
    * Код состояния
    * @type {number}
@@ -13,14 +14,21 @@ export interface IResponseData<T = any> {
    */
   statusCode: number,
   /**
+   * Код ошибки
+   * @type {K}
+   * @memberof IResponseData
+   */
+  errorCode: K,
+  /**
    * Есть ошибка
    * @type {boolean}
    * @memberof IResponseData
    */
-  error: boolean,
+  isError: boolean,
   /**
+   *
    * Данные
-   * @type {(T | null)}
+   * @type {T}
    * @memberof IResponseData
    */
   data: T,

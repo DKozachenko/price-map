@@ -1,3 +1,4 @@
+import { Observable, of, catchError, switchMap, throwError } from 'rxjs';
 import { Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from './../../users/services/users.service';
@@ -5,11 +6,13 @@ import { MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WsResponse } from '@nestjs/websockets';
-import * as bcrypt from 'bcrypt';
-import { secretKey } from '../../../constants';
+import { secretKey } from '../../../models/constants';
 import { IResponseData, IUserRegisterInfo, IUserLoginInfo } from '@core/interfaces';
 import { User } from '@core/entities';
 import { Role, AuthEvents } from '@core/enums';
+import { AuthErrorCode } from '@core/types';
+import { HashService } from '../services';
+import { IPartialData } from '../models/interfaces';
 
 /**
  * Шлюз авторизации
@@ -23,154 +26,195 @@ import { Role, AuthEvents } from '@core/enums';
 })
 export class AuthGateway {
   constructor (private readonly usersService: UsersService,
+    private readonly hashService: HashService,
     private readonly jwtService: JwtService) {}
 
   /**
    * Событие регистрации
    * @param {IUserRegisterInfo} userRegisterInfo информация для регистрации
-   * @return {*}  {Promise<WsResponse<IResponseData<User>>>} данные о зарегистрированном пользователе
+   * @return {*}  {(Observable<WsResponse<IResponseData<User | null, AuthErrorCode | null>>>)} зарегистрованный пользователь
    * @memberof AuthGateway
    */
   @SubscribeMessage(AuthEvents.RegisterAttemp)
-  public async register(@MessageBody() userRegisterInfo: IUserRegisterInfo): Promise<WsResponse<IResponseData<User>>> {
-    const userWithSameNickname = await this.usersService.getByNickname(userRegisterInfo.nickname);
-    if (userWithSameNickname) {
-      return {
-        event: AuthEvents.RegisterFailed,
-        data: {
-          statusCode: 401,
-          error: true,
-          message: 'Пользователь с таким никнеймом уже существует',
-          data: null
+  public register(@MessageBody() userRegisterInfo: IUserRegisterInfo): 
+    Observable<WsResponse<IResponseData<User | null, AuthErrorCode | null>>> {
+    let errorCode: AuthErrorCode;
+    const errorCodePartialDataMap: Map<AuthErrorCode, IPartialData> = new Map<AuthErrorCode, IPartialData>([
+      [
+        'EXISTED_NICKNAME', 
+        {
+          statusCode: 400,
+          message: 'Пользователь с таким никнеймом уже существует'
         }
-      };
-    }
-
-    const userWithSameMail = await this.usersService.getByMail(userRegisterInfo.mail);
-    if (userWithSameMail) {
-      return {
-        event: AuthEvents.RegisterFailed,
-        data: {
-          statusCode: 401,
-          error: true,
-          message: 'Пользователь с такой почтой уже существует',
-          data: null
+      ],
+      [
+        'EXISTED_MAIL', 
+        {
+          statusCode: 400,
+          message: 'Пользователь с такой почтой уже существует'
         }
-      };
-    }
-
-    let salt: string;
-    let password: string;
-    let hash: string;
-    try {
-      salt = await bcrypt.genSalt();
-      password = userRegisterInfo.password;
-      hash = await bcrypt.hash(password, salt);
-    } catch (e: any) {
-      Logger.error(e, 'AuthGateway');
-      return {
-        event: AuthEvents.RegisterFailed,
-        data: {
-          statusCode: 405,
-          error: true,
-          message: 'Ошибка при хэшировании пароля',
-          data: null
+      ],
+      [
+        'HASH_ERROR', 
+        {
+          statusCode: 500,
+          message: 'Ошибка при регистрации'
         }
-      };
-    }
+      ],
+      [
+        'DB_ERROR', 
+        {
+          statusCode: 500,
+          message: 'Ошибка при регистрации'
+        }
+      ]
+    ]);
 
-    try {
-      await this.usersService.add({
-        ...userRegisterInfo,
-        role: Role.User,
-        password: hash,
-        products: []
-      });
+    return this.usersService.getByNickname(userRegisterInfo.nickname)
+      .pipe(
+        switchMap((userWithSameNickname: User | null) => {
+          if (userWithSameNickname) {
+            errorCode = 'EXISTED_NICKNAME';
+            return throwError(() => new Error(`Error code: ${errorCode}, nickname: ${userRegisterInfo.nickname}`));
+          }
+          return this.usersService.getByMail(userRegisterInfo.mail);
+        }),
+        switchMap((userWithSameMail: User | null) => {
+          if (userWithSameMail) {
+            errorCode = 'EXISTED_MAIL';
+            return throwError(() => new Error(`Error code: ${errorCode}, mail: ${userRegisterInfo.mail}`)); 
+          }
 
-      return {
-        event: AuthEvents.RegisterSuccessed,
-        data: {
-          statusCode: 201,
-          error: false,
-          data: {
+          return this.hashService.hashPassword(userRegisterInfo.password)
+            .pipe(
+              catchError((e: Error) => {
+                errorCode = 'HASH_ERROR';
+                return throwError(() => new Error(`Error code: ${errorCode}, error: ${e}`)); 
+              }),
+            );
+        }),
+        switchMap((hashedPassword: string) => {
+          return this.usersService.add({
             ...userRegisterInfo,
             role: Role.User,
-            password: hash,
-            products: [],
-            id: ''
-          },
-          message: 'Пользователь успешно зарегистрирован'
-        }
-      };
-    } catch (e: any) {
-      Logger.error(e, 'AuthGateway');
-      return {
-        event: AuthEvents.RegisterFailed,
-        data: {
-          statusCode: 500,
-          error: true,
-          data: null,
-          message: 'Ошибка при сохранении в базу данных'
-        }
-      };
-    }
+            password: hashedPassword,
+            products: []
+          })
+            .pipe(
+              catchError((e: Error) => {
+                errorCode = 'DB_ERROR';
+                return throwError(() => new Error(`Error code: ${errorCode}, error: ${e}`)); 
+              }),
+            );
+        }),
+        switchMap((newUser: User) => {
+          return of({
+            event: AuthEvents.RegisterSuccessed,
+            data: {
+              statusCode: 201,
+              errorCode: null,
+              isError: false,
+              data: newUser,
+              message: 'Пользователь успешно зарегистрирован'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'AuthGateway');
+          const partialData: IPartialData | undefined = errorCodePartialDataMap.get(errorCode);
+          return of({
+            event: AuthEvents.RegisterFailed,
+            data: {
+              statusCode: partialData?.statusCode ?? 400,
+              errorCode,
+              isError: true,
+              data: null,
+              message: partialData?.message ?? 'Неизвестная ошибка'             
+            }
+          });
+        })
+      );
   }
 
   /**
    * Событие входа
    * @param {IUserLoginInfo} userLoginInfo данные для входа
-   * @return {*}  {Promise<WsResponse<IResponseData<string>>>} токен
+   * @return {*}  {(Observable<WsResponse<IResponseData<string | null, AuthErrorCode | null>>>)} токен
    * @memberof AuthGateway
    */
   @SubscribeMessage(AuthEvents.LoginAttemp)
-  public async login(@MessageBody() userLoginInfo: IUserLoginInfo): Promise<WsResponse<IResponseData<string>>> {
-    const user: User = await this.usersService.getByNickname(userLoginInfo.nickname);
-
-    if (!user) {
-      return {
-        event: AuthEvents.LoginFailed,
-        data: {
-          statusCode: 401,
-          error: true,
-          data: null,
+  public login(@MessageBody() userLoginInfo: IUserLoginInfo): 
+    Observable<WsResponse<IResponseData<string | null, AuthErrorCode | null>>> {
+    let errorCode: AuthErrorCode;
+    const errorCodePartialDataMap: Map<AuthErrorCode, IPartialData> = new Map<AuthErrorCode, IPartialData>([
+      [
+        'NON_EXISTENT_LOGIN', 
+        {
+          statusCode: 400,
           message: 'Пользователь с таким логином не существует'
         }
-      };
-    }
-
-    const isMatchPassword: boolean = await bcrypt.compare(userLoginInfo.password, user.password);
-
-    if (!isMatchPassword) {
-      return {
-        event: AuthEvents.LoginFailed,
-        data: {
+      ],
+      [
+        'WRONG_PASSWORD', 
+        {
           statusCode: 400,
-          error: true,
-          data: null,
-          message: 'Указан неверный пароль'
+          message: 'Неверный пароль'
         }
-      };
-    }
+      ]
+    ]);
+    let currentUser: User;
 
-    const token: string = this.jwtService.sign({
-      userId: user.id,
-      nickname: user.nickname,
-      role: user.role
-    }, {
-      expiresIn: '10h',
-      secret: secretKey
-    });
+    return this.usersService.getByNickname(userLoginInfo.nickname)
+      .pipe(
+        switchMap((user: User) => {
+          if (!user) {
+            errorCode = 'NON_EXISTENT_LOGIN';
+            return throwError(() => new Error(`Error code: ${errorCode}, mail: ${userLoginInfo.nickname}`)); 
+          }
+          currentUser = user;
 
-    return {
-      event: 'login successed',
-      data: {
-        statusCode: 200,
-        error: false,
-        data: `Bearer ${token}`,
-        message: 'Вход успешно произведен'
-      }
-    };
-
+          return this.hashService.isMatchPasswords(userLoginInfo.password, user.password);
+        }),      
+        switchMap((isMatch: boolean) => {
+          if (!isMatch) {
+            errorCode = 'WRONG_PASSWORD';
+            return throwError(() => new Error(`Error code: ${errorCode}, password: ${userLoginInfo.password}`)); 
+          }
+          const token: string = this.jwtService.sign({
+            userId: currentUser.id,
+            nickname: currentUser.nickname,
+            role: currentUser.role
+          }, {
+            expiresIn: '10h',
+            secret: secretKey
+          });
+          
+          return of({
+            event: AuthEvents.LoginSuccessed,
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: `Bearer ${token}`,
+              message: 'Вход успешно произведен'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'AuthGateway');
+          const partialData: IPartialData | undefined = errorCodePartialDataMap.get(errorCode);
+          return of({
+            event: AuthEvents.LoginFailed,
+            data: {
+              statusCode: partialData?.statusCode ?? 400,
+              errorCode,
+              isError: true,
+              data: null,
+              message: partialData?.message ?? 'Неизвестная ошибка'             
+            }
+          });
+        })
+      );
   }
 
 }

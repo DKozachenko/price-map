@@ -1,14 +1,8 @@
 /* eslint max-depth: "off" */
 import { Injectable } from '@nestjs/common';
 import { By, until } from 'selenium-webdriver';
+import { BreadcrumbInfo } from '../models/interfaces';
 import { BaseScrapingService } from './base-scraping.service';
-
-interface BreadcrumbInfo {
-  [key: string]: string,
-  category1LevelName: string,
-  category2LevelName: string,
-  category3LevelName: string,
-}
 
 @Injectable()
 export class CategoryScrapingService extends BaseScrapingService {

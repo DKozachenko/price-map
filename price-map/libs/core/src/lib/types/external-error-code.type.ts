@@ -1,0 +1,1 @@
+export type ExternalErrorCode = 'BUILD_ROUTE_FAILED';

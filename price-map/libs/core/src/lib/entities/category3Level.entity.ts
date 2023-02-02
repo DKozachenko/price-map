@@ -59,7 +59,7 @@ export class Category3Level {
    * @memberof Category3Level
    */
   @OneToMany(() => Product, (product: Product) => product.category3Level, {
-    eager: true,
+    eager: false,
     cascade: true,
   })
   public products: Product[]
