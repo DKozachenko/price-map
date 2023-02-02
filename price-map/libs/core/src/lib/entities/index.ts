@@ -1,4 +1,3 @@
-export { BaseEntity } from './base.entity';
 export { Organization } from './organization.entity';
 export { Shop } from './shop.entity';
 export { Product } from './product.entity';
