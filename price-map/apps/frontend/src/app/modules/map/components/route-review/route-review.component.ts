@@ -46,36 +46,20 @@ export class RouteReviewComponent implements OnInit {
 
   public ngOnInit(): void {
     this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductFailed)
-      .pipe(
-        untilDestroyed(this)
-      )
-      .subscribe((response: IResponseData<null>) => {
-        this.notificationService.showError(response.message);
-      });
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
 
     this.webSocketService.on<IResponseData<Product>>(ProductEvents.GetProductSuccessed)
-      .pipe(
-        untilDestroyed(this)
-      )
-      .subscribe((response: IResponseData<Product>) => {
-        this.products.push(response.data);
-      });
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<Product>) => this.products.push(response.data));
 
     this.productsService.addProductIdToRoute$
-      .pipe(
-        untilDestroyed(this)
-      )
-      .subscribe((id: string) => {
-        this.webSocketService.emit<string>(ProductEvents.GetProductAttempt, id);
-      });
+      .pipe(untilDestroyed(this))
+      .subscribe((id: string) => this.webSocketService.emit<string>(ProductEvents.GetProductAttempt, id));
 
     this.productsService.deleteProductIdFromRoute$
-      .pipe(
-        untilDestroyed(this)
-      )
-      .subscribe((id: string) => {
-        this.products = this.products.filter((product: Product) => product.id !== id);
-      });
+      .pipe(untilDestroyed(this))
+      .subscribe((id: string) => this.products = this.products.filter((product: Product) => product.id !== id));
   }
   /**
    * Построение маршрута

@@ -6,6 +6,7 @@ import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService } from '../../services';
 import { Category3Level } from '@core/entities';
 import { CategoryEvents } from '@core/enums';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 /**
  * Компонент фильтра для определенной категории 3 уровня
@@ -41,30 +42,20 @@ export class CharacteristicFilterComponent implements OnInit {
 
   public ngOnInit(): void {
     this.filterService.chechedCategory3LevelIds$
-      .pipe(
-        untilDestroyed(this)
-      )  
+      .pipe(untilDestroyed(this))  
       .subscribe((set: Set<string>) => {
         const id: string = [...set][0];
         this.webSocketSevice.emit<string>(CategoryEvents.GetCategory3LevelAttempt, id);
       });
 
     this.webSocketSevice.on<IResponseData<null>>(CategoryEvents.GetCategory3LevelFailed)
-      .pipe(
-        untilDestroyed(this)
-      )  
-      .subscribe((response: IResponseData<null>) => {
-        this.notificationService.showError(response.message);
-      });
+      .pipe(untilDestroyed(this))  
+      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
 
     
     this.webSocketSevice.on<IResponseData<Category3Level>>(CategoryEvents.GetCategory3LevelSuccessed)
-      .pipe(
-        untilDestroyed(this)
-      )  
-      .subscribe((response: IResponseData<Category3Level>) => {
-        this.category3Level = response.data;
-      });
+      .pipe(untilDestroyed(this))  
+      .subscribe((response: IResponseData<Category3Level>) => this.category3Level = response.data);
   }
 
   /**

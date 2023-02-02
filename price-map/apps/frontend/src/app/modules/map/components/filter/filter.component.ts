@@ -1,3 +1,4 @@
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Component, OnInit } from '@angular/core';
 import { NotificationService, WebSocketService } from '../../../../services';
@@ -48,30 +49,22 @@ export class FilterComponent implements OnInit {
 
   public ngOnInit(): void {
     this.webSocketSevice.on<IResponseData<null>>(CategoryEvents.GetCategories1LevelFailed)
-      .pipe(
-        untilDestroyed(this)
-      )
-      .subscribe((response: IResponseData<null>) => {
-        this.notificationService.showError(response.message);
-      });
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
 
     this.webSocketSevice.on<IResponseData<Category1Level[]>>(CategoryEvents.GetCategories1LevelSuccessed)
-      .pipe(
-        untilDestroyed(this)
-      )
-      .subscribe((response: IResponseData<Category1Level[]>) => {
-        this.categories1Level = response.data.map(this.mapData);
-      });
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<Category1Level[]>) => this.categories1Level = response.data.map(this.mapData));
 
     this.webSocketSevice.emit(CategoryEvents.GetCategories1LevelAttempt);
 
     this.filterService.chechedCategory3LevelIds$
       .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
         untilDestroyed(this)
       )
-      .subscribe((data: Set<string>) => {
-        this.isShowCharacteristics = data.size === 1;
-      });
+      .subscribe((data: Set<string>) => this.isShowCharacteristics = data.size === 1);
   }
 
   /**

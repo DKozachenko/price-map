@@ -52,9 +52,7 @@ export class WebSocketService implements OnDestroy {
    */
   private subscribeOnConnect(): void {
     this.connectSub = this.on<null>('connect')
-      .subscribe((data: null) => {
-        console.log('Socket connected');
-      });
+      .subscribe(() => console.log('Socket connected'));
   }
 
   /**
@@ -87,9 +85,9 @@ export class WebSocketService implements OnDestroy {
    */
   private subcribeOnDisconnect(): void {
     this.disconnectSub = this.on<[string, DisconnectDescription | undefined]>('disconnect')
-      .subscribe(([reason, description]: [string, DisconnectDescription | undefined]) => {
-        console.warn('Socket disconnected', 'reason ', reason, 'description', description);
-      });
+      .subscribe(([reason, description]: [string, DisconnectDescription | undefined]) => 
+        console.warn('Socket disconnected', 'reason ', reason, 'description', description)
+      );
   }
 
   /**

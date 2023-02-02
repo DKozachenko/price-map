@@ -57,17 +57,11 @@ export class RegisterComponent implements OnInit {
     });
 
     this.webSocketSevice.on<IResponseData<null>>(AuthEvents.RegisterFailed)
-      .pipe(
-        untilDestroyed(this)
-      )
-      .subscribe((response: IResponseData<null>) => {
-        this.notificationService.showError(response.message);
-      });
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
 
     this.webSocketSevice.on<IResponseData<User>>(AuthEvents.RegisterSuccessed)
-      .pipe(
-        untilDestroyed(this)
-      )
+      .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<User>) => {
         this.form.reset();
         this.notificationService.showSuccess(response.message);

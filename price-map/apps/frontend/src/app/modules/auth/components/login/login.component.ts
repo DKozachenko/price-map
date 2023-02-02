@@ -45,9 +45,7 @@ export class LoginComponent implements OnInit {
     });
 
     this.webSocketSevice.on<IResponseData<string>>(AuthEvents.LoginSuccessed)
-      .pipe(
-        untilDestroyed(this)
-      )
+      .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<string>) => {
         this.form.reset();
         this.notificationService.showSuccess(response.message);
@@ -56,12 +54,8 @@ export class LoginComponent implements OnInit {
       });
     
     this.webSocketSevice.on<IResponseData<null>>(AuthEvents.LoginFailed)
-      .pipe(
-        untilDestroyed(this)
-      )
-      .subscribe((response: IResponseData<null>) => {
-        this.notificationService.showError(response.message);
-      });
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
   }
 
   /** 

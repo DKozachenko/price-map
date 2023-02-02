@@ -1,3 +1,4 @@
+import { IUserFilter } from './../../../../../../../../libs/core/src/lib/interfaces/user-filter.interface';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Product } from '@core/entities';
@@ -5,6 +6,7 @@ import { IResponseData } from '@core/interfaces';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService, MapService, ProductService } from '../../services';
 import { ExternalEvents, ProductEvents } from '@core/enums';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 /**
  * Компонент карты
@@ -44,58 +46,36 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
   public ngOnInit(): void {
     this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductsFailed)
-      .pipe(
-        untilDestroyed(this)
-      )
-      .subscribe((response: IResponseData<null>) => {
-        this.notificationService.showError(response.message);
-      });
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
 
-    
     this.webSocketService.on<IResponseData<Product[]>>(ProductEvents.GetProductsSuccessed)
-      .pipe(
-        untilDestroyed(this)
-      )
-      .subscribe((response: IResponseData<Product[]>) => {
-        this.mapService.addProducts(response.data);
-      });
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<Product[]>) => this.mapService.addProducts(response.data));
 
-    
     this.webSocketService.on<IResponseData<number[][]>>(ExternalEvents.BuildRouteSuccessed)
-      .pipe(
-        untilDestroyed(this)
-      )
-      .subscribe((response: IResponseData<number[][]>) => {
-        this.mapService.addRoute(response.data);
-      });
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<number[][]>) => this.mapService.addRoute(response.data));
 
-    
     this.webSocketService.on<IResponseData<null>>(ExternalEvents.BuildRouteFailed)
-      .pipe(
-        untilDestroyed(this)
-      )
-      .subscribe((response: IResponseData<null>) => {
-        this.notificationService.showError(response.message);
-      });
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
 
     this.productService.productIdsToRoute$
-      .pipe(
-        untilDestroyed(this)
-      )
-      .subscribe((data) => {
-        this.isShowRouteReview = data.size > 0;
-      });
+      .pipe(untilDestroyed(this))
+      .subscribe((data) => this.isShowRouteReview = data.size > 0);
 
     this.filterService.chechedCategory3LevelIds$
       .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
         untilDestroyed(this)
       )
-      .subscribe((data: Set<string>) => {
-        this.webSocketService.emit<string[]>(ProductEvents.GetProductsAttempt, [...data]);
-      });
+      .subscribe((data: Set<string>) => this.webSocketService.emit<string[]>(ProductEvents.GetProductsAttempt, [...data]));
 
     this.filterService.filterValues$
       .pipe(
+        debounceTime(400),
         untilDestroyed(this)
       )
       .subscribe((data) => console.log('filterValues', data));
