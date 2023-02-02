@@ -157,4 +157,26 @@ export class CharacteristicFilterComponent implements OnInit {
 
     this.filterService.filterValues$.next(this.currentFilter);
   }
+
+  /**
+   * Функция trackBy для фильтров
+   * @param {number} index инлекс
+   * @param {IFilter} item фильтр
+   * @return {*}  {string} название фильтра
+   * @memberof CharacteristicFilterComponent
+   */
+  public trackByFilterFn(index: number, item: IFilter): string {   
+    return item?.name ?? index;
+  }
+
+  /**
+   * Функция trackBy для значений фильтра
+   * @param {number} index индекс
+   * @param {(number | string)} item значение
+   * @return {*}  {(number | string)} значение
+   * @memberof CharacteristicFilterComponent
+   */
+  public trackByValueFn(index: number, item: number | string): number | string {   
+    return item ?? index;
+  }
 }

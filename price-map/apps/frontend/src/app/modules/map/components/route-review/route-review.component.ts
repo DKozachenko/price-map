@@ -100,4 +100,15 @@ export class RouteReviewComponent implements OnInit, OnDestroy {
     const coordinates: ICoordinates[] = this.getCoordinates();
     this.webSocketService.emit<ICoordinates[]>(ExternalEvents.BuildRouteAttempt, coordinates);
   }
+
+  /**
+   * Функция trackBy для товаров
+   * @param {number} index индекс
+   * @param {Product} item товар
+   * @return {*}  {string} id товара
+   * @memberof RouteReviewComponent
+   */
+  public trackByProductFn(index: number, item: Product): string {   
+    return item.id ?? index;
+  }
 }

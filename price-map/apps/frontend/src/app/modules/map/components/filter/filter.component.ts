@@ -235,4 +235,37 @@ export class FilterComponent implements OnInit {
       this.filterService.chechedCategory3LevelIds$.next(this.setChechedCategory3LevelIds);
     }
   }
+
+  /**
+   * Функция trackBy для категорий 1 уровня
+   * @param {number} index индекс
+   * @param {ICategory1LevelForView} item категория 1 уровня для отображения
+   * @return {*}  {string} id категории
+   * @memberof FilterComponent
+   */
+  public trackByCategory1LevelFn(index: number, item: ICategory1LevelForView): string {   
+    return item.id ?? index;
+  }
+
+  /**
+   * Функция trackBy для категорий 2 уровня
+   * @param {number} index индекс
+   * @param {ICategory2LevelForView} item категория 2 уровня для отображения
+   * @return {*}  {string} id категории
+   * @memberof FilterComponent
+   */
+  public trackByCategory2LevelFn(index: number, item: ICategory2LevelForView): string {   
+    return item.id ?? index;
+  }
+
+  /**
+   * Функция trackBy для категорий 3 уровня
+   * @param {number} index индекс
+   * @param {ICategory3LevelForView} item категория 3 уровня для отображения
+   * @return {*}  {string} id категории
+   * @memberof FilterComponent
+   */
+  public trackByCategory3LevelFn(index: number, item: ICategory3LevelForView): string {   
+    return item.id ?? index;
+  }
 }
