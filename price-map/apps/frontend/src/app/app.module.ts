@@ -10,6 +10,7 @@ import { NbThemeModule, NbToastrModule, NbToastrService, NbIconModule, NbLayoutM
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthGuard, RolesGuard } from './guards';
+import { CookieService } from 'ngx-cookie-service';
 
 /**
  * Главный модуль приложения
@@ -45,7 +46,8 @@ import { AuthGuard, RolesGuard } from './guards';
       multi: true,
     },
     NbToastrService,
-    NotificationService
+    NotificationService,
+    CookieService
   ],
   bootstrap: [AppComponent],
 })
