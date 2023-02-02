@@ -72,7 +72,7 @@
               size="medium"
             >
               <nb-option 
-                *ngFor="let value of filter.values; trackBy: trackByValueFn" 
+                *ngFor="let value of $any(filter.values); trackBy: trackByValueFn" 
                 [value]="value" 
                 (click)="changeEnumFilter(filter, value)"
               >{{ value }}</nb-option>

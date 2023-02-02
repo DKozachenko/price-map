@@ -34,7 +34,7 @@ export class CharacteristicFilterComponent implements OnInit {
    * @type {*}
    * @memberof CharacteristicFilterComponent
    */
-  public category3Level: any;
+  public category3Level: Category3Level;
 
   constructor(private readonly filterService: FilterService,
     private readonly webSocketSevice: WebSocketService,
