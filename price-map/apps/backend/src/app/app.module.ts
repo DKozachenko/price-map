@@ -13,13 +13,7 @@ import * as fs from 'fs';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AppGateway } from './gateways';
 import { secretKey } from './models/constants';
-
-interface BreadcrumbInfo {
-  [key: string]: string,
-  category1LevelName: string,
-  category2LevelName: string,
-  category3LevelName: string,
-}
+import { BreadcrumbInfo } from './modules/scraping/models/interfaces';
 
 /**
  * Главный модуль приложения
