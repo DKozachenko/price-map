@@ -23,6 +23,7 @@ export class MapComponent implements OnInit {
     });
 
     this.webSocketSevice.emit('get users attempt', { temp: 1 });
+    this.webSocketSevice.emit('get users attempt', { temp: 1 });
   }
 
 }

@@ -13,6 +13,7 @@ export const JwtAuthGuard = (failedEventName: string) => {
     public canActivate(context: ExecutionContext): boolean {
       const client = context.switchToWs().getClient();
       const data = context.switchToWs().getData();
+      // console.log(client);
       console.log(123, data);
       console.log(client.handshake)
       // console.log(client.handshake.headers)

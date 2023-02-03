@@ -44,12 +44,16 @@ export class WebSocketService {
   }
 
   public addToken(): void {
-    // this.socket.auth = { 
-    //   token: this.tokenService.getToken()
-    // };
-    this.socket.auth = (cb) => {
-      cb({ token: this.tokenService.getToken() })
+    // console.log(this.socket.auth);
+    if (!this.socket.auth) {
+      console.log(1);
+      this.socket.auth = { 
+        token: this.tokenService.getToken()
+      };
+      this.socket.disconnect().connect();
     }
-    console.log(this.socket.auth);
+    // this.socket.auth = (cb) => {
+    //   cb({ token: this.tokenService.getToken() })
+    // }
   }
 }
