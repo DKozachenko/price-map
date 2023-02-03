@@ -1,0 +1,26 @@
+<nb-card class="route__review custom__map-card">
+  <nb-card-header>Маршрут</nb-card-header>
+
+  <nb-card-body class="route__review-body custom__scroll custom__map-card__body">
+    <div class="products">
+      <map-product-mini-card 
+        *ngFor="let product of products; trackBy: trackByProductFn" 
+        [product]="product"
+      ></map-product-mini-card>
+    </div>
+
+    <button
+      class="button"
+      nbButton
+      hero
+      status="primary"
+      shape="round"
+      type="button"
+      (click)="buildRoute()"
+    >
+      Построить маршрут
+    </button>
+  </nb-card-body>
+</nb-card>
+
+

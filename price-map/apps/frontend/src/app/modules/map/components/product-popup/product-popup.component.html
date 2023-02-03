@@ -1,0 +1,24 @@
+<nb-card class="popup__card">
+  <nb-card-header>{{ productInfo.name }}</nb-card-header>
+
+  <nb-card-body>
+    {{ productInfo.description }}
+  </nb-card-body>
+
+  <nb-card-footer>
+    <button
+      class="button"
+      nbButton
+      hero
+      status="primary"
+      shape="round"
+      type="button"
+      (click)="addProductIdToRoute()"
+    >
+      Добавить в маршрут
+    </button>
+
+    <nb-icon icon="heart-outline"></nb-icon>
+  </nb-card-footer>
+</nb-card>
+
