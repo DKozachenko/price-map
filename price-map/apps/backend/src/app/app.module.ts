@@ -1,12 +1,7 @@
-import { MiddlewareConsumer, Module, OnModuleInit } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { CatsController } from './controllers/cats.controller';
-import { CatsService } from './controllers/cats.service';
-import { LoggerMiddleware } from './middlewares/logger.middleware';
-import { WsModule, ScrapingModule, AuthModule, UsersModule } from './modules';
-import { CategoryScrapingService, ProductScrapingService, ScrapingService } from './modules/scraping/services';
+import { ScrapingModule, AuthModule, UsersModule, ProductsModule, CategoriesModule, ExternalModule } from './modules';
+import { ScrapingService } from './modules/scraping/services';
 import { Organization,
   Shop,
   Product,
@@ -15,24 +10,25 @@ import { Organization,
   Category2Level,
   Category3Level } from '@core/entities';
 import * as fs from 'fs';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtService } from '@nestjs/jwt';
-import { OnGatewayConnection, OnGatewayInit } from '@nestjs/websockets';
+import { JwtModule, JwtService } from '@nestjs/jwt';
+import { AppGateway } from './gateways';
+import { secretKey } from './models/constants';
+import { BreadcrumbInfo } from './modules/scraping/models/interfaces';
 
-//TODO: вынести в интерфейсы
-interface BreadcrumbInfo {
-  [key: string]: string,
-  category1LevelName: string,
-  category2LevelName: string,
-  category3LevelName: string,
-}
-
-
+/**
+ * Главный модуль приложения
+ * @export
+ * @class AppModule
+ * @implements {OnModuleInit}
+ */
 @Module({
   imports: [
     AuthModule,
     UsersModule,
+    ProductsModule,
+    CategoriesModule,
     ScrapingModule,
+    ExternalModule,
     //TODO: Добавить свой логгер
     //TODO: Миграции
     TypeOrmModule.forRoot({
@@ -53,34 +49,31 @@ interface BreadcrumbInfo {
         Category3Level
       ],
       synchronize: true,
-    })
+    }),
+    JwtModule.register({
+      secret: secretKey,
+      signOptions: { expiresIn: '10h' },
+    }),
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
-    JwtService
+    JwtService,
+    AppGateway
   ],
 })
-export class AppModule implements OnGatewayInit, OnGatewayConnection, OnModuleInit {
-  public afterInit(server: any) {
-    console.log('Socket INIT');
-  }
-
-  handleConnection(client: any, ...args: any[]) {
-    console.log('Socket CONNECTED');
-  }
+export class AppModule implements OnModuleInit {
+  constructor(private readonly scrapingService: ScrapingService) {}
 
   public async onModuleInit(): Promise<void> {
-    console.time();
+    // console.time();
     // const resultCats = await this.scrapingService.scrapeCategories();
     // const productsMap: Map<BreadcrumbInfo, string[]> = this.scrapingService.getProductsMap();
     // await new Promise(temp => setTimeout(temp, 2000));
     // const result = await this.scrapingService.scrapeProducts(productsMap);
-    // console.log('result', result)
+    // console.log('result', result);
 
     // fs.writeFile('test.json', JSON.stringify(result), function(error){
     //   if(error) throw error;
     // });
-    console.timeEnd();
+    // console.timeEnd();
   }
 }

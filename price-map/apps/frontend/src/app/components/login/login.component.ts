@@ -1,3 +1,4 @@
+import { CategoryEvents } from './../../../../../../libs/core/src/lib/enums/category-events.enum';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -29,18 +30,16 @@ export class LoginComponent implements OnInit {
     this.webSocketSevice.socket.on('login successed', (response) => {
       console.log('on login successed', response);
       this.tokenService.setToken(response.result);
-      this.router.navigate(['map'], { queryParamsHandling: 'merge' })
+      // this.router.navigate(['map'], { queryParamsHandling: 'merge' })
     });
 
-    this.webSocketSevice.socket.on('get users failed', (response) => {
-      console.log('on get users failed', response);
-    });
+    this.webSocketSevice.on(CategoryEvents.GetCategories1LevelFailed)
+      .subscribe(data => console.log('failed', data))
 
-    this.webSocketSevice.socket.on('get users successed', (response) => {
-      console.log('on get users successed', response);
-    });
+    this.webSocketSevice.on(CategoryEvents.GetCategories1LevelSuccessed)
+      .subscribe(data => console.log('success', data))
 
-    this.webSocketSevice.emit('get users attempt', {
+    this.webSocketSevice.emit(CategoryEvents.GetCategories1LevelAttempt, {
       test: 'dfsdf'
     });
 

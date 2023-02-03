@@ -31,7 +31,7 @@ export const JwtAuthGuard = (failedEventName: string): Type<any> => {
       }
 
       const tokenWithoutBearer: string = token.split(' ')?.[1];
-      console.log(tokenWithoutBearer)
+
       let payload: IPayload;
       try {
         payload = this.jwtService.verify(tokenWithoutBearer, {
