@@ -1,1 +1,1 @@
-export { AuthService } from './auth.service';
+export { HashService } from './hash.service';

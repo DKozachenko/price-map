@@ -1,37 +1,60 @@
+import { from, Observable } from 'rxjs';
 import { Injectable } from '@nestjs/common';
-import { Role } from '../../auth/models/enums';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '@core/entities';
+import { Repository } from 'typeorm';
 
-export type User = any;
-
+/**
+ * Сервис пользователей
+ * @export
+ * @class UsersService
+ */
 @Injectable()
 export class UsersService {
-  private readonly users: any[] = [
-    {
-      userId: 1,
-      nickname: 'john',
-      password: 'changeme',
-      role: 'user'
-    },
-    {
-      userId: 2,
-      nickname: 'maria',
-      password: 'guess',
-      role: 'admin'
-    },
-  ];
+  /**
+   * Репозиторий пользователей
+   * @private
+   * @type {Repository<User>}
+   * @memberof UsersService
+   */
+  @InjectRepository(User, 'postgresConnect')
+  private readonly userRepository: Repository<User>;
 
-  async getByNickname(nickname: string): Promise<User | undefined> {
-    return this.users.find(user => user.nickname === nickname);
+  /**
+   * Получение по никнейму
+   * @param {string} nickname никнейм
+   * @return {*}  {(Observable<User | null>)} пользователь
+   * @memberof UsersService
+   */
+  public getByNickname(nickname: string): Observable<User | null> {
+    return from(this.userRepository.findOne({
+      where: {
+        nickname
+      }
+    }));
   }
 
-  async add(user: any): Promise<User> {
-    const newUser = {
-      nickname: user.nickname,
-      password: user.password,
-      role: user.role,
-      userId: this.users.length + 1
-    };
-    this.users.push(newUser);
-    return newUser;
+  /**
+   * Получение по почте
+   * @param {string} mail почта
+   * @return {*}  {(Observable<User | null>)} пользователь
+   * @memberof UsersService
+   */
+  public getByMail(mail: string): Observable<User | null> {
+    return from(this.userRepository.findOne({
+      where: {
+        mail
+      }
+    }));
+  }
+
+  /**
+   * Добавление
+   * @param {Omit<User, 'id'>} newUser новый пользователь
+   * @return {*}  {(Observable<User>)}
+   * @memberof UsersService
+   */
+  public add(newUser: Omit<User, 'id'>): Observable<User> {
+    return from(this.userRepository.save(newUser));
   }
 }

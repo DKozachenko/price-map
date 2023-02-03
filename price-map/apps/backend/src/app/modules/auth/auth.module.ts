@@ -1,27 +1,32 @@
 import { Module } from '@nestjs/common';
-import { UsersModule } from '../users/users.module';
 import { PassportModule } from '@nestjs/passport';
-import { JwtModule } from '@nestjs/jwt';
-import { AuthService } from './services';
-import { jwtConstants } from './models/constants';
-import { JwtStrategy, LocalStrategy } from './strategies';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AuthGateway } from './gateways';
+import { secretKey } from '../../models/constants';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '@core/entities';
+import { UsersService } from '../users/services';
+import { HashService } from './services';
 
+/**
+ * Модуль авторизации
+ * @export
+ * @class AuthModule
+ */
 @Module({
   imports: [
-    UsersModule,
+    TypeOrmModule.forFeature([User], 'postgresConnect'),
     PassportModule,
     JwtModule.register({
-      secret: jwtConstants.secret,
+      secret: secretKey,
       signOptions: { expiresIn: '10h' },
     }),
   ],
   providers: [
-    AuthService,
-    LocalStrategy,
-    JwtStrategy,
-    AuthGateway
-  ],
-  exports: [AuthService],
+    UsersService,
+    HashService,
+    AuthGateway,
+    JwtService
+  ]
 })
 export class AuthModule {}

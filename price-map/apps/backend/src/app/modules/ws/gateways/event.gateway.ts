@@ -5,7 +5,7 @@ import { MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WsResponse } from '@nestjs/websockets';
-import { Category2Level, Category3Level, Category1Level } from '@price-map/core/entities';
+import { Category2Level, Category3Level, Category1Level } from '@core/entities';
 import { Repository } from 'typeorm';
 
 @WebSocketGateway({

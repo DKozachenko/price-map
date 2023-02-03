@@ -31,6 +31,20 @@ export class LoginComponent implements OnInit {
       this.tokenService.setToken(response.result);
       this.router.navigate(['map'], { queryParamsHandling: 'merge' })
     });
+
+    this.webSocketSevice.socket.on('get users failed', (response) => {
+      console.log('on get users failed', response);
+    });
+
+    this.webSocketSevice.socket.on('get users successed', (response) => {
+      console.log('on get users successed', response);
+    });
+
+    this.webSocketSevice.emit('get users attempt', {
+      test: 'dfsdf'
+    });
+
+    
   }
 
   public submit(): void {

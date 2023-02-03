@@ -13,7 +13,7 @@ import { Organization,
   User,
   Category1Level,
   Category2Level,
-  Category3Level } from '@price-map/core/entities';
+  Category3Level } from '@core/entities';
 import * as fs from 'fs';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
@@ -35,25 +35,25 @@ interface BreadcrumbInfo {
     ScrapingModule,
     //TODO: Добавить свой логгер
     //TODO: Миграции
-    // TypeOrmModule.forRoot({
-    //   name: 'postgresConnect',
-    //   type: 'postgres',
-    //   host: 'localhost',
-    //   port: 5432,
-    //   username: 'postgres',
-    //   password: 'vkdima03',
-    //   database: 'master_pm',
-    //   entities: [
-    //     Organization,
-    //     Shop,
-    //     Product,
-    //     User,
-    //     Category1Level,
-    //     Category2Level,
-    //     Category3Level
-    //   ],
-    //   synchronize: true,
-    // })
+    TypeOrmModule.forRoot({
+      name: 'postgresConnect',
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'postgres',
+      password: 'vkdima03',
+      database: 'test_pm',
+      entities: [
+        Organization,
+        Shop,
+        Product,
+        User,
+        Category1Level,
+        Category2Level,
+        Category3Level
+      ],
+      synchronize: true,
+    })
   ],
   controllers: [AppController],
   providers: [
