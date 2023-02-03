@@ -1,11 +1,12 @@
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NotificationService, TokenService, WebSocketService } from '../../../../services';
+import { NotificationService, TokenService } from '../../../../services';
 import { IResponseData, IUserLoginInfo } from '@core/interfaces';
 import { AuthEvents, CategoryEvents } from '@core/enums';
 import { Router } from '@angular/router';
 import { Category1Level } from '@core/entities';
+import { WebSocketService } from '../../services/web-socket.service';
 
 /**
  * Компонет формы логина
@@ -40,6 +41,7 @@ export class LoginComponent implements OnInit {
     private readonly tokenService: TokenService) {}
 
   public ngOnInit(): void {
+    this.webSocketSevice.initSocket();
     this.form = new FormGroup({
       nickname: new FormControl(undefined, [Validators.required]),
       password: new FormControl(undefined, [Validators.required]),

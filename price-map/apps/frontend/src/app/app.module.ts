@@ -8,7 +8,9 @@ import { appInitializer } from './initializers';
 import { TokenService, WebSocketService } from './services';
 import { SettingsComponent } from './components/settings/settings.component';
 import { UsersReviewComponent } from './components/users-review/users-review.component';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NotificationService } from './services/notification.service';
+import { NbThemeModule, NbToastrModule, NbToastrService, NbIconModule, NbLayoutModule } from '@nebular/theme';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 @NgModule({
   declarations: [
@@ -23,11 +25,19 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NbThemeModule.forRoot({
+      name: 'cosmic'
+    }),
+    NbToastrModule.forRoot(),
+    NbEvaIconsModule,
+    NbIconModule,
+    NbLayoutModule
   ],
   providers: [
     WebSocketService,
     TokenService,
+    NotificationService,
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializer,
