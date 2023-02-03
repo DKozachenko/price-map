@@ -16,15 +16,13 @@ export class MapComponent implements OnInit {
 
     this.webSocketSevice.socket.on('get users failed', (response) => {
       console.log('on get users failed', response);
-      alert('Глаза разуй, дебил, данные чекни');
     });
 
     this.webSocketSevice.socket.on('get users successed', (response) => {
       console.log('on get users successed', response);
     });
 
-    this.webSocketSevice.addToken();
-    this.webSocketSevice.socket.emit('get users attempt', { temp: 1 });
+    this.webSocketSevice.emit('get users attempt', { temp: 1 });
   }
 
 }

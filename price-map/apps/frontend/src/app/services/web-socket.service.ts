@@ -38,9 +38,18 @@ export class WebSocketService {
     });
   }
 
+  public emit<T = null>(eventName: string, data?: T): void {
+    this.addToken();
+    this.socket.emit(eventName, data);
+  }
+
   public addToken(): void {
-    this.socket.auth = { 
-      token: this.tokenService.getToken()
-    };
+    // this.socket.auth = { 
+    //   token: this.tokenService.getToken()
+    // };
+    this.socket.auth = (cb) => {
+      cb({ token: this.tokenService.getToken() })
+    }
+    console.log(this.socket.auth);
   }
 }

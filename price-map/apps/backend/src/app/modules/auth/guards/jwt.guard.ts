@@ -12,13 +12,17 @@ export const JwtAuthGuard = (failedEventName: string) => {
 
     public canActivate(context: ExecutionContext): boolean {
       const client = context.switchToWs().getClient();
+      const data = context.switchToWs().getData();
+      console.log(123, data);
+      console.log(client.handshake)
+      // console.log(client.handshake.headers)
       const token: string = client.handshake?.auth?.token;
 
       if (!token) {
         client.emit(failedEventName, {
           statusCode: 401,
           error: true,
-          message: 'Unauthorized'
+          message: 'Unauthorized' 
         });
         return false;
       }
