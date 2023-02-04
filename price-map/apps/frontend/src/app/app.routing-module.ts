@@ -11,7 +11,8 @@ const routes: Routes = [
   },
   {
     path: 'auth',
-    loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)
+    loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule),
+    title: 'Авторизация'
   },
   {
     path: 'map',
@@ -25,7 +26,8 @@ const routes: Routes = [
         Role.Admin
       ]
     },
-    loadChildren: () => import('./modules/map/map.module').then(m => m.MapModule)
+    loadChildren: () => import('./modules/map/map.module').then(m => m.MapModule),
+    title: 'Карта'
   },
   {
     path: 'settings',
@@ -39,7 +41,8 @@ const routes: Routes = [
         Role.Admin
       ]
     },
-    loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule)
+    loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule),
+    title: 'Настройки'
   },
   {
     path: 'admin',
@@ -50,7 +53,8 @@ const routes: Routes = [
     data: {
       roles: [Role.Admin]
     },
-    loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule)
+    loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
+    title: 'Админ-панель'
   },
   {
     path: '**',
