@@ -3,13 +3,17 @@ import { fromEvent, Observable, Subscription } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { DisconnectDescription } from 'socket.io-client/build/esm/socket';
 import { TokenService } from '.';
+import { AppModule } from '../app.module';
+import { AuthModule } from '../modules';
 
 /**
  * Сервис общения с сервером по webSocket'у
  * @export
  * @class WebSocketService 
  */
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class WebSocketService implements OnDestroy {
   /**
    * Количество попыток подключения
@@ -111,7 +115,9 @@ export class WebSocketService implements OnDestroy {
    * @memberof WebSocketService
    */
   public initSocket(): void {
-    this.socket = io('http://localhost:3333');
+    this.socket = io('http://localhost:3333', {
+      // transports: ["websocket", "polling"]
+    });
 
     this.subscribeOnConnect();
     this.subscribeOnErrorConnect();
@@ -127,6 +133,7 @@ export class WebSocketService implements OnDestroy {
    */
   public emit<T = null>(eventName: string, data?: T): void {
     this.addToken();
+    console.log(this.socket.auth)
     this.socket.emit(eventName, data);
   }
 

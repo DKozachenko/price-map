@@ -1,12 +1,11 @@
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NotificationService, TokenService } from '../../../../services';
+import { NotificationService, TokenService, WebSocketService } from '../../../../services';
 import { IResponseData, IUserLoginInfo } from '@core/interfaces';
 import { AuthEvents, CategoryEvents } from '@core/enums';
 import { Router } from '@angular/router';
 import { Category1Level } from '@core/entities';
-import { WebSocketService } from '../../services/web-socket.service';
 
 /**
  * Компонет формы логина
@@ -34,14 +33,16 @@ export class LoginComponent implements OnInit {
    * @memberof LoginComponent
    */
   public form!: FormGroup;
-
-  constructor(private readonly webSocketSevice: WebSocketService,
+  private readonly webSocketSevice: WebSocketService;
+  constructor(
     private readonly notificationService: NotificationService,
     private router: Router,
-    private readonly tokenService: TokenService) {}
+    private readonly tokenService: TokenService,
+    private readonly injector: Injector) {
+      this.webSocketSevice = injector.get(WebSocketService);
+    }
 
   public ngOnInit(): void {
-    this.webSocketSevice.initSocket();
     this.form = new FormGroup({
       nickname: new FormControl(undefined, [Validators.required]),
       password: new FormControl(undefined, [Validators.required]),
@@ -68,8 +69,8 @@ export class LoginComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Category1Level[]>) => console.log(2, 'successed', response));
 
-      console.log(this.webSocketSevice.socket.auth)
-      this.webSocketSevice.emit(CategoryEvents.GetCategories1LevelAttempt);
+    console.log(this.webSocketSevice.socket.auth)
+    this.webSocketSevice.emit(CategoryEvents.GetCategories1LevelAttempt);
   }
 
   /** 

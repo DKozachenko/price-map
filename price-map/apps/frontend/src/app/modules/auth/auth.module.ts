@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NbButtonModule,
   NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbTabsetModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { WebSocketService } from './services/web-socket.service';
+import { WebSocketService } from '../../services';
 
 
 /**
@@ -33,8 +33,8 @@ import { WebSocketService } from './services/web-socket.service';
     NbEvaIconsModule,
     NbFormFieldModule
   ],
-  providers: [
-    WebSocketService
-  ]
+  // providers: [
+
+  // ]
 })
 export class AuthModule { }
