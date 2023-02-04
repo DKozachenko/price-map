@@ -7,6 +7,7 @@ import { NbButtonModule,
   NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbTabsetModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { WebSocketService } from '../../services';
+import { SharedModule } from '../shared/shared.module';
 
 
 /**
@@ -17,12 +18,12 @@ import { WebSocketService } from '../../services';
 @NgModule({
   declarations: [
     LoginComponent,
-    RegisterComponent,
+    // RegisterComponent,
     LayoutComponent
   ],
   imports: [
     CommonModule,
-    AuthRoutingModule,
+    // AuthRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     NbButtonModule,

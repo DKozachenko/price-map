@@ -11,9 +11,7 @@ import { AuthModule } from '../modules';
  * @export
  * @class WebSocketService 
  */
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class WebSocketService implements OnDestroy {
   /**
    * Количество попыток подключения

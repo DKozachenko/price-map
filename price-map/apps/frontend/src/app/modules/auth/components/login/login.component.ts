@@ -33,16 +33,18 @@ export class LoginComponent implements OnInit {
    * @memberof LoginComponent
    */
   public form!: FormGroup;
-  private readonly webSocketSevice: WebSocketService;
+  
   constructor(
     private readonly notificationService: NotificationService,
     private router: Router,
     private readonly tokenService: TokenService,
-    private readonly injector: Injector) {
-      this.webSocketSevice = injector.get(WebSocketService);
+    private readonly webSocketSevice: WebSocketService) {
+      // this.webSocketSevice = injector.get(WebSocketService);
     }
 
   public ngOnInit(): void {
+    console.warn(this.webSocketSevice.socket, 'lazy')
+    console.log(this.webSocketSevice.socket.auth, 'lazy')
     this.form = new FormGroup({
       nickname: new FormControl(undefined, [Validators.required]),
       password: new FormControl(undefined, [Validators.required]),
@@ -56,6 +58,7 @@ export class LoginComponent implements OnInit {
         this.tokenService.setToken(response.data ?? '');
         this.router.navigate(['map'], { queryParamsHandling: 'merge' });
       });
+    console.log(this.webSocketSevice.socket.auth, 'lazy')
     
     this.webSocketSevice.on<IResponseData<null>>(AuthEvents.LoginFailed)
       .pipe(untilDestroyed(this))
@@ -63,14 +66,14 @@ export class LoginComponent implements OnInit {
 
       this.webSocketSevice.on<IResponseData<null>>(CategoryEvents.GetCategories1LevelFailed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<null>) => console.log(1, 'failed', response));
+      .subscribe((response: IResponseData<null>) => console.log(response, 'lazy'));
 
     this.webSocketSevice.on<IResponseData<Category1Level[]>>(CategoryEvents.GetCategories1LevelSuccessed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<Category1Level[]>) => console.log(2, 'successed', response));
+      .subscribe((response: IResponseData<Category1Level[]>) => console.log(response, 'lazy'));
 
-    console.log(this.webSocketSevice.socket.auth)
-    this.webSocketSevice.emit(CategoryEvents.GetCategories1LevelAttempt);
+    console.log(this.webSocketSevice.socket.auth, 'lazy')
+    this.webSocketSevice.emit(CategoryEvents.GetCategories1LevelAttempt, { data: 34234 });
   }
 
   /** 

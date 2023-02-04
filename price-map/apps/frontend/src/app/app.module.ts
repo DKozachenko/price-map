@@ -9,8 +9,11 @@ import { TokenService, WebSocketService } from './services';
 import { SettingsComponent } from './components/settings/settings.component';
 import { UsersReviewComponent } from './components/users-review/users-review.component';
 import { NotificationService } from './services/notification.service';
-import { NbThemeModule, NbToastrModule, NbToastrService, NbIconModule, NbLayoutModule } from '@nebular/theme';
+import { NbThemeModule, NbToastrModule, NbToastrService, NbIconModule, NbLayoutModule, NbButtonModule, NbTabsetModule, NbInputModule, NbFormFieldModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { CommonModule } from '@angular/common';
+import { AuthModule } from './modules/auth/auth.module';
+import { SharedModule } from './modules/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -30,9 +33,15 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
       name: 'cosmic'
     }),
     NbToastrModule.forRoot(),
-    NbEvaIconsModule,
+    NbButtonModule,
+    NbLayoutModule,
+    NbTabsetModule,
+    NbInputModule,
     NbIconModule,
-    NbLayoutModule
+    NbEvaIconsModule,
+    NbFormFieldModule,
+    AuthModule,
+    SharedModule
   ],
   providers: [
     WebSocketService,

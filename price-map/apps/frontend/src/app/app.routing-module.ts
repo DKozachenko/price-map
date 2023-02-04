@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent, MapComponent, RegisterComponent, SettingsComponent, UsersReviewComponent } from './components';
 import { AuthGuard, RolesGuard } from './guards';
+import { LayoutComponent } from './modules/auth/components';
+import { WebSocketService } from './services';
 
 const routes: Routes = [
   {
@@ -11,34 +13,11 @@ const routes: Routes = [
   },
   {
     path: 'auth',
-    loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)
+    component: LayoutComponent
   },
   {
     path: 'login',
     component: LoginComponent
-  },
-  {
-    path: 'register',
-    component: RegisterComponent
-  },
-  {
-    path: 'map',
-    component: MapComponent,
-    canActivate: [
-      AuthGuard,
-      RolesGuard
-    ],
-    data: {
-      roles: ['user']
-    }
-  },
-  {
-    path: 'settings',
-    component: SettingsComponent
-  },
-  {
-    path: 'users-review',
-    component: UsersReviewComponent
   },
 ];
 

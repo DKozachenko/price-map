@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
     private readonly tokenService: TokenService) {}
 
   ngOnInit(): void {
+    console.warn(this.webSocketSevice.socket, 'eager')
     this.form = new FormGroup({
       nickname: new FormControl(undefined, [Validators.required]),
       password: new FormControl(undefined, [Validators.required]),
@@ -34,14 +35,13 @@ export class LoginComponent implements OnInit {
     });
 
     this.webSocketSevice.on(CategoryEvents.GetCategories1LevelFailed)
-      .subscribe(data => console.log('failed', data))
+      .subscribe(data => console.log(data, 'eager'))
 
     this.webSocketSevice.on(CategoryEvents.GetCategories1LevelSuccessed)
-      .subscribe(data => console.log('success', data))
+      .subscribe(data => console.log(data, 'eager'))
 
-    this.webSocketSevice.emit(CategoryEvents.GetCategories1LevelAttempt, {
-      test: 'dfsdf'
-    });
+    console.log(this.webSocketSevice.socket.auth, 'eager')
+    this.webSocketSevice.emit(CategoryEvents.GetCategories1LevelAttempt);
 
     
   }
