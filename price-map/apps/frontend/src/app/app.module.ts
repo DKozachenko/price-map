@@ -1,3 +1,4 @@
+import { MapModule } from './modules/map/map.module';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -11,6 +12,10 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthGuard, RolesGuard } from './guards';
 import { CookieService } from 'ngx-cookie-service';
+import { AuthModule } from './modules/auth/auth.module';
+import { SharedModule } from './modules/shared/shared.module';
+import { AdminModule } from './modules/admin/admin.module';
+import { SettingsModule } from './modules/settings/settings.module';
 
 /**
  * Главный модуль приложения
@@ -32,7 +37,14 @@ import { CookieService } from 'ngx-cookie-service';
     NbToastrModule.forRoot(),
     NbEvaIconsModule,
     NbIconModule,
-    NbLayoutModule
+    NbLayoutModule,
+    //Эти модули должны были быть по факту lazy loading, но если их таковыми сделать, то почему-то
+    //не отправляется токен на бэк, баг из разряда "мэджик" 
+    AuthModule,
+    MapModule,
+    SettingsModule,
+    AdminModule,
+    SharedModule
   ],
   providers: [
     AuthGuard,
