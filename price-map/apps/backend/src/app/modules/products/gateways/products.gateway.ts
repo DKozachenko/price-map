@@ -9,7 +9,8 @@ import { Product } from '@core/entities';
 import { ProductsService } from '../services';
 import { DbErrorCode } from '@core/types';
 import { catchError, Observable, of, switchMap } from 'rxjs';
-import { Logger } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
 
 /**
  * Шлюз товаров
@@ -31,7 +32,7 @@ export class ProductsGateway {
    * @memberof ProductsGateway
    */
   @Roles(Role.User, Role.Admin)
-  // @UseGuards(JwtAuthGuard('get products failed'), RolesAuthGuard('get products failed'))
+  @UseGuards(JwtAuthGuard(ProductEvents.GetProductsFailed), RolesAuthGuard(ProductEvents.GetProductsFailed))
   @SubscribeMessage(ProductEvents.GetProductsAttempt)
   public getAll(@MessageBody() query: any): 
     Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>> {
@@ -72,7 +73,7 @@ export class ProductsGateway {
    * @memberof ProductsGateway
    */
   @Roles(Role.User, Role.Admin)
-  // @UseGuards(JwtAuthGuard('get product failed'), RolesAuthGuard('get product failed'))
+  @UseGuards(JwtAuthGuard(ProductEvents.GetProductFailed), RolesAuthGuard(ProductEvents.GetProductFailed))
   @SubscribeMessage(ProductEvents.GetProductAttempt)
   public getById(@MessageBody() id: string): Observable<WsResponse<IResponseData<Product | null, DbErrorCode | null>>> {
     return this.productsService.getById(id)

@@ -16,7 +16,6 @@ export const JwtAuthGuard = (failedEventName: string): Type<any> => {
 
     public canActivate(context: ExecutionContext): boolean {
       const client = context.switchToWs().getClient();
-      console.log(client.handshake);
       const token: string = client.handshake?.auth?.token;
 
       if (!token) {

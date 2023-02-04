@@ -71,7 +71,7 @@ export class CategoriesGateway {
    * @memberof CategoriesGateway
    */
   @Roles(Role.User, Role.Admin)
-  // @UseGuards(JwtAuthGuard('get categories 1 level failed'), RolesAuthGuard('get categories 1 level failed'))
+  @UseGuards(JwtAuthGuard(CategoryEvents.GetCategory3LevelFailed), RolesAuthGuard(CategoryEvents.GetCategory3LevelFailed))
   @SubscribeMessage(CategoryEvents.GetCategory3LevelAttempt)
   public getCategory3LevelById(@MessageBody() id: string): 
     Observable<WsResponse<IResponseData<Category3Level | null, DbErrorCode | null>>> {

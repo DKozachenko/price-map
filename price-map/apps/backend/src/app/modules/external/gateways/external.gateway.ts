@@ -2,7 +2,7 @@ import { MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WsResponse } from '@nestjs/websockets';
-import { Logger } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { Roles } from '../../../decorators';
 import { ExternalEvents, Role } from '@core/enums';
 import { ExternalService } from '../services';
@@ -10,6 +10,7 @@ import { catchError, Observable, of, switchMap } from 'rxjs';
 import { ICoordinates, IResponseData } from '@core/interfaces';
 import { ExternalErrorCode } from '@core/types';
 import * as polyline  from '@mapbox/polyline';
+import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
 
 /**
  * Шлюз пользователей
@@ -31,7 +32,7 @@ export class ExternalGateway {
      * @memberof AppGateway
      */
   @Roles(Role.User, Role.Admin)
-  // @UseGuards(JwtAuthGuard('get product failed'), RolesAuthGuard('get product failed'))
+  @UseGuards(JwtAuthGuard(ExternalEvents.BuildRouteFailed), RolesAuthGuard(ExternalEvents.BuildRouteFailed))
   @SubscribeMessage(ExternalEvents.BuildRouteAttempt)
   public buildRoute(@MessageBody() coordinates: ICoordinates[]): 
     Observable<WsResponse<IResponseData<number[][] | null, ExternalErrorCode | null>>> {
