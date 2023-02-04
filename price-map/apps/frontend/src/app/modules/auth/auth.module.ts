@@ -18,12 +18,12 @@ import { SharedModule } from '../shared/shared.module';
 @NgModule({
   declarations: [
     LoginComponent,
-    // RegisterComponent,
+    RegisterComponent,
     LayoutComponent
   ],
   imports: [
     CommonModule,
-    // AuthRoutingModule,
+    AuthRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     NbButtonModule,
