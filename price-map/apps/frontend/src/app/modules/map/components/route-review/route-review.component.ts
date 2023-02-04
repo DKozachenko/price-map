@@ -51,7 +51,7 @@ export class RouteReviewComponent implements OnInit {
       .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
 
     this.webSocketService.on<IResponseData<Product>>(ProductEvents.GetProductSuccessed)
-      .pipe(untilDestroyed(this), delay(2000))
+      .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Product>) => this.products.push(response.data));
 
     this.productsService.addProductIdToRoute$

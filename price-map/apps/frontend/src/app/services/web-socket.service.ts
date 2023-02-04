@@ -111,7 +111,12 @@ export class WebSocketService implements OnDestroy {
    * @memberof WebSocketService
    */
   public initSocket(): void {
-    this.socket = io('http://localhost:3333');
+    this.socket = io('http://localhost:3333', {
+      transports: [
+        'websocket', 
+        'polling'
+      ]
+    });
 
     this.subscribeOnConnect();
     this.subscribeOnErrorConnect();

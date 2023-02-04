@@ -9,7 +9,8 @@ import { IResponseData } from '@core/interfaces';
 import { Category1Level, Category3Level } from '@core/entities';
 import { CategoriesService } from '../services';
 import { DbErrorCode } from '@core/types';
-import { Logger } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
 
 /**
  * Шлюз категорий
@@ -30,7 +31,8 @@ export class CategoriesGateway {
    * @memberof CategoriesGateway
    */
   @Roles(Role.User, Role.Admin)
-  // @UseGuards(JwtAuthGuard('get categories 1 level failed'), RolesAuthGuard('get categories 1 level failed'))
+  @UseGuards(JwtAuthGuard(CategoryEvents.GetCategories1LevelFailed), 
+    RolesAuthGuard(CategoryEvents.GetCategories1LevelFailed))
   @SubscribeMessage(CategoryEvents.GetCategories1LevelAttempt)
   public getAllCategories1Level(): Observable<WsResponse<IResponseData<Category1Level[] | null, DbErrorCode | null>>> {
     return this.categoriesService.getAllCategories1Level()
@@ -70,7 +72,8 @@ export class CategoriesGateway {
    * @memberof CategoriesGateway
    */
   @Roles(Role.User, Role.Admin)
-  // @UseGuards(JwtAuthGuard('get categories 1 level failed'), RolesAuthGuard('get categories 1 level failed'))
+  @UseGuards(JwtAuthGuard(CategoryEvents.GetCategory3LevelFailed), 
+    RolesAuthGuard(CategoryEvents.GetCategory3LevelFailed))
   @SubscribeMessage(CategoryEvents.GetCategory3LevelAttempt)
   public getCategory3LevelById(@MessageBody() id: string): 
     Observable<WsResponse<IResponseData<Category3Level | null, DbErrorCode | null>>> {
