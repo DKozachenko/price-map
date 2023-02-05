@@ -16,20 +16,33 @@ export class ExternalService {
    * Создание строки с координатами через запятую
    * @private
    * @param {ICoordinates[]} coordinates координатами
-   * @return {*}  {string} коодинаты через запятую
+   * @return {*}  {string} коодинаты через запятую (в формате {longitude},{latitude})
    * @memberof AppService
    */
   private createCoordinatesQuery(coordinates: ICoordinates[]): string {
     let result = '';
     for (let i = 0; i < coordinates.length; ++i) {
       if (i === coordinates.length - 1) {
-        result += `${coordinates[i].latitude},${coordinates[i].longitude}`;
+        result += `${coordinates[i].longitude},${coordinates[i].latitude}`;
       } else {
-        result += `${coordinates[i].latitude},${coordinates[i].longitude};`;
+        result += `${coordinates[i].longitude},${coordinates[i].latitude};`;
       }
     }
 
     return result;
+  }
+
+  /**
+   * Смена координат (из {latitude},{longitude} в {longitude},{latitude})
+   * @param {number[]} coordinate координата
+   * @return {*}  {number[]} коодината с поменяными широтой и долготой
+   * @memberof ExternalService
+   */
+  public swapCoordinates(coordinate: number[]): number[] {
+    const temp = coordinate[0];
+    coordinate[0] = coordinate[1];
+    coordinate[1] = temp;
+    return coordinate;
   }
 
   /**

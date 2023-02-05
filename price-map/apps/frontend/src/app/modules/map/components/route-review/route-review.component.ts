@@ -36,8 +36,8 @@ export class RouteReviewComponent implements OnInit {
    */
   private getCoordinates(): ICoordinates[] {
     return this.products.map((product: Product) => ({
-      latitude: product.shop.coordinates.longitude,
-      longitude: product.shop.coordinates.latitude
+      latitude: product.shop.coordinates.latitude,
+      longitude: product.shop.coordinates.longitude
     }));
   }
 
@@ -78,7 +78,7 @@ export class RouteReviewComponent implements OnInit {
    * @return {*}  {string} id товара
    * @memberof RouteReviewComponent
    */
-  public trackByProductFn(index: number, item: Product): string {   
+  public trackByProductFn(index: number, item: Product): string {
     return item.id ?? index;
   }
 }
