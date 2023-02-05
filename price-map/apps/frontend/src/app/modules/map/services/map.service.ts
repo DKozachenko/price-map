@@ -43,7 +43,7 @@ export class MapService {
    * @memberof MapService
    */
   private initialPoint: LngLatLike = [
-    82.936, 
+    82.936,
     55.008
   ];
 
@@ -257,7 +257,7 @@ export class MapService {
    * Преобразования товара из БД в фичу
    * @private
    * @param {Product} product товар
-   * @return {*}  {Feature<Point, IProductInfo>} фича
+   * @return {*}  {Feature<Point, IProductInfo>} фича (координаты в формате {longitude},{latitude})
    * @memberof MapService
    */
   private mapProducts(product: Product): Feature<Point, IProductInfo> {
@@ -272,7 +272,7 @@ export class MapService {
       geometry: {
         type: 'Point',
         coordinates: [
-          product.shop.coordinates.longitude, 
+          product.shop.coordinates.longitude,
           product.shop.coordinates.latitude
         ],
       },
@@ -316,32 +316,32 @@ export class MapService {
         type: 'circle',
         source: this.productsSourceName,
         filter: [
-          'has', 
+          'has',
           'point_count'
         ],
         paint: {
           'circle-color': [
-            'step', 
+            'step',
             [
-              'get', 
+              'get',
               'point_count'
-            ], 
-            '#51bbd6', 
-            100, 
-            '#f1f075', 
-            750, 
+            ],
+            '#51bbd6',
+            100,
+            '#f1f075',
+            750,
             '#f28cb1'
           ],
           'circle-radius': [
-            'step', 
+            'step',
             [
-              'get', 
+              'get',
               'point_count'
-            ], 
-            20, 
-            100, 
-            30, 
-            750, 
+            ],
+            20,
+            100,
+            30,
+            750,
             40
           ],
         },
@@ -365,7 +365,7 @@ export class MapService {
         type: 'symbol',
         source: this.productsSourceName,
         filter: [
-          'has', 
+          'has',
           'point_count'
         ],
         layout: {
@@ -396,9 +396,9 @@ export class MapService {
         type: 'symbol',
         source: this.productsSourceName,
         filter: [
-          '!', 
+          '!',
           [
-            'has', 
+            'has',
             'point_count'
           ]
         ],
@@ -406,13 +406,13 @@ export class MapService {
           'icon-image': '{icon}',
           'icon-overlap': 'always',
           'text-field': [
-            'get', 
+            'get',
             'price'
           ],
           'text-font': ['Open Sans Semibold'],
           'text-size': 18,
           'text-offset': [
-            0, 
+            0,
             0.5
           ],
           'text-anchor': 'top',
@@ -495,7 +495,7 @@ export class MapService {
         },
         paint: {
           'line-color': '#6699ff',
-          'line-width': 8,
+          'line-width': 4,
         },
       });
     }

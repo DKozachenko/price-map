@@ -26,7 +26,7 @@ export class ExternalGateway {
   constructor(private readonly externalService: ExternalService) { }
 
   /**
-     * Событие построения маршрута 
+     * Событие построения маршрута
      * @param {ICoordinates[]} coordinates коодинаты
      * @return {*}  {(Observable<WsResponse<IResponseData<number[][] | null, AppErrorCode | null>>>)} ответ
      * @memberof AppGateway
@@ -34,25 +34,20 @@ export class ExternalGateway {
   @Roles(Role.User, Role.Admin)
   @UseGuards(JwtAuthGuard(ExternalEvents.BuildRouteFailed), RolesAuthGuard(ExternalEvents.BuildRouteFailed))
   @SubscribeMessage(ExternalEvents.BuildRouteAttempt)
-  public buildRoute(@MessageBody() coordinates: ICoordinates[]): 
+  public buildRoute(@MessageBody() coordinates: ICoordinates[]):
     Observable<WsResponse<IResponseData<number[][] | null, ExternalErrorCode | null>>> {
     return this.externalService.buildRoute(coordinates)
       .pipe(
         switchMap((osrmData: any) => {
-          const poly: string = osrmData.data.routes[0].geometry;
-          const data: number[][] = polyline.decode(poly);
+          const encodedPolyline: string = osrmData.data.routes[0].geometry;
+          const decodedCoordinates: number[][] = polyline.decode(encodedPolyline);
           return of({
             event: ExternalEvents.BuildRouteSuccessed,
             data: {
               statusCode: 200,
               errorCode: null,
               isError: false,
-              data: data.map((value: number[]) => {
-                const temp = value[0];
-                value[0] = value[1];
-                value[1] = temp;
-                return value;
-              }),
+              data: decodedCoordinates.map((value: number[]) => this.externalService.swapCoordinates(value)),
               message: 'Маршрут успешно построен'
             }
           });
