@@ -4,7 +4,7 @@ import { MessageBody,
   WsResponse } from '@nestjs/websockets';
 import { Roles } from '../../../decorators';
 import { ProductEvents, Role } from '@core/enums';
-import { IResponseData } from '@core/interfaces';
+import { IProductQuery, IResponseData } from '@core/interfaces';
 import { Product } from '@core/entities';
 import { ProductsService } from '../services';
 import { DbErrorCode } from '@core/types';
@@ -34,9 +34,10 @@ export class ProductsGateway {
   @Roles(Role.User, Role.Admin)
   @UseGuards(JwtAuthGuard(ProductEvents.GetProductsFailed), RolesAuthGuard(ProductEvents.GetProductsFailed))
   @SubscribeMessage(ProductEvents.GetProductsAttempt)
-  public getAll(@MessageBody() query: any): 
+  public getAll(@MessageBody() query: IProductQuery):
     Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>> {
-    return this.productsService.getAll(query ? query : [])
+    console.log(query)
+    return this.productsService.getAll(query)
       .pipe(
         switchMap((products: Product[]) => {
           return of({

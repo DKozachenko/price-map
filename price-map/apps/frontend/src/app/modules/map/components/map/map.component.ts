@@ -1,7 +1,7 @@
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Product } from '@core/entities';
-import { IResponseData } from '@core/interfaces';
+import { IResponseData, IProductQuery } from '@core/interfaces';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService, MapService, ProductService } from '../../services';
 import { ExternalEvents, ProductEvents } from '@core/enums';
@@ -37,6 +37,8 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
    */
   public isShowRouteReview: boolean = false;
 
+
+
   constructor(private readonly webSocketService: WebSocketService,
     private readonly notificationService: NotificationService,
     private readonly mapService: MapService,
@@ -66,8 +68,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.filterService.chechedCategory3LevelIds$
       .pipe(untilDestroyed(this))
-      .subscribe((data: Set<string>) => 
-        this.webSocketService.emit<string[]>(ProductEvents.GetProductsAttempt, [...data]));
+      .subscribe((data: Set<string>) =>
+        this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
+          category3LevelIds: [...data],
+          filters: null
+        }));
 
     this.filterService.filterValues$
       .pipe(

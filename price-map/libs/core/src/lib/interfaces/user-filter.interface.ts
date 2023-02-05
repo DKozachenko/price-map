@@ -1,3 +1,5 @@
+import { FilterType } from "../types"
+
 /**
  * Интерфейс пользовательского фильтра (определенной категории 3 уровня)
  * @export
@@ -12,7 +14,13 @@ export interface IUserFilter {
    */
   name: string,
   /**
-   * Значение 
+   * Тип
+   * @type {FilterType}
+   * @memberof IFilter
+   */
+  type: FilterType,
+  /**
+   * Значение
    * @type {(string | number | string[] | number[] | boolean)}
    * @memberof IUserFilter
    */

@@ -3,8 +3,8 @@
  * @export
  * @interface ICharacteristic
  */
-export interface ICharacteristic {  
-  [key: string]: string  | number,
+export interface ICharacteristic {
+  [key: string]: string  | number | boolean,
   /**
    * Название
    * @type {string}
@@ -13,8 +13,8 @@ export interface ICharacteristic {
   name: string,
   /**
    * Значение
-   * @type {(string | number)}
+   * @type {(string | number | boolean)}
    * @memberof ICharacteristic
    */
-  value: string | number
+  value: string | number | boolean
 }
