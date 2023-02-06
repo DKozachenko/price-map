@@ -1,10 +1,11 @@
-import { ICharacteristic } from './../../../../../../../libs/core/src/lib/interfaces/characteristic.interface';
+/* eslint-disable no-case-declarations */
+/* eslint-disable indent */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '@core/entities';
-import { Any, In, Repository } from 'typeorm';
-import { from, Observable, of, switchMap } from 'rxjs';
-import { IProductQuery } from '@core/interfaces';
+import { In, Repository } from 'typeorm';
+import { from, iif, Observable, of, switchMap } from 'rxjs';
+import { IProductQuery, IUserFilter } from '@core/interfaces';
 
 /**
  * Сервис товаров
@@ -23,12 +24,109 @@ export class ProductsService {
   private readonly productRepository: Repository<Product>;
 
   /**
+   * Генерация условия для JSON значения
+   * @private
+   * @param {IUserFilter} filter фильтр
+   * @return {*}  {string} условное выражение
+   * @memberof ProductsService
+   */
+  private generateJsonValueCondition(filter: IUserFilter): string {
+    const result = 'characteristics.value';
+    switch (filter.type) {
+      case 'enum':
+        let inQuery: string = '(';
+        for (let i = 0; i < (<number[] | string[]>filter.value).length; ++i) {
+          if (i === (<number[] | string[]>filter.value).length - 1) {
+            inQuery += `'${filter.value[i]}')`;
+          } else {
+            inQuery += `'${filter.value[i]}', `;
+          }
+        }
+
+        return `${result} IN ${inQuery}`;
+      case 'boolean':
+        return `${result}::boolean = ${ filter.value ? 'true' : 'false' }`;
+      case 'range':
+        if (filter.value[0] && filter.value[1]) {
+          return `${result}::float >= ${filter.value[0]} AND ${result}::float <= ${filter.value[1]}`;
+        } else if (!filter.value[0] && filter.value[1]) {
+          return `${result}::float <= ${filter.value[1]}`;
+        } else if (filter.value[0] && !filter.value[1]) {
+          return `${result}::float >= ${filter.value[0]}`;
+        } else {
+          return `${result} IS NOT NULL`;
+        }
+      default:
+        return '';
+    }
+  }
+
+  /**
+   * Генерация SQL-кода для WITH таблицы
+   * @private
+   * @param {IProductQuery} query запрос
+   * @return {*}  {string} SQL-код для WITH
+   * @memberof ProductsService
+   */
+  private generateWithSql(query: IProductQuery): string {
+    let fromQuery = '';
+    for (let i = 0; i < query.filters.length; ++i) {
+      const filter = query.filters[i];
+      const valueQuery: string = this.generateJsonValueCondition(filter);
+
+      if (i === query.filters.length - 1) {
+        fromQuery += `SELECT p."id"
+        FROM "Products" p, jsonb_to_recordset(p."characteristics") AS characteristics(name text, value text)
+        WHERE p."category3LevelId" = '${query.category3LevelIds}'
+        AND characteristics.name = '${filter.name}' and ${valueQuery}`;
+      } else {
+        fromQuery += `
+        SELECT p."id"
+        FROM "Products" p, jsonb_to_recordset(p."characteristics") AS characteristics(name text, value text)
+        WHERE p."category3LevelId" = '${query.category3LevelIds}'
+        AND characteristics.name = '${filter.name}' and ${valueQuery}
+        INTERSECT
+        `;
+      }
+    }
+
+    return `WITH approachIds AS (${fromQuery}
+  )`;
+  }
+
+  /**
+   * Генерация SQL запроса для товаров
+   * @private
+   * @param {IProductQuery} query запрос
+   * @return {*}  {string} SQL-Запрос
+   * @memberof ProductsService
+   */
+  private generateSql(query: IProductQuery): string {
+    const withSql: string = this.generateWithSql(query);
+    return `${withSql}
+    SELECT p."id", p."name", p."description", p."price", p."characteristics", p."imagePath",
+    json_build_object('id', s."id", 'name', s."name", 'schedule', s."schedule", 'imagePath',
+    s."imagePath", 'coordinates', s."coordinates") AS shop,
+    json_build_object('id', cl."id", 'name', cl."name", 'filters', cl."filters") AS category3Level
+    FROM approachIds
+    INNER JOIN "Products" p ON approachIds."id" = p."id"
+    INNER JOIN "Shops" s ON p."shopId" = s."id"
+    INNER JOIN "Categories3Level" cl ON p."category3LevelId" = cl."id";`;
+  }
+
+  /**
    * Получение всех товаров в определенных категориях 3 уровня
-   * @param {string[]} ids id категорий 3 уровня
-   * @return {*}  {Observable<Product[]>} товары
+   * @param {IProductQuery} query запрос для товаров
+   * @return {*}  {Observable<Product[]>}
    * @memberof ProductsService
    */
   public getAll(query: IProductQuery): Observable<Product[]> {
+    const sqlQuery: string = this.generateSql(query);
+
+    if (query.filters.length) {
+      return from(this.productRepository.query(sqlQuery));
+    }
+
     return from(this.productRepository.find({
       where: {
         category3Level: {
@@ -39,65 +137,7 @@ export class ProductsService {
         shop: true,
         category3Level: true
       }
-    }))
-      .pipe(
-        switchMap((products: Product[]) => {
-          if (query.filters && query.filters.length) {
-            let result = [];
-
-            for (const product of products) {
-              const characteristics: ICharacteristic[] = product.characteristics;
-              let approach = 0;
-
-              for (const filter of query.filters) {
-                const characteristic: ICharacteristic = characteristics.find((char: ICharacteristic) => char.name === filter.name);
-
-                if (characteristic) {
-                  if (filter.type === 'boolean') {
-                    if (filter.value === null) {
-                      ++approach;
-                    }
-                    if (filter.value !== null && <boolean>(characteristic.value) === <boolean>filter.value) {
-                      ++approach;
-                    }
-                  } else if (filter.type === 'enum') {
-                    if ((<(string | number)[]>filter.value).includes(<string | number>characteristic.value)) {
-                      ++approach;
-                    }
-                  } else {
-                    const leftLimit: number = filter.value[0];
-                    const rightLimit: number = filter.value[1];
-
-                    if (leftLimit && rightLimit) {
-                      if (characteristic.value >= leftLimit && characteristic.value <= rightLimit) {
-                        ++approach;
-                      }
-                    } else if (leftLimit && !rightLimit) {
-                      if (characteristic.value >= leftLimit) {
-                        ++approach;
-                      }
-                    } else if (!leftLimit && rightLimit) {
-                      if (characteristic.value <= rightLimit) {
-                        ++approach;
-                      }
-                    } else {
-                      ++approach;
-                    }
-                  }
-                }
-              }
-
-              if (approach === query.filters.length) {
-                result.push(product);
-              }
-            }
-
-            return of(result);
-          }
-
-          return of(products);
-        })
-      );
+    }));
   }
 
 

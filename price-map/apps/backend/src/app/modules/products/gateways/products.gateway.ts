@@ -36,7 +36,6 @@ export class ProductsGateway {
   @SubscribeMessage(ProductEvents.GetProductsAttempt)
   public getAll(@MessageBody() query: IProductQuery):
     Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>> {
-    console.log(query)
     return this.productsService.getAll(query)
       .pipe(
         switchMap((products: Product[]) => {

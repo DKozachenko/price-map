@@ -6,17 +6,17 @@ import { IUserFilter } from '.';
  * @interface IProductQuery
  */
 export interface IProductQuery {
-  [key: string]: string[] | IUserFilter[] | null,
+  [key: string]: string[] | IUserFilter[],
   /**
    * Id категорий 3 уровня
-   * @type {(string[] | null)}
+   * @type {(string[])}
    * @memberof IProductQuery
    */
-  category3LevelIds: string[] | null,
+  category3LevelIds: string[],
   /**
    * Фильтры
-   * @type {(IUserFilter[] | null)}
+   * @type {(IUserFilter[])}
    * @memberof IProductQuery
    */
-  filters: IUserFilter[] | null
+  filters: IUserFilter[]
 }

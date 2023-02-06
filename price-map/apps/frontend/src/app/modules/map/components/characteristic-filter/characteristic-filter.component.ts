@@ -66,7 +66,7 @@ export class CharacteristicFilterComponent implements OnInit {
         this.webSocketSevice.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
           category3LevelIds: [this.category3Level.id],
           filters: data
-        })
+        });
       });
   }
 

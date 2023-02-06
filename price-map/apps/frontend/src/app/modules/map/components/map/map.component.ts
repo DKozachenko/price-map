@@ -71,7 +71,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       .subscribe((data: Set<string>) =>
         this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
           category3LevelIds: [...data],
-          filters: null
+          filters: []
         }));
 
     this.filterService.filterValues$
