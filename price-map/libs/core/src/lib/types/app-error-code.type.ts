@@ -1,0 +1,1 @@
+export type AppErrorCode = 'NO_TOKEN' | 'INVALID_TOKEN' | 'FORBIDDEN_RESOURCE';

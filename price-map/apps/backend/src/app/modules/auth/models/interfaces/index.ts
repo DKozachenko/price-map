@@ -1,0 +1,1 @@
+export { IPartialData } from './partial-data.interface';

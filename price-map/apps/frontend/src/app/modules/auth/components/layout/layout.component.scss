@@ -1,0 +1,22 @@
+@import "../../../../../assets/styles/mixins";
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  height: 100%;
+}
+
+::ng-deep {
+  .wrapper {
+    .tabset {
+      justify-content: space-evenly;
+    }
+
+    nb-tabset .tab-link {
+      @include font(1.6rem, white);
+    }
+  }
+}

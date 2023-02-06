@@ -1,0 +1,69 @@
+<div class="auth">
+  <h3 class="auth__title">Вход</h3>
+
+  <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form__group">
+      <input
+        type="text"
+        nbInput
+        fullWidth
+        shape="round"
+        fieldSize="giant"
+        placeholder="Никнейм"
+        formControlName="nickname"
+      >
+
+      <div class="form__error" *ngIf="form.get('nickname')?.touched && form.get('nickname')?.errors">
+        <p class="form__error-description"
+          *ngIf="(form.get('nickname')?.touched || form.get('nickname')?.dirty) && form.get('nickname')?.errors?.['required']"
+        >
+          Это поле является обязательным
+        </p>
+      </div>
+    </div>
+
+    <div class="form__group">
+      <nb-form-field>
+        <input
+          class="password__field"
+          [type]="isShowPassword ? 'text' : 'password'"
+          nbInput
+          fullWidth
+          shape="round"
+          fieldSize="giant"
+          placeholder="Пароль"
+          formControlName="password"
+        >
+        <button type="button" nbSuffix nbButton ghost (click)="toggleShowPassword()">
+          <nb-icon
+            [icon]="isShowPassword ? 'eye-outline' : 'eye-off-2-outline'"
+            pack="eva"
+            [attr.aria-label]="isShowPassword ? 'hide password' : 'show password'"
+          >
+          </nb-icon>
+        </button>
+      </nb-form-field>
+
+      <div class="form__error" *ngIf="form.get('password')?.touched && form.get('password')?.errors">
+        <p class="form__error-description"
+          *ngIf="(form.get('password')?.touched || form.get('password')?.dirty) && form.get('password')?.errors?.['required']"
+        >
+          Это поле является обязательным
+        </p>
+      </div>
+    </div>
+
+
+    <button
+      class="button"
+      nbButton
+      hero
+      status="primary"
+      shape="round"
+      type="submit"
+      [disabled]="form.invalid"
+    >
+      Войти
+    </button>
+  </form>
+</div>

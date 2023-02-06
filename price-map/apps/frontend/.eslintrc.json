@@ -9,6 +9,9 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
+        "@typescript-eslint/no-inferrable-types": [
+          "off"
+        ],
         "@angular-eslint/directive-selector": [
           "error",
           {
@@ -21,7 +24,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "price-map",
+            "prefix": ["price-map", ""],
             "style": "kebab-case"
           }
         ]

@@ -9,7 +9,8 @@ async function bootstrap() {
   const port: number | string = process.env.PORT || 3333;
   await app.listen(port);
   Logger.log(
-    `Server is running on: http://localhost:${port}/${globalPrefix}`
+    `Server is running on: http://localhost:${port}/${globalPrefix}`,
+    'bootstrap'
   );
 }
 

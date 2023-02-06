@@ -1,3 +1,6 @@
+@import '~maplibre-gl/dist/maplibre-gl.css';
+@import "./assets/styles/mixins";
+
 html {
   font-size: 10px!important;
 }
@@ -7,6 +10,134 @@ body {
 }
 
 .root {
-  height: 100vh;
+  height: 100%;
   width: 100%;
+}
+
+.form__error {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  z-index: 5;
+  background-color: white;
+  border-radius: 1rem;
+  padding: .6rem;
+  border: 1px solid #a16eff;
+
+  .form__error-description {
+    @include font(1.3rem, #7a00ff, 700);
+  }
+}
+
+// Стили для попапа на карте
+.product__popup {
+  .mapboxgl-popup-content,
+  .maplibregl-popup-content {
+    padding: 0;
+  }
+}
+
+//Кастомные скролл
+.custom__scroll {
+  &::-webkit-scrollbar {
+    width: 4px;            
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: #323259;
+    border-radius: 20px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: white; 
+    border-radius: 20px; 
+    border: 3px solid white;  
+
+    &:hover {
+      border-color: darken(white, 10%);
+    }
+  }
+}
+
+//Кастомные стили для карточек на карте
+.custom__map-card {
+  position: absolute;
+  margin-bottom: 0!important;
+  z-index: 5;
+  top: 0;
+  bottom: 0;
+  border-radius: 0!important;
+
+  nb-card-header {
+    @include font(1.8rem, white);
+  }
+
+  &__body {
+    padding: 2rem!important;
+    height: 100%;
+  }
+}
+
+//Общие стили для входа / регистраци
+.auth {
+  margin-top: 2rem;
+  border: 2px solid #a16eff;
+  border-radius: 1rem;
+
+  padding: 2rem 1.5rem;
+
+  &__title {
+    @include font(3.5rem, #a16eff);
+    text-align: center;
+
+    margin-bottom: 2.5rem;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__group {
+    margin-bottom: 2rem;
+    min-width: 28rem;
+
+    position: relative;
+  }
+
+  input {
+    @include font(1.6rem, white);
+
+    &::placeholder {
+      @include font(1.6rem, white);
+      opacity: 0.5;
+    }
+  }
+}
+
+.button {
+  margin-top: 0;
+  width: 100%;
+}
+
+.auth {
+  [nbButton].size-medium, 
+  .nb-theme-cosmic .size-medium[nbButtonToggle] {
+    @include font(1.6rem, white);
+    padding: .7rem 1.5rem;
+    letter-spacing: .2rem;
+  }
+}
+
+//Стили для оповещений
+nb-toast {
+  .title {
+    @include font(1.8rem, white, 700);
+  }
+
+  .message {
+    @include font(1.4rem, white, 700);
+  }
 }
