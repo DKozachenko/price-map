@@ -1,11 +1,12 @@
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { IFilter, IResponseData, IUserFilter } from '@core/interfaces';
+import { IFilter, IProductQuery, IResponseData, IUserFilter } from '@core/interfaces';
 import { Component, OnInit } from '@angular/core';
 import { RangeFilterIndex } from '@core/types';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService } from '../../services';
 import { Category3Level } from '@core/entities';
-import { CategoryEvents } from '@core/enums';
+import { CategoryEvents, ProductEvents } from '@core/enums';
+import { debounceTime } from 'rxjs';
 
 /**
  * Компонент фильтра для определенной категории 3 уровня
@@ -41,20 +42,32 @@ export class CharacteristicFilterComponent implements OnInit {
 
   public ngOnInit(): void {
     this.filterService.chechedCategory3LevelIds$
-      .pipe(untilDestroyed(this))  
+      .pipe(untilDestroyed(this))
       .subscribe((set: Set<string>) => {
         const id: string = [...set][0];
         this.webSocketSevice.emit<string>(CategoryEvents.GetCategory3LevelAttempt, id);
       });
 
     this.webSocketSevice.on<IResponseData<null>>(CategoryEvents.GetCategory3LevelFailed)
-      .pipe(untilDestroyed(this))  
+      .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
 
-    
+
     this.webSocketSevice.on<IResponseData<Category3Level>>(CategoryEvents.GetCategory3LevelSuccessed)
-      .pipe(untilDestroyed(this))  
+      .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Category3Level>) => this.category3Level = response.data);
+
+    this.filterService.filterValues$
+      .pipe(
+        debounceTime(400),
+        untilDestroyed(this)
+      )
+      .subscribe((data: IUserFilter[]) => {
+        this.webSocketSevice.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
+          category3LevelIds: [this.category3Level.id],
+          filters: data
+        });
+      });
   }
 
   /**
@@ -72,6 +85,7 @@ export class CharacteristicFilterComponent implements OnInit {
     } else {
       this.currentFilter.push({
         name: filter.name,
+        type: filter.type,
         value
       });
     }
@@ -87,7 +101,7 @@ export class CharacteristicFilterComponent implements OnInit {
    * @memberof CharacteristicFilterComponent
    */
   public changeRangeFilter(filter: IFilter, index: RangeFilterIndex, event: Event): void {
-    const filterElem: IUserFilter | undefined = this.currentFilter.find((currentFilterElem: IUserFilter) => 
+    const filterElem: IUserFilter | undefined = this.currentFilter.find((currentFilterElem: IUserFilter) =>
       currentFilterElem.name === filter.name);
     const value: string = (event.target as HTMLInputElement).value;
 
@@ -97,8 +111,9 @@ export class CharacteristicFilterComponent implements OnInit {
     } else {
       const filterValue: any = {
         name: filter.name,
+        type: filter.type,
         value: [
-          null, 
+          null,
           null
         ]
       };
@@ -111,13 +126,13 @@ export class CharacteristicFilterComponent implements OnInit {
   }
 
   /**
-   * Изменение фильтра с типом "enum" 
+   * Изменение фильтра с типом "enum"
    * @param {IFilter} filter фильтр
    * @param {string} value новое значение
    * @memberof CharacteristicFilterComponent
    */
   public changeEnumFilter(filter: IFilter, value: string): void {
-    const filterElem: IUserFilter | undefined = this.currentFilter.find((currentFilterElem: IUserFilter) => 
+    const filterElem: IUserFilter | undefined = this.currentFilter.find((currentFilterElem: IUserFilter) =>
       currentFilterElem.name === filter.name);
 
     if (filterElem) {
@@ -135,6 +150,7 @@ export class CharacteristicFilterComponent implements OnInit {
     } else {
       const filterValue: IUserFilter = {
         name: filter.name,
+        type: filter.type,
         value: [value]
       };
 
@@ -151,7 +167,7 @@ export class CharacteristicFilterComponent implements OnInit {
    * @return {*}  {string} название фильтра
    * @memberof CharacteristicFilterComponent
    */
-  public trackByFilterFn(index: number, item: IFilter): string {   
+  public trackByFilterFn(index: number, item: IFilter): string {
     return item?.name ?? index;
   }
 
@@ -162,7 +178,7 @@ export class CharacteristicFilterComponent implements OnInit {
    * @return {*}  {(number | string)} значение
    * @memberof CharacteristicFilterComponent
    */
-  public trackByValueFn(index: number, item: number | string): number | string {   
+  public trackByValueFn(index: number, item: number | string): number | string {
     return item ?? index;
   }
 }
