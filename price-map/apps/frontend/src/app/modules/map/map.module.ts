@@ -17,7 +17,7 @@ import { NbCardModule,
   NbRadioModule, 
   NbSelectModule, 
   NbButtonModule } from '@nebular/theme';
-import { SharedModule } from '..';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [

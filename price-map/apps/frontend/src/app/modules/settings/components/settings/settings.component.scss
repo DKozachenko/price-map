@@ -1,0 +1,16 @@
+@import "../../../../../assets/styles/mixins";
+
+.setting {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__body {
+    max-width: 60rem;
+  } 
+}
+
+.button {
+  max-width: 20rem;
+}

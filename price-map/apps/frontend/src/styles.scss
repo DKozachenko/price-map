@@ -3,6 +3,7 @@
 
 html {
   font-size: 10px!important;
+  overflow-y: hidden!important;
 }
 
 body {
@@ -122,7 +123,8 @@ body {
   width: 100%;
 }
 
-.auth {
+.auth,
+.setting {
   [nbButton].size-medium, 
   .nb-theme-cosmic .size-medium[nbButtonToggle] {
     @include font(1.6rem, white);
