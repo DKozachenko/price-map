@@ -116,6 +116,19 @@ body {
       opacity: 0.5;
     }
   }
+
+  label {
+    @include font(1.3rem, white, 700);
+    margin-left: 1rem;
+  }
+}
+
+.nb-theme-cosmic [nbInput].status-basic {
+  border-color: #a16eff!important;
+
+  &:hover {
+    border-color: darken(#a16eff, 5%)!important;
+  }
 }
 
 .button {

@@ -5,8 +5,12 @@
   <nb-layout-column>
     <div class="setting">
       <div class="setting__body">
+        <h3 class="setting__body-title">Настройки</h3>
+
         <form class="form" [formGroup]="form" (ngSubmit)="submit()">
           <div class="form__group">
+            <label>Имя</label>
+          
             <input type="text" nbInput fullWidth shape="round" fieldSize="giant" placeholder="Имя"
               formControlName="name">
 
@@ -25,6 +29,8 @@
           </div>
 
           <div class="form__group">
+            <label>Фамилия</label>
+
             <input type="text" nbInput fullWidth shape="round" fieldSize="giant" placeholder="Фамилия"
               formControlName="lastName">
 
@@ -43,6 +49,8 @@
           </div>
 
           <div class="form__group">
+            <label>Почта</label>
+
             <input type="text" nbInput fullWidth shape="round" fieldSize="giant" placeholder="Почта"
               formControlName="mail">
 
@@ -66,6 +74,8 @@
           </div>
 
           <div class="form__group">
+            <label>Никнейм</label>
+
             <input type="text" nbInput fullWidth shape="round" fieldSize="giant" placeholder="Никнейм"
               formControlName="nickname">
 
@@ -84,6 +94,8 @@
           </div>
 
           <div class="form__group">
+            <label>Пароль</label>
+
             <input type="text" nbInput fullWidth shape="round" fieldSize="giant" placeholder="Пароль"
               formControlName="password">
 

@@ -13,7 +13,7 @@ import * as fs from 'fs';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AppGateway } from './gateways';
 import { secretKey } from './models/constants';
-import { BreadcrumbInfo } from './modules/scraping/models/interfaces';
+import { HashService } from './services';
 
 /**
  * Главный модуль приложения
@@ -57,6 +57,7 @@ import { BreadcrumbInfo } from './modules/scraping/models/interfaces';
   ],
   providers: [
     JwtService,
+    HashService,
     AppGateway
   ],
 })

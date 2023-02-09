@@ -12,6 +12,7 @@ import { NbCardModule,
   NbButtonModule } from '@nebular/theme';
   import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SettingService } from './services';
 
 @NgModule({
   declarations: [SettingsComponent],
@@ -29,6 +30,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NbSelectModule,
     NbButtonModule,
     SharedModule
+  ],
+  providers: [
+    SettingService
   ]
 })
 export class SettingsModule { }

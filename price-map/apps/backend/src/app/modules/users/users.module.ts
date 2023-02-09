@@ -4,6 +4,7 @@ import { UsersService } from './services';
 import { UsersGateway } from './gateways';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '@core/entities';
+import { HashService } from '../../services';
 
 /**
  * Модуль пользователей
@@ -14,6 +15,7 @@ import { User } from '@core/entities';
   imports: [TypeOrmModule.forFeature([User], 'postgresConnect')],
   providers: [
     UsersService,
+    HashService,
     UsersGateway,
     JwtService
   ],
