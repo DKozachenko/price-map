@@ -4,8 +4,8 @@
   border: 1px solid white;
 
   &__body {
-    p {
-      @include font(1.3rem, white, 400);
+    span {
+      @include font(1.2rem, white, 400);
     }
   } 
 }
@@ -13,7 +13,7 @@
 ::ng-deep {
   .product {
     nb-card-header {
-      @include font(1.4rem, white, 700);
+      @include font(1.3rem, white, 700);
       border-bottom-color: white;
     }
   

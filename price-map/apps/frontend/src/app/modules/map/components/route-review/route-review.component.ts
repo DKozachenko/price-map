@@ -22,13 +22,6 @@ import { delay } from 'rxjs';
 })
 export class RouteReviewComponent implements OnInit {
   /**
-   * Товары, по которым нужно построить маршрут
-   * @type {Product[]}
-   * @memberof RouteReviewComponent
-   */
-  public products: Product[] = [];
-
-  /**
    * Получение массива координат
    * @private
    * @return {*}  {ICoordinates[]} массив координат
@@ -40,6 +33,16 @@ export class RouteReviewComponent implements OnInit {
       longitude: product.shop.coordinates.longitude
     }));
   }
+
+  /**
+   * Товары, по которым нужно построить маршрут
+   * @type {Product[]}
+   * @memberof RouteReviewComponent
+   */
+  public products: Product[] = [];
+
+
+  public isCollapsed: boolean = true;
 
   constructor(private readonly productsService: ProductService,
     private readonly webSocketService: WebSocketService,
@@ -69,6 +72,10 @@ export class RouteReviewComponent implements OnInit {
   public buildRoute(): void {
     const coordinates: ICoordinates[] = this.getCoordinates();
     this.webSocketService.emit<ICoordinates[]>(ExternalEvents.BuildRouteAttempt, coordinates);
+  }
+
+  public changeCollapse(): void {
+    this.isCollapsed = !this.isCollapsed;
   }
 
   /**
