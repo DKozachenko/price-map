@@ -29,6 +29,12 @@ export class UsersGateway {
   constructor (private readonly usersService: UsersService,
     private readonly hashService: HashService) {}
 
+  /**
+   * Получение ползователя по id
+   * @param {string} id id
+   * @return {*}  {(Observable<WsResponse<IResponseData<User | null, DbErrorCode | null>>>)} пользователь
+   * @memberof UsersGateway
+   */
   @Roles(Role.User, Role.Admin)
   @UseGuards(JwtAuthGuard(UserEvents.GetUserFailed), 
     RolesAuthGuard(UserEvents.GetUserFailed))
@@ -65,12 +71,18 @@ export class UsersGateway {
       );
   }
 
+  /**
+   * Обновление пользователя
+   * @param {User} user пользователь
+   * @return {*}  {(Observable<WsResponse<IResponseData<Partial<User> | null, AuthErrorCode | null>>>)} пользователь (поле пароль - опционально)
+   * @memberof UsersGateway
+   */
   @Roles(Role.User, Role.Admin)
   @UseGuards(JwtAuthGuard(UserEvents.UpdateUserFailed), 
     RolesAuthGuard(UserEvents.UpdateUserFailed))
   @SubscribeMessage(UserEvents.UpdateUserAttempt)
   public updateUser(@MessageBody() user: User): 
-    Observable<WsResponse<IResponseData<number | null, AuthErrorCode | null>>> {
+    Observable<WsResponse<IResponseData<Partial<User> | null, AuthErrorCode | null>>> {
     
     let updateInfo: Partial<User>;
     let errorCode: AuthErrorCode;
@@ -130,6 +142,7 @@ export class UsersGateway {
             mail: user.mail
           }
 
+          //Если с фронта пришел пароль, значит, он измененный, его нужно захешировать и обновить
           if (user.password) {
             return this.hashService.hashPassword(user.password)
             .pipe(
@@ -139,6 +152,7 @@ export class UsersGateway {
               }),
             );
           }
+          //Если фронт ничего не прислал, значит, пароль менять не надо
           return of(null);
         }),
         switchMap((hashedPassword: string | null) => {
@@ -171,7 +185,10 @@ export class UsersGateway {
               statusCode: 201,
               errorCode: null,
               isError: false,
-              data: affectedRows,
+              data: {
+                ...user,
+                ...updateInfo
+              },
               message: 'Пользователь успешно обновлен'
             }
           });

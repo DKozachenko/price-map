@@ -32,7 +32,14 @@ export class UsersService {
       where: query
     }));
   }
-  
+
+  /**
+   * Обновление по id
+   * @param {string} id id
+   * @param {Partial<User>} partialUser обновляемые данные
+   * @return {*}  {Observable<number>} кол-во затронутых строк
+   * @memberof UsersService
+   */
   public updateById(id: string, partialUser: Partial<User>): Observable<number> {
     return from(this.userRepository.update({ id }, { ...partialUser }))
       .pipe(

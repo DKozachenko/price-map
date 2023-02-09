@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { User } from '@core/entities';
-import { AuthEvents, UserEvents } from '@core/enums';
-import { IPayload, IResponseData, IUserRegisterInfo } from '@core/interfaces';
+import { UserEvents } from '@core/enums';
+import { IPayload, IResponseData } from '@core/interfaces';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
-import { NotificationService, TokenService, WebSocketService } from '../../../../services';
-import { SettingService } from '../../services';
+import { NotificationService, SettingsService, TokenService, WebSocketService } from '../../../../services';
 
 @UntilDestroy()
 @Component({
@@ -14,13 +13,24 @@ import { SettingService } from '../../services';
   styleUrls: ['./settings.component.scss'],
 })
 export class SettingsComponent implements OnInit {
+  /**
+   * Текущий пользователь
+   * @private
+   * @type {User}
+   * @memberof SettingsComponent
+   */
   private user: User;
+  /**
+   * Форма
+   * @type {FormGroup}
+   * @memberof SettingsComponent
+   */
   public form!: FormGroup;
 
   constructor(private readonly webSocketService: WebSocketService,
     private readonly tokenService: TokenService,
-    private readonly settingService: SettingService,
-    private readonly notificationService: NotificationService) {}
+    private readonly notificationService: NotificationService,
+    private readonly settingsService: SettingsService) {}
 
   public ngOnInit(): void {
     this.initForm();
@@ -45,12 +55,13 @@ export class SettingsComponent implements OnInit {
         this.notificationService.showError(response.message);
       });
 
-    this.webSocketService.on<IResponseData<User>>(UserEvents.UpdateUserSuccessed)
+    this.webSocketService.on<IResponseData<Partial<User>>>(UserEvents.UpdateUserSuccessed)
       .pipe(
         untilDestroyed(this)
       )
-      .subscribe((response: IResponseData<User>) => {
-        console.log(response)
+      .subscribe((response: IResponseData<Partial<User> >) => {
+        this.settingsService.updateUser$.next();
+        this.notificationService.showSuccess(response.message);
       });
 
     this.webSocketService.on<IResponseData<null>>(UserEvents.UpdateUserFailed)
@@ -66,6 +77,11 @@ export class SettingsComponent implements OnInit {
     this.webSocketService.emit<string>(UserEvents.GetUserAttempt, userId);    
   }
 
+  /**
+   * Инициализация формы
+   * @private
+   * @memberof SettingsComponent
+   */
   private initForm(): void {
     this.form = new FormGroup({
       name: new FormControl(undefined, [
@@ -92,11 +108,11 @@ export class SettingsComponent implements OnInit {
     });
   }
   
+  /**
+   * Отправка формы
+   * @memberof SettingsComponent
+   */
   public submit(): void {
-    console.log({ 
-      ...this.user,
-      ...this.form.value
-    });
     this.webSocketService.emit<User>(UserEvents.UpdateUserAttempt, { 
       ...this.user,
       ...this.form.value
