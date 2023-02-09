@@ -2,7 +2,7 @@
   <nb-card-header>
     <p>Маршрут</p>
     <nb-badge *ngIf="isCollapsed" [text]="products.length.toString()" status="success" position="top right"></nb-badge>
-    <div class="route__arrow" [ngClass]="{ 'route__arrow_up': !isCollapsed }" (click)="changeCollapse()">
+    <div class="route__arrow" [ngClass]="{ 'route__arrow_up': !isCollapsed }" (click)="toggleCollapse()">
       <nb-icon icon="arrow-ios-downward-outline"></nb-icon>
     </div>
   </nb-card-header>

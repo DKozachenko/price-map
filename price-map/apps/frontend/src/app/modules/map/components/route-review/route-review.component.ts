@@ -41,7 +41,11 @@ export class RouteReviewComponent implements OnInit {
    */
   public products: Product[] = [];
 
-
+  /**
+   * Свернут ли компонент
+   * @type {boolean}
+   * @memberof RouteReviewComponent
+   */
   public isCollapsed: boolean = true;
 
   constructor(private readonly productsService: ProductService,
@@ -74,7 +78,11 @@ export class RouteReviewComponent implements OnInit {
     this.webSocketService.emit<ICoordinates[]>(ExternalEvents.BuildRouteAttempt, coordinates);
   }
 
-  public changeCollapse(): void {
+  /**
+   * Свернуть развернуть компонент
+   * @memberof RouteReviewComponent
+   */
+  public toggleCollapse(): void {
     this.isCollapsed = !this.isCollapsed;
   }
 

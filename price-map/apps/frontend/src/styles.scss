@@ -61,6 +61,10 @@ body {
   }
 }
 
+.header nav {
+  min-height: 5.7rem;
+}
+
 //Кастомные стили для карточек на карте
 .custom__map-card {
   position: absolute;
