@@ -1,10 +1,14 @@
+import { ClearControl } from './../controls/clear.control';
 import { ProductPopupComponent } from './../components/product-popup/product-popup.component';
-import {ComponentFactoryResolver,
+import {
+  ComponentFactoryResolver,
   ElementRef,
   Injectable,
-  Injector } from '@angular/core';
+  Injector
+} from '@angular/core';
 import { FeatureCollection, Point, Feature } from 'geojson';
-import { CircleStyleLayer,
+import {
+  CircleStyleLayer,
   GeoJSONSource,
   GeoJSONSourceSpecification,
   GeolocateControl,
@@ -16,7 +20,8 @@ import { CircleStyleLayer,
   MapMouseEvent,
   NavigationControl,
   Popup,
-  SymbolStyleLayer } from 'maplibre-gl';
+  SymbolStyleLayer
+} from 'maplibre-gl';
 import { ProductService } from '.';
 import { Product } from '@core/entities';
 import { IProductInfo } from '../models/interfaces';
@@ -96,7 +101,7 @@ export class MapService {
   private unclusterPointLayerId: string = 'unclustered-point';
 
   constructor(private readonly productService: ProductService,
-    private readonly resolver: ComponentFactoryResolver) {}
+    private readonly resolver: ComponentFactoryResolver) { }
 
   /**
    * Создание экземпляра карты и привязка к контейнеру
@@ -142,6 +147,10 @@ export class MapService {
     this.map.addControl(geoControl);
 
     geoControl.on('geolocate', this.onGeolocate);
+
+    const clearControl: ClearControl = new ClearControl(this.resolver, this);
+    this.map.addControl(clearControl, 'top-right');
+    console.log(this.map._controls);
   }
 
   /**
@@ -498,6 +507,14 @@ export class MapService {
           'line-width': 4,
         },
       });
+    }
+  }
+
+  public removeRouteLayer(): void {
+    const lineLayer: LineStyleLayer = <LineStyleLayer>this.map.getLayer(this.routeSourceName);
+
+    if (lineLayer) {
+      this.map.removeLayer(this.routeSourceName);
     }
   }
 
