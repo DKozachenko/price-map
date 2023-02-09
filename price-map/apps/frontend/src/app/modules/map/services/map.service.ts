@@ -12,6 +12,7 @@ import {
   GeoJSONSource,
   GeoJSONSourceSpecification,
   GeolocateControl,
+  IControl,
   LineStyleLayer,
   LngLatLike,
   Map,
@@ -147,10 +148,18 @@ export class MapService {
     this.map.addControl(geoControl);
 
     geoControl.on('geolocate', this.onGeolocate);
+  }
 
+  public addClearControl(): void {
     const clearControl: ClearControl = new ClearControl(this.resolver, this);
     this.map.addControl(clearControl, 'top-right');
-    console.log(this.map._controls);
+  }
+
+  public removeClearControl(): void {
+    const clearControl: ClearControl | undefined = <ClearControl | undefined>this.map._controls.find((control: IControl) => control instanceof ClearControl);
+    if (clearControl) {
+      this.map.removeControl(clearControl);
+    }
   }
 
   /**
@@ -508,6 +517,8 @@ export class MapService {
         },
       });
     }
+
+    this.addClearControl();
   }
 
   public removeRouteLayer(): void {
@@ -516,6 +527,8 @@ export class MapService {
     if (lineLayer) {
       this.map.removeLayer(this.routeSourceName);
     }
+
+    this.removeClearControl();
   }
 
   /**

@@ -1,10 +1,11 @@
 import { ComponentFactoryResolver, Injector } from "@angular/core";
-import { Map } from "maplibre-gl";
 import { ClearControlComponent } from "../components";
 import { MapService } from "../services";
+import {
+  IControl,
+} from 'maplibre-gl';
 
-export class ClearControl {
-  private map: Map | undefined;
+export class ClearControl implements IControl {
   private container: HTMLDivElement;
 
   constructor(private readonly resolver: ComponentFactoryResolver,
@@ -25,6 +26,5 @@ export class ClearControl {
 
   public onRemove() {
     this.container?.parentNode?.removeChild(this.container);
-    this.map = undefined;
   }
 }
