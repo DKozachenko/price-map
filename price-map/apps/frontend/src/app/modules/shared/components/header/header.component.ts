@@ -5,6 +5,7 @@ import { SettingsService, TokenService, WebSocketService } from '../../../../ser
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { User } from '@core/entities';
 import { UserEvents } from '@core/enums';
+import { delay } from 'rxjs';
 
 /**
  * Компонент шапки
