@@ -128,7 +128,7 @@ export class UsersGateway {
           updateInfo = {
             ...updateInfo,
             nickname: user.nickname
-          }
+          };
           return this.usersService.getByQuery({ mail: user.mail, id: Not(user.id) });
         }),
         switchMap((userWithSameMail: User | null) => {
@@ -140,17 +140,17 @@ export class UsersGateway {
           updateInfo = {
             ...updateInfo,
             mail: user.mail
-          }
+          };
 
           //Если с фронта пришел пароль, значит, он измененный, его нужно захешировать и обновить
           if (user.password) {
             return this.hashService.hashPassword(user.password)
-            .pipe(
-              catchError((e: Error) => {
-                errorCode = 'HASH_ERROR';
-                return throwError(() => new Error(`Error code: ${errorCode}, error: ${e}`)); 
-              }),
-            );
+              .pipe(
+                catchError((e: Error) => {
+                  errorCode = 'HASH_ERROR';
+                  return throwError(() => new Error(`Error code: ${errorCode}, error: ${e}`)); 
+                }),
+              );
           }
           //Если фронт ничего не прислал, значит, пароль менять не надо
           return of(null);
@@ -160,14 +160,14 @@ export class UsersGateway {
             updateInfo = {
               ...updateInfo,
               password: hashedPassword
-            }
+            };
           }
           
           updateInfo = {
             ...updateInfo,
             name: user.name,
             lastName: user.lastName,
-          }
+          };
 
           return this.usersService.updateById(user.id, updateInfo)
             .pipe(
@@ -178,7 +178,7 @@ export class UsersGateway {
             );
         }),
         switchMap((affectedRows: number) => {
-          Logger.log(`Обновление пользователя. Обновлено строк: ${affectedRows}`);
+          Logger.log('UsersGateway', `Обновление пользователя. Обновлено строк: ${affectedRows}`);
           return of({
             event: UserEvents.UpdateUserSuccessed,
             data: {
