@@ -1,18 +1,3 @@
-@import "../../../../../assets/styles/mixins";
-
 .clear-control span {
   background: no-repeat center / 80% url('../../../../../assets/close-outline.svg');;
-}
-
-::ng-deep.nb-theme-cosmic nb-tooltip {
-  padding: .5rem 1rem;
-  background-color: #151a30;
-
-  .arrow {
-    border-bottom-color: #151a30;
-  }
-  
-  .content {
-    @include font(1.2rem, white);
-  }
 }

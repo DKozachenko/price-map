@@ -7,7 +7,8 @@ import { CharacteristicFilterComponent,
   RouteReviewComponent, 
   ProductMiniCardComponent, 
   ProductPopupComponent, 
-  ClearControlComponent} from './components';
+  ClearControlComponent,
+  LayersControlComponent} from './components';
 import { MapRoutingModule } from './map-routing.module';
 import { FilterService, MapService, ProductService } from './services';
 import { NbCardModule, 
@@ -31,7 +32,8 @@ import { SharedModule } from '../shared/shared.module';
     CheckboxComponent,
     ProductMiniCardComponent,
     ProductPopupComponent,
-    ClearControlComponent
+    ClearControlComponent,
+    LayersControlComponent
   ],
   imports: [
     CommonModule,

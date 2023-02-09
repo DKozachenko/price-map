@@ -160,3 +160,18 @@ nb-toast {
     @include font(1.4rem, white, 700);
   }
 }
+
+//Cтили для контролы для слоев, цены, радиуса
+.mapboxgl-ctrl-top-left, 
+.maplibregl-ctrl-top-left {
+  left: initial;
+  right: 0;
+  margin-right: 1rem;
+}
+
+//Cтили для контролы для масштабирования, геолокации и очистки маршрута
+.mapboxgl-ctrl-top-right, 
+.maplibregl-ctrl-top-right {
+  top: 50%;
+  transform: translateY(-50%);
+}

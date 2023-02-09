@@ -1,4 +1,3 @@
-import { ClearControl } from './../controls/clear.control';
 import { ProductPopupComponent } from './../components/product-popup/product-popup.component';
 import {
   ComponentFactoryResolver,
@@ -26,6 +25,8 @@ import {
 import { ProductService } from '.';
 import { Product } from '@core/entities';
 import { IProductInfo } from '../models/interfaces';
+import { ClearControl, LayersControl } from '../controls';
+import { WebSocketService } from '../../../services';
 
 /**
  * Сервис по работе с картой
@@ -102,6 +103,7 @@ export class MapService {
   private unclusterPointLayerId: string = 'unclustered-point';
 
   constructor(private readonly productService: ProductService,
+    private readonly webSocketService: WebSocketService,
     private readonly resolver: ComponentFactoryResolver) { }
 
   /**
@@ -146,6 +148,9 @@ export class MapService {
       trackUserLocation: true,
     });
     this.map.addControl(geoControl);
+
+    const layersControl: LayersControl = new LayersControl(this.resolver, this, this.webSocketService);
+    this.map.addControl(layersControl, 'top-left');
 
     geoControl.on('geolocate', this.onGeolocate);
   }
