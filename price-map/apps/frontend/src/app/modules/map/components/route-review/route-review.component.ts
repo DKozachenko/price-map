@@ -22,19 +22,6 @@ import { delay } from 'rxjs';
 })
 export class RouteReviewComponent implements OnInit {
   /**
-   * Получение массива координат
-   * @private
-   * @return {*}  {ICoordinates[]} массив координат
-   * @memberof RouteReviewComponent
-   */
-  private getCoordinates(): ICoordinates[] {
-    return this.products.map((product: Product) => ({
-      latitude: product.shop.coordinates.latitude,
-      longitude: product.shop.coordinates.longitude
-    }));
-  }
-
-  /**
    * Товары, по которым нужно построить маршрут
    * @type {Product[]}
    * @memberof RouteReviewComponent
@@ -47,6 +34,19 @@ export class RouteReviewComponent implements OnInit {
    * @memberof RouteReviewComponent
    */
   public isCollapsed: boolean = true;
+
+  /**
+   * Получение массива координат
+   * @private
+   * @return {*}  {ICoordinates[]} массив координат
+   * @memberof RouteReviewComponent
+   */
+  private getCoordinates(): ICoordinates[] {
+    return this.products.map((product: Product) => ({
+      latitude: product.shop.coordinates.latitude,
+      longitude: product.shop.coordinates.longitude
+    }));
+  }
 
   constructor(private readonly productsService: ProductService,
     private readonly webSocketService: WebSocketService,
