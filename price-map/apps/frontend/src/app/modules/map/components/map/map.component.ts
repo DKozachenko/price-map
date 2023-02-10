@@ -1,10 +1,10 @@
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
-import { Product } from '@core/entities';
+import { Product, Shop } from '@core/entities';
 import { IResponseData, IProductQuery } from '@core/interfaces';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService, MapService, ProductService } from '../../services';
-import { ExternalEvents, ProductEvents } from '@core/enums';
+import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
 import { debounceTime } from 'rxjs';
 import { LayerType } from '../../models/types';
 
@@ -65,13 +65,21 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
 
+    this.webSocketService.on<IResponseData<null>>(ShopEvents.GetShopsFailed)
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+
+    this.webSocketService.on<IResponseData<Shop[]>>(ShopEvents.GetShopsSuccessed)
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<Shop[]>) => this.mapService.addShops(response.data));
+
     this.mapService.currentLayer$
       .pipe(untilDestroyed(this))
       .subscribe((layer: LayerType) => {
-        console.log(layer);
         this.isShowFilter = layer === 'products';
-        if (layer === 'shops') {
-          
+        this.mapService.removeAllLayers();
+        if (layer === 'shops') { 
+          this.webSocketService.emit<null>(ShopEvents.GetShopsAttempt);
         }
       })
 

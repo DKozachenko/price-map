@@ -24,8 +24,8 @@ import {
   SymbolStyleLayer
 } from 'maplibre-gl';
 import { ProductService } from '.';
-import { Product } from '@core/entities';
-import { IProductInfo } from '../models/interfaces';
+import { Product, Shop } from '@core/entities';
+import { IProductInfo, IShopInfo } from '../models/interfaces';
 import { ClearControl, LayersControl } from '../controls';
 import { WebSocketService } from '../../../services';
 import { LayerType } from '../models/types';
@@ -63,6 +63,9 @@ export class MapService {
    * @memberof MapService
    */
   private productsSourceName: string = 'products';
+
+  private shopsSourceName: string = 'shops';
+  private shopLayerId: string = 'shop';
 
   /**
    * Название источника данных для маршрута
@@ -133,6 +136,57 @@ export class MapService {
    */
   private onGeolocate(position: GeolocationPosition): void {
     console.log('GEOLOCATE', position.coords.latitude, position.coords.longitude);
+  }
+
+  public loadProductImage(): void {
+    this.map.loadImage(
+      '../../../../assets/wood.png',
+      (error: any, image: any) => {
+        if (error) throw error;
+        if (!this.map?.hasImage('shop')) {
+          if (image) {
+            this.map?.addImage('shop', image);
+          }
+        }
+      },
+    );
+  }
+
+  public loadShopImage(): void {
+    this.map.loadImage(
+      '../../../../assets/shop.png',
+      (error: any, image: any) => {
+        if (error) throw error;
+        if (!this.map?.hasImage('shop')) {
+          if (image) {
+            this.map?.addImage('shop', image);
+          }
+        }
+      },
+    );
+  }
+
+  public removeAllLayers(): void {
+    const clustersLayer: CircleStyleLayer = <CircleStyleLayer>this.map.getLayer(this.clusterLayerId);
+    if (clustersLayer) {
+      this.map.removeLayer(this.clusterLayerId);
+    }
+    const clusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.clusterCountLayerId);
+    if (clusterCountLayer) {
+      this.map.removeLayer(this.clusterCountLayerId);
+    }
+    const unclasteredPointLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.unclusterPointLayerId);
+    if (unclasteredPointLayer) {
+      this.map.removeLayer(this.unclusterPointLayerId);
+    }
+    const lineLayer: LineStyleLayer = <LineStyleLayer>this.map.getLayer(this.routeLayerId);
+    if (lineLayer) {
+      this.map.removeLayer(this.routeLayerId);
+    }
+    const shopLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.shopLayerId);
+    if (shopLayer) {
+      this.map.removeLayer(this.shopLayerId);
+    }
   }
 
   /**
@@ -287,7 +341,7 @@ export class MapService {
    * @return {*}  {Feature<Point, IProductInfo>} фича (координаты в формате {longitude},{latitude})
    * @memberof MapService
    */
-  private mapProducts(product: Product): Feature<Point, IProductInfo> {
+  private mapProduct(product: Product): Feature<Point, IProductInfo> {
     return {
       type: 'Feature',
       properties: {
@@ -306,6 +360,26 @@ export class MapService {
     };
   }
 
+  private mapShop(shop: Shop): Feature<Point, IShopInfo & { icon: string }> {
+    return {
+      type: 'Feature',
+      properties: {
+        id: shop.id,
+        name: shop.name,
+        imagePath: shop.imagePath ?? '',
+        productNumber: shop.products.length.toString(),
+        icon: 'shop'
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [
+          shop.coordinates.longitude,
+          shop.coordinates.latitude
+        ],
+      },
+    };
+  }
+
   /**
    * Установка фич для источника данных JSON
    * @private
@@ -313,7 +387,7 @@ export class MapService {
    * @return {*}  {GeoJSONSourceSpecification} источник данных с переданными фичами
    * @memberof MapService
    */
-  private setFeaturesToJsonSource(features: Feature<Point, IProductInfo>[]): GeoJSONSourceSpecification {
+  private setFeaturesToJsonSource(features: Feature<Point, IProductInfo | IShopInfo>[]): GeoJSONSourceSpecification {
     return {
       type: 'geojson',
       data: {
@@ -466,7 +540,7 @@ export class MapService {
    * @memberof MapService
    */
   private addProductsSource(products: Product[]): void {
-    const features: Feature<Point, IProductInfo>[] = products.map((product: Product) => this.mapProducts(product));
+    const features: Feature<Point, IProductInfo>[] = products.map((product: Product) => this.mapProduct(product));
     const actualSource: GeoJSONSourceSpecification = this.setFeaturesToJsonSource(features);
 
     const productsSource: GeoJSONSource | undefined = <GeoJSONSource | undefined>(
@@ -477,6 +551,21 @@ export class MapService {
       productsSource.setData(<GeoJSON.GeoJSON>actualSource.data);
     } else {
       this.map.addSource(this.productsSourceName, actualSource);
+    }
+  }
+
+  private addShopsSource(shops: Shop[]): void {
+    const features: Feature<Point, IShopInfo>[] = shops.map((shop: Shop) => this.mapShop(shop));
+    const actualSource: GeoJSONSourceSpecification = this.setFeaturesToJsonSource(features);
+
+    const shopsSource: GeoJSONSource | undefined = <GeoJSONSource | undefined>(
+      this.map.getSource(this.shopsSourceName)
+    );
+
+    if (shopsSource) {
+      shopsSource.setData(<GeoJSON.GeoJSON>actualSource.data);
+    } else {
+      this.map.addSource(this.shopsSourceName, actualSource);
     }
   }
 
@@ -507,7 +596,7 @@ export class MapService {
    * @memberof MapService
    */
   private addRouteLayer(): void {
-    const lineLayer: LineStyleLayer = <LineStyleLayer>this.map.getLayer(this.routeSourceName);
+    const lineLayer: LineStyleLayer = <LineStyleLayer>this.map.getLayer(this.routeLayerId);
 
     if (lineLayer) {
       lineLayer.source = this.routeSourceName;
@@ -528,6 +617,35 @@ export class MapService {
     }
 
     this.addClearControl();
+  }
+
+  private addShopsLayer(): void {
+    const shopLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.shopLayerId);
+
+    if (shopLayer) {
+      shopLayer.source = this.shopsSourceName;
+    } else {
+      this.map.addLayer({
+        id: this.shopLayerId,
+        type: 'symbol',
+        source: this.shopsSourceName,
+        layout: {
+          'icon-image': '{icon}',
+          'icon-overlap': 'always',
+          'text-field': [
+            'get', 
+            'name'
+          ],
+          'text-font': ['Consolas'],
+          'text-size': 14,
+          'text-offset': [
+            0, 
+            0.5
+          ],
+          'text-anchor': 'top'
+        }
+      });
+    }
   }
 
   public removeRouteLayer(): void {
@@ -577,6 +695,11 @@ export class MapService {
     this.addRouteLayer();
   }
 
+  public addShops(shops: Shop[]): void {
+    this.addShopsSource(shops);
+    this.addShopsLayer();
+  }
+
   /**
    * Инициализация карты (привязка к контейнеру, добавление контролов, установка событий на клики)
    * @param {ElementRef<HTMLElement>} container контейнер для карты
@@ -584,6 +707,7 @@ export class MapService {
    */
   public initMap(container: ElementRef<HTMLElement>): void {
     this.setMap(container);
+    this.loadShopImage();
     this.addControls();
     this.setClicks();
   }

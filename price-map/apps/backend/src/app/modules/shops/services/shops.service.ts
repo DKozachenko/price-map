@@ -30,7 +30,11 @@ export class ShopsService {
    * @memberof ProductsService
    */
   public getAll(): Observable<Shop[]> {
-    return from(this.shopRepository.find({}));
+    return from(this.shopRepository.find({
+      relations: {
+        products: true
+      }
+    }));
   }
 
 
