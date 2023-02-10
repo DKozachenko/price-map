@@ -1,5 +1,4 @@
 import { Subject } from 'rxjs';
-import { ProductPopupComponent } from './../components/product-popup/product-popup.component';
 import {
   ComponentFactoryResolver,
   ElementRef,
@@ -29,6 +28,7 @@ import { IProductInfo, IShopInfo } from '../models/interfaces';
 import { ClearControl, LayersControl } from '../controls';
 import { WebSocketService } from '../../../services';
 import { LayerType } from '../models/types';
+import { ShopPopupComponent, ProductPopupComponent } from '../components';
 
 /**
  * Сервис по работе с картой
@@ -288,7 +288,7 @@ export class MapService {
    * @return {*}  {HTMLDivElement} див
    * @memberof MapService
    */
-  private createPopupDomContent(productInfo: IProductInfo): HTMLDivElement {
+  private createProductPopupDomContent(productInfo: IProductInfo): HTMLDivElement {
     const componentFactory = this.resolver.resolveComponentFactory(ProductPopupComponent);
     // const injector = Injector.create({ providers: [{provide: ProductService, deps: []}] } );
     // const component = componentFactory.create(this.injector);
@@ -296,6 +296,14 @@ export class MapService {
     component.instance.productInfo = productInfo;
     //Своеобразный DI, тк через через конструктор не вышло
     component.instance.productService = this.productService;
+    component.changeDetectorRef.detectChanges();
+    return <HTMLDivElement>component.location.nativeElement;
+  }
+
+  private createShopPopupDomContent(shopInfo: IShopInfo): HTMLDivElement {
+    const componentFactory = this.resolver.resolveComponentFactory(ShopPopupComponent);
+    const component = componentFactory.create(Injector.create([]));
+    component.instance.shopInfo = shopInfo;
     component.changeDetectorRef.detectChanges();
     return <HTMLDivElement>component.location.nativeElement;
   }
@@ -317,8 +325,21 @@ export class MapService {
         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
       }
 
-      const content = this.createPopupDomContent(feature.properties);
-      const popup: Popup = new Popup({ className: 'product__popup' }).setLngLat(coordinates).setDOMContent(content);
+      const content = this.createProductPopupDomContent(feature.properties);
+      const popup: Popup = new Popup({ className: 'custom__popup' }).setLngLat(coordinates).setDOMContent(content);
+      popup.addTo(this.map);
+    });
+  }
+
+  private setShopPointClick(): void {
+    this.map.on('click', this.shopLayerId, (e: MapLayerMouseEvent) => {
+      console.log('shop-layer', e);
+      const feature: Feature<Point, IShopInfo> = <Feature<Point, IShopInfo>>e.features?.[0];
+      const geometry: Point = feature?.geometry;
+      const coordinates: [number, number] = <[number, number]>geometry?.coordinates?.slice();
+
+      const content = this.createShopPopupDomContent(feature.properties);
+      const popup: Popup = new Popup({ className: 'custom__popup' }).setLngLat(coordinates).setDOMContent(content);
       popup.addTo(this.map);
     });
   }
@@ -332,6 +353,7 @@ export class MapService {
     this.setClusterClick();
     this.setClusterCountClick();
     this.setUnclusteredPointClick();
+    this.setShopPointClick();
   }
 
   /**
@@ -368,6 +390,8 @@ export class MapService {
         name: shop.name,
         imagePath: shop.imagePath ?? '',
         productNumber: shop.products.length.toString(),
+        organizationDescription: shop.organization.description,
+        organizationWebsite: shop.organization.website ?? '',
         icon: 'shop'
       },
       geometry: {
@@ -640,7 +664,7 @@ export class MapService {
           'text-size': 14,
           'text-offset': [
             0, 
-            0.5
+            0.75
           ],
           'text-anchor': 'top'
         }

@@ -1,17 +1,6 @@
 @import "../../../../../assets/styles/mixins";
 
 .popup__card {
-  margin-bottom: 0;
-
-  nb-card-header {
-    @include font(1.6rem, white);
-    padding-right: 3rem;
-  }
-
-  nb-card-body {
-    @include font(1.4rem, white);
-  }
-
   nb-card-footer {
     display: flex;
     justify-content: space-between;

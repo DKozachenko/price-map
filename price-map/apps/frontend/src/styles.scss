@@ -32,10 +32,24 @@ body {
 }
 
 // Стили для попапа на карте
-.product__popup {
+.custom__popup {
   .mapboxgl-popup-content,
   .maplibregl-popup-content {
     padding: 0;
+  }
+}
+
+.popup__card {
+  margin-bottom: 0!important;
+
+  nb-card-header {
+    @include font(1.6rem, white);
+    padding-right: 3rem;
+  }
+
+  nb-card-body,
+  nb-card-body p {
+    @include font(1.4rem, white);
   }
 }
 
