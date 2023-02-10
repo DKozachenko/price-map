@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs';
 import { ProductPopupComponent } from './../components/product-popup/product-popup.component';
 import {
   ComponentFactoryResolver,
@@ -27,6 +28,7 @@ import { Product } from '@core/entities';
 import { IProductInfo } from '../models/interfaces';
 import { ClearControl, LayersControl } from '../controls';
 import { WebSocketService } from '../../../services';
+import { LayerType } from '../models/types';
 
 /**
  * Сервис по работе с картой
@@ -101,6 +103,8 @@ export class MapService {
    * @memberof MapService
    */
   private unclusterPointLayerId: string = 'unclustered-point';
+
+  public currentLayer$: Subject<LayerType> = new Subject<LayerType>();
 
   constructor(private readonly productService: ProductService,
     private readonly webSocketService: WebSocketService,

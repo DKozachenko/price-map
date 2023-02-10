@@ -6,6 +6,7 @@ import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService, MapService, ProductService } from '../../services';
 import { ExternalEvents, ProductEvents } from '@core/enums';
 import { debounceTime } from 'rxjs';
+import { LayerType } from '../../models/types';
 
 /**
  * Компонент карты
@@ -37,6 +38,8 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
    */
   public isShowRouteReview: boolean = false;
 
+  public isShowFilter: boolean = true;
+
 
 
   constructor(private readonly webSocketService: WebSocketService,
@@ -61,6 +64,17 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     this.webSocketService.on<IResponseData<null>>(ExternalEvents.BuildRouteFailed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+
+    this.mapService.currentLayer$
+      .pipe(untilDestroyed(this))
+      .subscribe((layer: LayerType) => {
+        console.log(layer);
+        this.isShowFilter = layer === 'products';
+        if (layer === 'shops') {
+          
+        }
+      })
+
 
     this.productService.productIdsToRoute$
       .pipe(untilDestroyed(this))

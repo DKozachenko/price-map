@@ -1,6 +1,5 @@
 <div class="mapboxgl-ctrl layers-control">
-  <nb-select status="basic" size="large" shape="semi-round" (selectedChange)="changeLayer($event)">
-    <nb-option [value]="null">Очистить</nb-option>
+  <nb-select status="basic" size="large" shape="semi-round" (selectedChange)="changeLayer($event)" [(selected)]="layer">
     <nb-option [value]="'products'">Товары</nb-option>
     <nb-option [value]="'shops'">Магазины</nb-option>
   </nb-select>
