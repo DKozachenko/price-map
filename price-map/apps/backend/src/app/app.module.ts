@@ -1,6 +1,6 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ScrapingModule, AuthModule, UsersModule, ProductsModule, CategoriesModule, ExternalModule } from './modules';
+import { ScrapingModule, AuthModule, UsersModule, ProductsModule, CategoriesModule, ExternalModule, ShopsModule } from './modules';
 import { ScrapingService } from './modules/scraping/services';
 import { Organization,
   Shop,
@@ -9,7 +9,6 @@ import { Organization,
   Category1Level,
   Category2Level,
   Category3Level } from '@core/entities';
-import * as fs from 'fs';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AppGateway } from './gateways';
 import { secretKey } from './models/constants';
@@ -29,6 +28,7 @@ import { HashService } from './services';
     CategoriesModule,
     ScrapingModule,
     ExternalModule,
+    ShopsModule,
     //TODO: Добавить свой логгер
     //TODO: Миграции
     TypeOrmModule.forRoot({
