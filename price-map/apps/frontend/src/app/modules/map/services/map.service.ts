@@ -642,6 +642,10 @@ export class MapService {
           'line-width': 4,
         },
       });
+
+      //Перемещаем слой с маршрутом "под" кластеризованный слой
+      const clustersLayer: CircleStyleLayer = <CircleStyleLayer>this.map.getLayer(this.clusterLayerId);
+      this.map.moveLayer(this.routeLayerId, clustersLayer ? this.clusterLayerId : undefined); 
     }
 
     this.addClearControl();

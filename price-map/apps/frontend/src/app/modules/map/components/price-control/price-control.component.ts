@@ -12,8 +12,14 @@ export class PriceControlComponent implements OnInit {
   public filterService: FilterService; 
 
   public ngOnInit(): void {
+    this.initSlider();
+  }
+
+  private initSlider(): void {
+    // Без подписки на DOMContentLoaded не работает
     document.addEventListener('DOMContentLoaded', () => {
-      (<any>$('#slider')).roundSlider({
+      const slider: JQuery<HTMLDivElement> = $('#slider');
+      (<any>slider).roundSlider({
         radius: 50,
         circleShape: "pie",
         sliderType: "min-range",
@@ -28,18 +34,16 @@ export class PriceControlComponent implements OnInit {
         borderWidth: 0,
         pathColor: 'white',
         rangeColor: '#a16eff',
-        tooltipColor: 'black',
-        change: "traceEvent",
-        drag: "traceEvent"
+        tooltipColor: 'black'
       });
 
-      function traceEvent(e: any) {
-        console.log(e.type);
-      }
-    })
+      //Теряет контекст, поэтому напрямую передаем
+      slider.on('change', this.changePrice.bind(this));
+    });
   }
 
-  public traceEvent(e: any) {
-    console.log(e);
+  private changePrice(e: any) {
+    const price: number = e.options.value;
+    this.filterService.currentMaxPrice$.next(price);
   }
 }

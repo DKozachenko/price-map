@@ -77,6 +77,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((layer: LayerType) => {
         this.isShowFilter = layer === 'products';
+        this.isShowRouteReview = layer === 'products';
         this.mapService.removeAllLayers();
         if (layer === 'shops') { 
           this.webSocketService.emit<null>(ShopEvents.GetShopsAttempt);
@@ -96,12 +97,14 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
           filters: []
         }));
 
-    this.filterService.filterValues$
+    this.filterService.currentMaxPrice$
       .pipe(
         debounceTime(400),
         untilDestroyed(this)
       )
-      .subscribe((data) => console.log('filterValues', data));
+      .subscribe((price: number) => {
+        console.log('Price', price);
+      });
   }
 
   public ngAfterViewInit() {
