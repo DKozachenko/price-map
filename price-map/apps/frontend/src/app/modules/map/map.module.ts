@@ -9,7 +9,8 @@ import { CharacteristicFilterComponent,
   ProductPopupComponent, 
   ClearControlComponent,
   LayersControlComponent,
-  ShopPopupComponent } from './components';
+  ShopPopupComponent, 
+  PriceControlComponent} from './components';
 import { MapRoutingModule } from './map-routing.module';
 import { FilterService, MapService, ProductService } from './services';
 import { NbCardModule, 
@@ -35,7 +36,8 @@ import { SharedModule } from '../shared/shared.module';
     ProductPopupComponent,
     ShopPopupComponent,
     ClearControlComponent,
-    LayersControlComponent
+    LayersControlComponent,
+    PriceControlComponent
   ],
   imports: [
     CommonModule,

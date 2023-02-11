@@ -21,4 +21,6 @@ export class FilterService {
    * @memberof FilterService
    */
   public filterValues$: Subject<IUserFilter[]> = new Subject<IUserFilter[]>();
-}
+
+  public currentMaxPrice$: Subject<number> = new Subject<number>();
+};

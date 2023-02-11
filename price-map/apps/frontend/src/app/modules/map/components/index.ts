@@ -8,3 +8,4 @@ export { ProductPopupComponent } from './product-popup/product-popup.component';
 export { ShopPopupComponent } from './shop-popup/shop-popup.component';
 export { ClearControlComponent } from './clear-control/clear-control.component';
 export { LayersControlComponent } from './layers-control/layers-control.component';
+export { PriceControlComponent } from './price-control/price-control.component';

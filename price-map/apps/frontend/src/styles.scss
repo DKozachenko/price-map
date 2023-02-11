@@ -179,8 +179,10 @@ nb-toast {
 .mapboxgl-ctrl-top-left, 
 .maplibregl-ctrl-top-left {
   left: initial;
-  right: 0;
+  right: 3rem;
   margin-right: 1rem;
+
+  display: flex;
 }
 
 //Cтили для контролы для масштабирования, геолокации и очистки маршрута

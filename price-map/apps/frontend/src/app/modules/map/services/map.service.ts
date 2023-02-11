@@ -22,10 +22,10 @@ import {
   Popup,
   SymbolStyleLayer
 } from 'maplibre-gl';
-import { ProductService } from '.';
+import { FilterService, ProductService } from '.';
 import { Product, Shop } from '@core/entities';
 import { IProductInfo, IShopInfo } from '../models/interfaces';
-import { ClearControl, LayersControl } from '../controls';
+import { ClearControl, LayersControl, PriceControl } from '../controls';
 import { WebSocketService } from '../../../services';
 import { LayerType } from '../models/types';
 import { ShopPopupComponent, ProductPopupComponent } from '../components';
@@ -111,6 +111,7 @@ export class MapService {
 
   constructor(private readonly productService: ProductService,
     private readonly webSocketService: WebSocketService,
+    private readonly filterService: FilterService,
     private readonly resolver: ComponentFactoryResolver) { }
 
   /**
@@ -209,6 +210,9 @@ export class MapService {
 
     const layersControl: LayersControl = new LayersControl(this.resolver, this, this.webSocketService);
     this.map.addControl(layersControl, 'top-left');
+
+    const priceControl: PriceControl = new PriceControl(this.resolver, this.filterService);
+    this.map.addControl(priceControl, 'top-left');
 
     geoControl.on('geolocate', this.onGeolocate);
   }
