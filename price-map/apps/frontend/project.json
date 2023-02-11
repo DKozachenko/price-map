@@ -19,9 +19,13 @@
         "styles": [
           "apps/frontend/src/styles.scss",
           "apps/frontend/src/assets/styles/reset.scss",
-          "node_modules/@nebular/theme/styles/prebuilt/cosmic.scss"
+          "node_modules/@nebular/theme/styles/prebuilt/cosmic.scss",
+          "node_modules/round-slider/dist/roundslider.min.css"
         ],
-        "scripts": []
+        "scripts": [
+          "node_modules/jquery/dist/jquery.min.js",
+          "node_modules/round-slider/dist/roundslider.min.js"
+        ]
       },
       "configurations": {
         "production": {

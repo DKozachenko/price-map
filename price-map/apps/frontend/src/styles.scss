@@ -180,9 +180,9 @@ nb-toast {
 .maplibregl-ctrl-top-left {
   left: initial;
   right: 3rem;
-  margin-right: 1rem;
 
   display: flex;
+  align-items: center;
 }
 
 //Cтили для контролы для масштабирования, геолокации и очистки маршрута
