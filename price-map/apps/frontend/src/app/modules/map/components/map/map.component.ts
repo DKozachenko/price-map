@@ -1,7 +1,7 @@
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Product, Shop } from '@core/entities';
-import { IResponseData, IProductQuery } from '@core/interfaces';
+import { IResponseData, IProductQuery, IPriceQuery } from '@core/interfaces';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService, MapService, ProductService } from '../../services';
 import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
@@ -79,10 +79,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
         this.isShowFilter = layer === 'products';
         this.isShowRouteReview = layer === 'products';
         this.mapService.removeAllLayers();
-        if (layer === 'shops') { 
+        if (layer === 'shops') {
           this.webSocketService.emit<null>(ShopEvents.GetShopsAttempt);
         }
-      })
+      });
 
 
     this.productService.productIdsToRoute$
@@ -91,20 +91,28 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.filterService.chechedCategory3LevelIds$
       .pipe(untilDestroyed(this))
-      .subscribe((data: Set<string>) =>
+      .subscribe((data: Set<string>) => {
+        console.log('123', {
+          category3LevelIds: [...data],
+          filters: [],
+          price: this.filterService.priceQuery
+        });
         this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
           category3LevelIds: [...data],
-          filters: []
-        }));
-
-    this.filterService.currentMaxPrice$
-      .pipe(
-        debounceTime(400),
-        untilDestroyed(this)
-      )
-      .subscribe((price: number) => {
-        console.log('Price', price);
+          filters: [],
+          price: this.filterService.priceQuery
+        });
       });
+
+
+    // this.filterService.currentMaxPrice$
+    //   .pipe(
+    //     debounceTime(400),
+    //     untilDestroyed(this)
+    //   )
+    //   .subscribe((price: IPriceQuery) => {
+    //     console.log('Price', price);
+    //   });
   }
 
   public ngAfterViewInit() {

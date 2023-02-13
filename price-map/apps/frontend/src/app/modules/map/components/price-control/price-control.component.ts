@@ -9,7 +9,7 @@ import 'round-slider';
   styleUrls: ['./price-control.component.scss']
 })
 export class PriceControlComponent implements OnInit {
-  public filterService: FilterService; 
+  public filterService: FilterService;
 
   public ngOnInit(): void {
     this.initSlider();
@@ -21,8 +21,8 @@ export class PriceControlComponent implements OnInit {
       const slider: JQuery<HTMLDivElement> = $('#slider');
       (<any>slider).roundSlider({
         radius: 50,
-        circleShape: "pie",
-        sliderType: "min-range",
+        circleShape: 'pie',
+        sliderType: 'min-range',
         showTooltip: true,
         editableTooltip: false,
         handleSize: '+7',
@@ -44,6 +44,9 @@ export class PriceControlComponent implements OnInit {
 
   private changePrice(e: any) {
     const price: number = e.options.value;
-    this.filterService.currentMaxPrice$.next(price);
+    this.filterService.addPriceQuery({
+      max: price,
+      min: null
+    });
   }
 }

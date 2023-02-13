@@ -1,12 +1,12 @@
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { IFilter, IProductQuery, IResponseData, IUserFilter } from '@core/interfaces';
+import { IFilter, IPriceQuery, IProductQuery, IResponseData, IUserFilter } from '@core/interfaces';
 import { Component, OnInit } from '@angular/core';
 import { RangeFilterIndex } from '@core/types';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService } from '../../services';
 import { Category3Level } from '@core/entities';
 import { CategoryEvents, ProductEvents } from '@core/enums';
-import { debounceTime } from 'rxjs';
+import { combineLatest, combineLatestAll, concat, debounceTime, forkJoin, merge, withLatestFrom, zip } from 'rxjs';
 
 /**
  * Компонент фильтра для определенной категории 3 уровня
@@ -57,17 +57,35 @@ export class CharacteristicFilterComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Category3Level>) => this.category3Level = response.data);
 
-    this.filterService.filterValues$
-      .pipe(
-        debounceTime(400),
-        untilDestroyed(this)
-      )
-      .subscribe((data: IUserFilter[]) => {
-        this.webSocketSevice.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
-          category3LevelIds: [this.category3Level.id],
-          filters: data
-        });
+    combineLatest([
+      this.filterService.filterValues$.asObservable(),
+      this.filterService.currentMaxPrice$.asObservable()
+    ])
+      .subscribe(([filters, priceQuery]: [IUserFilter[], IPriceQuery]) => {
+        console.log(filters, priceQuery);
       });
+
+    this.filterService.currentMaxPrice$
+      .subscribe(data => console.warn(1, data));
+
+
+    // this.filterService.filterValues$
+    //   .pipe(
+    //     debounceTime(400),
+    //     untilDestroyed(this)
+    //   )
+    //   .subscribe((data: IUserFilter[]) => {
+    //     console.log('456', {
+    //       category3LevelIds: [this.category3Level.id],
+    //       filters: data,
+    //       price: this.filterService.priceQuery
+    //     });
+    //     this.webSocketSevice.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
+    //       category3LevelIds: [this.category3Level.id],
+    //       filters: data,
+    //       price: this.filterService.priceQuery
+    //     });
+    //   });
   }
 
   /**

@@ -1,4 +1,4 @@
-import { IUserFilter } from '.';
+import { IPriceQuery, IUserFilter } from '.';
 
 /**
  * Интерфейс запроса для товаров
@@ -6,7 +6,7 @@ import { IUserFilter } from '.';
  * @interface IProductQuery
  */
 export interface IProductQuery {
-  [key: string]: string[] | IUserFilter[],
+  [key: string]: string[] | IUserFilter[] | IPriceQuery,
   /**
    * Id категорий 3 уровня
    * @type {(string[])}
@@ -18,5 +18,6 @@ export interface IProductQuery {
    * @type {(IUserFilter[])}
    * @memberof IProductQuery
    */
-  filters: IUserFilter[]
+  filters: IUserFilter[],
+  price: IPriceQuery
 }
