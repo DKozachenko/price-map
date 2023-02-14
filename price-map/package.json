@@ -7,6 +7,7 @@
     "postinstall": "node ./decorate-angular-cli.js",
     "start:front": "nx serve frontend",
     "start:back": "nx serve backend",
+    "start:scraper": "cd ./apps/scraper/scraper && poetry run python index.py",
     "build:front": "nx build frontend",
     "build:back": "nx build backend",
     "lint:front": "nx lint frontend",
