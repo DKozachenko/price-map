@@ -7,6 +7,7 @@ import { FilterService, MapService, ProductService } from '../../services';
 import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
 import { debounceTime } from 'rxjs';
 import { LayerType } from '../../models/types';
+import { customCombineLastest } from '../operators';
 
 /**
  * Компонент карты
@@ -89,30 +90,18 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((data) => this.isShowRouteReview = data.size > 0);
 
-    this.filterService.chechedCategory3LevelIds$
+    customCombineLastest([
+      this.filterService.chechedCategory3LevelIds$,
+      this.filterService.currentMaxPrice$
+    ])
       .pipe(untilDestroyed(this))
-      .subscribe((data: Set<string>) => {
-        console.log('123', {
-          category3LevelIds: [...data],
-          filters: [],
-          price: this.filterService.priceQuery
-        });
+      .subscribe(([ids, priceQuery]: any[]) => {
         this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
-          category3LevelIds: [...data],
+          category3LevelIds: [...ids],
           filters: [],
-          price: this.filterService.priceQuery
+          price: priceQuery ?? { max: null, min: null }
         });
       });
-
-
-    // this.filterService.currentMaxPrice$
-    //   .pipe(
-    //     debounceTime(400),
-    //     untilDestroyed(this)
-    //   )
-    //   .subscribe((price: IPriceQuery) => {
-    //     console.log('Price', price);
-    //   });
   }
 
   public ngAfterViewInit() {

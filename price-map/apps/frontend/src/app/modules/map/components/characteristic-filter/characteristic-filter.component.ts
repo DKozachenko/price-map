@@ -7,6 +7,7 @@ import { FilterService } from '../../services';
 import { Category3Level } from '@core/entities';
 import { CategoryEvents, ProductEvents } from '@core/enums';
 import { combineLatest, combineLatestAll, concat, debounceTime, forkJoin, merge, withLatestFrom, zip } from 'rxjs';
+import { customCombineLastest } from '../operators';
 
 /**
  * Компонент фильтра для определенной категории 3 уровня
@@ -57,35 +58,18 @@ export class CharacteristicFilterComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Category3Level>) => this.category3Level = response.data);
 
-    combineLatest([
-      this.filterService.filterValues$.asObservable(),
-      this.filterService.currentMaxPrice$.asObservable()
+    customCombineLastest([
+      this.filterService.filterValues$.pipe(debounceTime(400)),
+      this.filterService.currentMaxPrice$
     ])
-      .subscribe(([filters, priceQuery]: [IUserFilter[], IPriceQuery]) => {
-        console.log(filters, priceQuery);
+      .pipe(untilDestroyed(this))
+      .subscribe(([filters, priceQuery]: any[]) => {
+        this.webSocketSevice.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
+          category3LevelIds: [this.category3Level.id],
+          filters: filters ?? [],
+          price: priceQuery ?? { max: null, min: null }
+        });
       });
-
-    this.filterService.currentMaxPrice$
-      .subscribe(data => console.warn(1, data));
-
-
-    // this.filterService.filterValues$
-    //   .pipe(
-    //     debounceTime(400),
-    //     untilDestroyed(this)
-    //   )
-    //   .subscribe((data: IUserFilter[]) => {
-    //     console.log('456', {
-    //       category3LevelIds: [this.category3Level.id],
-    //       filters: data,
-    //       price: this.filterService.priceQuery
-    //     });
-    //     this.webSocketSevice.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
-    //       category3LevelIds: [this.category3Level.id],
-    //       filters: data,
-    //       price: this.filterService.priceQuery
-    //     });
-    //   });
   }
 
   /**

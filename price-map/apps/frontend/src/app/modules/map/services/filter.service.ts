@@ -24,9 +24,9 @@ export class FilterService {
    * @type {Subject<IUserFilter[]>}
    * @memberof FilterService
    */
-  public filterValues$: BehaviorSubject<IUserFilter[]> = new BehaviorSubject<IUserFilter[]>([]);
+  public filterValues$: Subject<IUserFilter[]> = new Subject<IUserFilter[]>();
 
-  public currentMaxPrice$: BehaviorSubject<IPriceQuery> = new BehaviorSubject<IPriceQuery>(this.priceQuery);
+  public currentMaxPrice$: Subject<IPriceQuery> = new Subject<IPriceQuery>();
 
   public addPriceQuery(price: IPriceQuery): void {
     this.priceQuery = price;
