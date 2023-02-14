@@ -99,7 +99,7 @@ export class ProductsGateway {
               errorCode: <DbErrorCode>'DB_ERROR',
               isError: false,
               data: null,
-              message: 'Ошибка при получении товаров'
+              message: 'Ошибка при получении товара'
             }
           });
         })

@@ -9,3 +9,4 @@ export { IUserLoginInfo } from './user-login-info.interface';
 export { IPayload } from './payload-interface';
 export { IUserFilter } from './user-filter.interface';
 export { IProductQuery } from './product-query.interface';
+export { IPriceQuery } from './price-query.interface';

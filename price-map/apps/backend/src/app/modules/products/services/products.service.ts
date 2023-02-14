@@ -3,9 +3,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '@core/entities';
-import { In, Repository } from 'typeorm';
+import { Between, FindOperator, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { from, iif, Observable, of, switchMap } from 'rxjs';
-import { IProductQuery, IUserFilter } from '@core/interfaces';
+import { IPriceQuery, IProductQuery, IUserFilter } from '@core/interfaces';
 
 /**
  * Сервис товаров
@@ -94,6 +94,20 @@ export class ProductsService {
   )`;
   }
 
+  private generateWhereSql(priceQuery: IPriceQuery): string {
+    if (!priceQuery.max && !priceQuery.min) {
+      return '';
+    }
+    if (priceQuery.max && priceQuery.min) {
+      return `WHERE p."price" <= ${priceQuery.max} AND p."price" >= ${priceQuery.min}`;
+    }
+    if (priceQuery.max && !priceQuery.min) {
+      return `WHERE p."price" <= ${priceQuery.max}`;
+    }
+
+    return `WHERE p."price" >= ${priceQuery.min}`;
+  }
+
   /**
    * Генерация SQL запроса для товаров
    * @private
@@ -103,6 +117,8 @@ export class ProductsService {
    */
   private generateSql(query: IProductQuery): string {
     const withSql: string = this.generateWithSql(query);
+    const whereSql: string = this.generateWhereSql(query.price);
+    console.log(whereSql);
     return `${withSql}
     SELECT p."id", p."name", p."description", p."price", p."characteristics", p."imagePath",
     json_build_object('id', s."id", 'name', s."name", 'schedule', s."schedule", 'imagePath',
@@ -111,7 +127,22 @@ export class ProductsService {
     FROM approachIds
     INNER JOIN "Products" p ON approachIds."id" = p."id"
     INNER JOIN "Shops" s ON p."shopId" = s."id"
-    INNER JOIN "Categories3Level" cl ON p."category3LevelId" = cl."id";`;
+    INNER JOIN "Categories3Level" cl ON p."category3LevelId" = cl."id"
+    ${whereSql ? whereSql : ''};`;
+  }
+
+  private generatePriceFindOperator(priceQuery: IPriceQuery): FindOperator<number> {
+    if (!priceQuery.max && !priceQuery.min) {
+      return undefined;
+    }
+    if (priceQuery.max && priceQuery.min) {
+      return Between(priceQuery.min, priceQuery.max);
+    }
+    if (priceQuery.max && !priceQuery.min) {
+      return LessThanOrEqual(priceQuery.max);
+    }
+
+    return MoreThanOrEqual(priceQuery.min);
   }
 
   /**
@@ -127,11 +158,13 @@ export class ProductsService {
       return from(this.productRepository.query(sqlQuery));
     }
 
+    const priceFindOperator: FindOperator<number> = this.generatePriceFindOperator(query.price);
     return from(this.productRepository.find({
       where: {
         category3Level: {
           id: In(query.category3LevelIds)
-        }
+        },
+        price: priceFindOperator
       },
       relations: {
         shop: true,

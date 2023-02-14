@@ -1,11 +1,13 @@
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
-import { Product } from '@core/entities';
-import { IResponseData, IProductQuery } from '@core/interfaces';
+import { Product, Shop } from '@core/entities';
+import { IResponseData, IProductQuery, IPriceQuery } from '@core/interfaces';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService, MapService, ProductService } from '../../services';
-import { ExternalEvents, ProductEvents } from '@core/enums';
+import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
 import { debounceTime } from 'rxjs';
+import { LayerType } from '../../models/types';
+import { customCombineLastest } from '../operators';
 
 /**
  * Компонент карты
@@ -37,6 +39,8 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
    */
   public isShowRouteReview: boolean = false;
 
+  public isShowFilter: boolean = true;
+
 
 
   constructor(private readonly webSocketService: WebSocketService,
@@ -62,24 +66,42 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
 
+    this.webSocketService.on<IResponseData<null>>(ShopEvents.GetShopsFailed)
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+
+    this.webSocketService.on<IResponseData<Shop[]>>(ShopEvents.GetShopsSuccessed)
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<Shop[]>) => this.mapService.addShops(response.data));
+
+    this.mapService.currentLayer$
+      .pipe(untilDestroyed(this))
+      .subscribe((layer: LayerType) => {
+        this.isShowFilter = layer === 'products';
+        this.isShowRouteReview = layer === 'products';
+        this.mapService.removeAllLayers();
+        if (layer === 'shops') {
+          this.webSocketService.emit<null>(ShopEvents.GetShopsAttempt);
+        }
+      });
+
+
     this.productService.productIdsToRoute$
       .pipe(untilDestroyed(this))
       .subscribe((data) => this.isShowRouteReview = data.size > 0);
 
-    this.filterService.chechedCategory3LevelIds$
+    customCombineLastest([
+      this.filterService.chechedCategory3LevelIds$,
+      this.filterService.currentMaxPrice$
+    ])
       .pipe(untilDestroyed(this))
-      .subscribe((data: Set<string>) =>
+      .subscribe(([ids, priceQuery]: any[]) => {
         this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
-          category3LevelIds: [...data],
-          filters: []
-        }));
-
-    this.filterService.filterValues$
-      .pipe(
-        debounceTime(400),
-        untilDestroyed(this)
-      )
-      .subscribe((data) => console.log('filterValues', data));
+          category3LevelIds: [...ids],
+          filters: [],
+          price: priceQuery ?? { max: null, min: null }
+        });
+      });
   }
 
   public ngAfterViewInit() {

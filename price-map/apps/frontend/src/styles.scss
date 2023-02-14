@@ -32,10 +32,24 @@ body {
 }
 
 // Стили для попапа на карте
-.product__popup {
+.custom__popup {
   .mapboxgl-popup-content,
   .maplibregl-popup-content {
     padding: 0;
+  }
+}
+
+.popup__card {
+  margin-bottom: 0!important;
+
+  nb-card-header {
+    @include font(1.6rem, white);
+    padding-right: 3rem;
+  }
+
+  nb-card-body,
+  nb-card-body p {
+    @include font(1.4rem, white);
   }
 }
 
@@ -159,4 +173,21 @@ nb-toast {
   .message {
     @include font(1.4rem, white, 700);
   }
+}
+
+//Cтили для контролы для слоев, цены, радиуса
+.mapboxgl-ctrl-top-left, 
+.maplibregl-ctrl-top-left {
+  left: initial;
+  right: 25rem;
+
+  display: flex;
+  align-items: center;
+}
+
+//Cтили для контролы для масштабирования, геолокации и очистки маршрута
+.mapboxgl-ctrl-top-right, 
+.maplibregl-ctrl-top-right {
+  top: 50%;
+  transform: translateY(-50%);
 }

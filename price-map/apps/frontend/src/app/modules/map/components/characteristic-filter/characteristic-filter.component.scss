@@ -86,7 +86,7 @@
   nb-option-list {
     border-color: #a16eff;
   
-    &.size-medium nb-option {
+    &.size-medium nb-option.multiple {
       @include font(1.25rem, white);
       padding: 0.6rem 1rem!important;
       align-items: center;

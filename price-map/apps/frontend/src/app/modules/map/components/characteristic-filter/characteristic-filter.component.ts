@@ -1,12 +1,13 @@
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { IFilter, IProductQuery, IResponseData, IUserFilter } from '@core/interfaces';
+import { IFilter, IPriceQuery, IProductQuery, IResponseData, IUserFilter } from '@core/interfaces';
 import { Component, OnInit } from '@angular/core';
 import { RangeFilterIndex } from '@core/types';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService } from '../../services';
 import { Category3Level } from '@core/entities';
 import { CategoryEvents, ProductEvents } from '@core/enums';
-import { debounceTime } from 'rxjs';
+import { combineLatest, combineLatestAll, concat, debounceTime, forkJoin, merge, withLatestFrom, zip } from 'rxjs';
+import { customCombineLastest } from '../operators';
 
 /**
  * Компонент фильтра для определенной категории 3 уровня
@@ -57,15 +58,16 @@ export class CharacteristicFilterComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Category3Level>) => this.category3Level = response.data);
 
-    this.filterService.filterValues$
-      .pipe(
-        debounceTime(400),
-        untilDestroyed(this)
-      )
-      .subscribe((data: IUserFilter[]) => {
+    customCombineLastest([
+      this.filterService.filterValues$.pipe(debounceTime(400)),
+      this.filterService.currentMaxPrice$
+    ])
+      .pipe(untilDestroyed(this))
+      .subscribe(([filters, priceQuery]: any[]) => {
         this.webSocketSevice.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
           category3LevelIds: [this.category3Level.id],
-          filters: data
+          filters: filters ?? [],
+          price: priceQuery ?? { max: null, min: null }
         });
       });
   }

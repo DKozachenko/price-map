@@ -1,0 +1,16 @@
+@import "../../../../../assets/styles/mixins";
+
+#slider {
+  margin-left: 2rem;
+}
+
+::ng-deep #slider {
+  .rs-handle  {
+    background-color: #fff;
+    border: 5px solid #a16eff;
+  }
+
+  .rs-tooltip {
+    @include font(1.5rem, #333);
+  }
+}
