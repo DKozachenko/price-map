@@ -4,6 +4,9 @@
   "affected": {
     "defaultBase": "master"
   },
+  "plugins": [
+    "@nxlv/python"
+  ],
   "tasksRunnerOptions": {
     "default": {
       "runner": "@nrwl/nx-cloud",
