@@ -1,0 +1,32 @@
+[tool.coverage.run]
+branch = true
+source = [ "scraper" ]
+
+[tool.coverage.report]
+exclude_lines = ['if TYPE_CHECKING:']
+show_missing = true
+
+[tool.pytest.ini_options]
+addopts = "--cov --cov-fail-under=100 --cov-report html:'../../coverage/apps/scraper/html' --cov-report xml:'../../coverage/apps/scraper/coverage.xml' --junitxml='../../reports/apps/scraper/unittests/junit.xml' --html='../../reports/apps/scraper/unittests/html/index.html'"
+
+[tool.poetry]
+name = "scraper_package"
+version = "1.0.0"
+description = ""
+authors = [ ]
+license = 'MIT'
+readme = 'README.md'
+
+  [[tool.poetry.packages]]
+  include = "scraper"
+
+  [tool.poetry.dependencies]
+  python = ">=3.10"
+  selenium = "^4.8.0"
+  selenium-stealth = "^1.0.6"
+
+  
+
+[build-system]
+requires = ["poetry-core==1.1.0"]
+build-backend = "poetry.core.masonry.api"
