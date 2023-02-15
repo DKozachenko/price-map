@@ -2,8 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 
-from models.max_get_url_attempts_constant import MAX_GET_URL_ATTEMPTS
-from models.driver_path_constant import DRIVER_PATH
+from models.max_get_url_attempts import MAX_GET_URL_ATTEMPTS
+from models.driver_path import DRIVER_PATH
 
 class BaseScrapingService:
   _driver = None
