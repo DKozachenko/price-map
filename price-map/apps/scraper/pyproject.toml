@@ -24,6 +24,7 @@ readme = 'README.md'
   python = ">=3.10"
   selenium = "^4.8.0"
   selenium-stealth = "^1.0.6"
+  asyncio = "^3.4.3"
 
   
 
