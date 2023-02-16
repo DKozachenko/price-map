@@ -12,7 +12,7 @@ class CategoryScrapingService(BaseScrapingService):
   __category3LevelLinks = set()
   productsMap = dict()
 
-  def __init__():
+  def __init__(self):
     pass
 
   async def __openCatalogPopup():

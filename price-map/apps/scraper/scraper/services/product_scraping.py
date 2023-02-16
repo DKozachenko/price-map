@@ -9,6 +9,9 @@ from models.driver_path import DRIVER_PATH
 from services.base_scraping import BaseScrapingService
 
 class ProductScrapingService(BaseScrapingService):
+  def __init__(self):
+    pass
+
   async def __getCharacteristics():
     characteristics = []
     characteristicsDls = await self.__driver.find_elements(By.css('dl[id]'))
