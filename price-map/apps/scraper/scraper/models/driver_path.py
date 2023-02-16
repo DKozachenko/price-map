@@ -1,1 +1,1 @@
-DRIVER_PATH = 'C:/Users/dkozachenko/Desktop/projects/price-map/price-map/apps/scraper/scraper/driver/chromedriver.exe'
+DRIVER_PATH = 'C:/Users/kozac/Downloads/chromedriver_win32/chromedriver.exe'

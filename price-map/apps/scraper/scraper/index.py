@@ -1,3 +1,4 @@
 from services.base_scraping import BaseScrapingService
 from services.category_scraping import CategoryScrapingService
+from services.product_scraping import ProductScrapingService
 print(4)
