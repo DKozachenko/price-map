@@ -9,41 +9,40 @@ from models.driver_path import DRIVER_PATH
 from services.base_scraping import BaseScrapingService
 
 class CategoryScrapingService(BaseScrapingService):
-  __category3LevelLinks = set()
-  productsMap = dict()
-
   def __init__(self):
-    pass
+    super().__init__()
+    self.__category3LevelLinks = set()
+    self.__productsMap = dict()
 
-  async def __openCatalogPopup():
-    actions = ActionChains(self.__driver)
+  def __openCatalogPopup(self):
+    actions = ActionChains(self._driver)
 
-    catalogPopupButton = await self.__driver.find_element(By.id('catalogPopupButton'))
-    await actions.move_to_element(catalogPopupButton).click(catalogPopupButton).perform()
+    catalogPopupButton = self._driver.find_element(By.id('catalogPopupButton'))
+    actions.move_to_element(catalogPopupButton).click(catalogPopupButton).perform()
 
     #ожидание пока прогрузится каталог
-    await self.__driver.wait(until.elementLocated(By.css('div[data-zone-name="catalog-content"]')), 10000)
+    self._driver.wait(until.elementLocated(By.css('div[data-zone-name="catalog-content"]')), 10000)
 
-  async def __clickAllMoreSpans():
-    moreSpans = await self._driver.find_elements(By.css(
+  def __clickAllMoreSpans(self):
+    moreSpans = self._driver.find_elements(By.css(
       'div[role="heading"] div div[data-auto="category"] ul[data-autotest-id="subItems"] li > span'
     ))
     for span in moreSpans:
-      actions = ActionChains(self.__driver)
-      await actions.move_to_element(span).click(span).perform()
+      actions = ActionChains(self._driver)
+      actions.move_to_element(span).click(span).perform()
 
-  async def __getFilters():
+  def __getFilters(self):
     filters = []
 
-    filterDiv = await self.__driver.find_element(By.css('div[data-grabber="SearchFilters"]'))
-    filterDivsBoolean = await filterDiv.find_elements(By.css('div[data-filter-type="boolean"]'))
-    filterDivsEnum = await filterDiv.find_elements(By.css('div[data-filter-type="enum"]'))
-    filterDivsRange = await filterDiv.find_elements(By.css('div[data-filter-type="range"]'))
+    filterDiv = self._driver.find_element(By.css('div[data-grabber="SearchFilters"]'))
+    filterDivsBoolean = filterDiv.find_elements(By.css('div[data-filter-type="boolean"]'))
+    filterDivsEnum = filterDiv.find_elements(By.css('div[data-filter-type="enum"]'))
+    filterDivsRange = filterDiv.find_elements(By.css('div[data-filter-type="range"]'))
 
     #TODO: возможно разделить получение булек, рэнджей и енамов в разные методы
     #бульки
     for filterDivBoolean in filterDivsBoolean:
-      filterBooleanName = await filterDivBoolean.text
+      filterBooleanName = filterDivBoolean.text
 
       if filterBooleanName:
         filters.push({
@@ -53,17 +52,17 @@ class CategoryScrapingService(BaseScrapingService):
 
     #рэнжи
     for filterDivRange in filterDivsRange:
-      filterDivRangeLegend = await filterDivRange.find_element(By.css('fieldset span'))
-      filterDivRangeName = await filterDivRangeLegend.text
-      filterDivRangeMinLabel = await filterDivRange.find_element(By.css(
+      filterDivRangeLegend = filterDivRange.find_element(By.css('fieldset span'))
+      filterDivRangeName = filterDivRangeLegend.text
+      filterDivRangeMinLabel = filterDivRange.find_element(By.css(
         'span[data-auto="filter-range-min"] label:not([for])'
       ))
-      filterDivRangeMaxLabel = await filterDivRange.find_element(By.css(
+      filterDivRangeMaxLabel = filterDivRange.find_element(By.css(
         'span[data-auto="filter-range-max"] label:not([for])'
       ))
 
-      filterDivRangeMinLabelText = await filterDivRangeMinLabel.text
-      filterDivRangeMaxLabelText = await filterDivRangeMaxLabel.text
+      filterDivRangeMinLabelText = filterDivRangeMinLabel.text
+      filterDivRangeMaxLabelText = filterDivRangeMaxLabel.text
 
       filterDivRangeMinValueStr = filterDivRangeMinLabelText.split(' ')[1]
       filterDivRangeMaxValueStr = filterDivRangeMaxLabelText.split(' ')[1]
@@ -94,29 +93,29 @@ class CategoryScrapingService(BaseScrapingService):
 
     #енумки
     for filterDivEnum in filterDivsEnum:
-      filterDivEnumLegend = await filterDivEnum.find_element(By.css('fieldset legend'))
-      filterDivEnumName = await filterDivEnumLegend.text
+      filterDivEnumLegend = filterDivEnum.find_element(By.css('fieldset legend'))
+      filterDivEnumName = filterDivEnumLegend.text
 
-      await self.__driver.implicitly_wait(1500)
-      filterEnumFieldsetDivs = await filterDivEnum.find_elements(By.css('fieldset > div > div'))
+      self._driver.implicitly_wait(1500)
+      filterEnumFieldsetDivs = filterDivEnum.find_elements(By.css('fieldset > div > div'))
 
       for fieldsetDiv in filterEnumFieldsetDivs:
-        moreSpans = await fieldsetDiv.find_elements(By.css('span[tabindex="0"]'))
+        moreSpans = fieldsetDiv.find_elements(By.css('span[tabindex="0"]'))
 
         for moreSpan in moreSpans:
-          actions = ActionChains(self.__driver)
-          await actions.scroll_from_origin(0, 0, 0, 0, moreSpan).perform()
-          await actions.move_to_element(moreSpan).click(moreSpan).perform()
-          await self.__driver.implicitly_wait(1000)
+          actions = ActionChains(self._driver)
+          actions.scroll_from_origin(0, 0, 0, 0, moreSpan).perform()
+          actions.move_to_element(moreSpan).click(moreSpan).perform()
+          self._driver.implicitly_wait(1000)
 
-      filterEnumValueDivs = await filterDivEnum.find_elements(By.css(
+      filterEnumValueDivs = filterDivEnum.find_elements(By.css(
         'fieldset div[data-baobab-name="FilterValue"]'
       ))
       filterValues = []
 
       for filterEnumValueDiv in filterEnumValueDivs:
         try:
-          filterEnumValue = await filterEnumValueDiv.text
+          filterEnumValue = filterEnumValueDiv.text
           filterValues.push(filterEnumValue)
         except:
           break
@@ -130,22 +129,22 @@ class CategoryScrapingService(BaseScrapingService):
 
     return filters
 
-  async def __setFilters(categories1Level):
+  def __setFilters(self, categories1Level):
     index = 0
     attemptsToGetUrl = 0
     array = self.__category3LevelLinks
     while index < array.length and attemptsToGetUrl < MAX_GET_URL_ATTEMPTS:
-      await self.__setCookies()
-      await self.__driver.get(array[index])
+      self.__setCookies()
+      self._driver.get(array[index])
 
-      await self.__driver.implicitly_wait(1000)
+      self._driver.implicitly_wait(1000)
 
       #TODO: не у всех категорий 3 уровня сразу есть товары, у кого-то мб еще категории внутри
       try:
-        breadcrumb = await self._driver.find_elements(By.css('ol[itemscope] li'))
-        category1LevelName = await breadcrumb[0].text
-        category2LevelName = await breadcrumb[1].text
-        category3LevelName = await breadcrumb[2].text
+        breadcrumb = self._driver.find_elements(By.css('ol[itemscope] li'))
+        category1LevelName = breadcrumb[0].text
+        category2LevelName = breadcrumb[1].text
+        category3LevelName = breadcrumb[2].text
 
         # category1Level = categories1Level.find((item) => item.name === category1LevelName)
         category1Level = None
@@ -157,19 +156,19 @@ class CategoryScrapingService(BaseScrapingService):
         category3Level = None
 
         if category3Level:
-          filters = await self.__getFilters()
+          filters = self.__getFilters()
           category3Level.filters = filters
 
           #добавление ссылок на товары в этой категории
           links = []
-          productBlocks = await self.__driver.find_elements(By.css('div[data-baobab-name="$main"]'))
-          productArticles = await productBlocks[0].find_elements(By.css('article'))
+          productBlocks = self._driver.find_elements(By.css('div[data-baobab-name="$main"]'))
+          productArticles = productBlocks[0].find_elements(By.css('article'))
           count = 0
 
           for i in range(productArticles.length):
             if count < 5:
-              productA = await productArticles[i].find_element(By.css('a[data-baobab-name="title"]'))
-              productLink = await productA.getAttribute('href')
+              productA = productArticles[i].find_element(By.css('a[data-baobab-name="title"]'))
+              productLink = productA.getAttribute('href')
               links.push(productLink)
 
               count += 1
@@ -185,20 +184,20 @@ class CategoryScrapingService(BaseScrapingService):
       except:
         attemptsToGetUrl += 1
 
-  async def __getCategories1Level():
+  def __getCategories1Level(self):
     categories1Level = []
-    category1LevelLis = await self._driver.find_elements(By.css('ul[role="tablist"]:first-child li'))
+    category1LevelLis = self._driver.find_elements(By.css('ul[role="tablist"]:first-child li'))
     #TODO: убрать count
     count = 0
     count3Level = 0
     for category1LevelLi in category1LevelLis:
-      actions = ActionChains(self.__driver)
-      await actions.move_to_element(category1LevelLi).perform()
+      actions = ActionChains(self._driver)
+      actions.move_to_element(category1LevelLi).perform()
 
-      await self.__clickAllMoreSpans()
+      self.__clickAllMoreSpans()
 
-      category1LevelA = await self.__driver.find_element(By.css('div[role="heading"] > a'))
-      category1LevelName = await category1LevelA.text
+      category1LevelA = self._driver.find_element(By.css('div[role="heading"] > a'))
+      category1LevelName = category1LevelA.text
 
       if category1LevelName != 'Скидки' and category1LevelName != 'Ресейл' and count <= 3 and count > 2:
         category1Level = {
@@ -206,32 +205,32 @@ class CategoryScrapingService(BaseScrapingService):
           categories2Level: []
         }
 
-        category2LevelDivs = await self.__driver.find_elements(By.css(
+        category2LevelDivs = self._driver.find_elements(By.css(
           'div[role="heading"] div div[data-auto="category"]'
         ))
 
         for category2LevelDiv in category2LevelDivs:
-          category2LevelDivHeading = await category2LevelDiv.find_element(By.css('div[role="heading"]'))
+          category2LevelDivHeading = category2LevelDiv.find_element(By.css('div[role="heading"]'))
           #при переборе не получает элемент
-          category2LevelName = await category2LevelDivHeading.text
+          category2LevelName = category2LevelDivHeading.text
           category2Level = {
             name: category2LevelName,
             categories3Level: []
           }
 
-          categories3LevelDivs = await category2LevelDiv.find_elements(By.css(
+          categories3LevelDivs = category2LevelDiv.find_elements(By.css(
             'ul[data-autotest-id="subItems"] li > div'
           ))
 
           if categories3LevelDivs:
             for categories3LevelDiv in categories3LevelDivs:
-              category3LevelA = await categories3LevelDiv.find_element(By.css('a'))
+              category3LevelA = categories3LevelDiv.find_element(By.css('a'))
 
               if count3Level < 4:
-                category3LevelLink = await category3LevelA.getAttribute('href')
-                self.category3LevelLinks.add(category3LevelLink)
+                category3LevelLink = category3LevelA.getAttribute('href')
+                self.__category3LevelLinks.add(category3LevelLink)
 
-              category3LevelName = await categories3LevelDiv.text
+              category3LevelName = categories3LevelDiv.text
               category2Level.categories3Level.push({
                 name: category3LevelName,
                 filters: []
@@ -246,24 +245,24 @@ class CategoryScrapingService(BaseScrapingService):
 
     return categories1Level
 
-  async def scrape():
+  def scrape(self):
     categories1Level = []
 
-    await self._initializeDriver()
+    self._initializeDriver()
 
-    if self.__driver:
-      await self.__driver.get('https://market.yandex.ru/')
-      await self.__setCookies()
+    if self._driver:
+      self._driver.get('https://market.yandex.ru/')
+      self._setCookies()
 
       #TODO: Есть вайбы, что все равно страница редиректит даже если нет капчи
-      if self.isShowedCaptcha():
-        await self.__driver.get('https://market.yandex.ru/')
+      if self._isShowedCaptcha():
+        self._driver.get('https://market.yandex.ru/')
 
-      await self.__openCatalogPopup()
+      self.__openCatalogPopup()
 
-      categories1Level = await self.__getCategories1Level()
-      await self.__setFilters(categories1Level)
+      categories1Level = self.__getCategories1Level()
+      self.__setFilters(categories1Level)
 
-      await self.__driver.quit()
+      self._driver.quit()
 
     return categories1Level

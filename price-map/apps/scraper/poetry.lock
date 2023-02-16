@@ -135,6 +135,18 @@ files = [
 pycparser = "*"
 
 [[package]]
+name = "chromedriver-py"
+version = "110.0.5481.77"
+description = "chromedriver binaries for all platforms"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "chromedriver-py-110.0.5481.77.tar.gz", hash = "sha256:3d1caec019898a49690040afe889fde90243ffe08c146e4013c7ddb2e7147b16"},
+    {file = "chromedriver_py-110.0.5481.77-py3-none-any.whl", hash = "sha256:dd1e9f1bb80589095a190ebc744243b5fe43080c0888ecb2f47222ec20da2597"},
+]
+
+[[package]]
 name = "exceptiongroup"
 version = "1.1.0"
 description = "Backport of PEP 654 (exception groups)"
@@ -349,4 +361,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
   python-versions = ">=3.10"
-content-hash = "e49859523c9e1e44fecb52df17f1ca845b76475813f195510a1c17ecb62faaf3"
+content-hash = "cdc875008fb17d534b9723c8f234e786705da65aa04862856c3dcb92294b32c3"
