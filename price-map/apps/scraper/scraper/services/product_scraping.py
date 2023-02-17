@@ -3,124 +3,124 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.by import By
 
 from models.max_get_url_attempts import MAX_GET_URL_ATTEMPTS
-from models.driver_path import DRIVER_PATH
 from services.base_scraping import BaseScrapingService
 
 class ProductScrapingService(BaseScrapingService):
   def __init__(self):
     pass
 
-  async def __getCharacteristics():
+  def __getCharacteristics(self):
     characteristics = []
-    characteristicsDls = await self.__driver.find_elements(By.css('dl[id]'))
+    characteristicsDls = self._driver.find_elements(By.CSS_SELECTOR, 'dl[id]')
     for characteristicDl in characteristicsDls:
-      dt = await characteristicDl.find_element(By.css('dt'))
-      dd = await characteristicDl.find_element(By.css('dd'))
+      dt = characteristicDl.find_element(By.CSS_SELECTOR, 'dt')
+      dd = characteristicDl.find_element(By.CSS_SELECTOR, 'dd')
 
-      dtText = await dt.text
-      ddText = await dd.text
+      dtText = dt.text
+      ddText = dd.text
 
       value = ''
 
       valueFloat = float(ddText)
       valueInt = int(ddText)
 
-      if valueFloat is not None and str(valueFloat).length == ddText.length:
+      if valueFloat is not None and len(str(valueFloat)) == len(ddText):
         value = valueFloat
-      elif valueInt is not None and str(valueInt).length == ddText.length:
+      elif valueInt is not None and len(str(valueInt)) == len(ddText):
         value = valueInt
       else:
         value = ddText
 
 
       characteristic = {
-        name: dtText,
-        value: value
+        "name": dtText,
+        "value": value
       }
 
-      characteristics.push(characteristic)
+      characteristics.append(characteristic)
 
     return characteristics
 
-  async def __getProduct(offerDiv, info, name, description, characteristics, imagePath):
+  def __getProduct(self, offerDiv, info, name, description, characteristics, imagePath):
     #TODO: не у всех предложений название магазина представлено текстом, у кого-то картинкой
-    offerLinksA = await offerDiv.find_elements(By.css('a[data-zone-name="offerLink"]'))
-    shopName = await offerLinksA[1].text
+    offerLinksA = offerDiv.find_elements(By.CSS_SELECTOR, 'a[data-zone-name="offerLink"]')
+    shopName = offerLinksA[1].text
 
-    priceSpan = await offerDiv.find_element(By.css('span[data-auto="mainPrice"] span'))
-    price = await priceSpan.text
-    priceInt = int(price.replaceAll(' ', ''))
+    priceSpan = offerDiv.find_element(By.CSS_SELECTOR, 'span[data-auto="mainPrice"] span')
+    price = priceSpan.text
+    priceInt = int(price.replace(' ', ''))
 
     product = {
-      categoryInfo: info,
-      name: name,
-      description: description,
-      characteristics: characteristics,
-      imagePath: imagePath,
-      shopName: shopName,
-      price: priceInt
+      "categoryInfo": info,
+      "name": name,
+      "description": description,
+      "characteristics": characteristics,
+      "imagePath": imagePath,
+      "shopName": shopName,
+      "price": priceInt
     }
 
     return product
 
 
-  async def __getProductsByCategory(info):
+  def __getProductsByCategory(self, info):
     products = []
 
-    productActionsA = await self.__driver.find_elements(By.css('div[data-baobab-name="$productActions"] a'))
+    productActionsA = self._driver.find_elements(By.CSS_SELECTOR, 'div[data-baobab-name="$productActions"] a')
 
-    await self.__setCookies()
+    self._setCookies()
     #нажатие на раздел "Характеристики"
-    actions = ActionChains(self.__driver)
-    await actions.move_to_element(productActionsA[1]).click(productActionsA[1]).perform()
+    actions = ActionChains(self._driver)
+    actions.move_to_element(productActionsA[1]).click(productActionsA[1]).perform()
 
-    productNameH1 = await self.__driver.find_element(By.css('h1[data-baobab-name="$name"]'))
-    productName = await productNameH1.text
+    productNameH1 = self._driver.find_element(By.CSS_SELECTOR, 'h1[data-baobab-name="$name"]')
+    productName = productNameH1.text
 
-    productDescriptionDiv = await self.__driver.find_element(By.css(
+    productDescriptionDiv = self._driver.find_element(By.CSS_SELECTOR, 
       'div[data-auto="product-full-specs"] div:not([class])'
-    ))
-    productDescription = await productDescriptionDiv.text
+    )
+    productDescription = productDescriptionDiv.text
 
-    productImageA = await self.__driver.find_element(By.css('div[data-zone-name="picture"] img'))
-    productImagePath = await productImageA.get_attribute('src')
+    productImageA = self._driver.find_element(By.CSS_SELECTOR, 'div[data-zone-name="picture"] img')
+    productImagePath = productImageA.get_attribute('src')
 
-    characteristics = await self.__getCharacteristics()
+    characteristics = self.__getCharacteristics()
     #TODO: вариант, что может не быть офферов, или вариант,
     #что нет кнопки показать предложения, тк предложений в целом немного
-    allOffersA = await self.__driver.find_element(By.css('div[data-auto="topOffers"] > div > div > a'))
-    await self.__setCookies()
+    allOffersA = self._driver.find_element(By.CSS_SELECTOR, 'div[data-auto="topOffers"] > div > div > a')
+    self._setCookies()
     #нажатие на "Все предложения"
-    actions = ActionChains(self.__driver)
-    await actions.move_to_element(allOffersA).click(allOffersA).perform()
-    await self.__driver.implicitly_wait(1000)
+    actions = ActionChains(self._driver)
+    actions.move_to_element(allOffersA).click(allOffersA).perform()
+    self._driver.implicitly_wait(1000)
 
-    offerDivs = await self.__driver.find_elements(By.css('div[data-zone-name="OfferSnippet"]'))
+    offerDivs = self._driver.find_elements(By.CSS_SELECTOR, 'div[data-zone-name="OfferSnippet"]')
 
     for offerDiv in offerDivs:
-      product = await self.getProduct(offerDiv, info, productName, productDescription, characteristics, productImagePath)
-      products.push(product)
+      product = self.__getProduct(offerDiv, info, productName, productDescription, characteristics, productImagePath)
+      products.append(product)
 
     return products
 
 
-  async def __getProducts(productsMap):
+  def __getProducts(self, productsMap):
     products = []
 
     for [info, links] in productsMap:
       index = 0
       attemptsToGetUrl = 0
 
-      while index < links.length and attemptsToGetUrl < MAX_GET_URL_ATTEMPTS:
-        await self.__setCookies()
-        await self.__driver.get(links[index])
+      while index < len(links) and attemptsToGetUrl < MAX_GET_URL_ATTEMPTS:
+        self._setCookies()
+        self._driver.get(links[index])
 
-        await self.__driver.implicitly_wait(1000)
+        self._driver.implicitly_wait(1000)
 
         try:
-          productsByCategory = await self.__getProductsByCategory(info)
+          productsByCategory = self.__getProductsByCategory(info)
           products.extend(productsByCategory)
 
           index += 1
@@ -131,22 +131,22 @@ class ProductScrapingService(BaseScrapingService):
     return products
 
 
-  async def scrape(productsMap):
+  def scrape(self, productsMap):
     products = []
 
-    await self.__initialize__driver()
+    self._initializeDriver()
 
-    if self.__driver:
-      await self.__driver.get('https://market.yandex.ru/')
-      await self.__setCookies()
+    if self._driver:
+      self._driver.get('https://market.yandex.ru/')
+      self._setCookies()
 
       #TODO: Есть вайбы, что все равно страница редиректит даже если нет капчи
-      if self.__isShowedCaptcha():
-        await self.__driver.get('https://market.yandex.ru/')
+      if self._isShowedCaptcha():
+        self._driver.get('https://market.yandex.ru/')
 
-      products = await self.__getProducts(productsMap)
+      products = self.__getProducts(productsMap)
 
-      await self.__driver.quit()
+      self._driver.quit()
 
     return products
 
