@@ -139,25 +139,34 @@ class CategoryScrapingService(BaseScrapingService):
     array = list(self.__category3LevelLinks)
     while index < len(array) and attemptsToGetUrl < MAX_GET_URL_ATTEMPTS:
       self._setCookies()
+      print('set up')
       self._driver.get(array[index])
+      print('get by id')
       self._driver.implicitly_wait(3)
 
       #TODO: не у всех категорий 3 уровня сразу есть товары, у кого-то мб еще категории внутри
       try:
-        breadcrumb = self._driver.find_elements(By.css('ol[itemscope] li'))
+        print('TRY')
+        breadcrumb = self._driver.find_elements(By.CSS_SELECTOR, 'ol[itemscope] li')
+        print('aaaaa')
         category1LevelName = breadcrumb[0].text
+        print('aaaaabbbbb')
         category2LevelName = breadcrumb[1].text
+        print('ccccccc')
         category3LevelName = breadcrumb[2].text
 
         # category1Level = categories1Level.find((item) => item.name === category1LevelName)
-        category1Level = filter(lambda item: item['name'] == category1LevelName, categories1Level)
+        category1Level = list(filter(lambda item: item['name'] == category1LevelName, categories1Level))
+        print(123, category1Level)
         # category2Level = category1Level.categories2Level.find((item) => item.name === category2LevelName)
-        category2Level = filter(lambda item: item['name'] == category2LevelName, category1Level['categories2Level'])
+        category2Level = list(filter(lambda item: item['name'] == category2LevelName, category1Level['categories2Level']))
+        print(456, category2Level)
         # category3Level = category2Level.categories3Level.find((item) =>
         #   item.name.toLowerCase().includes(category3LevelName.toLowerCase())
         #   or category3LevelName.toLowerCase().includes(item.name.toLowerCase()))
-        category3Level = filter(lambda item: category3LevelName.lower() in item['name'].lower()
-          or item['name'].lower() in category3LevelName.lower(), category2Level['categories3Level'])
+        category3Level = list(filter(lambda item: category3LevelName.lower() in item['name'].lower()
+          or item['name'].lower() in category3LevelName.lower(), category2Level['categories3Level']))[0]
+        print(789, category3Level)
 
         if category3Level:
           print('33333333333333')
@@ -268,25 +277,21 @@ class CategoryScrapingService(BaseScrapingService):
 
       #TODO: Есть вайбы, что все равно страница редиректит даже если нет капчи
       if self._isShowedCaptcha():
-        print(9)
-        self._driver.implicitly_wait(2)
-        captcha = self._driver.find_element(By.CSS_SELECTOR, '.CheckboxCaptcha-Button')
-        captcha.click()
-        print(8)
+        self._driver.implicitly_wait(2.4)
+        # captcha = self._driver.find_element(By.CSS_SELECTOR, '.CheckboxCaptcha-Button')
+        # captcha.click()
         actions = ActionChains(self._driver)
-        print(7)
         # actions.click(captcha).perform()
-        print(6)
         # self._setCookies()
-        # self._driver.get('https://market.yandex.ru/')
-        self._driver.implicitly_wait(2)
-        print(5)
+        self._driver.get('https://market.yandex.ru/')
+        self._driver.implicitly_wait(2.0)
 
-      # self.__openCatalogPopup()
+      self.__openCatalogPopup()
 
-      # categories1Level = self.__getCategories1Level()
-      # self.__setFilters(categories1Level)
-      # print(1, self.__productsMap)
+      categories1Level = self.__getCategories1Level()
+      print('categories1Level', categories1Level)
+      self.__setFilters(categories1Level)
+      print(1, self.__productsMap)
 
       # self._driver.quit()
 
