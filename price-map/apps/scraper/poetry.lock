@@ -201,6 +201,23 @@ files = [
 attrs = ">=19.2.0"
 
 [[package]]
+name = "pika"
+version = "1.3.1"
+description = "Pika Python AMQP Client Library"
+category = "main"
+optional = false
+python-versions = ">=3.4"
+files = [
+    {file = "pika-1.3.1-py3-none-any.whl", hash = "sha256:89f5e606646caebe3c00cbdbc4c2c609834adde45d7507311807b5775edac8e0"},
+    {file = "pika-1.3.1.tar.gz", hash = "sha256:beb19ff6dd1547f99a29acc2c6987ebb2ba7c44bf44a3f8e305877c5ef7d2fdc"},
+]
+
+[package.extras]
+gevent = ["gevent"]
+tornado = ["tornado"]
+twisted = ["twisted"]
+
+[[package]]
 name = "pycparser"
 version = "2.21"
 description = "C parser in Python"
@@ -361,4 +378,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
   python-versions = ">=3.10"
-content-hash = "cdc875008fb17d534b9723c8f234e786705da65aa04862856c3dcb92294b32c3"
+content-hash = "757bc7d12e4675e68740e3c807c6bcde8f68aed09a3974bcee72a8421626591b"

@@ -4,21 +4,29 @@ import { AppModule } from './app/app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+  const app: INestApplication = await NestFactory.create(AppModule);
+  const globalPrefix: string = 'api';
+  app.setGlobalPrefix(globalPrefix);
+  const port: number | string = process.env.PORT || 3333;
+
+  app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
-      urls:['amqp://localhost:5672'],
-      queue: 'test_queue',
+      urls: ['amqp://quest:quest@localhost:5672'],
+      queue: 'test_exchange',
       queueOptions: {
-        durable: false
-      }
-    }
-  })
-  await app.listen();
-  // Logger.log(
-  //   `Server is running on: http://localhost:${port}/${globalPrefix}`,
-  //   'bootstrap'
-  // );
+        durable: true,
+      },
+    },
+  });
+
+  await app.startAllMicroservices();
+  await app.listen(port);
+  
+  Logger.log(
+    `Server is running on: http://localhost:${port}/${globalPrefix}`,
+    'bootstrap'
+  );
 }
 
 bootstrap();

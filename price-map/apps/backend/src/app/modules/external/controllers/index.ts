@@ -1,1 +1,0 @@
-export { ExternalController } from './external.controller';

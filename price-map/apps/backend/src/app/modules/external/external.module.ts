@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ExternalService } from './services';
+import { ExternalService, RabbitService } from './services';
 import { ExternalGateway } from './gateways';
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
-import { ExternalController } from './controllers';
+import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 
 /**
  * Модуль для взаимодействия с внешними системами (OSRM, OSM API)
@@ -11,8 +11,9 @@ import { ExternalController } from './controllers';
  * @class ExternalModule
  */
 @Module({
-  imports: [HttpModule],
-  controllers: [ExternalController],
+  imports: [
+    HttpModule,
+  ],
   providers: [
     ExternalService,
     ExternalGateway,

@@ -26,6 +26,7 @@ readme = 'README.md'
   selenium-stealth = "^1.0.6"
   asyncio = "^3.4.3"
   chromedriver-py = "110.0.5481.77"
+  pika = "^1.3.1"
 
   
 
