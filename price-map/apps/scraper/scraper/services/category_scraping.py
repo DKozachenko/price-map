@@ -76,12 +76,12 @@ class CategoryScrapingService(BaseScrapingService):
       if ',' in filterDivRangeMinValueStr:
         filterRangeMinValue = float(filterDivRangeMinValueStr.replace(',', '.'))
       else:
-        filterRangeMinValue = float(filterDivRangeMinValueStr)
+        filterRangeMinValue = int(filterDivRangeMinValueStr)
 
       filterRangeMaxValue = 0
 
       if ',' in filterDivRangeMaxValueStr:
-        filterRangeMaxValue = int(filterDivRangeMaxValueStr.replace(',', '.'))
+        filterRangeMaxValue = float(filterDivRangeMaxValueStr.replace(',', '.'))
       else:
         filterRangeMaxValue = int(filterDivRangeMaxValueStr)
 
@@ -138,67 +138,70 @@ class CategoryScrapingService(BaseScrapingService):
     attemptsToGetUrl = 0
     array = list(self.__category3LevelLinks)
     while index < len(array) and attemptsToGetUrl < MAX_GET_URL_ATTEMPTS:
-      self._setCookies()
-      print('set up')
+      # self._setCookies()
+      # print('set up')
       self._driver.get(array[index])
-      print('get by id')
-      self._driver.implicitly_wait(3)
+      # print('get by id')
+      self._driver.implicitly_wait(1000)
 
       #TODO: не у всех категорий 3 уровня сразу есть товары, у кого-то мб еще категории внутри
-      try:
-        print('TRY')
-        breadcrumb = self._driver.find_elements(By.CSS_SELECTOR, 'ol[itemscope] li')
-        print('aaaaa')
-        category1LevelName = breadcrumb[0].text
-        print('aaaaabbbbb')
-        category2LevelName = breadcrumb[1].text
-        print('ccccccc')
-        category3LevelName = breadcrumb[2].text
+      # try:
+      breadcrumb = self._driver.find_elements(By.CSS_SELECTOR, 'ol[itemscope] li')
+      print(breadcrumb)
+      category1LevelName = breadcrumb[0].text
+      category2LevelName = breadcrumb[1].text
+      category3LevelName = breadcrumb[2].text
+      print(category1LevelName, category2LevelName, category3LevelName)
+      # category1Level = categories1Level.find((item) => item.name === category1LevelName)
+      category1Level = list(filter(lambda item: item['name'] == category1LevelName, categories1Level))[0]
+      # category1Level = None
+      # for cat1 in categories1Level:
+      #   if (cat1['name'] == category1LevelName):
+      #     category1Level = cat1
+      #     break
 
-        # category1Level = categories1Level.find((item) => item.name === category1LevelName)
-        category1Level = list(filter(lambda item: item['name'] == category1LevelName, categories1Level))
-        print(123, category1Level)
-        # category2Level = category1Level.categories2Level.find((item) => item.name === category2LevelName)
-        category2Level = list(filter(lambda item: item['name'] == category2LevelName, category1Level['categories2Level']))
-        print(456, category2Level)
-        # category3Level = category2Level.categories3Level.find((item) =>
-        #   item.name.toLowerCase().includes(category3LevelName.toLowerCase())
-        #   or category3LevelName.toLowerCase().includes(item.name.toLowerCase()))
-        category3Level = list(filter(lambda item: category3LevelName.lower() in item['name'].lower()
-          or item['name'].lower() in category3LevelName.lower(), category2Level['categories3Level']))[0]
-        print(789, category3Level)
+      # print(123, category1Level)
+      # category2Level = category1Level.categories2Level.find((item) => item.name === category2LevelName)
+      category2Level = list(filter(lambda item: item['name'] == category2LevelName, list(category1Level['categories2Level'])))[0]
+      # print(456, category2Level)
+      # category3Level = category2Level.categories3Level.find((item) =>
+      #   item.name.toLowerCase().includes(category3LevelName.toLowerCase())
+      #   or category3LevelName.toLowerCase().includes(item.name.toLowerCase()))
+      category3Level = list(filter(lambda item: category3LevelName.lower() in item['name'].lower()
+        or item['name'].lower() in category3LevelName.lower(), category2Level['categories3Level']))[0]
+      # print(789, category3Level)
 
-        if category3Level:
-          print('33333333333333')
-          filters = self.__getFilters()
-          category3Level['filters'] = filters
+      if category3Level:
+        filters = self.__getFilters()
+        category3Level['filters'] = filters
 
-          #добавление ссылок на товары в этой категории
-          links = []
-          productBlocks = self._driver.find_elements(By.css('div[data-baobab-name="$main"]'))
-          productArticles = productBlocks[0].find_elements(By.css('article'))
-          count = 0
+        #добавление ссылок на товары в этой категории
+        links = []
+        productBlocks = self._driver.find_elements(By.CSS_SELECTOR, 'div[data-baobab-name="$main"]')
+        productArticles = productBlocks[0].find_elements(By.CSS_SELECTOR, 'article')
+        count = 0
 
-          for i in range(len(productArticles)):
-            if count < 5:
-              productA = productArticles[i].find_element(By.css('a[data-baobab-name="title"]'))
-              productLink = productA.getAttribute('href')
-              links.append(productLink)
+        for i in range(len(productArticles)):
+          if count < 5:
+            productA = productArticles[i].find_element(By.CSS_SELECTOR, 'a[data-baobab-name="title"]')
+            productLink = productA.get_attribute('href')
+            links.append(productLink)
 
-              count += 1
+            count += 1
 
-          # self.__productsMap.update({ {
-          #   category1LevelName: category1LevelName,
-          #   category2LevelName: category2LevelName,
-          #   category3LevelName: category3LevelName
-          # }: links })
+        # self.__productsMap.update({ {
+        #   category1LevelName: category1LevelName,
+        #   category2LevelName: category2LevelName,
+        #   category3LevelName: category3LevelName
+        # }: links })
 
-          self.__productsMap.update({ 'test': links })
+        self.__productsMap.update({ 'test': links })
 
-        index += 1
-        attemptsToGetUrl = 0
-      except:
-        attemptsToGetUrl += 1
+      index += 1
+      attemptsToGetUrl = 0
+      # except:
+      #   print('IN EXCEPT')
+      #   attemptsToGetUrl += 1
 
   def __getCategories1Level(self):
     categories1Level = []
@@ -289,8 +292,8 @@ class CategoryScrapingService(BaseScrapingService):
       self.__openCatalogPopup()
 
       categories1Level = self.__getCategories1Level()
-      print('categories1Level', categories1Level)
       self.__setFilters(categories1Level)
+      print(categories1Level)
       print(1, self.__productsMap)
 
       # self._driver.quit()
