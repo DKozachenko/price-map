@@ -8,19 +8,6 @@ async function bootstrap() {
   const globalPrefix: string = 'api';
   app.setGlobalPrefix(globalPrefix);
 
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.RMQ,
-    options: {
-      urls: ['amqp://guest:guest@localhost:5672'],
-      queue: 'test_queue',
-      queueOptions: {
-        durable: true
-      }
-    },
-  });
-
-  
-  app.startAllMicroservices();
   const port: number | string = process.env.PORT || 3333;
   await app.listen(port);
   Logger.log(

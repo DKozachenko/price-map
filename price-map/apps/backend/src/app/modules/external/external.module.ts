@@ -13,8 +13,18 @@ import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 @Module({
   imports: [
     HttpModule,
+    RabbitMQModule.forRoot(RabbitMQModule, {
+      exchanges: [
+        {
+          name: 'test_exchange',
+          type: 'fanout',
+        },
+      ],
+      uri: 'amqp://guest:guest@localhost:5672'
+    }),
   ],
   providers: [
+    RabbitService,
     ExternalService,
     ExternalGateway,
     JwtService
