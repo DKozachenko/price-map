@@ -12,7 +12,7 @@ import { Organization,
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AppGateway } from './gateways';
 import { secretKey } from './models/constants';
-import { HashService } from './services';
+import { HashService, RabbitService } from './services';
 
 /**
  * Главный модуль приложения
@@ -58,13 +58,16 @@ import { HashService } from './services';
   providers: [
     JwtService,
     HashService,
+    RabbitService,
     AppGateway
   ],
 })
 export class AppModule implements OnModuleInit {
-  constructor(private readonly scrapingService: ScrapingService) {}
+  constructor(private readonly scrapingService: ScrapingService,
+   private readonly rabbitService: RabbitService) {}
 
   public async onModuleInit(): Promise<void> {
+    this.rabbitService.initConnection();
     // console.time();
     // const resultCats = await this.scrapingService.scrapeCategories();
     // const productsMap: Map<BreadcrumbInfo, string[]> = this.scrapingService.getProductsMap();

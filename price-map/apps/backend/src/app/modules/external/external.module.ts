@@ -1,9 +1,11 @@
+import { switchMap } from 'rxjs';
 import { Module, OnModuleInit, Logger } from '@nestjs/common';
 import { ExternalService } from './services';
 import { ExternalGateway } from './gateways';
 import { HttpModule } from '@nestjs/axios';
 import { JwtService } from '@nestjs/jwt';
-import {Channel, connect, Connection, ConsumeMessage}from 'amqplib'
+import {Channel, connect, Connection, ConsumeMessage}from 'amqplib';
+import { RabbitService } from '../../services';
 
 /**
  * Модуль для взаимодействия с внешними системами (OSRM, OSM API)
@@ -15,25 +17,29 @@ import {Channel, connect, Connection, ConsumeMessage}from 'amqplib'
     HttpModule,
   ],
   providers: [
+    RabbitService,
     ExternalService,
     ExternalGateway,
     JwtService
   ],
 })
 export class ExternalModule implements OnModuleInit {
-  public async onModuleInit() {
-    const connection: Connection = await connect(
-      'amqp://guest:guest@localhost:5672'
-      )
-      
-      const channel: Channel = await connection.createChannel();
-      
-      await channel.assertQueue('test_queue');
+  constructor(private readonly rabbitService: RabbitService) {}
 
-      await channel.consume('test_queue', (msg: ConsumeMessage ) => {
-        Logger.debug(`Message is ${msg.content.toString()}`);
-        console.log(JSON.parse(msg.content.toString()))
-        channel.ack(msg);
-      })
+  public onModuleInit() {
+    Logger.debug(123, this.rabbitService.connected$)
+    this.rabbitService.connected$.subscribe(d => Logger.debug(12321321))
+    // this.rabbitService.connected$
+    //   .pipe(
+    //     switchMap((data: boolean) => {
+    //       console.log(123)
+    //       if (data) {
+    //         return this.rabbitService.getMessage<any>('test_queue');
+    //       }
+    //     })
+    //   )
+    //   .subscribe(data => {
+    //     Logger.debug(data)
+    //   });
   }
 }
