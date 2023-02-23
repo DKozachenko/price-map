@@ -1,8 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { ICoordinates } from '@core/interfaces';
-import { HttpService } from '@nestjs/axios';
-import { from, Observable, switchMap, catchError, of, bindCallback, Subject } from 'rxjs';
-import * as bcrypt from 'bcrypt';
+import { from, Observable, switchMap, catchError, of } from 'rxjs';
 import {Channel, connect, Connection, ConsumeMessage}from 'amqplib';
 
 @Injectable()
@@ -43,25 +40,29 @@ export class RabbitService {
       )  
   }
 
-  // public getMessage<T>(queueName: string): Observable<T> {
-  //   // this.co
-  //   return obs
-  //     .pipe(
-  //       switchMap(() => {
-  //         return from(this.channel.consume(queueName, (msg: ConsumeMessage) => {
-  //           console.log('cring', msg)
-  //         }))
-  //         .pipe(
-  //           switchMap((msg: any) => {
-  //             console.log(5, msg);
-  //             return of(JSON.parse(msg.content.toString()) as T)
-  //           }),
-  //           catchError((err: any) => {
-  //             Logger.error(`Error occured ${err} while get message from queue ${queueName}, ${err}`, 'RabbitService');
-  //             return of({} as T);
-  //           })
-  //         );
-  //       })
-  //     )
-  // }
+  private getMessagePromise<T = any>(queueName: string): Promise<T> {
+    return new Promise((resolve, reject) => {
+      this.channel.consume(queueName, (message: ConsumeMessage) => {
+        if (message === null) {
+          Logger.error('Consumer cancelled by server', 'RabbitService');
+          reject(message);
+          return;
+        }
+        Logger.debug(`Message from ${queueName}`, 'RabbitService');
+        try {
+          const obj: T = <T>JSON.parse(message.content.toString());
+          this.channel.ack(message);
+          resolve(obj);
+        } catch (err: any) {
+          Logger.error(`Error while parsing JSON from ${queueName}, content: ${message.content.toString()}`, 'RabbitService');
+          reject(err);
+        }
+        return;
+      })
+    })
+  }
+
+  public getMessage<T = any>(queueName: string): Observable<T> {
+    return from(this.getMessagePromise<T>(queueName));
+  }
 }

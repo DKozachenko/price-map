@@ -1,3 +1,4 @@
+import { catchError, of } from 'rxjs';
 import { Module, OnModuleInit, Logger } from '@nestjs/common';
 import { CategoriesService } from './services';
 import { CategoriesGateway } from './gateways';
@@ -28,6 +29,13 @@ export class CategoriesModule implements OnModuleInit {
   constructor(private readonly rabbitService: RabbitService) {}
 
   public onModuleInit() {
-    // Logger.debug(this.rabbitService.channel, 56)
+    this.rabbitService.getMessage<any>('test_queue')
+      .pipe(
+        catchError((err: any) => {
+          Logger.error(`Error while getting message from ${'test_queue'}, ${err}`, 'CategoriesModule')
+          return of({});
+        })
+      )
+      .subscribe(d => console.log('god damn', d));
   }
 }
