@@ -7,13 +7,11 @@ import {Channel, connect, Connection, ConsumeMessage}from 'amqplib';
 
 @Injectable()
 export class RabbitService {
-  private connection: Connection;
-  private channel: Channel;
+  public connection: Connection;
+  public channel: Channel;
 
-  public connected$: Subject<boolean> = new Subject<boolean>();
-
-  public initConnection(): void {
-    from(connect({
+  public initConnection(): Observable<null> {
+    return from(connect({
       protocol: 'amqp',
       username: 'guest',
       password: 'guest',
@@ -21,6 +19,7 @@ export class RabbitService {
     }))
       .pipe(
         switchMap((connection: Connection) => {
+          this.connection = connection;
           Logger.log('Rabbit init', 'RabbitService');
           return from(connection.createChannel())
             .pipe(
@@ -30,33 +29,39 @@ export class RabbitService {
               })
             );
         }),
+        switchMap((channel: Channel | null) => {
+          if (channel) {
+            Logger.log('Rabbit init channel', 'RabbitService');
+            this.channel = channel;
+          }
+          return of(null);
+        }),
         catchError((err: any) => {
           Logger.error(`Error occured ${err} while connect to Rabbit`, 'RabbitService');
           return of(null);
         })
-      )
-      .subscribe((channel: Channel | null) => {
-        if (channel) {
-          console.log(123456345654);
-          Logger.log('Rabbit init channel', 'RabbitService');
-          this.channel = channel;
-          this.connected$.next(true);
-        }
-      })
+      )  
   }
 
-  public getMessage<T>(queueName: string): Observable<T> {
-    return from(this.channel.consume(queueName, (msg: ConsumeMessage) => msg))
-      .pipe(
-        switchMap((msg: any) => {
-          console.log(msg);
-          return of(JSON.parse(msg.content.toString()) as T)
-        }),
-        catchError((err: any) => {
-          Logger.error(`Error occured ${err} while get message from queue ${queueName}, ${err}`, 'RabbitService');
-          return of({} as T);
-        })
-      );
-
-  }
+  // public getMessage<T>(queueName: string): Observable<T> {
+  //   // this.co
+  //   return obs
+  //     .pipe(
+  //       switchMap(() => {
+  //         return from(this.channel.consume(queueName, (msg: ConsumeMessage) => {
+  //           console.log('cring', msg)
+  //         }))
+  //         .pipe(
+  //           switchMap((msg: any) => {
+  //             console.log(5, msg);
+  //             return of(JSON.parse(msg.content.toString()) as T)
+  //           }),
+  //           catchError((err: any) => {
+  //             Logger.error(`Error occured ${err} while get message from queue ${queueName}, ${err}`, 'RabbitService');
+  //             return of({} as T);
+  //           })
+  //         );
+  //       })
+  //     )
+  // }
 }

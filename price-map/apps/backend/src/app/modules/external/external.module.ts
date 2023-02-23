@@ -27,9 +27,12 @@ export class ExternalModule implements OnModuleInit {
   constructor(private readonly rabbitService: RabbitService) {}
 
   public onModuleInit() {
-    Logger.debug(123, this.rabbitService.connected$)
-    this.rabbitService.connected$.subscribe(d => Logger.debug(12321321))
-    // this.rabbitService.connected$
+    Logger.debug(this.rabbitService.connection, this.rabbitService.channel)
+    // Logger.debug(123, this.rabbitService.connected$)
+    // this.rabbitService.connected$.subscribe(d => Logger.debug('data'))
+    // this.rabbitService.getMessage<any>('test_queue')
+    //   .subscribe(d => console.log(5656, d))
+    // this.rabbitService.connecteda$
     //   .pipe(
     //     switchMap((data: boolean) => {
     //       console.log(123)

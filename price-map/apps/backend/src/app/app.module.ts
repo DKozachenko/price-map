@@ -67,7 +67,7 @@ export class AppModule implements OnModuleInit {
    private readonly rabbitService: RabbitService) {}
 
   public async onModuleInit(): Promise<void> {
-    this.rabbitService.initConnection();
+    // this.rabbitService.initConnection();
     // console.time();
     // const resultCats = await this.scrapingService.scrapeCategories();
     // const productsMap: Map<BreadcrumbInfo, string[]> = this.scrapingService.getProductsMap();
