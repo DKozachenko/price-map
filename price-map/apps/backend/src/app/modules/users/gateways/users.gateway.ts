@@ -178,7 +178,7 @@ export class UsersGateway {
             );
         }),
         switchMap((affectedRows: number) => {
-          Logger.log('UsersGateway', `Обновление пользователя. Обновлено строк: ${affectedRows}`);
+          Logger.log(`Updating user: ${affectedRows} rows`, 'UsersGateway');
           return of({
             event: UserEvents.UpdateUserSuccessed,
             data: {

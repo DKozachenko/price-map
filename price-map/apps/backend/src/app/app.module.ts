@@ -38,7 +38,7 @@ import { HashService, RabbitService } from './services';
       port: 5432,
       username: 'postgres',
       password: 'vkdima03',
-      database: 'test_pm',
+      database: 'real_data_pm',
       entities: [
         Organization,
         Shop,

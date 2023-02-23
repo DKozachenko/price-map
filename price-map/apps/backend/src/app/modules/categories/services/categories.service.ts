@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category3Level, Category2Level, Category1Level } from '@core/entities';
-import { Repository } from 'typeorm';
-import { from, Observable } from 'rxjs';
+import { DeleteResult, Repository } from 'typeorm';
+import { from, Observable, of, switchMap } from 'rxjs';
 
 /**
  * Сервис категорий (всех уровней)
@@ -63,5 +63,31 @@ export class CategoriesService {
         id
       }
     }));
+  }
+
+  public deleteAllCategories1Level(): Observable<number> {
+    return from(this.category1LevelRepository.delete({}))
+      .pipe(
+        switchMap((result: DeleteResult) => of(result.affected))
+      );
+  }
+
+  public saveCategories1Level(categories1Level: Omit<Category1Level, 'id'>[]): Observable<Category1Level[]> {
+    return from(this.category1LevelRepository.save(categories1Level));
+  }
+
+  public updateCategories(categories1Level: Omit<Category1Level, 'id'>[]): Observable<Category1Level[]> {
+    return this.deleteAllCategories1Level()
+      .pipe(
+        switchMap((affectedRows: number) => {
+          Logger.log(`Deleting categories: ${affectedRows} rows`, 'CategoriesService');
+          return this.saveCategories1Level(categories1Level);
+        })
+      )
+
+    // return from(this.category1LevelRepository.upsert(categories1Level, {
+    //   conflictPaths: ['name'],
+    //   skipUpdateIfNoValuesChanged: true
+    // }))
   }
 }

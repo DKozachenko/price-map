@@ -1,0 +1,1 @@
+export type RabbitErrorCode = 'GETTING_MESSAGE_ERROR';

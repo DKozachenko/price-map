@@ -94,6 +94,7 @@ export class Product {
    * @memberof Product
    */
   @ManyToOne(() => Category3Level, (category: Category3Level) => category.products, {
+    onDelete: 'CASCADE',
     orphanedRowAction: 'delete'
   })
   @JoinColumn()

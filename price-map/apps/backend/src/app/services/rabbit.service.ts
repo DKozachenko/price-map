@@ -7,6 +7,27 @@ export class RabbitService {
   public connection: Connection;
   public channel: Channel;
 
+  private getMessagePromise<T = any>(queueName: string): Promise<T> {
+    return new Promise((resolve, reject) => {
+      this.channel.consume(queueName, (message: ConsumeMessage) => {
+        if (message === null) {
+          reject(new Error('Consumer cancelled by server'));
+          return;
+        }
+        const content: string = message.content.toString();
+        Logger.debug(`Message from ${queueName}: ${content}`, 'RabbitService');
+        try {
+          const obj: T = <T>JSON.parse(message.content.toString());
+          this.channel.ack(message);
+          resolve(obj);
+        } catch (err: any) {
+          reject(new Error(`Error while parsing JSON from ${queueName}, content: ${content}`));
+        }
+        return;
+      })
+    })
+  }
+
   public initConnection(): Observable<null> {
     return from(connect({
       protocol: 'amqp',
@@ -40,27 +61,7 @@ export class RabbitService {
       )  
   }
 
-  private getMessagePromise<T = any>(queueName: string): Promise<T> {
-    return new Promise((resolve, reject) => {
-      this.channel.consume(queueName, (message: ConsumeMessage) => {
-        if (message === null) {
-          Logger.error('Consumer cancelled by server', 'RabbitService');
-          reject(message);
-          return;
-        }
-        Logger.debug(`Message from ${queueName}`, 'RabbitService');
-        try {
-          const obj: T = <T>JSON.parse(message.content.toString());
-          this.channel.ack(message);
-          resolve(obj);
-        } catch (err: any) {
-          Logger.error(`Error while parsing JSON from ${queueName}, content: ${message.content.toString()}`, 'RabbitService');
-          reject(err);
-        }
-        return;
-      })
-    })
-  }
+  
 
   public getMessage<T = any>(queueName: string): Observable<T> {
     return from(this.getMessagePromise<T>(queueName));
