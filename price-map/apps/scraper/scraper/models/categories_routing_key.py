@@ -1,0 +1,1 @@
+CATEGORIES_ROUTING_KEY = 'categories'

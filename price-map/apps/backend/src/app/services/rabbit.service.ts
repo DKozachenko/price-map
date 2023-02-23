@@ -31,8 +31,8 @@ export class RabbitService {
   public initConnection(): Observable<null> {
     return from(connect({
       protocol: 'amqp',
-      username: 'guest',
-      password: 'guest',
+      username: 'admin',
+      password: 'admin_rabbit',
       port: 5672
     }))
       .pipe(

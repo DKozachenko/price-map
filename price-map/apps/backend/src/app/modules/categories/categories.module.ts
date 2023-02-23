@@ -34,7 +34,7 @@ export class CategoriesModule implements OnModuleInit {
   public onModuleInit() {
     const errorCodes: (RabbitErrorCode | DbErrorCode)[] = ['DB_ERROR', 'GETTING_MESSAGE_ERROR'];
 
-    this.rabbitService.getMessage<Omit<Category1Level, 'id'>[]>('test_queue')
+    this.rabbitService.getMessage<Omit<Category1Level, 'id'>[]>('categories_queue')
       .pipe(
         switchMap((categories: Omit<Category1Level, 'id'>[]) => {
           return this.categoriesService.updateCategories(categories)
@@ -46,7 +46,7 @@ export class CategoriesModule implements OnModuleInit {
             )
         }),
         catchError((err: any) => {
-          Logger.error(`Error code: ${errorCodes[1]}, queue: ${'test_queue'}, ${err}`, 'CategoriesModule');
+          Logger.error(`Error code: ${errorCodes[1]}, queue: ${'categories_queue'}, ${err}`, 'CategoriesModule');
           return of(null);
         })
       )
