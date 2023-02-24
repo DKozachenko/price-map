@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, Logger } from '@nestjs/common';
 import { from, Observable, switchMap, catchError, of } from 'rxjs';
 import {Channel, connect, Connection, ConsumeMessage}from 'amqplib';
@@ -49,8 +50,8 @@ export class RabbitService {
           reject(new Error(`Error while parsing JSON from ${queueName}, content: ${content}`));
         }
         return;
-      })
-    })
+      });
+    });
   }
 
   /**
@@ -88,7 +89,7 @@ export class RabbitService {
           Logger.error(`Error occured ${err} while connect to Rabbit`, 'RabbitService');
           return of(null);
         })
-      )  
+      );
   }
 
   /**

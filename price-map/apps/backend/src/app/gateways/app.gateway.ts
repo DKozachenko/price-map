@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Logger } from '@nestjs/common';
 import { OnGatewayConnection, 
   OnGatewayDisconnect, 
@@ -18,15 +20,15 @@ import { OnGatewayConnection,
   }
 })
 export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  public afterInit(server: any) {
+  public afterInit(server: any): void {
     Logger.log('Socket init', 'AppGateway');
   }
 
-  public handleConnection(client: any, ...args: any[]) {
+  public handleConnection(client: any, ...args: any[]): void {
     Logger.log('Socket connected', 'AppGateway');
   }
 
-  public handleDisconnect(client: any) {
+  public handleDisconnect(client: any): void {
     Logger.log('Socket disconnected', 'AppGateway');
   }
 }

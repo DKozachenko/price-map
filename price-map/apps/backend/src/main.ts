@@ -4,9 +4,11 @@ import { switchMap, Observable, EMPTY, catchError, from } from 'rxjs';
 import { AppModule } from './app/app.module';
 import { RabbitService } from './app/services';
 
-//Необходимость в изменении дефолтного main.ts возникла из-за необходимо изначальной инициализации соединия с Rabbit,
-//тк при инициализации в корневом модуле асинхронно происходит соединение и инициализация всех модулей,
-//инициализация модулей происходит быстрее и поэтому взаимодействие с Rabbit недоступно в других модулях 
+/**
+ * Необходимость в изменении дефолтного main.ts возникла из-за необходимо изначальной инициализации соединия с Rabbit
+ * тк при инициализации в корневом модуле асинхронно происходит соединение и инициализация всех модулей
+ * инициализация модулей происходит быстрее и поэтому взаимодействие с Rabbit недоступно в других модулях 
+ */
 function start(): Observable<void> {
   const globalPrefix: string = 'api';
   const port: number | string = process.env.PORT || 3333;
@@ -28,11 +30,11 @@ function start(): Observable<void> {
         );
         return EMPTY;
       }),
-      catchError((err: any) => {
+      catchError((err: Error) => {
         Logger.error(`Error occured while starting app, ${err}`, 'bootstrap');
         return EMPTY;
       })
-    )
+    );
 }
 
 start().subscribe();

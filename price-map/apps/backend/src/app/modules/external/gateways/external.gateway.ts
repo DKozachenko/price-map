@@ -38,6 +38,7 @@ export class ExternalGateway {
     Observable<WsResponse<IResponseData<number[][] | null, ExternalErrorCode | null>>> {
     return this.externalService.buildRoute(coordinates)
       .pipe(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         switchMap((osrmData: any) => {
           const encodedPolyline: string = osrmData.data.routes[0].geometry;
           const decodedCoordinates: number[][] = polyline.decode(encodedPolyline);

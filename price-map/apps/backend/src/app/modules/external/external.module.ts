@@ -10,9 +10,7 @@ import { JwtService } from '@nestjs/jwt';
  * @class ExternalModule
  */
 @Module({
-  imports: [
-    HttpModule,
-  ],
+  imports: [HttpModule],
   providers: [
     ExternalService,
     ExternalGateway,

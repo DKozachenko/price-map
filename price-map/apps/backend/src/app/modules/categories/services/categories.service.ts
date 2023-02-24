@@ -100,6 +100,6 @@ export class CategoriesService {
           Logger.warn(`Deleting categories: ${affectedRows} rows`, 'CategoriesService');
           return this.saveCategories1Level(categories1Level);
         })
-      )
+      );
   }
 }

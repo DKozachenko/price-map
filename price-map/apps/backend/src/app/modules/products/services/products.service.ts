@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '@core/entities';
 import { Between, FindOperator, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
-import { from, iif, Observable, of, switchMap } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { IPriceQuery, IProductQuery, IUserFilter } from '@core/interfaces';
 
 /**

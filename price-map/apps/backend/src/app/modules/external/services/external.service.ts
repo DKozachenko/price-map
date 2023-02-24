@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@nestjs/common';
 import { ICoordinates } from '@core/interfaces';
 import { HttpService } from '@nestjs/axios';

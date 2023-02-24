@@ -2,10 +2,9 @@
 /* eslint-disable indent */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Product, Shop } from '@core/entities';
-import { In, Repository } from 'typeorm';
-import { from, iif, Observable, of, switchMap } from 'rxjs';
-import { IProductQuery, IUserFilter } from '@core/interfaces';
+import { Shop } from '@core/entities';
+import { Repository } from 'typeorm';
+import { from, Observable} from 'rxjs';
 
 /**
  * Сервис магазинов

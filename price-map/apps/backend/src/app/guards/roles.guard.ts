@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException, mixin, Type } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, mixin, Type } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '@core/enums';
@@ -10,6 +10,7 @@ import { TokenErrorCode } from '@core/types';
  * @export
  * @type { (failedEventName: string): Type<any> }
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const RolesAuthGuard = (failedEventName: string): Type<any> => {
   @Injectable()
   class RolesAuthGuardMixin implements CanActivate {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ExecutionContext, Injectable, CanActivate, mixin, Type, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { IPayload } from '@core/interfaces';
@@ -33,6 +34,7 @@ export const JwtAuthGuard = (failedEventName: string): Type<any> => {
 
       let payload: IPayload;
       try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         payload = this.jwtService.verify(tokenWithoutBearer, {
           secret: secretKey
         });

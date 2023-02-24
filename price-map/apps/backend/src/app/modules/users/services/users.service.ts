@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@core/entities';
 import { FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
-import { IUserRegisterInfo } from '@core/interfaces';
 
 /**
  * Сервис пользователей

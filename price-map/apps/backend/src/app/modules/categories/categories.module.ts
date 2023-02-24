@@ -31,27 +31,30 @@ export class CategoriesModule implements OnModuleInit {
     private readonly categoriesService: CategoriesService) {}
 
   public onModuleInit(): void {
-    const errorCodes: (RabbitErrorCode | DbErrorCode)[] = ['DB_ERROR', 'GET_MESSAGE_ERROR'];
+    const errorCodes: (RabbitErrorCode | DbErrorCode)[] = [
+      'DB_ERROR', 
+      'GET_MESSAGE_ERROR'
+    ];
 
     this.rabbitService.getMessage<Omit<Category1Level, 'id'>[]>('categories_queue')
       .pipe(
         switchMap((categories: Omit<Category1Level, 'id'>[]) => {
           return this.categoriesService.refreshAllCategoriesData(categories)
             .pipe(
-              catchError((err: any) => {
-                Logger.error(`Error code: ${errorCodes[0]}, ${err}`, 'CategoriesModule')
+              catchError((err: Error) => {
+                Logger.error(`Error code: ${errorCodes[0]}, ${err}`, 'CategoriesModule');
                 return of(null);
               })
-            )
+            );
         }),
-        catchError((err: any) => {
+        catchError((err: Error) => {
           Logger.error(`Error code: ${errorCodes[1]}, queue: ${'categories_queue'}, ${err}`, 'CategoriesModule');
           return of(null);
         })
       )
       .subscribe((data: Category1Level[] | null) => {
         if (data) {
-          Logger.log(`Successfully saving categories`, 'CategoriesModule');
+          Logger.log('Successfully saving categories', 'CategoriesModule');
         }
       }); 
   }
