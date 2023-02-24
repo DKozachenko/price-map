@@ -4,11 +4,11 @@ from models.scraper_exchange import SCRAPER_EXCHANGE
 from models.categories_routing_key import CATEGORIES_ROUTING_KEY
 
 class App:
-  def __init__(self):
-    self.scraping_service = ScrapingService()
-    self.rabbit_service = RabbitService()
+  def __init__(self) -> None:
+    self.scraping_service: ScrapingService = ScrapingService()
+    self.rabbit_service: RabbitService = RabbitService()
 
-  def start(self):
+  def start(self) -> None:
     self.rabbit_service.init_connection()
 
     # while True:

@@ -1,54 +1,55 @@
 import time
+from typing import Any, Union
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-
+from selenium.webdriver.remote.webelement import WebElement
 
 from models.max_get_url_attempts import MAX_GET_URL_ATTEMPTS
 from services.base_scraping import BaseScrapingService
 
 class CategoryScrapingService(BaseScrapingService):
-  def __init__(self):
+  def __init__(self) -> None:
     super().__init__()
-    self.__category3LevelLinks = set()
-    self.__productsMap = dict()
+    self.__category3LevelLinks: set[str] = set()
+    self.__productsMap: dict[str, list[str]] = dict()
 
-  def __openCatalogPopup(self):
+  def __openCatalogPopup(self) -> None:
     # time.sleep(10000000)
-    actions = ActionChains(self._driver)
+    actions: ActionChains = ActionChains(self._driver)
 
     WebDriverWait(self._driver, timeout=3).until(EC.presence_of_element_located((By.ID, 'catalogPopupButton')))
-    catalogPopupButton = self._driver.find_element(By.ID, 'catalogPopupButton')
+    catalogPopupButton: WebElement = self._driver.find_element(By.ID, 'catalogPopupButton')
     actions.move_to_element(catalogPopupButton).click(catalogPopupButton).perform()
 
     #ожидание пока прогрузится каталог
     WebDriverWait(self._driver, timeout=10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div[data-zone-name="catalog-content"]')))
 
-  def __clickAllMoreSpans(self):
+  def __clickAllMoreSpans(self) -> None:
     try:
-      moreSpans = self._driver.find_elements(By.CSS_SELECTOR, 
+      moreSpans: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 
         'div[role="heading"] div div[data-auto="category"] ul[data-autotest-id="subItems"] li > span'
       )
       for span in moreSpans:
-        actions = ActionChains(self._driver)
+        actions: ActionChains = ActionChains(self._driver)
         actions.move_to_element(span).click(span).perform()
     except:
       pass
     
 
-  def __getFilters(self):
-    filters = []
+  def __getFilters(self) -> list[dict[str, Any]]:
+    filters: list[dict[str, Any]] = []
 
-    filterDiv = self._driver.find_element(By.CSS_SELECTOR, 'div[data-grabber="SearchFilters"]')
-    filterDivsBoolean = filterDiv.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="boolean"]')
-    filterDivsEnum = filterDiv.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="enum"]')
-    filterDivsRange = filterDiv.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="range"]')
+    filterDiv: WebElement = self._driver.find_element(By.CSS_SELECTOR, 'div[data-grabber="SearchFilters"]')
+    filterDivsBoolean: list[WebElement] = filterDiv.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="boolean"]')
+    filterDivsEnum: list[WebElement] = filterDiv.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="enum"]')
+    filterDivsRange: list[WebElement] = filterDiv.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="range"]')
 
     #TODO: возможно разделить получение булек, рэнджей и енамов в разные методы
     #бульки
     for filterDivBoolean in filterDivsBoolean:
-      filterBooleanName = filterDivBoolean.text
+      filterBooleanName: str = filterDivBoolean.text
 
       if filterBooleanName:
         filters.append({
@@ -58,29 +59,29 @@ class CategoryScrapingService(BaseScrapingService):
 
     #рэнжи
     for filterDivRange in filterDivsRange:
-      filterDivRangeLegend = filterDivRange.find_element(By.CSS_SELECTOR, 'fieldset span')
-      filterDivRangeName = filterDivRangeLegend.text
-      filterDivRangeMinLabel = filterDivRange.find_element(By.CSS_SELECTOR, 
+      filterDivRangeLegend: WebElement = filterDivRange.find_element(By.CSS_SELECTOR, 'fieldset span')
+      filterDivRangeName: str = filterDivRangeLegend.text
+      filterDivRangeMinLabel: WebElement = filterDivRange.find_element(By.CSS_SELECTOR, 
         'span[data-auto="filter-range-min"] label:not([for])'
       )
-      filterDivRangeMaxLabel = filterDivRange.find_element(By.CSS_SELECTOR,
+      filterDivRangeMaxLabel: WebElement = filterDivRange.find_element(By.CSS_SELECTOR,
         'span[data-auto="filter-range-max"] label:not([for])'
       )
 
-      filterDivRangeMinLabelText = filterDivRangeMinLabel.text
-      filterDivRangeMaxLabelText = filterDivRangeMaxLabel.text
+      filterDivRangeMinLabelText: str = filterDivRangeMinLabel.text
+      filterDivRangeMaxLabelText: str = filterDivRangeMaxLabel.text
 
-      filterDivRangeMinValueStr = filterDivRangeMinLabelText.split(' ')[1]
-      filterDivRangeMaxValueStr = filterDivRangeMaxLabelText.split(' ')[1]
+      filterDivRangeMinValueStr: str = filterDivRangeMinLabelText.split(' ')[1]
+      filterDivRangeMaxValueStr: str = filterDivRangeMaxLabelText.split(' ')[1]
 
-      filterRangeMinValue = 0
+      filterRangeMinValue: Union[int, float] = 0
 
       if ',' in filterDivRangeMinValueStr:
         filterRangeMinValue = float(filterDivRangeMinValueStr.replace(',', '.'))
       else:
         filterRangeMinValue = int(filterDivRangeMinValueStr)
 
-      filterRangeMaxValue = 0
+      filterRangeMaxValue: Union[int, float] = 0
 
       if ',' in filterDivRangeMaxValueStr:
         filterRangeMaxValue = float(filterDivRangeMaxValueStr.replace(',', '.'))
@@ -99,29 +100,29 @@ class CategoryScrapingService(BaseScrapingService):
 
     #енумки
     for filterDivEnum in filterDivsEnum:
-      filterDivEnumLegend = filterDivEnum.find_element(By.CSS_SELECTOR, 'fieldset legend')
-      filterDivEnumName = filterDivEnumLegend.text
+      filterDivEnumLegend: WebElement = filterDivEnum.find_element(By.CSS_SELECTOR, 'fieldset legend')
+      filterDivEnumName: str = filterDivEnumLegend.text
 
       self._driver.implicitly_wait(2)
-      filterEnumFieldsetDivs = filterDivEnum.find_elements(By.CSS_SELECTOR, 'fieldset > div > div')
+      filterEnumFieldsetDivs: list[WebElement] = filterDivEnum.find_elements(By.CSS_SELECTOR, 'fieldset > div > div')
 
       for fieldsetDiv in filterEnumFieldsetDivs:
-        moreSpans = fieldsetDiv.find_elements(By.CSS_SELECTOR, 'span[tabindex="0"]')
+        moreSpans: list[WebElement] = fieldsetDiv.find_elements(By.CSS_SELECTOR, 'span[tabindex="0"]')
 
         for moreSpan in moreSpans:
-          actions = ActionChains(self._driver)
+          actions: ActionChains = ActionChains(self._driver)
           actions.scroll_from_origin(0, 0, 0, 0, moreSpan).perform()
           actions.move_to_element(moreSpan).click(moreSpan).perform()
           self._driver.implicitly_wait(1000)
 
-      filterEnumValueDivs = filterDivEnum.find_elements(By.CSS_SELECTOR,
+      filterEnumValueDivs: list[WebElement] = filterDivEnum.find_elements(By.CSS_SELECTOR,
         'fieldset div[data-baobab-name="FilterValue"]'
       )
-      filterValues = []
+      filterValues: list[str] = []
 
       for filterEnumValueDiv in filterEnumValueDivs:
         try:
-          filterEnumValue = filterEnumValueDiv.text
+          filterEnumValue: str = filterEnumValueDiv.text
           filterValues.append(filterEnumValue)
         except:
           break
@@ -135,10 +136,10 @@ class CategoryScrapingService(BaseScrapingService):
 
     return filters
 
-  def __setFilters(self, categories1Level):
-    index = 0
-    attemptsToGetUrl = 0
-    array = list(self.__category3LevelLinks)
+  def __setFilters(self, categories1Level: list[Any]) -> None:
+    index: int = 0
+    attemptsToGetUrl: int = 0
+    array: list[str] = list(self.__category3LevelLinks)
     while index < len(array) and attemptsToGetUrl < MAX_GET_URL_ATTEMPTS:
       # self._setCookies()
       # print('set up')
@@ -148,14 +149,14 @@ class CategoryScrapingService(BaseScrapingService):
 
       #TODO: не у всех категорий 3 уровня сразу есть товары, у кого-то мб еще категории внутри
       try:
-        breadcrumb = self._driver.find_elements(By.CSS_SELECTOR, 'ol[itemscope] li')
+        breadcrumb: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 'ol[itemscope] li')
         print(breadcrumb)
-        category1LevelName = breadcrumb[0].text
-        category2LevelName = breadcrumb[1].text
-        category3LevelName = breadcrumb[2].text
+        category1LevelName: str = breadcrumb[0].text
+        category2LevelName: str = breadcrumb[1].text
+        category3LevelName: str = breadcrumb[2].text
         print(category1LevelName, category2LevelName, category3LevelName)
         # category1Level = categories1Level.find((item) => item.name === category1LevelName)
-        category1Level = list(filter(lambda item: item['name'] == category1LevelName, categories1Level))[0]
+        category1Level: Any = list(filter(lambda item: item['name'] == category1LevelName, categories1Level))[0]
         # category1Level = None
         # for cat1 in categories1Level:
         #   if (cat1['name'] == category1LevelName):
@@ -164,29 +165,29 @@ class CategoryScrapingService(BaseScrapingService):
 
         # print(123, category1Level)
         # category2Level = category1Level.categories2Level.find((item) => item.name === category2LevelName)
-        category2Level = list(filter(lambda item: item['name'] == category2LevelName, list(category1Level['categories2Level'])))[0]
+        category2Level: Any = list(filter(lambda item: item['name'] == category2LevelName, list(category1Level['categories2Level'])))[0]
         # print(456, category2Level)
         # category3Level = category2Level.categories3Level.find((item) =>
         #   item.name.toLowerCase().includes(category3LevelName.toLowerCase())
         #   or category3LevelName.toLowerCase().includes(item.name.toLowerCase()))
-        category3Level = list(filter(lambda item: category3LevelName.lower() in item['name'].lower()
+        category3Level: Any = list(filter(lambda item: category3LevelName.lower() in item['name'].lower()
           or item['name'].lower() in category3LevelName.lower(), category2Level['categories3Level']))[0]
         # print(789, category3Level)
 
         if category3Level:
-          filters = self.__getFilters()
+          filters: list[dict[str, Any]] = self.__getFilters()
           category3Level['filters'] = filters
 
           #добавление ссылок на товары в этой категории
-          links = []
-          productBlocks = self._driver.find_elements(By.CSS_SELECTOR, 'div[data-baobab-name="$main"]')
-          productArticles = productBlocks[0].find_elements(By.CSS_SELECTOR, 'article')
-          count = 0
+          links: list[str] = []
+          productBlocks: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 'div[data-baobab-name="$main"]')
+          productArticles: list[WebElement] = productBlocks[0].find_elements(By.CSS_SELECTOR, 'article')
+          count: int = 0
 
           for i in range(len(productArticles)):
             if count < 5:
-              productA = productArticles[i].find_element(By.CSS_SELECTOR, 'a[data-baobab-name="title"]')
-              productLink = productA.get_attribute('href')
+              productA: WebElement = productArticles[i].find_element(By.CSS_SELECTOR, 'a[data-baobab-name="title"]')
+              productLink: str = productA.get_attribute('href')
               links.append(productLink)
 
               count += 1
@@ -205,58 +206,56 @@ class CategoryScrapingService(BaseScrapingService):
         print('IN EXCEPT')
         attemptsToGetUrl += 1
 
-  def __getCategories1Level(self):
-    categories1Level = []
-    category1LevelLis = self._driver.find_elements(By.CSS_SELECTOR, 'ul[role="tablist"]:first-child li')
+  def __getCategories1Level(self) -> list[Any]:
+    categories1Level: list[Any] = []
+    category1LevelLis: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 'ul[role="tablist"]:first-child li')
     #TODO: убрать count
-    count = 0
-    count3Level = 0
+    count: int = 0
+    count3Level: int = 0
     for category1LevelLi in category1LevelLis:
-      actions = ActionChains(self._driver)
+      actions: ActionChains = ActionChains(self._driver)
       actions.move_to_element(category1LevelLi).perform()
 
       self.__clickAllMoreSpans()
-
-
       self._driver.implicitly_wait(3)
       # WebDriverWait(self._driver, timeout=3).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div[role="heading"] > a')))
-      category1LevelA = self._driver.find_element(By.CSS_SELECTOR, 'div[role="heading"] > a')
-      category1LevelName = category1LevelA.text
+      category1LevelA: WebElement = self._driver.find_element(By.CSS_SELECTOR, 'div[role="heading"] > a')
+      category1LevelName: str = category1LevelA.text
 
       if category1LevelName != 'Скидки' and category1LevelName != 'Ресейл' and count <= 3 and count > 2:
-        category1Level = {
+        category1Level: dict[str, Any] = {
           "name": category1LevelName,
           "categories2Level": []
         }
 
-        category2LevelDivs = self._driver.find_elements(By.CSS_SELECTOR,
+        category2LevelDivs: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR,
           'div[role="heading"] div div[data-auto="category"]'
         )
 
         for category2LevelDiv in category2LevelDivs:
           # self._driver.implicitly_wait(3)
-          category2LevelDivHeading = category2LevelDiv.find_element(By.CSS_SELECTOR, 'div[role="heading"]')
+          category2LevelDivHeading: WebElement = category2LevelDiv.find_element(By.CSS_SELECTOR, 'div[role="heading"]')
           #при переборе не получает элемент
-          category2LevelName = category2LevelDivHeading.text
-          category2Level = {
+          category2LevelName: str = category2LevelDivHeading.text
+          category2Level: dict[str, Any] = {
             "name": category2LevelName,
             "categories3Level": []
           }
 
-          categories3LevelDivs = category2LevelDiv.find_elements(By.CSS_SELECTOR,
+          categories3LevelDivs: list[WebElement] = category2LevelDiv.find_elements(By.CSS_SELECTOR,
             'ul[data-autotest-id="subItems"] li > div'
           )
 
           if categories3LevelDivs:
             for categories3LevelDiv in categories3LevelDivs:
               # self._driver.implicitly_wait(3)
-              category3LevelA = categories3LevelDiv.find_element(By.CSS_SELECTOR, 'a')
+              category3LevelA: WebElement = categories3LevelDiv.find_element(By.CSS_SELECTOR, 'a')
 
               if count3Level < 4:
-                category3LevelLink = category3LevelA.get_attribute('href')
+                category3LevelLink: str = category3LevelA.get_attribute('href')
                 self.__category3LevelLinks.add(category3LevelLink)
 
-              category3LevelName = categories3LevelDiv.text
+              category3LevelName: str = categories3LevelDiv.text
               category2Level['categories3Level'].append({
                 "name": category3LevelName,
                 "filters": []
@@ -271,8 +270,8 @@ class CategoryScrapingService(BaseScrapingService):
 
     return categories1Level
 
-  def scrape(self):
-    categories1Level = []
+  def scrape(self) -> list[Any]:
+    categories1Level: list[Any] = []
 
     self._initializeDriver()
 
@@ -284,14 +283,14 @@ class CategoryScrapingService(BaseScrapingService):
       if self._isShowedCaptcha():
         # captcha = self._driver.find_element(By.CSS_SELECTOR, '.CheckboxCaptcha-Button')
         # captcha.click()
-        actions = ActionChains(self._driver)
+        actions: ActionChains = ActionChains(self._driver)
         # actions.click(captcha).perform()
         # self._setCookies()
         self._driver.get('https://market.yandex.ru/')
 
       self.__openCatalogPopup()
 
-      categories1Level = self.__getCategories1Level()
+      categories1Level: list[Any] = self.__getCategories1Level()
       self.__setFilters(categories1Level)
       print(categories1Level)
       print(1, self.__productsMap)

@@ -1,4 +1,4 @@
-COOKIES = [
+COOKIES: list[dict[str, str]] = [
   {
     "name": '_yasc',
     "value": '9ha1SRrpGRjhtG7UFMAwuMiTnhwz508qkl6MJPPKqVnFGhsN8M8E9UjStnHZwsMf7d0=',

@@ -1,1 +1,1 @@
-CATEGORIES_ROUTING_KEY = 'categories'
+CATEGORIES_ROUTING_KEY: str = 'categories'

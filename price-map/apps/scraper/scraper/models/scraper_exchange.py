@@ -1,1 +1,1 @@
-SCRAPER_EXCHANGE = 'scraper_exchange'
+SCRAPER_EXCHANGE: str = 'scraper_exchange'
