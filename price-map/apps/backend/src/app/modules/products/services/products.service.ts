@@ -131,7 +131,14 @@ export class ProductsService {
     ${whereSql ? whereSql : ''};`;
   }
 
-  private generatePriceFindOperator(priceQuery: IPriceQuery): FindOperator<number> {
+  /**
+   * Получение оператора сравнения для цены
+   * @private
+   * @param {IPriceQuery} priceQuery запрос для цены
+   * @return {*}  {FindOperator<number>} оператор сравнения для ORM
+   * @memberof ProductsService
+   */
+  private getPriceFindOperator(priceQuery: IPriceQuery): FindOperator<number> {
     if (!priceQuery.max && !priceQuery.min) {
       return undefined;
     }
@@ -158,7 +165,7 @@ export class ProductsService {
       return from(this.productRepository.query(sqlQuery));
     }
 
-    const priceFindOperator: FindOperator<number> = this.generatePriceFindOperator(query.price);
+    const priceFindOperator: FindOperator<number> = this.getPriceFindOperator(query.price);
     return from(this.productRepository.find({
       where: {
         category3Level: {

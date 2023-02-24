@@ -2,11 +2,36 @@ import { Injectable, Logger } from '@nestjs/common';
 import { from, Observable, switchMap, catchError, of } from 'rxjs';
 import {Channel, connect, Connection, ConsumeMessage}from 'amqplib';
 
+/**
+ * Сервис взаимодействия с Rabbit
+ * @export
+ * @class RabbitService
+ */
 @Injectable()
 export class RabbitService {
-  public connection: Connection;
-  public channel: Channel;
+  /**
+   * Текущее соединение
+   * @private
+   * @type {Connection}
+   * @memberof RabbitService
+   */
+  private connection: Connection;
+  /**
+   * Текущий канад
+   * @private
+   * @type {Channel}
+   * @memberof RabbitService
+   */
+  private channel: Channel;
 
+  /**
+   * Получение сообщения (возвращает Promise)
+   * @private
+   * @template T тип данных
+   * @param {string} queueName название очереди
+   * @return {*}  {Promise<T>} данные из сообщения
+   * @memberof RabbitService
+   */
   private getMessagePromise<T = any>(queueName: string): Promise<T> {
     return new Promise((resolve, reject) => {
       this.channel.consume(queueName, (message: ConsumeMessage) => {
@@ -28,6 +53,11 @@ export class RabbitService {
     })
   }
 
+  /**
+   * Инициализация соединия
+   * @return {*}  {Observable<null>}
+   * @memberof RabbitService
+   */
   public initConnection(): Observable<null> {
     return from(connect({
       protocol: 'amqp',
@@ -61,8 +91,13 @@ export class RabbitService {
       )  
   }
 
-  
-
+  /**
+   * Получение сообщения (возвращает Observable)
+   * @template T тип данных
+   * @param {string} queueName название очереди
+   * @return {*}  {Observable<T>} данные из сообщения
+   * @memberof RabbitService
+   */
   public getMessage<T = any>(queueName: string): Observable<T> {
     return from(this.getMessagePromise<T>(queueName));
   }

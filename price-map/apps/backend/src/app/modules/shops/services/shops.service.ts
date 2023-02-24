@@ -15,19 +15,18 @@ import { IProductQuery, IUserFilter } from '@core/interfaces';
 @Injectable()
 export class ShopsService {
   /**
-   * Репозиторий товаров
+   * Репозиторий магазинов
    * @private
-   * @type {Repository<Product>}
-   * @memberof ProductsService
+   * @type {Repository<Shop>}
+   * @memberof ShopsService
    */
   @InjectRepository(Shop, 'postgresConnect')
   private readonly shopRepository: Repository<Shop>;
 
   /**
-   * Получение всех товаров в определенных категориях 3 уровня
-   * @param {IProductQuery} query запрос для товаров
-   * @return {*}  {Observable<Product[]>}
-   * @memberof ProductsService
+   * Получение всех магазинов
+   * @return {*}  {Observable<Shop[]>} магазины
+   * @memberof ShopsService
    */
   public getAll(): Observable<Shop[]> {
     return from(this.shopRepository.find({
@@ -38,12 +37,11 @@ export class ShopsService {
     }));
   }
 
-
   /**
-   * Получение товара по id
+   * Получение магазина по id
    * @param {string} id id
-   * @return {*}  {Observable<Product | null>} товар
-   * @memberof ProductsService
+   * @return {*}  {(Observable<Shop | null>)} магазин
+   * @memberof ShopsService
    */
   public getById(id: string): Observable<Shop | null> {
     return from(this.shopRepository.findOne({

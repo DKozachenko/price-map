@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { ICoordinates } from '@core/interfaces';
-import { HttpService } from '@nestjs/axios';
 import { from, Observable, switchMap } from 'rxjs';
 import * as bcrypt from 'bcrypt';
 

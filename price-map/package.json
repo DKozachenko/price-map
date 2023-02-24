@@ -58,7 +58,6 @@
     "reflect-metadata": "^0.1.13",
     "round-slider": "^1.6.1",
     "rxjs": "^7.0.0",
-    "selenium-webdriver": "^4.6.1",
     "socket.io-client": "^4.5.3",
     "tslib": "^2.3.0",
     "typeorm": "^0.3.10",

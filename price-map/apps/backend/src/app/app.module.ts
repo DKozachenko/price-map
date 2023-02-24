@@ -1,7 +1,6 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ScrapingModule, AuthModule, UsersModule, ProductsModule, CategoriesModule, ExternalModule, ShopsModule } from './modules';
-import { ScrapingService } from './modules/scraping/services';
+import { AuthModule, UsersModule, ProductsModule, CategoriesModule, ExternalModule, ShopsModule } from './modules';
 import { Organization,
   Shop,
   Product,
@@ -18,7 +17,6 @@ import { HashService, RabbitService } from './services';
  * Главный модуль приложения
  * @export
  * @class AppModule
- * @implements {OnModuleInit}
  */
 @Module({
   imports: [
@@ -26,7 +24,6 @@ import { HashService, RabbitService } from './services';
     UsersModule,
     ProductsModule,
     CategoriesModule,
-    ScrapingModule,
     ExternalModule,
     ShopsModule,
     //TODO: Добавить свой логгер
@@ -62,22 +59,4 @@ import { HashService, RabbitService } from './services';
     AppGateway
   ],
 })
-export class AppModule implements OnModuleInit {
-  constructor(private readonly scrapingService: ScrapingService,
-   private readonly rabbitService: RabbitService) {}
-
-  public async onModuleInit(): Promise<void> {
-    // this.rabbitService.initConnection();
-    // console.time();
-    // const resultCats = await this.scrapingService.scrapeCategories();
-    // const productsMap: Map<BreadcrumbInfo, string[]> = this.scrapingService.getProductsMap();
-    // await new Promise(temp => setTimeout(temp, 2000));
-    // const result = await this.scrapingService.scrapeProducts(productsMap);
-    // console.log('result', result);
-
-    // fs.writeFile('test.json', JSON.stringify(result), function(error){
-    //   if(error) throw error;
-    // });
-    // console.timeEnd();
-  }
-}
+export class AppModule {}

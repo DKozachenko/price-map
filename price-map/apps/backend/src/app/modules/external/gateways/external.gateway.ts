@@ -26,11 +26,11 @@ export class ExternalGateway {
   constructor(private readonly externalService: ExternalService) { }
 
   /**
-     * Событие построения маршрута
-     * @param {ICoordinates[]} coordinates коодинаты
-     * @return {*}  {(Observable<WsResponse<IResponseData<number[][] | null, AppErrorCode | null>>>)} ответ
-     * @memberof AppGateway
-     */
+   * Событие построения маршрута
+   * @param {ICoordinates[]} coordinates коодинаты
+   * @return {*}  {(Observable<WsResponse<IResponseData<number[][] | null, AppErrorCode | null>>>)} ответ
+   * @memberof AppGateway
+   */
   @Roles(Role.User, Role.Admin)
   @UseGuards(JwtAuthGuard(ExternalEvents.BuildRouteFailed), RolesAuthGuard(ExternalEvents.BuildRouteFailed))
   @SubscribeMessage(ExternalEvents.BuildRouteAttempt)

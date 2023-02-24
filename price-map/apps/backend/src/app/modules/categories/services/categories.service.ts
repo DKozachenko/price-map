@@ -65,6 +65,11 @@ export class CategoriesService {
     }));
   }
 
+  /**
+   * Удаление всех категорий 1 уровня (вместе со связанными категория 2 и 3 уровней)
+   * @return {*}  {Observable<number>} кол-во затронутых строк
+   * @memberof CategoriesService
+   */
   public deleteAllCategories1Level(): Observable<number> {
     return from(this.category1LevelRepository.delete({}))
       .pipe(
@@ -72,11 +77,23 @@ export class CategoriesService {
       );
   }
 
+  /**
+   * Сохранение категорий 1 уровня (вместе со связанными категория 2 и 3 уровней)
+   * @param {Omit<Category1Level, 'id'>[]} categories1Level категории 1 уровня
+   * @return {*}  {Observable<Category1Level[]>} сохраненные категории 1 уровня из БД
+   * @memberof CategoriesService
+   */
   public saveCategories1Level(categories1Level: Omit<Category1Level, 'id'>[]): Observable<Category1Level[]> {
     return from(this.category1LevelRepository.save(categories1Level));
   }
 
-  public updateCategories(categories1Level: Omit<Category1Level, 'id'>[]): Observable<Category1Level[]> {
+  /**
+   * Обновление данных по всем категориям (удаление и сохранение по новой)
+   * @param {Omit<Category1Level, 'id'>[]} categories1Level категории 1 уровня 
+   * @return {*}  {Observable<Category1Level[]>} сохраненные категории 1 уровня из БД
+   * @memberof CategoriesService
+   */
+  public refreshAllCategoriesData(categories1Level: Omit<Category1Level, 'id'>[]): Observable<Category1Level[]> {
     return this.deleteAllCategories1Level()
       .pipe(
         switchMap((affectedRows: number) => {
@@ -84,10 +101,5 @@ export class CategoriesService {
           return this.saveCategories1Level(categories1Level);
         })
       )
-
-    // return from(this.category1LevelRepository.upsert(categories1Level, {
-    //   conflictPaths: ['name'],
-    //   skipUpdateIfNoValuesChanged: true
-    // }))
   }
 }

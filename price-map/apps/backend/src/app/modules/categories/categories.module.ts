@@ -7,7 +7,6 @@ import { Category1Level, Category2Level, Category3Level } from '@core/entities';
 import { JwtService } from '@nestjs/jwt';
 import { RabbitService } from '../../services';
 import { DbErrorCode, RabbitErrorCode } from '@core/types';
-import { InsertResult } from 'typeorm';
 
 /**
  * Модуль категорий (всех уровней)
@@ -31,13 +30,13 @@ export class CategoriesModule implements OnModuleInit {
   constructor(private readonly rabbitService: RabbitService,
     private readonly categoriesService: CategoriesService) {}
 
-  public onModuleInit() {
+  public onModuleInit(): void {
     const errorCodes: (RabbitErrorCode | DbErrorCode)[] = ['DB_ERROR', 'GETTING_MESSAGE_ERROR'];
 
     this.rabbitService.getMessage<Omit<Category1Level, 'id'>[]>('categories_queue')
       .pipe(
         switchMap((categories: Omit<Category1Level, 'id'>[]) => {
-          return this.categoriesService.updateCategories(categories)
+          return this.categoriesService.refreshAllCategoriesData(categories)
             .pipe(
               catchError((err: any) => {
                 Logger.error(`Error code: ${errorCodes[0]}, ${err}`, 'CategoriesModule')
