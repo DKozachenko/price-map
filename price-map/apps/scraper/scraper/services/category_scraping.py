@@ -1,5 +1,5 @@
 import time
-from typing import Any, Union
+from typing import Union
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -8,6 +8,10 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from constants.max_get_url_attempts import MAX_GET_URL_ATTEMPTS
 from services.base_scraping import BaseScrapingService
+from entities.filter import Filter
+from entities.category_1_level import Category1Level
+from entities.category_2_level import Category2Level
+from entities.category_3_level import Category3Level
 
 class CategoryScrapingService(BaseScrapingService):
   def __init__(self) -> None:
@@ -28,7 +32,7 @@ class CategoryScrapingService(BaseScrapingService):
 
   def __click_all_more_spans(self) -> None:
     try:
-      more_spans: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 
+      more_spans: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR,
         'div[role="heading"] div div[data-auto="category"] ul[data-autotest-id="subItems"] li > span'
       )
       for more_span in more_spans:
@@ -36,10 +40,10 @@ class CategoryScrapingService(BaseScrapingService):
         actions.move_to_element(more_span).click(more_span).perform()
     except:
       pass
-    
 
-  def __get_filters(self) -> list[dict[str, Any]]:
-    filters: list[dict[str, Any]] = []
+
+  def __get_filters(self) -> list[Filter]:
+    filters: list[Filter] = []
 
     filter_div: WebElement = self._driver.find_element(By.CSS_SELECTOR, 'div[data-grabber="SearchFilters"]')
     filter_divs_boolean: list[WebElement] = filter_div.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="boolean"]')
@@ -52,16 +56,14 @@ class CategoryScrapingService(BaseScrapingService):
       filter_boolean_name: str = filter_div_boolean.text
 
       if filter_boolean_name:
-        filters.append({
-          "name": filter_boolean_name.replace('\n', ''),
-          "type": 'boolean'
-        })
+        filter: Filter = Filter(filter_boolean_name.replace('\n', ''), 'boolean', [])
+        filters.append(filter)
 
     #рэнжи
     for filter_div_range in filter_divs_range:
       filter_div_range_legend: WebElement = filter_div_range.find_element(By.CSS_SELECTOR, 'fieldset span')
       filter_div_range_name: str = filter_div_range_legend.text
-      filter_div_range_min_label: WebElement = filter_div_range.find_element(By.CSS_SELECTOR, 
+      filter_div_range_min_label: WebElement = filter_div_range.find_element(By.CSS_SELECTOR,
         'span[data-auto="filter-range-min"] label:not([for])'
       )
       filter_div_range_max_label: WebElement = filter_div_range.find_element(By.CSS_SELECTOR,
@@ -73,7 +75,7 @@ class CategoryScrapingService(BaseScrapingService):
 
       filter_div_range_min_value_str: str = filter_div_range_min_label_text.split(' ')[1]
       filter_div_range_max_value_str: str = filter_div_range_max_label_text.split(' ')[1]
-
+      #ПЕРЕПИСАТЬ UNION НА ПАЛКУ И НЕ ЗАБУДЬ ПРО .FORMAT
       filter_range_min_value: Union[int, float] = 0
 
       if ',' in filter_div_range_min_value_str:
@@ -83,20 +85,15 @@ class CategoryScrapingService(BaseScrapingService):
 
       filter_range_max_value: Union[int, float] = 0
 
+      #ПОДУМАТЬ ПРО ГОВНО-ТЕРНАРЬ
       if ',' in filter_div_range_max_value_str:
         filter_range_max_value = float(filter_div_range_max_value_str.replace(',', '.'))
       else:
         filter_range_max_value = int(filter_div_range_max_value_str)
 
       if filter_div_range_name:
-        filters.append({
-          "name": filter_div_range_name,
-          "type": 'range',
-          "value": [
-            filter_range_min_value,
-            filter_range_max_value
-          ]
-        })
+        filter: Filter = Filter(filter_div_range_name, 'range', [filter_range_min_value, filter_range_max_value])
+        filters.append(filter)
 
     #енумки
     for filter_div_enum in filter_divs_enum:
@@ -128,15 +125,12 @@ class CategoryScrapingService(BaseScrapingService):
           break
 
       if filter_div_enum_name and any(bool(value) for value in filter_values):
-        filters.append({
-          "name": filter_div_enum_name,
-          "type": 'enum',
-          "value": filter_values
-        })
+        filter: Filter = Filter(filter_div_enum_name, 'enum', filter_values)
+        filters.append(filter)
 
     return filters
 
-  def __set_filters(self, categories_1_level: list[Any]) -> None:
+  def __set_filters(self, categories_1_level: list[Category1Level]) -> None:
     index: int = 0
     attempts_to_get_url: int = 0
     array: list[str] = list(self.__category_3_level_links)
@@ -155,18 +149,18 @@ class CategoryScrapingService(BaseScrapingService):
         category_2_level_name: str = breadcrumb[1].text
         category_3_level_name: str = breadcrumb[2].text
         print(category_1_level_name, category_2_level_name, category_3_level_name)
-        category_1_level: Any = list(filter(lambda item: item['name'] == category_1_level_name, categories_1_level))[0]
+        category_1_level: Category1Level = list(filter(lambda item: item.name == category_1_level_name, categories_1_level))[0]
 
         # print(123, category_1_level)
-        category_2_level: Any = list(filter(lambda item: item['name'] == category_2_level_name, list(category_1_level['categories2Level'])))[0]
+        category_2_level: Category2Level = list(filter(lambda item: item.name == category_2_level_name, category_1_level.categories2Level))[0]
         # print(456, category2Level)
-        category_3_level: Any = list(filter(lambda item: category_3_level_name.lower() in item['name'].lower()
-          or item['name'].lower() in category_3_level_name.lower(), category_2_level['categories3Level']))[0]
+        category_3_level: Category3Level = list(filter(lambda item: category_3_level_name.lower() in item.name.lower()
+          or item.name.lower() in category_3_level_name.lower(), category_2_level.categories3Level))[0]
         # print(789, category3Level)
 
         if category_3_level:
-          filters: list[dict[str, Any]] = self.__get_filters()
-          category_3_level['filters'] = filters
+          filters: list[Filter] = self.__get_filters()
+          category_3_level.filters = filters
 
           #добавление ссылок на товары в этой категории
           links: list[str] = []
@@ -188,7 +182,7 @@ class CategoryScrapingService(BaseScrapingService):
           #   category3LevelName: category3LevelName
           # }: links })
 
-          self.__products_map[category_3_level['name']] = links
+          self.__products_map[category_3_level.name] = links
 
         index += 1
         attempts_to_get_url = 0
@@ -196,8 +190,8 @@ class CategoryScrapingService(BaseScrapingService):
         print('IN EXCEPT')
         attempts_to_get_url += 1
 
-  def __get_categories_1_level(self) -> list[Any]:
-    categories_1_level: list[Any] = []
+  def __get_categories_1_level(self) -> list[Category1Level]:
+    categories_1_level: list[Category1Level] = []
     category_1_level_lis: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 'ul[role="tablist"]:first-child li')
     #TODO: убрать count
     count: int = 0
@@ -213,10 +207,7 @@ class CategoryScrapingService(BaseScrapingService):
       category_1_level_name: str = category_1_level_a.text
 
       if category_1_level_name != 'Скидки' and category_1_level_name != 'Ресейл' and count <= 3 and count > 2:
-        category_1_level: dict[str, Any] = {
-          "name": category_1_level_name,
-          "categories2Level": []
-        }
+        category_1_level: Category1Level = Category1Level(category_1_level_name, [])
 
         category_2_level_divs: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR,
           'div[role="heading"] div div[data-auto="category"]'
@@ -227,10 +218,7 @@ class CategoryScrapingService(BaseScrapingService):
           category_2_level_div_heading: WebElement = category_2_level_div.find_element(By.CSS_SELECTOR, 'div[role="heading"]')
           #при переборе не получает элемент
           category_2_level_name: str = category_2_level_div_heading.text
-          category_2_level: dict[str, Any] = {
-            "name": category_2_level_name,
-            "categories3Level": []
-          }
+          category_2_level: Category2Level = Category2Level(category_2_level_name, [])
 
           categories_3_level_divs: list[WebElement] = category_2_level_div.find_elements(By.CSS_SELECTOR,
             'ul[data-autotest-id="subItems"] li > div'
@@ -246,28 +234,26 @@ class CategoryScrapingService(BaseScrapingService):
                 self.__category_3_level_links.add(category_3_level_link)
 
               category_3_level_name: str = categories_3_level_div.text
-              category_2_level['categories3Level'].append({
-                "name": category_3_level_name,
-                "filters": []
-              })
+              category_3_level: Category3Level = Category3Level(category_3_level_name, [])
+              category_2_level.categories3Level.append(category_3_level)
 
               count_3_level += 1
 
-          category_1_level['categories2Level'].append(category_2_level)
+          category_1_level.categories2Level.append(category_2_level)
         categories_1_level.append(category_1_level)
 
       count += 1
 
     return categories_1_level
 
-  def scrape(self) -> list[Any]:
-    categories_1_level: list[Any] = []
+  def scrape(self) -> list[Category1Level]:
+    categories_1_level: list[Category1Level] = []
 
     self._init_driver()
 
     if self._driver:
       self._driver.get('https://market.yandex.ru/')
-      self._set_cookies()     
+      self._set_cookies()
 
       #TODO: Есть вайбы, что все равно страница редиректит даже если нет капчи
       if self._is_showed_captcha():

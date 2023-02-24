@@ -8,7 +8,7 @@
     "start:front": "nx serve frontend",
     "start:back": "nx serve backend",
     "start:scraper": "cd ./apps/scraper/scraper && poetry run python index.py",
-    "poststart:scraper": "rimraf ./apps/scraper/scraper/app/__pycache__ && rimraf ./apps/scraper/scraper/models/__pycache__ && rimraf ./apps/scraper/scraper/services/__pycache__",
+    "poststart:scraper": "rimraf ./apps/scraper/scraper/app/__pycache__ && rimraf ./apps/scraper/scraper/constants/__pycache__ && rimraf ./apps/scraper/scraper/services/__pycache__ && rimraf ./apps/scraper/scraper/entities/__pycache__",
     "build:front": "nx build frontend",
     "build:back": "nx build backend",
     "lint:front": "nx lint frontend",
