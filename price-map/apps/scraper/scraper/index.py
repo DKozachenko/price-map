@@ -1,4 +1,4 @@
 from app.app import App
 
-# app = App()
-# app.start()
+app = App()
+app.start()

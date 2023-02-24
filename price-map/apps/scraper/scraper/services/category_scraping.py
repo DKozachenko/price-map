@@ -296,6 +296,6 @@ class CategoryScrapingService(BaseScrapingService):
       print(categories1Level)
       print(1, self.__productsMap)
 
-      # self._driver.quit()
+      self._driver.quit()
 
     return categories1Level
