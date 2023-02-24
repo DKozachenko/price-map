@@ -40,25 +40,23 @@ class CategoryScrapingService(BaseScrapingService):
     except:
       pass
 
-
-  def __get_filters(self) -> list[Filter]:
-    filters: list[Filter] = []
-
-    filter_div: WebElement = self._driver.find_element(By.CSS_SELECTOR, 'div[data-grabber="SearchFilters"]')
+  def __get_boolean_filters(self, filter_div: WebElement) -> list[Filter]:
+    boolean_filters: list[Filter] = []
     filter_divs_boolean: list[WebElement] = filter_div.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="boolean"]')
-    filter_divs_enum: list[WebElement] = filter_div.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="enum"]')
-    filter_divs_range: list[WebElement] = filter_div.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="range"]')
 
-    #TODO: возможно разделить получение булек, рэнджей и енамов в разные методы
-    #бульки
     for filter_div_boolean in filter_divs_boolean:
       filter_boolean_name: str = filter_div_boolean.text
 
       if filter_boolean_name:
         filter: Filter = Filter(filter_boolean_name.replace('\n', ''), 'boolean', [])
-        filters.append(filter)
+        boolean_filters.append(filter)
 
-    #рэнжи
+    return boolean_filters
+
+  def __get_range_filters(self, filter_div: WebElement) -> list[Filter]:
+    range_filters: list[Filter] = []
+    filter_divs_range: list[WebElement] = filter_div.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="range"]')
+
     for filter_div_range in filter_divs_range:
       filter_div_range_legend: WebElement = filter_div_range.find_element(By.CSS_SELECTOR, 'fieldset span')
       filter_div_range_name: str = filter_div_range_legend.text
@@ -92,9 +90,14 @@ class CategoryScrapingService(BaseScrapingService):
 
       if filter_div_range_name:
         filter: Filter = Filter(filter_div_range_name, 'range', [filter_range_min_value, filter_range_max_value])
-        filters.append(filter)
+        range_filters.append(filter)
 
-    #енумки
+    return range_filters
+
+  def __get_enum_filters(self, filter_div: WebElement) -> list[Filter]:
+    enum_filters: list[Filter] = []
+    filter_divs_enum: list[WebElement] = filter_div.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="enum"]')
+
     for filter_div_enum in filter_divs_enum:
       filter_div_enum_legend: WebElement = filter_div_enum.find_element(By.CSS_SELECTOR, 'fieldset legend')
       filter_div_enum_name: str = filter_div_enum_legend.text
@@ -125,7 +128,21 @@ class CategoryScrapingService(BaseScrapingService):
 
       if filter_div_enum_name and any(bool(value) for value in filter_values):
         filter: Filter = Filter(filter_div_enum_name, 'enum', filter_values)
-        filters.append(filter)
+        enum_filters.append(filter)
+
+    return enum_filters
+
+
+  def __get_filters(self) -> list[Filter]:
+    filters: list[Filter] = []
+
+    filter_div: WebElement = self._driver.find_element(By.CSS_SELECTOR, 'div[data-grabber="SearchFilters"]')
+    boolean_filters = self.__get_boolean_filters(filter_div)
+    range_filters = self.__get_range_filters(filter_div)
+    enum_filters = self.__get_enum_filters(filter_div)
+    filters.extend(boolean_filters)
+    filters.extend(range_filters)
+    filters.extend(enum_filters)
 
     return filters
 
