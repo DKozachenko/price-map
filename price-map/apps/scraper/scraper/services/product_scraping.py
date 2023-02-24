@@ -7,37 +7,37 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
-from models.max_get_url_attempts import MAX_GET_URL_ATTEMPTS
+from constants.max_get_url_attempts import MAX_GET_URL_ATTEMPTS
 from services.base_scraping import BaseScrapingService
 
 class ProductScrapingService(BaseScrapingService):
   def __init__(self) -> None:
     pass
 
-  def __getCharacteristics(self) -> list[dict[str, Any]]:
+  def __get_сharacteristics(self) -> list[dict[str, Any]]:
     characteristics: list[dict[str, Any]] = []
-    characteristicsDls: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 'dl[id]')
-    for characteristicDl in characteristicsDls:
-      dt: WebElement = characteristicDl.find_element(By.CSS_SELECTOR, 'dt')
-      dd: WebElement = characteristicDl.find_element(By.CSS_SELECTOR, 'dd')
+    characteristics_dls: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 'dl[id]')
+    for characteristics_dl in characteristics_dls:
+      dt: WebElement = characteristics_dl.find_element(By.CSS_SELECTOR, 'dt')
+      dd: WebElement = characteristics_dl.find_element(By.CSS_SELECTOR, 'dd')
 
-      dtText: str = dt.text
-      ddText: str = dd.text
+      dt_text: str = dt.text
+      dd_text: str = dd.text
 
       value: Union[int, float] = ''
 
-      valueFloat: float = float(ddText)
-      valueInt: int = int(ddText)
+      value_float: float = float(dd_text)
+      value_int: int = int(dd_text)
 
-      if valueFloat is not None and len(str(valueFloat)) == len(ddText):
-        value = valueFloat
-      elif valueInt is not None and len(str(valueInt)) == len(ddText):
-        value = valueInt
+      if value_float is not None and len(str(value_float)) == len(dd_text):
+        value = value_float
+      elif value_int is not None and len(str(value_int)) == len(dd_text):
+        value = value_int
       else:
-        value = ddText
+        value = dd_text
 
       characteristic: dict[str, Any] = {
-        "name": dtText,
+        "name": dt_text,
         "value": value
       }
 
@@ -45,89 +45,89 @@ class ProductScrapingService(BaseScrapingService):
 
     return characteristics
 
-  def __getProduct(self, offerDiv: WebElement, info: str, name: str, description: str, characteristics: list[dict[str, Any]], imagePath: str) -> Any:
+  def __get_product(self, offer_div: WebElement, info: str, name: str, description: str, characteristics: list[dict[str, Any]], image_path: str) -> Any:
     #TODO: не у всех предложений название магазина представлено текстом, у кого-то картинкой
-    offerLinksA: list[WebElement] = offerDiv.find_elements(By.CSS_SELECTOR, 'a[data-zone-name="offerLink"]')
-    shopName: str = offerLinksA[1].text
+    offer_links_a: list[WebElement] = offer_div.find_elements(By.CSS_SELECTOR, 'a[data-zone-name="offerLink"]')
+    shop_name: str = offer_links_a[1].text
 
-    priceSpan: WebElement = offerDiv.find_element(By.CSS_SELECTOR, 'span[data-auto="mainPrice"] span')
-    price: str = priceSpan.text
-    priceInt: int = int(price.replace(' ', ''))
+    price_span: WebElement = offer_div.find_element(By.CSS_SELECTOR, 'span[data-auto="mainPrice"] span')
+    price: str = price_span.text
+    price_int: int = int(price.replace(' ', ''))
 
     product: Any = {
       "categoryInfo": info,
       "name": name,
       "description": description,
       "characteristics": characteristics,
-      "imagePath": imagePath,
-      "shopName": shopName,
-      "price": priceInt
+      "imagePath": image_path,
+      "shopName": shop_name,
+      "price": price_int
     }
 
     return product
 
 
-  def __getProductsByCategory(self, info: str) -> list[Any]:
+  def __get_products_by_category(self, info: str) -> list[Any]:
     products: list[Any] = []
 
-    productActionsA: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 'div[data-baobab-name="$productActions"] a')
+    product_actions_a: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 'div[data-baobab-name="$productActions"] a')
 
-    self._setCookies()
+    self._set_cookies()
     #нажатие на раздел "Характеристики"
     actions: ActionChains = ActionChains(self._driver)
-    actions.move_to_element(productActionsA[1]).click(productActionsA[1]).perform()
+    actions.move_to_element(product_actions_a[1]).click(product_actions_a[1]).perform()
 
-    productNameH1: WebElement = self._driver.find_element(By.CSS_SELECTOR, 'h1[data-baobab-name="$name"]')
-    productName: str = productNameH1.text
+    product_name_h1: WebElement = self._driver.find_element(By.CSS_SELECTOR, 'h1[data-baobab-name="$name"]')
+    product_name: str = product_name_h1.text
 
-    productDescriptionDiv: WebElement = self._driver.find_element(By.CSS_SELECTOR, 
+    product_description_div: WebElement = self._driver.find_element(By.CSS_SELECTOR, 
       'div[data-auto="product-full-specs"] div:not([class])'
     )
-    productDescription: str = productDescriptionDiv.text
+    product_description: str = product_description_div.text
 
-    productImageA: WebElement = self._driver.find_element(By.CSS_SELECTOR, 'div[data-zone-name="picture"] img')
-    productImagePath: str = productImageA.get_attribute('src')
+    product_image_a: WebElement = self._driver.find_element(By.CSS_SELECTOR, 'div[data-zone-name="picture"] img')
+    product_image_path: str = product_image_a.get_attribute('src')
 
-    characteristics: list[dict[str, Any]] = self.__getCharacteristics()
+    characteristics: list[dict[str, Any]] = self.__get_сharacteristics()
     #TODO: вариант, что может не быть офферов, или вариант,
     #что нет кнопки показать предложения, тк предложений в целом немного
-    allOffersA: WebElement = self._driver.find_element(By.CSS_SELECTOR, 'div[data-auto="topOffers"] > div > div > a')
-    self._setCookies()
+    all_offers_a: WebElement = self._driver.find_element(By.CSS_SELECTOR, 'div[data-auto="topOffers"] > div > div > a')
+    self._set_cookies()
     #нажатие на "Все предложения"
     actions: ActionChains = ActionChains(self._driver)
-    actions.move_to_element(allOffersA).click(allOffersA).perform()
+    actions.move_to_element(all_offers_a).click(all_offers_a).perform()
     self._driver.implicitly_wait(1000)
 
-    offerDivs: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 'div[data-zone-name="OfferSnippet"]')
+    offer_divs: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 'div[data-zone-name="OfferSnippet"]')
 
-    for offerDiv in offerDivs:
-      product: Any = self.__getProduct(offerDiv, info, productName, productDescription, characteristics, productImagePath)
+    for offer_div in offer_divs:
+      product: Any = self.__get_product(offer_div, info, product_name, product_description, characteristics, product_image_path)
       products.append(product)
 
     return products
 
 
-  def __getProducts(self, productsMap: dict[str, list[str]]) -> list[Any]:
+  def __get_products(self, productsMap: dict[str, list[str]]) -> list[Any]:
     products: list[Any] = []
 
     for [info, links] in productsMap:
       index: int = 0
-      attemptsToGetUrl: int = 0
+      attempts_to_get_url: int = 0
 
-      while index < len(links) and attemptsToGetUrl < MAX_GET_URL_ATTEMPTS:
-        self._setCookies()
+      while index < len(links) and attempts_to_get_url < MAX_GET_URL_ATTEMPTS:
+        self._set_cookies()
         self._driver.get(links[index])
 
         self._driver.implicitly_wait(1000)
 
         try:
-          productsByCategory: list[Any] = self.__getProductsByCategory(info)
-          products.extend(productsByCategory)
+          products_by_category: list[Any] = self.__get_products_by_category(info)
+          products.extend(products_by_category)
 
           index += 1
-          attemptsToGetUrl = 0
+          attempts_to_get_url = 0
         except:
-          attemptsToGetUrl += 1
+          attempts_to_get_url += 1
 
     return products
 
@@ -135,17 +135,17 @@ class ProductScrapingService(BaseScrapingService):
   def scrape(self, productsMap: dict[str, list[str]]) -> list[Any]:
     products: list[Any] = []
 
-    self._initializeDriver()
+    self._init_driver()
 
     if self._driver:
       self._driver.get('https://market.yandex.ru/')
-      self._setCookies()
+      self._set_cookies()
 
       #TODO: Есть вайбы, что все равно страница редиректит даже если нет капчи
-      if self._isShowedCaptcha():
+      if self._is_showed_captcha():
         self._driver.get('https://market.yandex.ru/')
 
-      products = self.__getProducts(productsMap)
+      products = self.__get_products(productsMap)
 
       self._driver.quit()
 

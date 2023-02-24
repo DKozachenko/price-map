@@ -4,17 +4,17 @@ from selenium.webdriver.chrome.service import Service
 from selenium_stealth import stealth
 from chromedriver_py import binary_path as DRIVER_PATH
 
-from models.cookies import COOKIES
+from constants.cookies import COOKIES
 
 class BaseScrapingService:
   def __init__(self) -> None:
     self._driver: Optional[webdriver.Chrome] = None
 
-  def _isShowedCaptcha(self) -> bool:
+  def _is_showed_captcha(self) -> bool:
     title: str = self._driver.title
     return title == 'Ой!'
 
-  def _initializeDriver(self) -> None:
+  def _init_driver(self) -> None:
     options: webdriver.ChromeOptions = webdriver.ChromeOptions()
     options.add_argument("start-maximized")
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -32,7 +32,7 @@ class BaseScrapingService:
       fix_hairline=True,
     )
 
-  def _setCookies(self) -> None:
+  def _set_cookies(self) -> None:
     for cookie in COOKIES:
       self._driver.add_cookie({
         "name": cookie["name"],

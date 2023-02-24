@@ -1,7 +1,7 @@
 from services.scraping import ScrapingService
 from services.rabbit import RabbitService
-from models.scraper_exchange import SCRAPER_EXCHANGE
-from models.categories_routing_key import CATEGORIES_ROUTING_KEY
+from constants.scraper_exchange import SCRAPER_EXCHANGE
+from constants.categories_routing_key import CATEGORIES_ROUTING_KEY
 
 class App:
   def __init__(self) -> None:
