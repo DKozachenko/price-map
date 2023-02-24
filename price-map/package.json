@@ -8,6 +8,7 @@
     "start:front": "nx serve frontend",
     "start:back": "nx serve backend",
     "start:scraper": "cd ./apps/scraper/scraper && poetry run python index.py",
+    "poststart:scraper": "rimraf ./apps/scraper/scraper/app/__pycache__ && rimraf ./apps/scraper/scraper/models/__pycache__ && rimraf ./apps/scraper/scraper/services/__pycache__",
     "build:front": "nx build frontend",
     "build:back": "nx build backend",
     "lint:front": "nx lint frontend",
@@ -99,6 +100,7 @@
     "jest-preset-angular": "~12.2.2",
     "nx": "15.0.0",
     "prettier": "^2.6.2",
+    "rimraf": "^4.1.2",
     "ts-jest": "28.0.5",
     "ts-node": "10.9.1",
     "typescript": "~4.8.2"
