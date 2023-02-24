@@ -10,33 +10,33 @@ COOKIES: list[dict[str, str]] = [
     "domain": '.yandex.ru'
   },
   {
-    "name": '_ym_isad', 
-    "value": '2', 
+    "name": '_ym_isad',
+    "value": '2',
     "domain": '.yandex.ru'
   },
   {
-    "name": '_ym_uid', 
-    "value": '1676709506689239215', 
+    "name": '_ym_uid',
+    "value": '1676709506689239215',
     "domain": '.yandex.ru'
   },
   {
-    "name": '_ym_visorc', 
-    "value": 'b', 
+    "name": '_ym_visorc',
+    "value": 'b',
     "domain": '.yandex.ru'
   },
   {
-    "name": 'bnpl_limit', 
-    "value": '200000', 
+    "name": 'bnpl_limit',
+    "value": '200000',
     "domain": '.yandex.ru'
   },
   {
-    "name": 'cmp-merge', 
-    "value": 'true', 
+    "name": 'cmp-merge',
+    "value": 'true',
     "domain": '.market.yandex.ru'
   },
   {
-    "name": 'currentRegionId', 
-    "value": '65', 
+    "name": 'currentRegionId',
+    "value": '65',
     "domain": '.market.yandex.ru'
   },
   {
@@ -50,33 +50,33 @@ COOKIES: list[dict[str, str]] = [
     "domain": '.yandex.ru'
   },
   {
-    "name": 'gdpr', 
-    "value": '0', 
+    "name": 'gdpr',
+    "value": '0',
     "domain": '.yandex.ru'
   },
   {
-    "name": 'is_gdpr', 
-    "value": '0', 
+    "name": 'is_gdpr',
+    "value": '0',
     "domain": '.yandex.ru'
   },
   {
-    "name": 'is_gdpr_b', 
-    "value": 'CMyzPRDqlgE=', 
+    "name": 'is_gdpr_b',
+    "value": 'CMyzPRDqlgE=',
     "domain": '.yandex.ru'
   },
   {
-    "name": 'js', 
-    "value": '1', 
+    "name": 'js',
+    "value": '1',
     "domain": '.market.yandex.ru'
   },
   {
-    "name": 'mOC', 
-    "value": '1', 
+    "name": 'mOC',
+    "value": '1',
     "domain": '.market.yandex.ru'
   },
   {
-    "name": 'nec', 
-    "value": '0', 
+    "name": 'nec',
+    "value": '0',
     "domain": '.market.yandex.ru'
   },
   {
@@ -85,8 +85,8 @@ COOKIES: list[dict[str, str]] = [
     "domain": '.market.yandex.ru'
   },
   {
-    "name": 'reviews-merge', 
-    "value": 'true', 
+    "name": 'reviews-merge',
+    "value": 'true',
     "domain": '.market.yandex.ru'
   },
   {
@@ -100,13 +100,13 @@ COOKIES: list[dict[str, str]] = [
     "domain": '.yandex.ru'
   },
   {
-    "name": 'skid', 
-    "value": '5087233331676709669', 
+    "name": 'skid',
+    "value": '5087233331676709669',
     "domain": '.yandex.ru'
   },
   {
-    "name": 'ugcp', 
-    "value": '1', 
+    "name": 'ugcp',
+    "value": '1',
     "domain": 'market.yandex.ru'
   },
   {
@@ -115,13 +115,13 @@ COOKIES: list[dict[str, str]] = [
     "domain": '.market.yandex.ru'
   },
   {
-    "name": 'yandexuid', 
-    "value": '5434898861676709667', 
+    "name": 'yandexuid',
+    "value": '5434898861676709667',
     "domain": '.yandex.ru'
   },
   {
-    "name": 'yashr', 
-    "value": '5201021831676709667', 
+    "name": 'yashr',
+    "value": '5201021831676709667',
     "domain": '.yandex.ru'
   },
   {
@@ -130,8 +130,10 @@ COOKIES: list[dict[str, str]] = [
     "domain": '.yandex.ru'
   },
   {
-    "name": 'yuidss', 
-    "value": '5434898861676709667', 
+    "name": 'yuidss',
+    "value": '5434898861676709667',
     "domain": '.yandex.ru'
   }
 ]
+""" Куки
+"""

@@ -7,14 +7,26 @@ from chromedriver_py import binary_path as DRIVER_PATH
 from constants.cookies import COOKIES
 
 class BaseScrapingService:
+  """ Базовый класс для сервисов-скреперов
+  """
+
   def __init__(self) -> None:
     self._driver: Optional[webdriver.Chrome] = None
 
   def _is_showed_captcha(self) -> bool:
+    """ Показана ли капча
+
+    Returns:
+      bool: true / false
+    """
+
     title: str = self._driver.title
     return title == 'Ой!'
 
   def _init_driver(self) -> None:
+    """ Инициализация драйвера
+    """
+
     options: webdriver.ChromeOptions = webdriver.ChromeOptions()
     options.add_argument("start-maximized")
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
@@ -33,6 +45,9 @@ class BaseScrapingService:
     )
 
   def _set_cookies(self) -> None:
+    """ Установка куки
+    """
+
     for cookie in COOKIES:
       self._driver.add_cookie({
         "name": cookie["name"],

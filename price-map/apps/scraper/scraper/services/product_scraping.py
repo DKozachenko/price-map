@@ -9,10 +9,22 @@ from entities.characteristic import Characteristic
 from entities.product import Product
 
 class ProductScrapingService(BaseScrapingService):
+  """ Сервис-скрепер товаров
+
+  Args:
+    BaseScrapingService (_type_): наследуется от BaseScrapingService
+  """
+
   def __init__(self) -> None:
     pass
 
   def __get_сharacteristics(self) -> list[Characteristic]:
+    """ Получение характеристик
+
+    Returns:
+      list[Filter]: список характеристик
+    """
+
     characteristics: list[Characteristic] = []
     characteristics_dls: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 'dl[id]')
     for characteristics_dl in characteristics_dls:
@@ -40,6 +52,20 @@ class ProductScrapingService(BaseScrapingService):
     return characteristics
 
   def __get_product(self, offer_div: WebElement, category_3_level_name: str, name: str, description: str, characteristics: list[Characteristic], image_path: str) -> Product:
+    """ Получение продукта
+
+    Args:
+      offer_div (WebElement): элемент с предложением
+      category_3_level_name (str): название категории 3 уровня
+      name (str): название
+      description (str): описание
+      characteristics (list[Characteristic]): список характеристик
+      image_path (str): путь к изображению
+
+    Returns:
+      Product: товар
+    """
+
     #TODO: не у всех предложений название магазина представлено текстом, у кого-то картинкой
     offer_links_a: list[WebElement] = offer_div.find_elements(By.CSS_SELECTOR, 'a[data-zone-name="offerLink"]')
     shop_name: str = offer_links_a[1].text
@@ -53,6 +79,15 @@ class ProductScrapingService(BaseScrapingService):
 
 
   def __get_products_by_category(self, category_3_level_name: str) -> list[Product]:
+    """ Получение товаров по категории 3 уровня
+
+    Args:
+      category_3_level_name (str): название категории 3 уровня
+
+    Returns:
+      list[Product]: список товаров
+    """
+
     products: list[Product] = []
 
     product_actions_a: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 'div[data-baobab-name="$productActions"] a')
@@ -93,6 +128,15 @@ class ProductScrapingService(BaseScrapingService):
 
 
   def __get_products(self, productsMap: dict[str, list[str]]) -> list[Product]:
+    """ Получение товаров
+
+    Args:
+      productsMap (dict[str, list[str]]): словарь с названиями категорий 3 уровня и ссылок на товары
+
+    Returns:
+      list[Product]: список товаров
+    """
+
     products: list[Product] = []
 
     for [category_3_level_name, links] in productsMap:
@@ -116,8 +160,16 @@ class ProductScrapingService(BaseScrapingService):
 
     return products
 
-
   def scrape(self, productsMap: dict[str, list[str]]) -> list[Product]:
+    """ Скрепинг товаров
+
+    Args:
+      productsMap (dict[str, list[str]]): словарь с названиями категорий 3 уровня и ссылок на товары
+
+    Returns:
+      list[Product]: список товаров
+    """
+
     products: list[Product] = []
 
     self._init_driver()

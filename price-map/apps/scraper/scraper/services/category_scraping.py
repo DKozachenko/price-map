@@ -1,4 +1,3 @@
-import time
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -13,13 +12,21 @@ from entities.category_2_level import Category2Level
 from entities.category_3_level import Category3Level
 
 class CategoryScrapingService(BaseScrapingService):
+  """ Сервис-скрепер категорий
+
+  Args:
+    BaseScrapingService (_type_): наследуется от BaseScrapingService
+  """
+
   def __init__(self) -> None:
     super().__init__()
     self.__category_3_level_links: set[str] = set()
     self.__products_map: dict[str, list[str]] = dict()
 
   def __open_catalog_popup(self) -> None:
-    # time.sleep(10000000)
+    """ Открытие попапа каталога
+    """
+
     actions: ActionChains = ActionChains(self._driver)
 
     WebDriverWait(self._driver, timeout=3).until(EC.presence_of_element_located((By.ID, 'catalogPopupButton')))
@@ -30,6 +37,9 @@ class CategoryScrapingService(BaseScrapingService):
     WebDriverWait(self._driver, timeout=10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div[data-zone-name="catalog-content"]')))
 
   def __click_all_more_spans(self) -> None:
+    """ Клик на все кнопки "Еще"
+    """
+
     try:
       more_spans: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR,
         'div[role="heading"] div div[data-auto="category"] ul[data-autotest-id="subItems"] li > span'
@@ -41,6 +51,15 @@ class CategoryScrapingService(BaseScrapingService):
       pass
 
   def __get_boolean_filters(self, filter_div: WebElement) -> list[Filter]:
+    """ Получение фильтров с булевым значением
+
+    Args:
+      filter_div (WebElement): элемент фильтра
+
+    Returns:
+      list[Filter]: список фильтров
+    """
+
     boolean_filters: list[Filter] = []
     filter_divs_boolean: list[WebElement] = filter_div.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="boolean"]')
 
@@ -54,6 +73,15 @@ class CategoryScrapingService(BaseScrapingService):
     return boolean_filters
 
   def __get_range_filters(self, filter_div: WebElement) -> list[Filter]:
+    """ Получение фильтров с диапазоном
+
+    Args:
+      filter_div (WebElement): элемент фильтра
+
+    Returns:
+      list[Filter]: список фильтров
+    """
+
     range_filters: list[Filter] = []
     filter_divs_range: list[WebElement] = filter_div.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="range"]')
 
@@ -82,7 +110,7 @@ class CategoryScrapingService(BaseScrapingService):
 
       filter_range_max_value: int | float = 0
 
-      #ПОДУМАТЬ ПРО ГОВНО-ТЕРНАРЬ
+      # ПОДУМАТЬ ПРО ГОВНО-ТЕРНАРЬ
       if ',' in filter_div_range_max_value_str:
         filter_range_max_value = float(filter_div_range_max_value_str.replace(',', '.'))
       else:
@@ -95,6 +123,15 @@ class CategoryScrapingService(BaseScrapingService):
     return range_filters
 
   def __get_enum_filters(self, filter_div: WebElement) -> list[Filter]:
+    """ Получение фильтров с перечислением значений
+
+    Args:
+      filter_div (WebElement): элемент фильтра
+
+    Returns:
+      list[Filter]: список фильтров
+    """
+
     enum_filters: list[Filter] = []
     filter_divs_enum: list[WebElement] = filter_div.find_elements(By.CSS_SELECTOR, 'div[data-filter-type="enum"]')
 
@@ -134,9 +171,15 @@ class CategoryScrapingService(BaseScrapingService):
 
 
   def __get_filters(self) -> list[Filter]:
-    filters: list[Filter] = []
+    """ Получение фильтров
 
+    Returns:
+      list[Filter]: список фильтров
+    """
+
+    filters: list[Filter] = []
     filter_div: WebElement = self._driver.find_element(By.CSS_SELECTOR, 'div[data-grabber="SearchFilters"]')
+
     boolean_filters = self.__get_boolean_filters(filter_div)
     range_filters = self.__get_range_filters(filter_div)
     enum_filters = self.__get_enum_filters(filter_div)
@@ -147,6 +190,12 @@ class CategoryScrapingService(BaseScrapingService):
     return filters
 
   def __set_filters(self, categories_1_level: list[Category1Level]) -> None:
+    """ Установка фильтров
+
+    Args:
+      categories_1_level (list[Category1Level]): список категорий 1 уровня
+    """
+
     index: int = 0
     attempts_to_get_url: int = 0
     array: list[str] = list(self.__category_3_level_links)
@@ -207,6 +256,12 @@ class CategoryScrapingService(BaseScrapingService):
         attempts_to_get_url += 1
 
   def __get_categories_1_level(self) -> list[Category1Level]:
+    """ Получение категорий 1 уровня
+
+    Returns:
+      list[Category1Level]: список категорий 1 уровня (вместе со связанными категориями 2 и 3 уровней)
+    """
+
     categories_1_level: list[Category1Level] = []
     category_1_level_lis: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, 'ul[role="tablist"]:first-child li')
     #TODO: убрать count
@@ -263,6 +318,12 @@ class CategoryScrapingService(BaseScrapingService):
     return categories_1_level
 
   def scrape(self) -> list[Category1Level]:
+    """ Скрепинг категорий 1 уровня
+
+    Returns:
+      list[Category1Level]: список категорий 1 уровня
+    """
+
     categories_1_level: list[Category1Level] = []
 
     self._init_driver()

@@ -1,6 +1,9 @@
 from entities.characteristic import Characteristic
 
 class Product:
+  """ Товар
+  """
+
   def __init__(self, category_3_level_name: str, name: str, description: str, image_path: str, shop_name: str, price: int, characteristics: list[Characteristic]) -> None:
     self.category_3_level_name: str = category_3_level_name
     self.name: str = name

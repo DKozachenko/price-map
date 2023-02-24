@@ -6,14 +6,18 @@ from entities.category_1_level import Category1Level
 from entities.category_2_level import Category2Level
 from entities.category_3_level import Category3Level
 from entities.filter import Filter
-import jsonpickle
 
 class App:
+  """ Класс приложения
+  """
+
   def __init__(self) -> None:
     self.scraping_service: ScrapingService = ScrapingService()
     self.rabbit_service: RabbitService = RabbitService()
 
   def start(self) -> None:
+    """ Старт приложения
+    """
     self.rabbit_service.init_connection()
 
     # while True:
@@ -28,6 +32,4 @@ class App:
       cat2: Category2Level = Category2Level('test category 2 level', [cat3])
       cat1: Category1Level = Category1Level('test category 1 level', [cat2])
       data: list[Category1Level] = [cat1]
-      str_json_data = str(jsonpickle.encode(data, unpicklable=False))
-      self.rabbit_service.send_message(SCRAPER_EXCHANGE, CATEGORIES_ROUTING_KEY, str_json_data)
-      print(f'Send message to {CATEGORIES_ROUTING_KEY}, data: {str_json_data}')
+      self.rabbit_service.send_message(SCRAPER_EXCHANGE, CATEGORIES_ROUTING_KEY, data)
