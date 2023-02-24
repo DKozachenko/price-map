@@ -17,7 +17,6 @@ class RabbitService:
     self.__connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672))
     self.__channel = self.__connection.channel()
 
-  # дженерик бы бахнуть к данным то, заюш
   def send_message(self, exchange: str, routing_key: str, data: Any) -> None:
     """ Отправка сообщения
 
@@ -27,7 +26,6 @@ class RabbitService:
         data (Any): произвольные данные
     """
 
-    # str_json_data: str = str(data).replace('\'', '"')
     str_json_data = str(jsonpickle.encode(data, unpicklable=False))
     self.__channel.basic_publish(exchange=exchange, routing_key=routing_key, body=str_json_data)
     print(f'Send message to {exchange} with {routing_key} routing key, data: {str_json_data}')
