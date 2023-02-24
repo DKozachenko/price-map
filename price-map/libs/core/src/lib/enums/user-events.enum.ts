@@ -1,3 +1,8 @@
+/**
+ * События пользователей
+ * @export
+ * @enum {string}
+ */
 export enum UserEvents {
   GetUserAttempt = 'get user attempt',
   GetUserFailed = 'get user failed',

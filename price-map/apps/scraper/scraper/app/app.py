@@ -15,13 +15,13 @@ class App:
     for i in range(1):
       # categories = self.scraping_service.scrape_categories()
       categories = {
-        "name": 'test name',
+        "name": 'test name 3',
         "categories2Level": [
           {
-            "name": '3243545',
+            "name": 'test cat 2',
             "categories3Level": [
               {
-                "name": 'mega',
+                "name": 'mega 4',
                 "filters": []
               }
             ]

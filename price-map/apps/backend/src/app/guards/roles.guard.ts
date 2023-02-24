@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '@core/enums';
 import { secretKey, roleKey } from '../models/constants';
-import { AppErrorCode } from '@core/types';
+import { TokenErrorCode } from '@core/types';
 
 /**
  * Гвард для защиты роутов (проверяет соответствие ролей)
@@ -36,7 +36,7 @@ export const RolesAuthGuard = (failedEventName: string): Type<any> => {
       if (!requiredRoles.includes(role)) {
         client.emit(failedEventName, {
           statusCode: 403,
-          errorCode: <AppErrorCode>'FORBIDDEN_RESOURCE',
+          errorCode: <TokenErrorCode>'FORBIDDEN_RESOURCE',
           isError: true,
           data: null,
           message: 'Ошибка прав доступа'

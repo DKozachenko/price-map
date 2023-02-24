@@ -31,7 +31,7 @@ export class CategoriesModule implements OnModuleInit {
     private readonly categoriesService: CategoriesService) {}
 
   public onModuleInit(): void {
-    const errorCodes: (RabbitErrorCode | DbErrorCode)[] = ['DB_ERROR', 'GETTING_MESSAGE_ERROR'];
+    const errorCodes: (RabbitErrorCode | DbErrorCode)[] = ['DB_ERROR', 'GET_MESSAGE_ERROR'];
 
     this.rabbitService.getMessage<Omit<Category1Level, 'id'>[]>('categories_queue')
       .pipe(

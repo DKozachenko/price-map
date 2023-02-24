@@ -97,7 +97,7 @@ export class CategoriesService {
     return this.deleteAllCategories1Level()
       .pipe(
         switchMap((affectedRows: number) => {
-          Logger.log(`Deleting categories: ${affectedRows} rows`, 'CategoriesService');
+          Logger.warn(`Deleting categories: ${affectedRows} rows`, 'CategoriesService');
           return this.saveCategories1Level(categories1Level);
         })
       )

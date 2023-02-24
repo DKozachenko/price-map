@@ -2,7 +2,7 @@ import { ExecutionContext, Injectable, CanActivate, mixin, Type, Logger } from '
 import { JwtService } from '@nestjs/jwt';
 import { IPayload } from '@core/interfaces';
 import { secretKey } from '../models/constants';
-import { AppErrorCode } from '@core/types';
+import { TokenErrorCode } from '@core/types';
 
 /**
  * Гвард для защиты роутов (проверяет наличие токена)
@@ -21,7 +21,7 @@ export const JwtAuthGuard = (failedEventName: string): Type<any> => {
       if (!token) {
         client.emit(failedEventName, {
           statusCode: 401,
-          errorCode: <AppErrorCode>'NO_TOKEN',
+          errorCode: <TokenErrorCode>'NO_TOKEN',
           isError: true,
           data: null,
           message: 'Отсутствует токен'
@@ -40,7 +40,7 @@ export const JwtAuthGuard = (failedEventName: string): Type<any> => {
         Logger.error(e, 'JwtAuthGuard');
         client.emit(failedEventName, {
           statusCode: 406,
-          errorCode: <AppErrorCode>'INVALID_TOKEN',
+          errorCode: <TokenErrorCode>'INVALID_TOKEN',
           isError: true,
           data: null,
           message: 'Невалидный токен'

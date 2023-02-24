@@ -28,7 +28,7 @@ export class ExternalGateway {
   /**
    * Событие построения маршрута
    * @param {ICoordinates[]} coordinates коодинаты
-   * @return {*}  {(Observable<WsResponse<IResponseData<number[][] | null, AppErrorCode | null>>>)} ответ
+   * @return {*}  {(Observable<WsResponse<IResponseData<number[][] | null, ExternalErrorCode | null>>>)} ответ
    * @memberof AppGateway
    */
   @Roles(Role.User, Role.Admin)
