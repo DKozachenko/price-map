@@ -1,5 +1,4 @@
 import time
-from typing import Union
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -75,15 +74,15 @@ class CategoryScrapingService(BaseScrapingService):
 
       filter_div_range_min_value_str: str = filter_div_range_min_label_text.split(' ')[1]
       filter_div_range_max_value_str: str = filter_div_range_max_label_text.split(' ')[1]
-      #ПЕРЕПИСАТЬ UNION НА ПАЛКУ И НЕ ЗАБУДЬ ПРО .FORMAT
-      filter_range_min_value: Union[int, float] = 0
+
+      filter_range_min_value: int | float = 0
 
       if ',' in filter_div_range_min_value_str:
         filter_range_min_value = float(filter_div_range_min_value_str.replace(',', '.'))
       else:
         filter_range_min_value = int(filter_div_range_min_value_str)
 
-      filter_range_max_value: Union[int, float] = 0
+      filter_range_max_value: int | float = 0
 
       #ПОДУМАТЬ ПРО ГОВНО-ТЕРНАРЬ
       if ',' in filter_div_range_max_value_str:

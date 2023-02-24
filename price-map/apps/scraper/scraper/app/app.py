@@ -30,4 +30,4 @@ class App:
       data: list[Category1Level] = [cat1]
       str_json_data = str(jsonpickle.encode(data, unpicklable=False))
       self.rabbit_service.send_message(SCRAPER_EXCHANGE, CATEGORIES_ROUTING_KEY, str_json_data)
-      print('Send message to {0}, data: {1}'.format(CATEGORIES_ROUTING_KEY, str_json_data))
+      print(f'Send message to {CATEGORIES_ROUTING_KEY}, data: {str_json_data}')

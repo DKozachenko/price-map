@@ -1,6 +1,4 @@
-from typing import Union
-
 class Characteristic:
-  def __init__(self, name: str, value: Union[int, float, str]) -> None:
+  def __init__(self, name: str, value: int | float | str) -> None:
     self.name: str = name
-    self.value: Union[int, float, str] = value
+    self.value: int | float | str = value

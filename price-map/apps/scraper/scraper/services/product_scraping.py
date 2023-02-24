@@ -1,7 +1,3 @@
-from typing import Union
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -26,7 +22,7 @@ class ProductScrapingService(BaseScrapingService):
       dt_text: str = dt.text
       dd_text: str = dd.text
 
-      value: Union[int, float] = 0
+      value: int | float = 0
 
       value_float: float = float(dd_text)
       value_int: int = int(dd_text)
