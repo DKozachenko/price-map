@@ -1,16 +1,19 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category3Level, Category2Level, Category1Level } from '@core/entities';
 import { DeleteResult, Repository } from 'typeorm';
-import { from, Observable, of, switchMap } from 'rxjs';
+import { from, Observable, of, switchMap, catchError } from 'rxjs';
+import { DbErrorCode, RabbitErrorCode } from '@core/types';
+import { RabbitService } from '../../../services';
 
 /**
  * Сервис категорий (всех уровней)
  * @export
  * @class CategoriesService
+ * @implements {OnModuleInit}
  */
 @Injectable()
-export class CategoriesService {
+export class CategoriesService implements OnModuleInit {
   /**
    * Репозиторий категорий 1 уровня
    * @private
@@ -37,6 +40,37 @@ export class CategoriesService {
    */
   @InjectRepository(Category3Level, 'postgresConnect')
   private readonly category3LevelRepository: Repository<Category3Level>;
+
+  constructor(private readonly rabbitService: RabbitService) {}
+
+  public onModuleInit(): void {
+    const errorCodes: (RabbitErrorCode | DbErrorCode)[] = [
+      'DB_ERROR',
+      'GET_MESSAGE_ERROR'
+    ];
+
+    this.rabbitService.getMessage<Omit<Category1Level, 'id'>[]>('categories_queue')
+      .pipe(
+        switchMap((categories: Omit<Category1Level, 'id'>[]) => {
+          return this.refreshAllCategoriesData(categories)
+            .pipe(
+              catchError((err: Error) => {
+                Logger.error(`Error code: ${errorCodes[0]}, ${err}`, 'CategoriesModule');
+                return of(null);
+              })
+            );
+        }),
+        catchError((err: Error) => {
+          Logger.error(`Error code: ${errorCodes[1]}, queue: ${'categories_queue'}, ${err}`, 'CategoriesModule');
+          return of(null);
+        })
+      )
+      .subscribe((data: Category1Level[] | null) => {
+        if (data) {
+          Logger.log('Successfully saving categories', 'CategoriesModule');
+        }
+      });
+  }
 
   /**
    * Получений всех категорий 1 уровня
@@ -89,7 +123,7 @@ export class CategoriesService {
 
   /**
    * Обновление данных по всем категориям (удаление и сохранение по новой)
-   * @param {Omit<Category1Level, 'id'>[]} categories1Level категории 1 уровня 
+   * @param {Omit<Category1Level, 'id'>[]} categories1Level категории 1 уровня
    * @return {*}  {Observable<Category1Level[]>} сохраненные категории 1 уровня из БД
    * @memberof CategoriesService
    */
