@@ -1,5 +1,7 @@
 from typing import Optional
 from selenium import webdriver
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium_stealth import stealth
 from chromedriver_py import binary_path as DRIVER_PATH
@@ -54,3 +56,110 @@ class BaseScrapingService:
         "value": cookie["value"],
         "domain": cookie["domain"]
       })
+
+  def _get_element_by_selector(self, selector: str, parent: WebElement | None = None) -> WebElement:
+    """ Получение элемента по селектору
+
+    Args:
+      selector (str): селектор
+      parent (WebElement | None, optional): родитель. Defaults to None.
+
+    Returns:
+      WebElement: элемент
+    """
+
+    # try:
+    if parent:
+      element: WebElement = parent.find_element(By.CSS_SELECTOR, selector)
+      return element
+    else:
+      element: WebElement = self._driver.find_element(By.CSS_SELECTOR, selector)
+      return element
+    # except:
+    #   print(f'Couldn\'t get element with selector {selector}')
+    #   return None
+
+  def _get_element_by_id(self, id: str, parent: WebElement | None = None) -> WebElement:
+    """ Получение элемента по id
+
+    Args:
+      id (str): id
+      parent (WebElement | None, optional): родитель. Defaults to None.
+
+    Returns:
+      WebElement: элемент
+    """
+
+    # try:
+    if parent:
+      element: WebElement = parent.find_element(By.ID, id)
+      return element
+    else:
+      element: WebElement = self._driver.find_element(By.ID, id)
+      return element
+    # except:
+    #   print(f'Couldn\'t get element with id {id}')
+    #   return None
+
+  def _get_elements_by_selector(self, selector: str, parent: WebElement | None = None) -> list[WebElement]:
+    """ Получение элементов по селектору
+
+    Args:
+      selector (str): селектор
+      parent (WebElement | None, optional): родитель. Defaults to None.
+
+    Returns:
+      list[WebElement]: список элементов
+    """
+
+    # try:
+    if parent:
+      elements: list[WebElement] = parent.find_elements(By.CSS_SELECTOR, selector)
+      return elements
+    else:
+      elements: list[WebElement] = self._driver.find_elements(By.CSS_SELECTOR, selector)
+      return elements
+    # except:
+    #   print(f'Couldn\'t get elements with selector {selector}')
+    #   return []
+
+  def _get_text_from_element(self, selector: str, parent: WebElement | None = None) -> str:
+    """ Получение текста из селектора
+
+    Args:
+      selector (str): селектор
+      parent (WebElement | None, optional): родитель. Defaults to None.
+
+    Returns:
+      str: текст
+    """
+
+    # try:
+    element: WebElement = self._get_element_by_selector(selector, parent)
+    text: str = element.text
+    return text
+    # except:
+    #   print(f'Couldn\'t get text, selenium id {element.id}')
+    #   return ''
+
+  def _get_attribute_from_element(self, attribute: str, selector: str, parent: WebElement | None = None) -> str:
+    """ Получение значение атрибута
+
+    Args:
+      attribute (str): атрибут
+      selector (str): селектор
+      parent (WebElement | None, optional): родитель. Defaults to None.
+
+    Returns:
+      str: атрибут
+    """
+
+    # try:
+    element: WebElement = self._get_element_by_selector(selector, parent)
+    attr: str = element.get_attribute(attribute)
+    return attr
+    # except:
+    #   print(f'Couldn\'t get text, selenium id {element.id}')
+    #   return ''
+
+
