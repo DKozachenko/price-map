@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Callable, Optional, TypeVar
 from selenium import webdriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
@@ -6,7 +6,10 @@ from selenium.webdriver.chrome.service import Service
 from selenium_stealth import stealth
 from chromedriver_py import binary_path as DRIVER_PATH
 
+import time
 from constants.cookies import COOKIES
+
+T = TypeVar('T')
 
 class BaseScrapingService:
   """ Базовый класс для сервисов-скреперов
@@ -161,5 +164,27 @@ class BaseScrapingService:
     # except:
     #   print(f'Couldn\'t get text, selenium id {element.id}')
     #   return ''
+
+
+  def _execute(callback: Callable, default_value: T, *args) -> T:
+    """ Выполнить какое-либо действие
+
+    Args:
+      callback (Callable): действие (функция)
+      default_value (T): дефолтное значение (в случае ошибки)
+
+    Returns:
+      T: значение
+    """
+
+    try:
+      value: T = callback(*args)
+      return value
+    except:
+      print(f'Exception in "_get" method, returned a {default_value} value')
+      return default_value
+
+  def _wait(secs) -> None:
+    time.sleep(secs)
 
 
