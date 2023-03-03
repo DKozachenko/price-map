@@ -26,14 +26,10 @@ class RabbitService:
       data (Any): произвольные данные
     """
 
-
     jsonpickle.set_preferred_backend('json')
     jsonpickle.set_encoder_options('json', ensure_ascii=False)
     str_json_data = str(jsonpickle.encode(data, unpicklable=False))
     print(921, str_json_data)
-    f = open("categories.json", "a")
-    f.write(str_json_data)
-    f.close()
     # self.__init_connection()
     # self.__channel.basic_publish(exchange=exchange, routing_key=routing_key, body=str_json_data)
     # print(f'Send message to {exchange} with {routing_key} routing key, data: {str_json_data}')

@@ -143,6 +143,72 @@ class BaseScrapingService:
 
     return element.text
 
+  
+  def _get_attribute_from_prop(self, element: WebElement, attr: str) -> str:
+    """ Получение атрибута из элемента
+
+    Args:
+      element (WebElement): элемент
+      attr (str): название атрибута
+
+    Returns:
+      str: значение атрибута
+    """
+
+    return element.get_attribute(attr)
+
+  def _get_attribute_from_prop(self, element: WebElement, attr: str) -> str:
+    """ Получение атрибута из элемента
+
+    Args:
+      element (WebElement): элемент
+      attr (str): название атрибута
+
+    Returns:
+      str: значение атрибута
+    """
+
+    return element.get_attribute(attr)
+
+  def _get_attribute_from_prop(self, element: WebElement, attr: str) -> str:
+    """ Получение атрибута из элемента
+
+    Args:
+      element (WebElement): элемент
+      attr (str): название атрибута
+
+    Returns:
+      str: значение атрибута
+    """
+
+    return element.get_attribute(attr)
+
+  def _get_attribute_from_prop(self, element: WebElement, attr: str) -> str:
+    """ Получение атрибута из элемента
+
+    Args:
+      element (WebElement): элемент
+      attr (str): название атрибута
+
+    Returns:
+      str: значение атрибута
+    """
+
+    return element.get_attribute(attr)
+
+  def _get_attribute_from_prop(self, element: WebElement, attr: str) -> str:
+    """ Получение атрибута из элемента
+
+    Args:
+      element (WebElement): элемент
+      attr (str): название атрибута
+
+    Returns:
+      str: значение атрибута
+    """
+
+    return element.get_attribute(attr)
+
   def _get_attribute_from_element(self, attribute: str, selector: str, parent: WebElement | None = None) -> str:
     """ Получение значение атрибута
 
@@ -159,16 +225,15 @@ class BaseScrapingService:
     attr: str = element.get_attribute(attribute)
     return attr
   
-  def _scroll_and_click(self, element: WebElement) -> None:
-    """ Скролл к элементу и клик
+  def _scroll(self, element: WebElement) -> None:
+    """ Скролл к элементу
 
     Args:
       element (WebElement): элемент
     """
 
     actions: ActionChains = ActionChains(self._driver)
-    actions.scroll_from_origin(0, 0, 0, 0, element).perform()
-    actions.move_to_element(element).click(element).perform()
+    actions.scroll_to_element(element).perform()
 
   def _click(self, element: WebElement) -> None:
     """ Клик на элемент

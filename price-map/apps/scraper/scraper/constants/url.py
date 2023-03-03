@@ -1,1 +1,1 @@
-URL = 'https://market.yandex.ru/'
+URL = 'https://novosibirsk.price.ru/'
