@@ -10,7 +10,7 @@ class RabbitService:
     self.__connection: Optional[pika.BlockingConnection] = None
     self.__channel: Optional[Any] = None
 
-  def init_connection(self) -> None:
+  def __init_connection(self) -> None:
     """ Инициализация соединения
     """
 
@@ -18,14 +18,19 @@ class RabbitService:
     self.__channel = self.__connection.channel()
 
   def send_message(self, exchange: str, routing_key: str, data: Any) -> None:
+    self.__init_connection()
     """ Отправка сообщения
 
     Args:
-        exchange (str): название обменника
-        routing_key (str): ключ маршрутизации
-        data (Any): произвольные данные
+      exchange (str): название обменника
+      routing_key (str): ключ маршрутизации
+      data (Any): произвольные данные
     """
 
+    jsonpickle.set_preferred_backend('json')
+    jsonpickle.set_encoder_options('json', ensure_ascii=False)
     str_json_data = str(jsonpickle.encode(data, unpicklable=False))
+    print(921, str_json_data)
     self.__channel.basic_publish(exchange=exchange, routing_key=routing_key, body=str_json_data)
     print(f'Send message to {exchange} with {routing_key} routing key, data: {str_json_data}')
+    self.__connection.close()

@@ -18,18 +18,18 @@ class App:
   def start(self) -> None:
     """ Старт приложения
     """
-    self.rabbit_service.init_connection()
-
+    
     # while True:
     for i in range(1):
-      # categories: list[Category1Level] = self.scraping_service.scrape_categories()
-      filters: list[Filter] = [
-        Filter('test filter', 'enum', ['test value 1', 'test value 2', 'test value 3']),
-        Filter('test filter 2', 'boolean'),
-        Filter('test filter 3', 'range', [1.34, 5.6]),
-      ]
-      cat3: Category3Level = Category3Level('test category 3 level', filters)
-      cat2: Category2Level = Category2Level('test category 2 level', [cat3])
-      cat1: Category1Level = Category1Level('test category 1 level', [cat2])
-      data: list[Category1Level] = [cat1]
-      self.rabbit_service.send_message(SCRAPER_EXCHANGE, CATEGORIES_ROUTING_KEY, data)
+      categories: list[Category1Level] = self.scraping_service.scrape_categories()
+      # filters: list[Filter] = [
+      #   Filter('test filter', 'enum', ['test value 1', 'test value 2', 'test value 3']),
+      #   Filter('test filter 2', 'boolean'),
+      #   Filter('test filter 3', 'range', [1.34, 5.6]),
+      # ]
+      # cat3: Category3Level = Category3Level('test category 3 level', filters)
+      # cat2: Category2Level = Category2Level('test category 2 level', [cat3])
+      # cat1: Category1Level = Category1Level('test category 1 level', [cat2])
+      # categories: list[Category1Level] = [cat1]
+      print('gggg')
+      self.rabbit_service.send_message(SCRAPER_EXCHANGE, CATEGORIES_ROUTING_KEY, categories)

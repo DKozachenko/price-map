@@ -23,17 +23,15 @@ class CategoryScrapingService(BaseScrapingService):
     super().__init__()
     self.__category_3_level_links: set[str] = set()
     self.__products_map: dict[str, list[str]] = dict()
+    self.__categories_1_level: list[Category1Level] = []
 
   def __open_catalog_popup(self) -> None:
     """ Открытие попапа каталога
     """
 
-    actions: ActionChains = ActionChains(self._driver)
-
-    WebDriverWait(self._driver, timeout=3).until(EC.presence_of_element_located(By.ID, 'catalogPopupButton'))
-    catalog_popup_putton: WebElement = self._execute_element_by_id('catalogPopupButton')
-
-    actions.move_to_element(catalog_popup_putton).click(catalog_popup_putton).perform()
+    WebDriverWait(self._driver, timeout=3).until(EC.presence_of_element_located((By.ID, 'catalogPopupButton')))
+    catalog_popup_putton: WebElement = self._execute(self._get_element_by_id, None, 'catalogPopupButton')
+    self._execute_void(self._click, catalog_popup_putton)
 
     #ожидание пока прогрузится каталог
     WebDriverWait(self._driver, timeout=10).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div[data-zone-name="catalog-content"]')))
@@ -42,14 +40,10 @@ class CategoryScrapingService(BaseScrapingService):
     """ Клик на все кнопки "Еще"
     """
 
-    try:
-      more_spans: list[WebElement] = self._execute_elements_by_selector('div[role="heading"] div div[data-auto="category"] ul[data-autotest-id="subItems"] li > span')
+    more_spans: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'div[role="heading"] div div[data-auto="category"] ul[data-autotest-id="subItems"] li > span')
 
-      for more_span in more_spans:
-        actions: ActionChains = ActionChains(self._driver)
-        actions.move_to_element(more_span).click(more_span).perform()
-    except:
-      pass
+    for more_span in more_spans:
+      self._execute_void(self._click, more_span)
 
   def __get_boolean_filters(self, filter_div: WebElement) -> list[Filter]:
     """ Получение фильтров с булевым значением
@@ -62,14 +56,12 @@ class CategoryScrapingService(BaseScrapingService):
     """
 
     boolean_filters: list[Filter] = []
-    filter_divs_boolean: list[WebElement] = self._execute_elements_by_selector('div[data-filter-type="boolean"]', filter_div)
+    filter_divs_boolean: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'div[data-filter-type="boolean"]', filter_div)
 
     for filter_div_boolean in filter_divs_boolean:
-      filter_boolean_name: str = filter_div_boolean.text
-
-      if filter_boolean_name:
-        filter: Filter = Filter(filter_boolean_name.replace('\n', ''), 'boolean', [])
-        boolean_filters.append(filter)
+      filter_boolean_name: str = self._execute(self._get_text_from_prop, '', filter_div_boolean)
+      filter: Filter = Filter(filter_boolean_name.replace('\n', ''), 'boolean', [])
+      boolean_filters.append(filter)
 
     return boolean_filters
 
@@ -84,12 +76,12 @@ class CategoryScrapingService(BaseScrapingService):
     """
 
     range_filters: list[Filter] = []
-    filter_divs_range: list[WebElement] = self._execute_elements_by_selector('div[data-filter-type="range"]', filter_div)
+    filter_divs_range: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'div[data-filter-type="range"]', filter_div)
 
     for filter_div_range in filter_divs_range:
-      filter_div_range_name: str = self._execute_text_from_element('fieldset span', filter_div_range)
-      filter_div_range_min_label_text: str = self._execute_text_from_element('span[data-auto="filter-range-min"] label:not([for])', filter_div_range)
-      filter_div_range_max_label_text: str = self._execute_text_from_element('span[data-auto="filter-range-max"] label:not([for])', filter_div_range)
+      filter_div_range_name: str = self._execute(self._get_text_from_element, '', 'fieldset span', filter_div_range)
+      filter_div_range_min_label_text: str = self._execute(self._get_text_from_element, '', 'span[data-auto="filter-range-min"] label:not([for])', filter_div_range)
+      filter_div_range_max_label_text: str = self._execute(self._get_text_from_element, '', 'span[data-auto="filter-range-max"] label:not([for])', filter_div_range)
 
       filter_div_range_min_value_str: str = filter_div_range_min_label_text.split(' ')[1]
       filter_div_range_max_value_str: str = filter_div_range_max_label_text.split(' ')[1]
@@ -126,32 +118,27 @@ class CategoryScrapingService(BaseScrapingService):
     """
 
     enum_filters: list[Filter] = []
-    filter_divs_enum: list[WebElement] = self._execute_element_by_selector('div[data-filter-type="enum"]', filter_div)
+    filter_divs_enum: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'div[data-filter-type="enum"]', filter_div)
 
     for filter_div_enum in filter_divs_enum:
-      filter_div_enum_name: str = self._execute_text_from_element('fieldset legend', filter_div_enum)
+      filter_div_enum_name: str = self._execute(self._get_text_from_element, '', 'fieldset legend', filter_div_enum)
 
       self._driver.implicitly_wait(2)
-      filter_enum_fieldset_divs: list[WebElement] = self._execute_elements_by_selector('fieldset > div > div', filter_div_enum)
+      filter_enum_fieldset_divs: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'fieldset > div > div', filter_div_enum)
 
       for fieldsetDiv in filter_enum_fieldset_divs:
-        more_spans: list[WebElement] = self._execute_elements_by_selector('span[tabindex="0"]', fieldsetDiv)
+        more_spans: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'span[tabindex="0"]', fieldsetDiv)
 
         for more_span in more_spans:
-          actions: ActionChains = ActionChains(self._driver)
-          actions.scroll_from_origin(0, 0, 0, 0, more_span).perform()
-          actions.move_to_element(more_span).click(more_span).perform()
+          self._execute_void(self._scroll_and_click, more_span)
           self._driver.implicitly_wait(1000)
 
-      filter_enum_value_divs: list[WebElement] = self._execute_elements_by_selector('fieldset div[data-baobab-name="FilterValue"]', filter_div_enum)
+      filter_enum_value_divs: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'fieldset div[data-baobab-name="FilterValue"]', filter_div_enum)
       filter_values: list[str] = []
 
       for filter_enum_value_div in filter_enum_value_divs:
-        try:
-          filter_enum_value: str = filter_enum_value_div.text
-          filter_values.append(filter_enum_value)
-        except:
-          break
+        filter_enum_value: str = self._execute(self._get_text_from_prop, '', filter_enum_value_div)
+        filter_values.append(filter_enum_value)
 
       if filter_div_enum_name and any(bool(value) for value in filter_values):
         filter: Filter = Filter(filter_div_enum_name, 'enum', filter_values)
@@ -168,127 +155,108 @@ class CategoryScrapingService(BaseScrapingService):
     """
 
     filters: list[Filter] = []
-    filter_div: WebElement = self._execute_element_by_selector('div[data-grabber="SearchFilters"]')
+    filter_div: WebElement = self._execute(self._get_element_by_selector, None, 'div[data-grabber="SearchFilters"]')
 
-    boolean_filters = self.__get_boolean_filters(filter_div)
-    range_filters = self.__get_range_filters(filter_div)
-    enum_filters = self.__get_enum_filters(filter_div)
+    boolean_filters: list[Filter] = self._execute(self.__get_boolean_filters, [], filter_div)
+    range_filters: list[Filter] = self._execute(self.__get_range_filters, [], filter_div)
+    enum_filters: list[Filter] = self._execute(self.__get_enum_filters, [], filter_div)
     filters.extend(boolean_filters)
     filters.extend(range_filters)
     filters.extend(enum_filters)
 
     return filters
 
-  def __set_filters(self, categories_1_level: list[Category1Level]) -> None:
+  def __set_filters(self) -> None:
     """ Установка фильтров
-
-    Args:
-      categories_1_level (list[Category1Level]): список категорий 1 уровня
     """
 
     index: int = 0
-    attempts_to_get_url: int = 0
     array: list[str] = list(self.__category_3_level_links)
-    while index < len(array) and attempts_to_get_url < MAX_GET_URL_ATTEMPTS:
+
+    while index < len(array):
       # self._set_cookies()
-      # print('set up')
       self._driver.get(array[index])
-      # print('get by id')
       self._driver.implicitly_wait(10)
 
       #TODO: не у всех категорий 3 уровня сразу есть товары, у кого-то мб еще категории внутри
-      try:
-        breadcrumb: list[WebElement] = self._execute(self._execute_elements_by_selector, [], 'ol[itemscope] li')
-        print(breadcrumb)
-        category_1_level_name: str = breadcrumb[0].text
-        category_2_level_name: str = breadcrumb[1].text
-        category_3_level_name: str = breadcrumb[2].text
-        print(category_1_level_name, category_2_level_name, category_3_level_name)
-        category_1_level: Category1Level = list(filter(lambda item: item.name == category_1_level_name, categories_1_level))[0]
-        # print(123, category_1_level)
-        category_2_level: Category2Level = list(filter(lambda item: item.name == category_2_level_name, category_1_level.categories2Level))[0]
-        # print(456, category2Level)
-        category_3_level: Category3Level = list(filter(lambda item: category_3_level_name.lower() in item.name.lower()
-          or item.name.lower() in category_3_level_name.lower(), category_2_level.categories3Level))[0]
-        # print(789, category3Level)
+      breadcrumb: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'ol[itemscope] li')
 
-        if category_3_level:
-          filters: list[Filter] = self._execute(self.__get_filters, [])
-          category_3_level.filters = filters
+      category_1_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[0])
+      category_2_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[1])
+      category_3_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[2])
 
-          #добавление ссылок на товары в этой категории
-          links: list[str] = []
-          product_blocks: list[WebElement] = self._execute(self._execute_elements_by_selector, [], 'div[data-baobab-name="$main"]')
-          product_articles: list[WebElement] = self._execute(self._execute_elements_by_selector, [], 'article', product_blocks[0])
-          count: int = 0
+      category_1_level: Category1Level = list(filter(lambda item: item.name == category_1_level_name, self.__categories_1_level))[0]
+      category_2_level: Category2Level = list(filter(lambda item: item.name == category_2_level_name, category_1_level.categories2Level))[0]
+      category_3_level: Category3Level = list(filter(lambda item: category_3_level_name.lower() in item.name.lower()
+        or item.name.lower() in category_3_level_name.lower(), category_2_level.categories3Level))[0]
 
-          for i in range(len(product_articles)):
-            if count < 5:
-              product_link: str = self._execute(self._execute_attribute_from_element, '', 'href', 'a[data-baobab-name="title"]', product_articles[i])
-              links.append(product_link)
+      if category_3_level:
+        filters: list[Filter] = self._execute(self.__get_filters, [])
+        category_3_level.filters = filters
 
-              count += 1
+        #добавление ссылок на товары в этой категории
+        links: list[str] = []
+        product_blocks: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'div[data-baobab-name="$main"]')
+        product_articles: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'article', product_blocks[0])
+        count: int = 0
 
-          self.__products_map[category_3_level.name] = links
+        for i in range(len(product_articles)):
+          if count < 5:
+            product_link: str = self._execute(self._get_attribute_from_element, '', 'href', 'a[data-baobab-name="title"]', product_articles[i])
+            links.append(product_link)
 
-        index += 1
-        attempts_to_get_url = 0
-      except:
-        attempts_to_get_url += 1
+            count += 1
 
-  def __get_categories_1_level(self) -> list[Category1Level]:
-    """ Получение категорий 1 уровня
+        self.__products_map[category_3_level.name] = links
 
-    Returns:
-      list[Category1Level]: список категорий 1 уровня (вместе со связанными категориями 2 и 3 уровней)
+      index += 1
+
+  def __fill_categories_1_level(self) -> None:
+    """ Заполнение категорий 1 уровня
     """
 
-    categories_1_level: list[Category1Level] = []
-    category_1_level_lis: list[WebElement] = self._execute(self._execute_elements_by_selector, [], 'ul[role="tablist"]:first-child li')
+    category_1_level_lis: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'ul[role="tablist"]:first-child li')
     #TODO: убрать count
     count: int = 0
     count_3_level: int = 0
-    for category_1_level_li in category_1_level_lis:
-      actions: ActionChains = ActionChains(self._driver)
-      actions.move_to_element(category_1_level_li).perform()
 
-      self.__click_all_more_spans()
+    for category_1_level_li in category_1_level_lis:
+      self._execute_void(self._hover, category_1_level_li)
+
+      self._execute_void(self.__click_all_more_spans)
       self._driver.implicitly_wait(3)
       # WebDriverWait(self._driver, timeout=3).until(EC.presence_of_element_located((By.CSS_SELECTOR, 'div[role="heading"] > a')))
-      category_1_level_name: str = self._execute(self._execute_text_from_element, '', 'div[role="heading"] > a')
+      category_1_level_name: str = self._execute(self._get_text_from_element, '', 'div[role="heading"] > a')
 
       if category_1_level_name != 'Скидки' and category_1_level_name != 'Ресейл' and count <= 3 and count > 2:
         category_1_level: Category1Level = Category1Level(category_1_level_name, [])
 
-        category_2_level_divs: list[WebElement] = self._execute(self._execute_elements_by_selector, [], 'div[role="heading"] div div[data-auto="category"]')
+        category_2_level_divs: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'div[role="heading"] div div[data-auto="category"]')
 
         for category_2_level_div in category_2_level_divs:
-          # self._driver.implicitly_wait(3)
           #при переборе не получает элемент
-          category_2_level_name: str = self._execute_text_from_element('div[role="heading"', category_2_level_div)
+          category_2_level_name: str = self._execute(self._get_text_from_element, '', 'div[role="heading"', category_2_level_div)
           category_2_level: Category2Level = Category2Level(category_2_level_name, [])
 
-          categories_3_level_divs: list[WebElement] = self._execute_elements_by_selector('ul[data-autotest-id="subItems"] li > div', category_2_level_div)
+          categories_3_level_divs: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'ul[data-autotest-id="subItems"] li > div', category_2_level_div)
 
           for categories_3_level_div in categories_3_level_divs:
             # self._driver.implicitly_wait(3)
 
             if count_3_level < 4:
-              category_3_level_link: str = self._execute(self._execute_attribute_from_element, '', 'href', 'a', categories_3_level_div)
+              category_3_level_link: str = self._execute(self._get_attribute_from_element, '', 'href', 'a', categories_3_level_div)
               self.__category_3_level_links.add(category_3_level_link)
 
-            category_3_level_name: str = categories_3_level_div.text
+            category_3_level_name: str = self._execute(self._get_text_from_prop, '', categories_3_level_div)
             category_3_level: Category3Level = Category3Level(category_3_level_name, [])
             category_2_level.categories3Level.append(category_3_level)
 
             count_3_level += 1
 
           category_1_level.categories2Level.append(category_2_level)
-        categories_1_level.append(category_1_level)
+        self.__categories_1_level.append(category_1_level)
 
       count += 1
-
-    return categories_1_level
 
   def scrape(self) -> list[Category1Level]:
     """ Скрепинг категорий 1 уровня
@@ -297,11 +265,9 @@ class CategoryScrapingService(BaseScrapingService):
       list[Category1Level]: список категорий 1 уровня
     """
 
-    categories_1_level: list[Category1Level] = []
-
     self._init_driver()
 
-    self._set_cookies()
+    # self._set_cookies()
     self._driver.get(URL)
     self._set_cookies()
 
@@ -309,13 +275,13 @@ class CategoryScrapingService(BaseScrapingService):
     if self._is_showed_captcha():
       self._driver.get(URL)
 
-    self.__open_catalog_popup()
-
-    categories_1_level = self._execute(self.__get_categories_1_level, [])
-    self.__set_filters(categories_1_level)
-    print(categories_1_level)
+    self._execute_void(self.__open_catalog_popup)
+    self._execute_void(self.__fill_categories_1_level)
+    self._wait(10)
+    self._execute_void(self.__set_filters)
+    # print(self.__categories_1_level)
     print(1, self.__products_map)
 
     self._driver.quit()
 
-    return categories_1_level
+    return self.__categories_1_level
