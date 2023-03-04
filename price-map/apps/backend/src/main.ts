@@ -1,4 +1,4 @@
-import { INestApplication, Logger } from '@nestjs/common';
+import { INestApplication, Inject, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { switchMap, Observable, EMPTY, catchError, from } from 'rxjs';
 import { AppModule } from './app/app.module';
@@ -6,7 +6,7 @@ import { RabbitService } from './app/services';
 
 /**
  * Необходимость в изменении дефолтного main.ts возникла из-за необходимо изначальной инициализации соединия с Rabbit
- * тк при инициализации в корневом модуле асинхронно происходит соединение и инициализация всех модулей
+ * тк при инициализации в корневом модуле асинхронно происходит соединение и инициализация всех модулей,
  * инициализация модулей происходит быстрее и поэтому взаимодействие с Rabbit недоступно в других модулях 
  */
 function start(): Observable<void> {

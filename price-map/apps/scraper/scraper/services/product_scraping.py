@@ -1,6 +1,5 @@
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.remote.webelement import WebElement
 import re
+from selenium.webdriver.remote.webelement import WebElement
 from constants.url import URL
 from services.base_scraping import BaseScrapingService
 from entities.characteristic import Characteristic
@@ -17,9 +16,27 @@ class ProductScrapingService(BaseScrapingService):
     pass
 
   def has_numbers(self, input_str: str) -> bool:
+    """ Содержаться ли числа в строке
+
+    Args:
+      input_str (str): строка_
+
+    Returns:
+      bool: true / false
+    """
+
     return any(char.isdigit() for char in input_str)
   
   def extract_number(self, input_str: str) -> float:
+    """ Извлечение вещественного числа из строки
+
+    Args:
+      input_str (str): строка
+
+    Returns:
+      float: число
+    """
+    
     copy_str: str = input_str.replace(' ', '')
     return float(re.findall(r"[-+]?(?:\d*\.*\d+)", copy_str)[0])
 
@@ -57,6 +74,19 @@ class ProductScrapingService(BaseScrapingService):
     return characteristics
 
   def __get_product(self, offer_div: WebElement, category_3_level_name: str, name: str, description: str, image_path: str, characteristics: list[Characteristic]) -> Product:
+    """ Получение товара
+
+    Args:
+      offer_div (WebElement): элемент с предложением
+      category_3_level_name (str): название категории 3 уровня
+      name (str): название
+      description (str): описание
+      image_path (str): путь к картинке
+      characteristics (list[Characteristic]): характеристики
+
+    Returns:
+      Product: товар
+    """
     shop_a: WebElement = self._execute(self._get_element_by_selector, None, '.p-c-price__shop', offer_div)
     
     #Магазин может быть представлен как картинка и как текст
@@ -75,8 +105,15 @@ class ProductScrapingService(BaseScrapingService):
       price: float = self._execute(self.extract_number, 0.0, price_str)
       product: Product = Product(category_3_level_name, name, description, image_path, shop_name, price, characteristics)
       return product
+
+    return Product('', '', '', '', '', 0.0, [])
     
   def __get_description(self) -> str:
+    """ Получение описания
+
+    Returns:
+      str: описание
+    """
     more_button: WebElement = self._execute(self._get_element_by_selector, None, '.more:not(.link)')
     self._click(more_button)
     self._wait(2)
@@ -109,16 +146,16 @@ class ProductScrapingService(BaseScrapingService):
     """
 
     products: list[Product] = []
-    product_name: str = self._execute(self._get_text_from_element, '', '.model-main h1')
-    product_description: str = self.__get_description()
-    product_image_path: str = self._execute(self._get_attribute_from_element, '', 'src', '.slider img')
-    #нажатие на раздел "Характеристики"
+    name: str = self._execute(self._get_text_from_element, '', '.model-main h1')
+    description: str = self._execute(self.__get_description, '')
+    image_path: str = self._execute(self._get_attribute_from_element, '', 'src', '.slider img')
+    #Нажатие на раздел "Характеристики"
     all_characteristic_button: WebElement = self._execute(self._get_element_by_selector, None, '.more.link')
     self._click(all_characteristic_button)
     self._wait(1)
 
     characteristics: list[Characteristic] = self._execute(self.__get_сharacteristics, [])
-    #нажатие на "Цены"
+    #Нажатие на "Цены"
     offers_div: WebElement = self._execute(self._get_element_by_selector, None, '.offers')
     self._click(offers_div)
     self._wait(2)
@@ -126,11 +163,10 @@ class ProductScrapingService(BaseScrapingService):
     #Выбор первых 5 предложений
     offer_divs = offer_divs[:5]
     for offer_div in offer_divs:
-      product: Product = self._execute(self.__get_product, Product('', '', '', '', '', 0, []), offer_div, category_3_level_name, product_name, product_description, product_image_path, characteristics)
+      product: Product = self._execute(self.__get_product, Product('', '', '', '', '', 0, []), offer_div, category_3_level_name, name, description, image_path, characteristics)
       products.append(product)
 
     return products
-
 
   def __get_products(self, products_map: dict[str, list[str]]) -> list[Product]:
     """ Получение товаров
@@ -148,13 +184,13 @@ class ProductScrapingService(BaseScrapingService):
         self._driver.get(link)
         products_by_category: list[Product] = self._execute(self.__get_products_by_category, [], category_3_level_name)
         products.extend(products_by_category)
-
-        if len(products) > 100:
+        #REMOVE
+        if len(products) > 300:
           return products
 
     return products
-
-  def scrape(self, products_map: dict[str, list[str]]) -> list[Product]:
+  
+  def __scrape(self, products_map: dict[str, list[str]]) -> list[Product]:
     """ Скрепинг товаров
 
     Args:
@@ -171,5 +207,18 @@ class ProductScrapingService(BaseScrapingService):
     self._driver.quit()
 
     return products
+
+  def scrape(self, products_map: dict[str, list[str]]) -> list[Product]:
+    """ Скрепинг товаров (публичное API)
+
+    Args:
+      productsMap (dict[str, list[str]]): словарь с названиями категорий 3 уровня и ссылок на товары
+
+    Returns:
+      list[Product]: список товаров
+    """
+
+    result: list[Product] = self._execute(self.__scrape, [], products_map)
+    return result
 
 

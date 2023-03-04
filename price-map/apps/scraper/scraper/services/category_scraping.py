@@ -30,20 +30,20 @@ class CategoryScrapingService(BaseScrapingService):
 
     WebDriverWait(self._driver, timeout=3).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.catalog > div > button')))
     catalog_popup_putton: WebElement = self._execute(self._get_element_by_selector, None, '.catalog > div > button')
-    self._execute_void(self._click, catalog_popup_putton)
+    self._click(catalog_popup_putton)
 
-    #ожидание пока прогрузится каталог
+    #Ожидание пока прогрузится каталог
     WebDriverWait(self._driver, timeout=10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.sidebar')))
 
   def __click_all_more_spans(self) -> None:
     """ Клик на все кнопки "Еще"
     """
-    # self._wait(2)
+
     all_more_spans: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.showmore span')
     current_more_spans: list[WebElement] = list(filter(lambda span: span.is_displayed() == True, all_more_spans))
 
     for more_span in current_more_spans:
-      self._execute_void(self._click, more_span)
+      self._click(more_span)
 
   def __get_filters(self) -> list[Filter]:
     """ Получение фильтров
@@ -63,9 +63,10 @@ class CategoryScrapingService(BaseScrapingService):
     for filter_div in filter_divs_displayed:
       dropdown_content_wrap_div: WebElement = self._execute(self._get_element_by_selector, None, '.droped-content-wrap', filter_div)
       style_str: str = self._execute(self._get_attribute_from_prop, '', dropdown_content_wrap_div, 'style')
-      #по стилям определение свернут ли фильтр или нет
+      #По стилям определение свернут ли фильтр или нет
       is_collapsed: bool = style_str.find('height: 0px') != -1
 
+      #Если фильтр свернут, необходимо его развернуть
       if is_collapsed:
         arrow_div: WebElement = self._execute(self._get_element_by_selector, None, '.is-body-opened.closed', filter_div)
         self._click(arrow_div)
@@ -77,6 +78,7 @@ class CategoryScrapingService(BaseScrapingService):
       enum_filter: WebElement = self._execute(self._get_element_by_selector, None, '.enum-filter', filter_div)
       boolean_bilter: WebElement = self._execute(self._get_element_by_selector, None, '.boolean-filter', filter_div)
 
+      #Фильтр типа диапазон
       if range_input:
         inputs: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'input', range_input)
         min_str: str = self._execute(self._get_attribute_from_prop, '',  inputs[0], 'placeholder') 
@@ -85,6 +87,7 @@ class CategoryScrapingService(BaseScrapingService):
         if len(min_str) > 0 and len(max_str) > 0:
           filter: Filter = Filter(filter_name, 'range', [float(min_str), float(max_str)])
           filters.append(filter)
+      #Фильтр типа перечисление
       elif enum_filter:
         show_more_button: WebElement = self._execute(self._get_element_by_selector, None, '.show-more-button', enum_filter)
 
@@ -105,6 +108,7 @@ class CategoryScrapingService(BaseScrapingService):
         if len(values) > 0:
           filter: Filter = Filter(filter_name, 'enum', values)
           filters.append(filter)
+      #Фильтр логического типа
       elif boolean_bilter:
         filter: Filter = Filter(filter_name, 'boolean', [])
         filters.append(filter)
@@ -112,6 +116,11 @@ class CategoryScrapingService(BaseScrapingService):
     return filters
                 
   def __add_product_links(self, category_3_level: Category3Level) -> None:
+    """ Добавление ссылок на товары
+
+    Args:
+      category_3_level (Category3Level): категория 3 уровня
+    """
     links: list[str] = []
     #Получение всех блоков товаров
     product_blocks_all: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.p-card:not(.product-history)')
@@ -135,6 +144,15 @@ class CategoryScrapingService(BaseScrapingService):
       self.products_map[category_3_level.name] = links
                 
   def __get_category_3_level(self, name: str) -> Category3Level:
+    """ Получение категории 3 уровня и добавление к ней ссылок на товары
+
+    Args:
+      name (str): название
+
+    Returns:
+      Category3Level: категория 3 уровня
+    """
+
     filters: list[Filter] = self._execute(self.__get_filters, [])
     category_3_level: Category3Level = Category3Level(name, filters)
     
@@ -142,6 +160,11 @@ class CategoryScrapingService(BaseScrapingService):
     return category_3_level
                 
   def __get_categories_1_level(self) -> list[Category1Level]:
+    """ Получение категорий 1 уровня
+
+    Returns:
+      list[Category1Level]: категории 1 уровня
+    """
     categories_1_level: list[Category1Level] = []
 
     for category_3_level_link in list(self.__category_3_level_links):
@@ -194,15 +217,19 @@ class CategoryScrapingService(BaseScrapingService):
     return categories_1_level
   
   def __get_category_3_level_links(self) -> set[str]:
+    """ Получение ссылок на категории 3 уровня
+
+    Returns:
+      set[str]: множество ссылок
+    """
     category_3_level_links: set[str] = set()
     category_1_level_lis: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.sidebar .nav li')
 
     # не включается последний элемент, тк это ссылка на весь каталог
     for category_1_level_li in category_1_level_lis[:-1]:
-      self._execute_void(self._hover, category_1_level_li)
-      self._execute_void(self.__click_all_more_spans)
-      
-      self._wait(2)
+      self._hover(category_1_level_li)
+      self.__click_all_more_spans()
+      self._wait(1)
 
       category_1_level_names_all: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.catalog-title')
       current_category_1_level_name: WebElement = list(filter(lambda span: span.is_displayed() == True, category_1_level_names_all))[0]
@@ -224,10 +251,14 @@ class CategoryScrapingService(BaseScrapingService):
                 category_3_level_link: str = self._execute(self._get_attribute_from_prop, '', categories_3_level_div, 'href')
                 category_3_level_links.add(category_3_level_link)
 
-    return category_3_level_links
+                #REMOVE
+                if len(list(category_3_level_links)) > 300:
+                  return category_3_level_links
 
-  def scrape(self) -> list[Category1Level]:
-    """ Скрепинг категорий 1 уровня
+    return category_3_level_links
+  
+  def __scrape(self) -> list[Category1Level]:
+    """ Скрепинг категорий 1 уровня (вместе со вложенными категориями 2 и 3 уровней)
 
     Returns:
       list[Category1Level]: список категорий 1 уровня
@@ -238,7 +269,17 @@ class CategoryScrapingService(BaseScrapingService):
     self.__open_catalog_popup()
     self.__category_3_level_links = self.__get_category_3_level_links()
     self._wait(3)
-    self.__categories_1_level = self.__get_categories_1_level()    
+    self.__categories_1_level = self.__get_categories_1_level()
     self._driver.quit()
 
     return self.__categories_1_level
+
+  def scrape(self) -> list[Category1Level]:
+    """ Скрепинг категорий 1 уровня (публичное API)
+
+    Returns:
+      list[Category1Level]: список категорий 1 уровня
+    """
+
+    result: list[Category1Level] = self._execute(self.__scrape, [])
+    return result

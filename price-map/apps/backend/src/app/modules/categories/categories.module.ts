@@ -22,6 +22,7 @@ import { RabbitService } from '../../services';
     RabbitService,
     CategoriesGateway,
     CategoriesService,
-  ]
+  ],
+  exports: [RabbitService, CategoriesService]
 })
 export class CategoriesModule {}

@@ -1,4 +1,4 @@
-from typing import Callable, Optional, TypeVar
+from typing import Callable, TypeVar
 from selenium import webdriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.action_chains import ActionChains
@@ -15,17 +15,7 @@ class BaseScrapingService:
   """
 
   def __init__(self) -> None:
-    self._driver: Optional[webdriver.Chrome] = None
-
-  def _is_showed_captcha(self) -> bool:
-    """ Показана ли капча
-
-    Returns:
-      bool: true / false
-    """
-
-    title: str = self._driver.title
-    return title == 'Ой!'
+    self._driver: webdriver.Chrome | None = None
 
   def _init_driver(self) -> None:
     """ Инициализация драйвера
@@ -65,24 +55,6 @@ class BaseScrapingService:
       return element
     else:
       element: WebElement = self._driver.find_element(By.CSS_SELECTOR, selector)
-      return element
-
-  def _get_element_by_id(self, id: str, parent: WebElement | None = None) -> WebElement:
-    """ Получение элемента по id
-
-    Args:
-      id (str): id
-      parent (WebElement | None, optional): родитель. Defaults to None.
-
-    Returns:
-      WebElement: элемент
-    """
-
-    if parent:
-      element: WebElement = parent.find_element(By.ID, id)
-      return element
-    else:
-      element: WebElement = self._driver.find_element(By.ID, id)
       return element
 
   def _get_elements_by_selector(self, selector: str, parent: WebElement | None = None) -> list[WebElement]:
@@ -130,7 +102,6 @@ class BaseScrapingService:
 
     return element.text
 
-  
   def _get_attribute_from_prop(self, element: WebElement, attr: str) -> str:
     """ Получение атрибута из элемента
 
@@ -207,23 +178,15 @@ class BaseScrapingService:
       return value
     except:
       func_name: str = getattr(callback, '__name__', 'Unknown name')
-      print(f'Exception in "{func_name}" method, returned a {str(default_value)} value')
+      print(f'Exception in "{func_name}" method with args ${args}, returned a {str(default_value)} value')
       return default_value
-    
-  def _execute_void(self, callback: Callable, *args) -> None:
-    """ Выполнить какое-либо действие, не возвращающее значение
+
+  def _wait(self, secs: int) -> None:
+    """ Ожидание
 
     Args:
-      callback (Callable): действие (функция)
+      secs (_type_): кол-во секунд
     """
-
-    try:
-      callback(*args)
-    except:
-      func_name: str = getattr(callback, '__name__', 'Unknown name')
-      print(f'Exception in "{func_name}" void method')
-
-  def _wait(self, secs) -> None:
     time.sleep(secs)
 
 

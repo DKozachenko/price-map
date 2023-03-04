@@ -43,7 +43,7 @@ export class CategoriesService implements OnModuleInit {
 
   constructor(private readonly rabbitService: RabbitService) {}
 
-  public onModuleInit(): void {
+  public onModuleInit(): void {      
     const errorCodes: (RabbitErrorCode | DbErrorCode)[] = [
       'DB_ERROR',
       'GET_MESSAGE_ERROR'
@@ -55,19 +55,19 @@ export class CategoriesService implements OnModuleInit {
           return this.refreshAllCategoriesData(categories)
             .pipe(
               catchError((err: Error) => {
-                Logger.error(`Error code: ${errorCodes[0]}, ${err}`, 'CategoriesModule');
+                Logger.error(`Error code: ${errorCodes[0]}, ${err}`, 'CategoriesService');
                 return of(null);
               })
             );
         }),
         catchError((err: Error) => {
-          Logger.error(`Error code: ${errorCodes[1]}, queue: ${'categories_queue'}, ${err}`, 'CategoriesModule');
+          Logger.error(`Error code: ${errorCodes[1]}, queue: ${'categories_queue'}, ${err}`, 'CategoriesService');
           return of(null);
         })
       )
       .subscribe((data: Category1Level[] | null) => {
         if (data) {
-          Logger.log('Successfully saving categories', 'CategoriesModule');
+          Logger.log(`Successfully saving ${data.length} categories`, 'CategoriesService');
         }
       });
   }
@@ -84,6 +84,15 @@ export class CategoriesService implements OnModuleInit {
       }
     }));
   }
+
+    /**
+   * Получение всех категорий 3 уровня
+   * @return {*}  {Observable<Category3Level[]>} категории 3 уровня
+   * @memberof CategoriesService
+   */
+    public getAllCategories3Level(): Observable<Category3Level[]> {
+      return from(this.category3LevelRepository.find({}))
+    }
 
   /**
    * Получение категории 3 уровня по id

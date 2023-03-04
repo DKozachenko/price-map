@@ -3,7 +3,6 @@ from services.product_scraping import ProductScrapingService
 from entities.category_1_level import Category1Level
 from entities.product import Product
 
-
 class ScrapingService:
   """ Главный сервис-скрепер
   """
@@ -22,5 +21,10 @@ class ScrapingService:
     return self.category_scraping_service.scrape()
 
   def scrape_products(self) -> list[Product]:
+    """ Скрепинг товаров
+
+    Returns:
+      list[Product]: список товаров
+    """
     products_map: dict[str, list[str]] = self.category_scraping_service.products_map
     return self.product_scraping_service.scrape(products_map)

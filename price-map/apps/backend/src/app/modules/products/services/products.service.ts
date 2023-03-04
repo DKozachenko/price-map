@@ -1,11 +1,15 @@
+import { Logger, OnModuleInit } from '@nestjs/common';
 /* eslint-disable no-case-declarations */
 /* eslint-disable indent */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Product } from '@core/entities';
+import { Category3Level, Product } from '@core/entities';
 import { Between, FindOperator, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
-import { from, Observable } from 'rxjs';
+import { catchError, forkJoin, from, Observable, of, switchMap, throwError } from 'rxjs';
 import { IPriceQuery, IProductQuery, IUserFilter } from '@core/interfaces';
+import { RabbitService } from '../../../services';
+import { DbErrorCode, RabbitErrorCode } from '@core/types';
+import { CategoriesService } from '../../categories/services';
 
 /**
  * Сервис товаров
@@ -13,7 +17,7 @@ import { IPriceQuery, IProductQuery, IUserFilter } from '@core/interfaces';
  * @class ProductsService
  */
 @Injectable()
-export class ProductsService {
+export class ProductsService implements OnModuleInit {
   /**
    * Репозиторий товаров
    * @private
@@ -22,6 +26,75 @@ export class ProductsService {
    */
   @InjectRepository(Product, 'postgresConnect')
   private readonly productRepository: Repository<Product>;
+
+  constructor(private readonly rabbitService: RabbitService,
+    private readonly categoriesService: CategoriesService) {}
+
+  public onModuleInit(): void {
+    let errorCode: RabbitErrorCode | DbErrorCode;
+
+    const errorCodes: (RabbitErrorCode | DbErrorCode)[] = [
+      'DB_ERROR',
+      'GET_MESSAGE_ERROR'
+    ];
+
+    this.rabbitService.getMessage<(Omit<Product, 'id'> & { shopName: string, category3LevelName: string })[]>('products_queue')
+      .pipe(
+        switchMap((products: (Omit<Product, 'id'> & { shopName: string, category3LevelName: string })[]) => {
+          return forkJoin([of(products), this.categoriesService.getAllCategories3Level()])
+            .pipe(
+              catchError((err: Error) => {
+                errorCode = errorCodes[0];
+                return throwError(() => err);
+              })
+            )
+        }),
+        switchMap(([
+          products, 
+          categories3Level
+        ]: [
+          (Omit<Product, 'id'> & { shopName: string, category3LevelName: string })[],
+          Category3Level[]
+        ]) => {
+          console.log(products.length)
+          const productsForSave: (Omit<Product, 'id' | 'shop'>)[] = []
+
+          for (const product of products) {
+            const existedCategory3Level: Category3Level | undefined = categories3Level.find((item: Category3Level) => item.name === product.category3LevelName);
+ 
+            if (existedCategory3Level) {
+              productsForSave.push({
+                name: product.name,
+                description: product.description,
+                imagePath: product.imagePath,
+                price: product.price,
+                characteristics: product.characteristics,
+                category3Level: existedCategory3Level,
+                users: []
+              })
+            }
+          }
+
+          return this.saveProducts(productsForSave)
+            .pipe(
+              catchError((err: Error) => {
+                errorCode = errorCodes[0];
+                return throwError(() => err);
+              })
+            );
+        }),
+        catchError((err: Error) => {
+          errorCode = errorCodes[1];
+          Logger.error(`Error code: ${errorCode}, queue: ${'products_queue'}, ${err}`, 'ProductsService');
+          return of(null);
+        })
+      )
+      .subscribe((data: Product[] | null) => {
+        if (data) {
+          Logger.log(`Successfully saving ${data.length} products`, 'ProductsService');
+        }
+      });
+  }
 
   /**
    * Генерация условия для JSON значения
@@ -197,5 +270,15 @@ export class ProductsService {
         category3Level: true
       }
     }));
+  }
+
+  /**
+   * Сохранение товаров (со связанными категорией и магазином)
+   * @param {((Omit<Product, 'id' | 'shop'>)[])} products товары
+   * @return {*}  {Observable<Product[]>} сохраненные товары
+   * @memberof ProductsService
+   */
+  public saveProducts(products: (Omit<Product, 'id' | 'shop'>)[]): Observable<Product[]> {
+    return from(this.productRepository.save(products));
   }
 }

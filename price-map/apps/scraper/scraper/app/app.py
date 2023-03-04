@@ -5,7 +5,6 @@ from constants.categories_routing_key import CATEGORIES_ROUTING_KEY
 from constants.products_routing_key import PRODUCTS_ROUTING_KEY
 from entities.category_1_level import Category1Level
 from entities.product import Product
-import jsonpickle
 
 class App:
   """ Класс приложения
@@ -21,7 +20,9 @@ class App:
     
     # while True:
     for i in range(1):
-      # categories: list[Category1Level] = self.scraping_service.scrape_categories()
-      # self.rabbit_service.send_message(SCRAPER_EXCHANGE, CATEGORIES_ROUTING_KEY, categories)
+      categories: list[Category1Level] = self.scraping_service.scrape_categories()
+
+      # if len(categories) > 0:
+        # self.rabbit_service.send_message(SCRAPER_EXCHANGE, CATEGORIES_ROUTING_KEY, categories)
       products: list[Product] = self.scraping_service.scrape_products()
       self.rabbit_service.send_message(SCRAPER_EXCHANGE, PRODUCTS_ROUTING_KEY, products)

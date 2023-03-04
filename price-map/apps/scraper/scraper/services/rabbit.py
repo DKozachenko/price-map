@@ -1,5 +1,5 @@
 import pika
-from typing import Any, Optional
+from typing import Any
 import jsonpickle
 
 class RabbitService:
@@ -7,8 +7,8 @@ class RabbitService:
   """
 
   def __init__(self) -> None:
-    self.__connection: Optional[pika.BlockingConnection] = None
-    self.__channel: Optional[Any] = None
+    self.__connection: pika.BlockingConnection | None = None
+    self.__channel: Any | None = None
 
   def __init_connection(self) -> None:
     """ Инициализация соединения
@@ -16,6 +16,20 @@ class RabbitService:
 
     self.__connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672))
     self.__channel = self.__connection.channel()
+
+  def __json_stringify(self, data: Any) -> str:
+    """ Преобразование данных в строку
+
+    Args:
+      data (Any): произвольные данные
+
+    Returns:
+      str: строка
+    """
+    jsonpickle.set_preferred_backend('json')
+    jsonpickle.set_encoder_options('json', ensure_ascii=False)
+    str_json_data = str(jsonpickle.encode(data, unpicklable=False))
+    return str_json_data
 
   def send_message(self, exchange: str, routing_key: str, data: Any) -> None:
     """ Отправка сообщения
@@ -26,10 +40,7 @@ class RabbitService:
       data (Any): произвольные данные
     """
 
-    jsonpickle.set_preferred_backend('json')
-    jsonpickle.set_encoder_options('json', ensure_ascii=False)
-    str_json_data = str(jsonpickle.encode(data, unpicklable=False))
-    print(921, str_json_data)
+    str_json_data = self.__json_stringify(data)
     self.__init_connection()
     self.__channel.basic_publish(exchange=exchange, routing_key=routing_key, body=str_json_data)
     print(f'Send message to {exchange} with {routing_key} routing key, data: {str_json_data}')
