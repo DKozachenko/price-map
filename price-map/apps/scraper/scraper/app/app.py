@@ -31,5 +31,4 @@ class App:
       # cat2: Category2Level = Category2Level('test category 2 level', [cat3])
       # cat1: Category1Level = Category1Level('test category 1 level', [cat2])
       # categories: list[Category1Level] = [cat1]
-      print('gggg')
       self.rabbit_service.send_message(SCRAPER_EXCHANGE, CATEGORIES_ROUTING_KEY, categories)
