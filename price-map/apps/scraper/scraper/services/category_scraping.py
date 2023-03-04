@@ -40,7 +40,7 @@ class CategoryScrapingService(BaseScrapingService):
     """
 
     all_more_spans: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.showmore span')
-    current_more_spans: list[WebElement] = list(filter(lambda span: span.is_displayed() == True, all_more_spans))
+    current_more_spans: list[WebElement] = self._execute(self._filter_elements, [], lambda span: span.is_displayed() == True, all_more_spans)
 
     for more_span in current_more_spans:
       self._click(more_span)
@@ -179,16 +179,16 @@ class CategoryScrapingService(BaseScrapingService):
         category_2_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[2]).strip()
         category_3_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[3]).strip()
 
-        found_categories_1_level: list[Category1Level] = list(filter(lambda item: item.name == category_1_level_name, categories_1_level))
+        found_categories_1_level: list[Category1Level] = self._execute(self._filter_elements, [], lambda item: item.name == category_1_level_name, categories_1_level)
         #Если такая категория 1 уровня нашлась
         if len(found_categories_1_level) > 0:
           category_1_level: Category1Level = found_categories_1_level[0]
-          found_categories_2_level: list[Category2Level] = list(filter(lambda item: item.name == category_2_level_name, category_1_level.categories2Level))
+          found_categories_2_level: list[Category2Level] = self._execute(self._filter_elements, [], lambda item: item.name == category_2_level_name, category_1_level.categories2Level)
 
           #Если такая категория 2 уровня нашлась
           if len(found_categories_2_level) > 0:
             category_2_level: Category2Level = found_categories_2_level[0]
-            found_categories_3_level: list[Category3Level] = list(filter(lambda item: item.name == category_3_level_name, category_2_level.categories3Level))
+            found_categories_3_level: list[Category3Level] = self._execute(self._filter_elements, [], lambda item: item.name == category_3_level_name, category_2_level.categories3Level)
 
             #Если такая категория 3 уровня не нашлась (должно выполняться всегда, тк названия категорий 3 уровня уникальны)
             if len(found_categories_3_level) == 0:
@@ -232,12 +232,12 @@ class CategoryScrapingService(BaseScrapingService):
       self._wait(1)
 
       category_1_level_names_all: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.catalog-title')
-      current_category_1_level_name: WebElement = list(filter(lambda span: span.is_displayed() == True, category_1_level_names_all))[0]
+      current_category_1_level_name: WebElement = self._execute(self._filter_elements, [''], lambda div: div.is_displayed() == True, category_1_level_names_all)[0]
       category_1_level_name: str = self._execute(self._get_text_from_prop, '', current_category_1_level_name).capitalize().strip()
 
       if (len(category_1_level_name) > 0):
         category_2_level_divs_all: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.catalog-block')
-        category_2_level_divs: list[WebElement] = list(filter(lambda span: span.is_displayed() == True, category_2_level_divs_all))
+        category_2_level_divs: list[WebElement] = self._execute(self._filter_elements, [], lambda div: div.is_displayed() == True, category_2_level_divs_all)
 
         for category_2_level_div in category_2_level_divs:
           category_2_level_name: str = self._execute(self._get_text_from_element, '', '.catalog-block__title', category_2_level_div).strip()

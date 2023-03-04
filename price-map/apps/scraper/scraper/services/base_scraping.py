@@ -9,6 +9,7 @@ from chromedriver_py import binary_path as DRIVER_PATH
 import time
 
 T = TypeVar('T')
+K = TypeVar('K')
 
 class BaseScrapingService:
   """ Базовый класс для сервисов-скреперов
@@ -38,6 +39,19 @@ class BaseScrapingService:
       renderer="Intel Iris OpenGL Engine",
       fix_hairline=True,
     )
+
+  def _filter_elements(self, callback: Callable[[K], bool], elements: list[K]) -> list[K]:
+    """ Фильтрация элементов
+
+    Args:
+      callback (Callable[[K], bool]): колбэк
+      elements (list[K]): элементы для фильтрации
+
+    Returns:
+      list[K]: отфильтрованные элементы
+    """
+    
+    return list(filter(callback, elements))
 
   def _get_element_by_selector(self, selector: str, parent: WebElement | None = None) -> WebElement:
     """ Получение элемента по селектору
