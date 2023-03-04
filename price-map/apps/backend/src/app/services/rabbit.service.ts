@@ -40,14 +40,15 @@ export class RabbitService {
           reject(new Error('Consumer cancelled by server'));
           return;
         }
-        const content: string = message.content.toString();
-        Logger.debug(`Message from ${queueName}: ${content}`, 'RabbitService');
+        
+        const bytes: number = message.content.length;
+        Logger.debug(`Message from ${queueName}, content length: ${bytes} bytes`, 'RabbitService');
         try {
           const obj: T = <T>JSON.parse(message.content.toString());
           this.channel.ack(message);
           resolve(obj);
         } catch (err: any) {
-          reject(new Error(`Error while parsing JSON from ${queueName}, content: ${content}`));
+          reject(new Error(`Error while parsing JSON from ${queueName}, content length: ${bytes} bytes`));
         }
         return;
       });

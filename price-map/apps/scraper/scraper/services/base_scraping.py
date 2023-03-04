@@ -6,9 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium_stealth import stealth
 from chromedriver_py import binary_path as DRIVER_PATH
-
 import time
-from constants.cookies import COOKIES
 
 T = TypeVar('T')
 
@@ -50,17 +48,6 @@ class BaseScrapingService:
       renderer="Intel Iris OpenGL Engine",
       fix_hairline=True,
     )
-
-  def _set_cookies(self) -> None:
-    """ Установка куки
-    """
-
-    for cookie in COOKIES:
-      self._driver.add_cookie({
-        "name": cookie["name"],
-        "value": cookie["value"],
-        "domain": cookie["domain"]
-      })
 
   def _get_element_by_selector(self, selector: str, parent: WebElement | None = None) -> WebElement:
     """ Получение элемента по селектору

@@ -34,6 +34,8 @@ class ProductScrapingService(BaseScrapingService):
     characteristics_divs: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.specifications:not(.active) .item')
     for characteristics_div in characteristics_divs:
       characteristic_label: str = self._execute(self._get_text_from_element, '', '.label', characteristics_div).strip()
+      #Иногда в название характеристики попадает текст из подсказки, поэтому необходимо его убрать
+      characteristic_label = re.sub("\\n.+", "", characteristic_label)
       characteristic_value: str = self._execute(self._get_text_from_element, '', '.value', characteristics_div).strip()
 
       #Первые два ветвления указывают, что тип характеристики - boolean
@@ -60,7 +62,6 @@ class ProductScrapingService(BaseScrapingService):
     #Магазин может быть представлен как картинка и как текст
     shop_image: WebElement = self._execute(self._get_element_by_selector, None, 'img', shop_a)
     shop_span: WebElement = self._execute(self._get_element_by_selector, None, 'span', shop_a)
-    print(shop_image, shop_span)
 
     if shop_image:
       shop_name: str = self._execute(self._get_attribute_from_prop, '', shop_image, 'title').strip()
@@ -74,6 +75,28 @@ class ProductScrapingService(BaseScrapingService):
       price: float = self._execute(self.extract_number, 0.0, price_str)
       product: Product = Product(category_3_level_name, name, description, image_path, shop_name, price, characteristics)
       return product
+    
+  def __get_description(self) -> str:
+    more_button: WebElement = self._execute(self._get_element_by_selector, None, '.more:not(.link)')
+    self._click(more_button)
+    self._wait(2)
+
+    description_blocks: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.description .block')
+    for description_block in description_blocks:
+      title: str = self._execute(self._get_text_from_element, '', '.title', description_block).strip()
+      #Кол-во блоков может быть разным, поэтому для описания приходиться ориентироваться на заголовок блока
+      if title == 'Описание от магазина':
+        description: str = self._execute(self._get_text_from_element, '', '.text', description_block).strip()
+
+        close_icon: WebElement = self._execute(self._get_element_by_selector, None, 'svg.icon-close')
+        self._click(close_icon)
+        self._wait(1)
+        return description
+
+    close_icon: WebElement = self._execute(self._get_element_by_selector, None, 'svg.icon-close')
+    self._click(close_icon)
+    self._wait(1)
+    return ''
 
   def __get_products_by_category(self, category_3_level_name: str) -> list[Product]:
     """ Получение товаров по категории 3 уровня
@@ -87,8 +110,7 @@ class ProductScrapingService(BaseScrapingService):
 
     products: list[Product] = []
     product_name: str = self._execute(self._get_text_from_element, '', '.model-main h1')
-    #на сайте нет описания товара
-    product_description: str = ''
+    product_description: str = self.__get_description()
     product_image_path: str = self._execute(self._get_attribute_from_element, '', 'src', '.slider img')
     #нажатие на раздел "Характеристики"
     all_characteristic_button: WebElement = self._execute(self._get_element_by_selector, None, '.more.link')
@@ -96,7 +118,7 @@ class ProductScrapingService(BaseScrapingService):
     self._wait(1)
 
     characteristics: list[Characteristic] = self._execute(self.__get_сharacteristics, [])
-    #нажатие на "Все предложения"
+    #нажатие на "Цены"
     offers_div: WebElement = self._execute(self._get_element_by_selector, None, '.offers')
     self._click(offers_div)
     self._wait(2)
@@ -105,8 +127,6 @@ class ProductScrapingService(BaseScrapingService):
     offer_divs = offer_divs[:5]
     for offer_div in offer_divs:
       product: Product = self._execute(self.__get_product, Product('', '', '', '', '', 0, []), offer_div, category_3_level_name, product_name, product_description, product_image_path, characteristics)
-      print('product', product)
-      self._wait(10)
       products.append(product)
 
     return products
@@ -128,6 +148,9 @@ class ProductScrapingService(BaseScrapingService):
         self._driver.get(link)
         products_by_category: list[Product] = self._execute(self.__get_products_by_category, [], category_3_level_name)
         products.extend(products_by_category)
+
+        if len(products) > 100:
+          return products
 
     return products
 

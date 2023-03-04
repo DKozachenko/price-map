@@ -4,7 +4,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
 
-from constants.max_get_url_attempts import MAX_GET_URL_ATTEMPTS as MAX_EXECUTE_ATTEMPS
 from constants.url import URL
 from services.base_scraping import BaseScrapingService
 from entities.filter import Filter

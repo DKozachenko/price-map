@@ -22,8 +22,5 @@ class ScrapingService:
     return self.category_scraping_service.scrape()
 
   def scrape_products(self) -> list[Product]:
-    # products_map: dict[str, list[str]] = self.category_scraping_service.products_map
-    products_map: dict[str, list[str]] = {
-      "Apple": ['https://novosibirsk.price.ru/igrovye-pristavki/sony-playstation-5/']
-    }
+    products_map: dict[str, list[str]] = self.category_scraping_service.products_map
     return self.product_scraping_service.scrape(products_map)
