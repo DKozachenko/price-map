@@ -157,58 +157,6 @@ class BaseScrapingService:
 
     return element.get_attribute(attr)
 
-  def _get_attribute_from_prop(self, element: WebElement, attr: str) -> str:
-    """ Получение атрибута из элемента
-
-    Args:
-      element (WebElement): элемент
-      attr (str): название атрибута
-
-    Returns:
-      str: значение атрибута
-    """
-
-    return element.get_attribute(attr)
-
-  def _get_attribute_from_prop(self, element: WebElement, attr: str) -> str:
-    """ Получение атрибута из элемента
-
-    Args:
-      element (WebElement): элемент
-      attr (str): название атрибута
-
-    Returns:
-      str: значение атрибута
-    """
-
-    return element.get_attribute(attr)
-
-  def _get_attribute_from_prop(self, element: WebElement, attr: str) -> str:
-    """ Получение атрибута из элемента
-
-    Args:
-      element (WebElement): элемент
-      attr (str): название атрибута
-
-    Returns:
-      str: значение атрибута
-    """
-
-    return element.get_attribute(attr)
-
-  def _get_attribute_from_prop(self, element: WebElement, attr: str) -> str:
-    """ Получение атрибута из элемента
-
-    Args:
-      element (WebElement): элемент
-      attr (str): название атрибута
-
-    Returns:
-      str: значение атрибута
-    """
-
-    return element.get_attribute(attr)
-
   def _get_attribute_from_element(self, attribute: str, selector: str, parent: WebElement | None = None) -> str:
     """ Получение значение атрибута
 

@@ -12,8 +12,6 @@ from entities.category_1_level import Category1Level
 from entities.category_2_level import Category2Level
 from entities.category_3_level import Category3Level
 
-import jsonpickle
-
 class CategoryScrapingService(BaseScrapingService):
   """ Сервис-скрепер категорий
 
@@ -25,7 +23,7 @@ class CategoryScrapingService(BaseScrapingService):
     super().__init__()
     self.__categories_1_level: list[Category1Level] = []
     self.__category_3_level_links: set[str] = set()
-    self.__products_map: dict[str, list[str]] = dict()
+    self.products_map: dict[str, list[str]] = dict()
 
   def __open_catalog_popup(self) -> None:
     """ Открытие попапа каталога
@@ -75,10 +73,11 @@ class CategoryScrapingService(BaseScrapingService):
         self._wait(1)
 
       filter_name: str = self._execute(self._get_text_from_element, '', '.filter-title', filter_div).strip()
+      #Тип фильтра определяется по классу
       range_input: WebElement = self._execute(self._get_element_by_selector, None, '.range-input', filter_div)
       enum_filter: WebElement = self._execute(self._get_element_by_selector, None, '.enum-filter', filter_div)
       boolean_bilter: WebElement = self._execute(self._get_element_by_selector, None, '.boolean-filter', filter_div)
-      # print('range_input', range_input, 'enum_filter', enum_filter, 'boolean_bilter', boolean_bilter)
+
       if range_input:
         inputs: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'input', range_input)
         min_str: str = self._execute(self._get_attribute_from_prop, '',  inputs[0], 'placeholder') 
@@ -115,7 +114,17 @@ class CategoryScrapingService(BaseScrapingService):
                 
   def __add_product_links(self, category_3_level: Category3Level) -> None:
     links: list[str] = []
-    product_blocks: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.p-card')
+    #Получение всех блоков товаров
+    product_blocks_all: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.p-card:not(.product-history)')
+    product_blocks: list[WebElement] = []
+
+    #Отбор только тех блоков, у которых есть кнопка сравнения цен (в ином случае ссылка ведет сразу в магазин поставщика)
+    for product_block_all in product_blocks_all:
+      compare_price_btn: WebElement = self._execute(self._get_element_by_selector, None, '.btn-compare-price', product_block_all)
+
+      if compare_price_btn:
+        product_blocks.append(product_block_all)
+
     if len(product_blocks) > 0:
       #Выбор первых 5 товаров
       product_blocks = product_blocks[:5]
@@ -124,7 +133,7 @@ class CategoryScrapingService(BaseScrapingService):
         product_link: str = self._execute(self._get_attribute_from_element, '', 'href', '.p-card__title-link', product_block)
         links.append(product_link)
 
-      self.__products_map[category_3_level.name] = links
+      self.products_map[category_3_level.name] = links
                 
   def __get_category_3_level(self, name: str) -> Category3Level:
     filters: list[Filter] = self._execute(self.__get_filters, [])
@@ -137,7 +146,6 @@ class CategoryScrapingService(BaseScrapingService):
     categories_1_level: list[Category1Level] = []
 
     for category_3_level_link in list(self.__category_3_level_links):
-      print('get', category_3_level_link)
       self._driver.get(category_3_level_link)
       self._wait(2)
 
@@ -148,10 +156,8 @@ class CategoryScrapingService(BaseScrapingService):
         category_1_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[1]).strip()
         category_2_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[2]).strip()
         category_3_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[3]).strip()
-        # print(category_1_level_name, category_2_level_name, category_3_level_name)
 
         found_categories_1_level: list[Category1Level] = list(filter(lambda item: item.name == category_1_level_name, categories_1_level))
-
         #Если такая категория 1 уровня нашлась
         if len(found_categories_1_level) > 0:
           category_1_level: Category1Level = found_categories_1_level[0]
@@ -167,9 +173,6 @@ class CategoryScrapingService(BaseScrapingService):
               category_3_level: Category3Level - self.__get_category_3_level(category_3_level_name)
               category_2_level.categories3Level.append(category_3_level)
 
-              # if len(self.__products_map.keys()) > 3:
-              #   print('STOP')
-              #   return categories_1_level
           #Если такая категория 2 уровня не нашлась
           else:
             category_2_level: Category2Level = Category2Level(category_2_level_name, [])
@@ -178,9 +181,6 @@ class CategoryScrapingService(BaseScrapingService):
             category_3_level: Category3Level = self.__get_category_3_level(category_3_level_name)
             category_2_level.categories3Level.append(category_3_level)
 
-            # if len(self.__products_map.keys()) > 3:
-            #   print('STOP')
-            #   return categories_1_level
         #Если такая категория 1 уровня не нашлась
         else:
           category_1_level: Category1Level = Category1Level(category_1_level_name, [])
@@ -191,10 +191,6 @@ class CategoryScrapingService(BaseScrapingService):
 
           category_3_level: Category3Level = self.__get_category_3_level(category_3_level_name)
           category_2_level.categories3Level.append(category_3_level)
-
-          # if len(self.__products_map.keys()) > 3:
-          #   print('STOP')
-          #   return categories_1_level
 
     return categories_1_level
   
@@ -243,10 +239,7 @@ class CategoryScrapingService(BaseScrapingService):
     self.__open_catalog_popup()
     self.__category_3_level_links = self.__get_category_3_level_links()
     self._wait(3)
-    self.__categories_1_level = self.__get_categories_1_level()
-    # print(self.__categories_1_level)
-    # print(1, self.__products_map)
-    
+    self.__categories_1_level = self.__get_categories_1_level()    
     self._driver.quit()
 
     return self.__categories_1_level

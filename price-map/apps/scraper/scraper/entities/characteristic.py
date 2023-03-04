@@ -2,6 +2,6 @@ class Characteristic:
   """ Характеристика
   """
 
-  def __init__(self, name: str, value: int | float | str) -> None:
+  def __init__(self, name: str, value: float | str | bool) -> None:
     self.name: str = name
-    self.value: int | float | str = value
+    self.value: float | str | bool = value
