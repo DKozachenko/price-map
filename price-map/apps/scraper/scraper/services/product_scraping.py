@@ -1,6 +1,7 @@
 import re
 from selenium.webdriver.remote.webelement import WebElement
 from constants.url import URL
+from constants.offers_per_product import OFFERS_PER_PRODUCT
 from services.base_scraping import BaseScrapingService
 from entities.characteristic import Characteristic
 from entities.product import Product
@@ -161,7 +162,7 @@ class ProductScrapingService(BaseScrapingService):
     self._wait(2)
     offer_divs: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.p-c-price')
     #Выбор первых 5 предложений
-    offer_divs = offer_divs[:5]
+    offer_divs = offer_divs[:OFFERS_PER_PRODUCT]
     for offer_div in offer_divs:
       product: Product = self._execute(self.__get_product, Product('', '', '', '', '', 0, []), offer_div, category_3_level_name, name, description, image_path, characteristics)
       products.append(product)

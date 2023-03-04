@@ -1,10 +1,9 @@
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
-
 from constants.url import URL
+from constants.products_per_category import PRODUCTS_PER_CATEGORY
 from services.base_scraping import BaseScrapingService
 from entities.filter import Filter
 from entities.category_1_level import Category1Level
@@ -135,7 +134,7 @@ class CategoryScrapingService(BaseScrapingService):
 
     if len(product_blocks) > 0:
       #Выбор первых 5 товаров
-      product_blocks = product_blocks[:5]
+      product_blocks = product_blocks[:PRODUCTS_PER_CATEGORY]
 
       for product_block in product_blocks:
         product_link: str = self._execute(self._get_attribute_from_element, '', 'href', '.p-card__title-link', product_block)

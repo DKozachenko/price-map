@@ -17,12 +17,14 @@ class App:
   def start(self) -> None:
     """ Старт приложения
     """
+    print("\033[1;32m This text is Bright Green")
+    print("\033[0;37m This text is Bright Green")
     
     # while True:
-    for i in range(1):
-      categories: list[Category1Level] = self.scraping_service.scrape_categories()
+    # for i in range(1):
+    #   categories: list[Category1Level] = self.scraping_service.scrape_categories()
 
-      # if len(categories) > 0:
-        # self.rabbit_service.send_message(SCRAPER_EXCHANGE, CATEGORIES_ROUTING_KEY, categories)
-      products: list[Product] = self.scraping_service.scrape_products()
-      self.rabbit_service.send_message(SCRAPER_EXCHANGE, PRODUCTS_ROUTING_KEY, products)
+    #   # if len(categories) > 0:
+    #     # self.rabbit_service.send_message(SCRAPER_EXCHANGE, CATEGORIES_ROUTING_KEY, categories)
+    #   products: list[Product] = self.scraping_service.scrape_products()
+    #   self.rabbit_service.send_message(SCRAPER_EXCHANGE, PRODUCTS_ROUTING_KEY, products)
