@@ -1,6 +1,7 @@
 import pika
 from typing import Any
 import jsonpickle
+from services.logger import LoggerService
 
 class RabbitService:
   """ Сервис взаимодействия с Rabbit
@@ -9,6 +10,7 @@ class RabbitService:
   def __init__(self) -> None:
     self.__connection: pika.BlockingConnection | None = None
     self.__channel: Any | None = None
+    self.logger_service: LoggerService = LoggerService()
 
   def __init_connection(self) -> None:
     """ Инициализация соединения
@@ -43,5 +45,5 @@ class RabbitService:
     str_json_data = self.__json_stringify(data)
     self.__init_connection()
     self.__channel.basic_publish(exchange=exchange, routing_key=routing_key, body=str_json_data)
-    print(f'Send message to {exchange} with {routing_key} routing key, data: {str_json_data}')
+    self.logger_service.log(f'Send message to {exchange} with {routing_key} routing key', 'RabbitService')
     self.__connection.close()

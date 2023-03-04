@@ -246,6 +246,18 @@ files = [
 ]
 
 [[package]]
+name = "pytz"
+version = "2022.7.1"
+description = "World timezone definitions, modern and historical"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pytz-2022.7.1-py2.py3-none-any.whl", hash = "sha256:78f4f37d8198e0627c5f1143240bb0206b8691d8d7ac6d78fee88b78733f8c4a"},
+    {file = "pytz-2022.7.1.tar.gz", hash = "sha256:01a0681c4b9684a28304615eba55d1ab31ae00bf68ec157ec3708a8182dbbcd0"},
+]
+
+[[package]]
 name = "selenium"
 version = "4.8.0"
 description = ""
@@ -381,4 +393,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
   python-versions = ">=3.10"
-content-hash = "4c2811614499b8a0010c92845c45fe0798521fa24fbbfa3da8539a99848526db"
+content-hash = "fa41d46516922ffea78b1c452353b26a318cbaf5dd57931b11c1fac26278f1f2"

@@ -7,6 +7,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium_stealth import stealth
 from chromedriver_py import binary_path as DRIVER_PATH
 import time
+from services.logger import LoggerService
 
 T = TypeVar('T')
 K = TypeVar('K')
@@ -17,6 +18,7 @@ class BaseScrapingService:
 
   def __init__(self) -> None:
     self._driver: webdriver.Chrome | None = None
+    self.logger_service: LoggerService = LoggerService()
 
   def _init_driver(self) -> None:
     """ Инициализация драйвера
@@ -50,7 +52,7 @@ class BaseScrapingService:
     Returns:
       list[K]: отфильтрованные элементы
     """
-    
+
     return list(filter(callback, elements))
 
   def _get_element_by_selector(self, selector: str, parent: WebElement | None = None) -> WebElement:
@@ -192,7 +194,7 @@ class BaseScrapingService:
       return value
     except:
       func_name: str = getattr(callback, '__name__', 'Unknown name')
-      print(f'Exception in "{func_name}" method with args ${args}, returned a {str(default_value)} value')
+      self.logger_service.error(f'Exception in "{func_name}" method with args ${args}, returned a {str(default_value)} value', 'BaseScrapingService')
       return default_value
 
   def _wait(self, secs: int) -> None:
