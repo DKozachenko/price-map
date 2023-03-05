@@ -4,7 +4,7 @@ import { Logger, OnModuleInit } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category3Level, Product } from '@core/entities';
-import { Between, FindOperator, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { Between, DeleteResult, FindOperator, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { catchError, forkJoin, from, Observable, of, switchMap, throwError } from 'rxjs';
 import { IPriceQuery, IProductQuery, IUserFilter } from '@core/interfaces';
 import { RabbitService } from '../../../services';
@@ -41,6 +41,22 @@ export class ProductsService implements OnModuleInit {
     this.rabbitService.getMessage<(Omit<Product, 'id'> & { shopName: string, category3LevelName: string })[]>('products_queue')
       .pipe(
         switchMap((products: (Omit<Product, 'id'> & { shopName: string, category3LevelName: string })[]) => {
+          return forkJoin([of(products), this.deleteAllProducts()])
+            .pipe(
+              catchError((err: Error) => {
+                errorCode = errorCodes[0];
+                return throwError(() => err);
+              })
+            )
+        }),
+        switchMap(([
+          products,
+          affectedRows
+        ]: [
+          (Omit<Product, 'id'> & { shopName: string, category3LevelName: string })[],
+          number
+        ]) => {
+          Logger.warn(`Deleting products: ${affectedRows} rows`, 'ProductsService');
           return forkJoin([of(products), this.categoriesService.getAllCategories3Level()])
             .pipe(
               catchError((err: Error) => {
@@ -50,7 +66,7 @@ export class ProductsService implements OnModuleInit {
             )
         }),
         switchMap(([
-          products, 
+          products,
           categories3Level
         ]: [
           (Omit<Product, 'id'> & { shopName: string, category3LevelName: string })[],
@@ -61,7 +77,7 @@ export class ProductsService implements OnModuleInit {
 
           for (const product of products) {
             const existedCategory3Level: Category3Level | undefined = categories3Level.find((item: Category3Level) => item.name === product.category3LevelName);
- 
+
             if (existedCategory3Level) {
               productsForSave.push({
                 name: product.name,
@@ -280,5 +296,17 @@ export class ProductsService implements OnModuleInit {
    */
   public saveProducts(products: (Omit<Product, 'id' | 'shop'>)[]): Observable<Product[]> {
     return from(this.productRepository.save(products));
+  }
+
+  /**
+   * Удаление всех товаров
+   * @return {*}  {Observable<number>} кол-во затронутых строк
+   * @memberof ProductsService
+   */
+  public deleteAllProducts(): Observable<number> {
+    return from(this.productRepository.delete({}))
+      .pipe(
+        switchMap((result: DeleteResult) => of(result.affected))
+      );
   }
 }
