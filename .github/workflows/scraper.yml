@@ -1,7 +1,7 @@
-name: Python application
+name: Scraper CI
 
 on:
-  worlflow_dispatch:
+  workflow_dispatch:
   push:
     branches: [ "task/*", "bugfix/*", "conf/*", "feature/*" ]
   pull_request:
