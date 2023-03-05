@@ -31,4 +31,4 @@ jobs:
     - name: Install poetry dependencies
       run: poetry install
     - name: Run test
-      run: poetry run python test.py
+      run: poetry run python scraper/test.py
