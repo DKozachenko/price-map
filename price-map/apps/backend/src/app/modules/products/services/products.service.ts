@@ -38,9 +38,9 @@ export class ProductsService implements OnModuleInit {
       'GET_MESSAGE_ERROR'
     ];
 
-    this.rabbitService.getMessage<(Omit<Product, 'id'> & { shopName: string, category3LevelName: string })[]>('products_queue')
+    this.rabbitService.getMessage<(Product & { shopName: string, category3LevelName: string })[]>('products_queue')
       .pipe(
-        switchMap((products: (Omit<Product, 'id'> & { shopName: string, category3LevelName: string })[]) => {
+        switchMap((products: (Product & { shopName: string, category3LevelName: string })[]) => {
           return forkJoin([of(products), this.deleteAllProducts()])
             .pipe(
               catchError((err: Error) => {
@@ -53,7 +53,7 @@ export class ProductsService implements OnModuleInit {
           products,
           affectedRows
         ]: [
-          (Omit<Product, 'id'> & { shopName: string, category3LevelName: string })[],
+          (Product & { shopName: string, category3LevelName: string })[],
           number
         ]) => {
           Logger.warn(`Deleting products: ${affectedRows} rows`, 'ProductsService');
@@ -69,17 +69,18 @@ export class ProductsService implements OnModuleInit {
           products,
           categories3Level
         ]: [
-          (Omit<Product, 'id'> & { shopName: string, category3LevelName: string })[],
+          (Product & { shopName: string, category3LevelName: string })[],
           Category3Level[]
         ]) => {
-          console.log(products.length)
-          const productsForSave: (Omit<Product, 'id' | 'shop'>)[] = []
+
+          const productsForSave: (Omit<Product, | 'shop'>)[] = []
 
           for (const product of products) {
             const existedCategory3Level: Category3Level | undefined = categories3Level.find((item: Category3Level) => item.name === product.category3LevelName);
 
             if (existedCategory3Level) {
               productsForSave.push({
+                id: product.id,
                 name: product.name,
                 description: product.description,
                 imagePath: product.imagePath,

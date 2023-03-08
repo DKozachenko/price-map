@@ -162,6 +162,7 @@ class CategoryScrapingService(BaseScrapingService):
     filters.extend(range_filters)
     filters.extend(enum_filters)
 
+
     return filters
                 
   def __add_product_links(self, category_3_level: Category3Level) -> None:
@@ -204,7 +205,7 @@ class CategoryScrapingService(BaseScrapingService):
 
     filters: list[Filter] = self._execute(self.__get_filters, [])
     category_3_level: Category3Level = Category3Level(name, filters)
-    
+    print(1, len(filters))
     self.__add_product_links(category_3_level)   
     return category_3_level
                 
@@ -225,6 +226,7 @@ class CategoryScrapingService(BaseScrapingService):
       #учитываем, только страницы, где длина breadcrumb ("Главная"+3 уровня категорий)
 
       flag: bool = False
+      filters_length = 0
       bread_crumb_text: str = ''
       for elem in breadcrumb:
         bread_crumb_text += elem.text + ',' 
@@ -252,6 +254,7 @@ class CategoryScrapingService(BaseScrapingService):
             if len(found_categories_3_level) == 0:
               flag = True
               category_3_level: Category3Level - self.__get_category_3_level(category_3_level_name)
+              filters_length = len(category_3_level.filters)
               category_2_level.categories3Level.append(category_3_level)
 
           #Если такая категория 2 уровня не нашлась
@@ -261,6 +264,7 @@ class CategoryScrapingService(BaseScrapingService):
 
             flag = True
             category_3_level: Category3Level = self.__get_category_3_level(category_3_level_name)
+            filters_length = len(category_3_level.filters)
             category_2_level.categories3Level.append(category_3_level)
 
         #Если такая категория 1 уровня не нашлась
@@ -273,10 +277,11 @@ class CategoryScrapingService(BaseScrapingService):
 
           flag = True
           category_3_level: Category3Level = self.__get_category_3_level(category_3_level_name)
+          filters_length = len(category_3_level.filters)
           category_2_level.categories3Level.append(category_3_level)
 
-    with open('breadcrumb_logs.txt', 'a', encoding='utf-8') as file:
-      file.write(f'getting into __get_category_3_level: {flag}\n')
+      with open('breadcrumb_logs.txt', 'a', encoding='utf-8') as file:
+        file.write(f'getting into __get_category_3_level: {flag}, filters len: {filters_length}\n')
     return categories_1_level
   
   def __get_category_3_level_links(self) -> set[str]:
@@ -328,10 +333,10 @@ class CategoryScrapingService(BaseScrapingService):
     """
     
     self._init_driver()
-    # self._driver.get(URL)
-    # self.__open_catalog_popup()
-    # self.__category_3_level_links = self.__get_category_3_level_links()
-    # self._wait(3)
+    self._driver.get(URL)
+    self.__open_catalog_popup()
+    self.__category_3_level_links = self.__get_category_3_level_links()
+    self._wait(3)
     self.__categories_1_level = self.__get_categories_1_level()
     self._driver.quit()
 
