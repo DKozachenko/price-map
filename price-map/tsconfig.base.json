@@ -2,9 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "rootDir": ".",
-    "types": [
-      "jquery"
-    ],
+    "types": ["jquery"],
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",

@@ -25,6 +25,11 @@ import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
 export class ShopsGateway {
   constructor (private readonly shopsService: ShopsService) {}
 
+  /**
+   * Получение всех магазинов
+   * @return {*}  {(Observable<WsResponse<IResponseData<Shop[] | null, DbErrorCode | null>>>)} магазины
+   * @memberof ShopsGateway
+   */
   @Roles(Role.User, Role.Admin)
   @UseGuards(JwtAuthGuard(ShopEvents.GetShopsFailed), RolesAuthGuard(ShopEvents.GetShopsFailed))
   @SubscribeMessage(ShopEvents.GetShopsAttempt)
@@ -60,6 +65,12 @@ export class ShopsGateway {
       );
   }
 
+  /**
+   * Получение магазина по id
+   * @param {string} id id
+   * @return {*}  {(Observable<WsResponse<IResponseData<Shop | null, DbErrorCode | null>>>)} магазин
+   * @memberof ShopsGateway
+   */
   @Roles(Role.User, Role.Admin)
   @UseGuards(JwtAuthGuard(ShopEvents.GetShopFailed), RolesAuthGuard(ShopEvents.GetShopFailed))
   @SubscribeMessage(ShopEvents.GetShopAttempt)

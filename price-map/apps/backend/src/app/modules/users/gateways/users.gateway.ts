@@ -7,7 +7,7 @@ import { Roles } from '../../../decorators';
 import { Role, UserEvents } from '@core/enums';
 import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
-import { IResponseData, IUserRegisterInfo } from '@core/interfaces';
+import { IResponseData } from '@core/interfaces';
 import { User } from '@core/entities';
 import { AuthErrorCode, DbErrorCode } from '@core/types';
 import { UsersService } from '../services';
@@ -178,7 +178,7 @@ export class UsersGateway {
             );
         }),
         switchMap((affectedRows: number) => {
-          Logger.log('UsersGateway', `Обновление пользователя. Обновлено строк: ${affectedRows}`);
+          Logger.log(`Updating user: ${affectedRows} rows`, 'UsersGateway');
           return of({
             event: UserEvents.UpdateUserSuccessed,
             data: {

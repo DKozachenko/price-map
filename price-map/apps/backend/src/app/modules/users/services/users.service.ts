@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@core/entities';
 import { FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
-import { IUserRegisterInfo } from '@core/interfaces';
 
 /**
  * Сервис пользователей
@@ -51,7 +50,7 @@ export class UsersService {
   /**
    * Добавление
    * @param {Omit<User, 'id'>} newUser новый пользователь
-   * @return {*}  {(Observable<User>)}
+   * @return {*}  {(Observable<User>)} сохраненный пользователь из БД
    * @memberof UsersService
    */
   public add(newUser: Omit<User, 'id'>): Observable<User> {

@@ -37,7 +37,7 @@ export class Category1Level {
    */
   @OneToMany(() => Category2Level, (category: Category2Level) => category.category1Level, {
     eager: false,
-    cascade: true
+    cascade: ['insert', 'update', 'remove']
   })
   public categories2Level: Category2Level[]
 }

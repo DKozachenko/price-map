@@ -4,6 +4,7 @@ import { CategoriesGateway } from './gateways';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category1Level, Category2Level, Category3Level } from '@core/entities';
 import { JwtService } from '@nestjs/jwt';
+import { RabbitService } from '../../services';
 
 /**
  * Модуль категорий (всех уровней)
@@ -18,8 +19,13 @@ import { JwtService } from '@nestjs/jwt';
   ], 'postgresConnect')],
   providers: [
     JwtService,
+    RabbitService,
     CategoriesGateway,
     CategoriesService,
+  ],
+  exports: [
+    RabbitService, 
+    CategoriesService
   ]
 })
 export class CategoriesModule {}

@@ -1,7 +1,6 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ScrapingModule, AuthModule, UsersModule, ProductsModule, CategoriesModule, ExternalModule, ShopsModule } from './modules';
-import { ScrapingService } from './modules/scraping/services';
+import { AuthModule, UsersModule, ProductsModule, CategoriesModule, ExternalModule, ShopsModule } from './modules';
 import { Organization,
   Shop,
   Product,
@@ -12,13 +11,12 @@ import { Organization,
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AppGateway } from './gateways';
 import { secretKey } from './models/constants';
-import { HashService } from './services';
+import { HashService, RabbitService } from './services';
 
 /**
  * Главный модуль приложения
  * @export
  * @class AppModule
- * @implements {OnModuleInit}
  */
 @Module({
   imports: [
@@ -26,7 +24,6 @@ import { HashService } from './services';
     UsersModule,
     ProductsModule,
     CategoriesModule,
-    ScrapingModule,
     ExternalModule,
     ShopsModule,
     //TODO: Добавить свой логгер
@@ -38,7 +35,7 @@ import { HashService } from './services';
       port: 5432,
       username: 'postgres',
       password: 'vkdima03',
-      database: 'test_pm',
+      database: 'real_data_pm',
       entities: [
         Organization,
         Shop,
@@ -58,23 +55,8 @@ import { HashService } from './services';
   providers: [
     JwtService,
     HashService,
+    RabbitService,
     AppGateway
   ],
 })
-export class AppModule implements OnModuleInit {
-  constructor(private readonly scrapingService: ScrapingService) {}
-
-  public async onModuleInit(): Promise<void> {
-    // console.time();
-    // const resultCats = await this.scrapingService.scrapeCategories();
-    // const productsMap: Map<BreadcrumbInfo, string[]> = this.scrapingService.getProductsMap();
-    // await new Promise(temp => setTimeout(temp, 2000));
-    // const result = await this.scrapingService.scrapeProducts(productsMap);
-    // console.log('result', result);
-
-    // fs.writeFile('test.json', JSON.stringify(result), function(error){
-    //   if(error) throw error;
-    // });
-    // console.timeEnd();
-  }
-}
+export class AppModule {}

@@ -19,5 +19,10 @@ export interface IProductQuery {
    * @memberof IProductQuery
    */
   filters: IUserFilter[],
+  /**
+   * Цена
+   * @type {IPriceQuery}
+   * @memberof IProductQuery
+   */
   price: IPriceQuery
 }
