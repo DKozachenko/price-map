@@ -14,7 +14,8 @@
     "lint:front": "nx lint frontend",
     "lint:back": "nx lint backend",
     "test:front": "nx test frontend",
-    "test:back": "nx test backend"
+    "test:back": "nx test backend",
+    "prepare": "nx g @nx-dotnet/core:restore"
   },
   "private": true,
   "dependencies": {
@@ -78,11 +79,13 @@
     "@nrwl/cypress": "15.0.0",
     "@nrwl/eslint-plugin-nx": "15.0.0",
     "@nrwl/jest": "15.2.1",
+    "@nrwl/js": "15.0.0",
     "@nrwl/linter": "15.0.0",
     "@nrwl/nest": "^15.2.1",
     "@nrwl/node": "^15.2.1",
     "@nrwl/nx-cloud": "latest",
     "@nrwl/workspace": "15.0.0",
+    "@nx-dotnet/core": "^1.19.1",
     "@nxlv/python": "^15.5.0",
     "@types/bcrypt": "^5.0.0",
     "@types/jest": "28.1.1",
