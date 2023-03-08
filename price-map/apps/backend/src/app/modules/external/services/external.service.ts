@@ -68,7 +68,8 @@ export class ExternalService {
    */
   //TODO: чуть-чуть типов для any
   public getOSMPointsByName(name: string): Observable<any> {
-    const query: string = `https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json];area[place=city][name="Новосибирск"] -> .nsk;nwr[name~"${name}"](area.nsk) -> .data;.data out geom;`;
+    const query: string = 'https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json];' 
+      + `area[place=city][name="Новосибирск"] -> .nsk;nwr[name~"${name}"](area.nsk) -> .data;.data out geom;`;
     return this.httpService.get<any>(query);
   }
 }

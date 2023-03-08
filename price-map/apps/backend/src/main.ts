@@ -1,4 +1,4 @@
-import { INestApplication, Inject, Logger } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { switchMap, Observable, EMPTY, catchError, from } from 'rxjs';
 import { AppModule } from './app/app.module';

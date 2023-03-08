@@ -41,13 +41,16 @@ export class ProductsService implements OnModuleInit {
     this.rabbitService.getMessage<(Product & { shopName: string, category3LevelName: string })[]>('products_queue')
       .pipe(
         switchMap((products: (Product & { shopName: string, category3LevelName: string })[]) => {
-          return forkJoin([of(products), this.deleteAllProducts()])
+          return forkJoin([
+            of(products), 
+            this.deleteAllProducts()
+          ])
             .pipe(
               catchError((err: Error) => {
                 errorCode = errorCodes[0];
                 return throwError(() => err);
               })
-            )
+            );
         }),
         switchMap(([
           products,
@@ -57,13 +60,16 @@ export class ProductsService implements OnModuleInit {
           number
         ]) => {
           Logger.warn(`Deleting products: ${affectedRows} rows`, 'ProductsService');
-          return forkJoin([of(products), this.categoriesService.getAllCategories3Level()])
+          return forkJoin([
+            of(products), 
+            this.categoriesService.getAllCategories3Level()
+          ])
             .pipe(
               catchError((err: Error) => {
                 errorCode = errorCodes[0];
                 return throwError(() => err);
               })
-            )
+            );
         }),
         switchMap(([
           products,
@@ -73,10 +79,10 @@ export class ProductsService implements OnModuleInit {
           Category3Level[]
         ]) => {
 
-          const productsForSave: (Omit<Product, | 'shop'>)[] = []
-
+          const productsForSave: (Omit<Product, | 'shop'>)[] = [];
           for (const product of products) {
-            const existedCategory3Level: Category3Level | undefined = categories3Level.find((item: Category3Level) => item.name === product.category3LevelName);
+            const existedCategory3Level: Category3Level | undefined 
+              = categories3Level.find((item: Category3Level) => item.name === product.category3LevelName);
 
             if (existedCategory3Level) {
               productsForSave.push({
@@ -88,7 +94,7 @@ export class ProductsService implements OnModuleInit {
                 characteristics: product.characteristics,
                 category3Level: existedCategory3Level,
                 users: []
-              })
+              });
             }
           }
 

@@ -85,14 +85,14 @@ export class CategoriesService implements OnModuleInit {
     }));
   }
 
-    /**
+  /**
    * Получение всех категорий 3 уровня
    * @return {*}  {Observable<Category3Level[]>} категории 3 уровня
    * @memberof CategoriesService
    */
-    public getAllCategories3Level(): Observable<Category3Level[]> {
-      return from(this.category3LevelRepository.find({}))
-    }
+  public getAllCategories3Level(): Observable<Category3Level[]> {
+    return from(this.category3LevelRepository.find({}));
+  }
 
   /**
    * Получение категории 3 уровня по id

@@ -3,9 +3,8 @@ import { Module } from '@nestjs/common';
 import { ProductsService } from './services';
 import { ProductsGateway } from './gateways';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Category3Level, Product } from '@core/entities';
+import { Product } from '@core/entities';
 import { JwtService } from '@nestjs/jwt';
-import { RabbitService } from '../../services';
 
 /**
  * Модуль товаров
