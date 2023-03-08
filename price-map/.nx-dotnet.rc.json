@@ -1,3 +1,5 @@
 {
-  "nugetPackages": {}
+  "nugetPackages": {
+    "RabbitMQ.Client": "6.4.0"
+  }
 }
