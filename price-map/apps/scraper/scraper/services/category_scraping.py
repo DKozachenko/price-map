@@ -44,6 +44,109 @@ class CategoryScrapingService(BaseScrapingService):
     for more_span in current_more_spans:
       self._click(more_span)
 
+  def __expand_filter(self, filter_div: WebElement) -> None:
+    """ Развернуть фильтр
+
+    Args:
+      filter_div (WebElement): элемент фильтра
+    """
+
+    dropdown_content_wrap_div: WebElement = self._execute(self._get_element_by_selector, None, '.droped-content-wrap', filter_div)
+    style_str: str = self._execute(self._get_attribute_from_prop, '', dropdown_content_wrap_div, 'style')
+    #По стилям определение свернут ли фильтр или нет
+    is_collapsed: bool = style_str.find('height: 0px') != -1
+
+    #Если фильтр свернут, необходимо его развернуть
+    if is_collapsed:
+      arrow_div: WebElement = self._execute(self._get_element_by_selector, None, '.is-body-opened.closed', filter_div)
+      self._click(arrow_div)
+      self._wait(1)
+
+  def __get_boolean_filters(self) -> list[Filter]:
+    """ Получение логических фильтров
+
+    Returns:
+      list[Filter]: список фильтров
+    """
+
+    filters: list[Filter] = []
+    filter_divs: list[WebElement] = self._execute(self._get_elements_by_selector, None, '.filter:has(.boolean-filter.filter-body)')
+    filter_divs = self._execute(self._filter_elements, [], lambda div: div.is_displayed() == True, filter_divs)
+
+    for filter_div in filter_divs:
+      # self._scroll(filter_div)
+      # self._wait(1)
+      self.__expand_filter(filter_div)
+
+      filter_name: str = self._execute(self._get_text_from_element, '', '.filter-title', filter_div).strip()
+      filter: Filter = Filter(filter_name, 'boolean', [])
+      filters.append(filter)
+
+    return filters
+  
+  def __get_range_filters(self) -> list[Filter]:
+    """ Получение фильтров типа диапазон
+
+    Returns:
+      list[Filter]: список фильтров
+    """
+
+    filters: list[Filter] = []
+    filter_divs: list[WebElement] = self._execute(self._get_elements_by_selector, None, '.filter:has(.range-input)')
+    filter_divs = self._execute(self._filter_elements, [], lambda div: div.is_displayed() == True, filter_divs)
+
+    for filter_div in filter_divs:
+      self.__expand_filter(filter_div)
+
+      filter_name: str = self._execute(self._get_text_from_element, '', '.filter-title', filter_div).strip()
+      inputs: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'input', filter_div)
+      min_str: str = self._execute(self._get_attribute_from_prop, '',  inputs[0], 'placeholder') 
+      max_str: str = self._execute(self._get_attribute_from_prop, '', inputs[1], 'placeholder') 
+
+      if len(min_str) > 0 and len(max_str) > 0:
+        filter: Filter = Filter(filter_name, 'range', [float(min_str), float(max_str)])
+        filters.append(filter)
+
+    return filters
+  
+  def __get_enum_filters(self) -> list[Filter]:
+    """ Получение фильтров с перечислением
+
+    Returns:
+      list[Filter]: список фильтров
+    """
+
+    filters: list[Filter] = []
+    filter_divs: list[WebElement] = self._execute(self._get_elements_by_selector, None, '.filter:has(.enum-filter)')
+    filter_divs = self._execute(self._filter_elements, [], lambda div: div.is_displayed() == True, filter_divs)
+
+    for filter_div in filter_divs:
+      self.__expand_filter(filter_div)
+
+      filter_name: str = self._execute(self._get_text_from_element, '', '.filter-title', filter_div).strip()
+      show_more_button: WebElement = self._execute(self._get_element_by_selector, None, '.show-more-button', filter_div)
+
+      if show_more_button:
+        self._click(show_more_button)
+        self._wait(1)
+
+      values: list[str] = []
+      value_spans: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.boolean-filter span', filter_div)
+
+      for value_span in value_spans:
+        #Если элемент не виден, необходимо проскроллить до него, чтобы получить значение
+        if value_span.is_displayed() == False:
+          self._scroll(value_span)
+
+        value: str = self._execute(self._get_text_from_prop, '', value_span)
+        values.append(value)
+
+      if len(values) > 0:
+        filter: Filter = Filter(filter_name, 'enum', values)
+        filters.append(filter)
+
+    return filters
+
   def __get_filters(self) -> list[Filter]:
     """ Получение фильтров
 
@@ -52,65 +155,12 @@ class CategoryScrapingService(BaseScrapingService):
     """
 
     filters: list[Filter] = []
-    filter_divs: list[WebElement] = self._execute(self._get_elements_by_selector, None, '.filter')
-    filter_divs_displayed: list[WebElement] = []
-
-    for filter_div in filter_divs:
-      if filter_div.is_displayed() == True:
-        filter_divs_displayed.append(filter_div)
-
-    for filter_div in filter_divs_displayed:
-      dropdown_content_wrap_div: WebElement = self._execute(self._get_element_by_selector, None, '.droped-content-wrap', filter_div)
-      style_str: str = self._execute(self._get_attribute_from_prop, '', dropdown_content_wrap_div, 'style')
-      #По стилям определение свернут ли фильтр или нет
-      is_collapsed: bool = style_str.find('height: 0px') != -1
-
-      #Если фильтр свернут, необходимо его развернуть
-      if is_collapsed:
-        arrow_div: WebElement = self._execute(self._get_element_by_selector, None, '.is-body-opened.closed', filter_div)
-        self._click(arrow_div)
-        self._wait(1)
-
-      filter_name: str = self._execute(self._get_text_from_element, '', '.filter-title', filter_div).strip()
-      #Тип фильтра определяется по классу
-      range_input: WebElement = self._execute(self._get_element_by_selector, None, '.range-input', filter_div)
-      enum_filter: WebElement = self._execute(self._get_element_by_selector, None, '.enum-filter', filter_div)
-      boolean_bilter: WebElement = self._execute(self._get_element_by_selector, None, '.boolean-filter', filter_div)
-
-      #Фильтр типа диапазон
-      if range_input:
-        inputs: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'input', range_input)
-        min_str: str = self._execute(self._get_attribute_from_prop, '',  inputs[0], 'placeholder') 
-        max_str: str = self._execute(self._get_attribute_from_prop, '', inputs[1], 'placeholder') 
-
-        if len(min_str) > 0 and len(max_str) > 0:
-          filter: Filter = Filter(filter_name, 'range', [float(min_str), float(max_str)])
-          filters.append(filter)
-      #Фильтр типа перечисление
-      elif enum_filter:
-        show_more_button: WebElement = self._execute(self._get_element_by_selector, None, '.show-more-button', enum_filter)
-
-        if show_more_button:
-          self._click(show_more_button)
-          self._wait(1)
-
-        values: list[str] = []
-        value_spans: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.boolean-filter span', enum_filter)
-
-        for value_span in value_spans:
-          #Если элемент не виден, необходимо проскроллить до него, чтобы получить значение
-          if value_span.is_displayed() == False:
-            self._scroll(value_span)
-
-          value: str = self._execute(self._get_text_from_prop, '', value_span)
-          values.append(value)
-        if len(values) > 0:
-          filter: Filter = Filter(filter_name, 'enum', values)
-          filters.append(filter)
-      #Фильтр логического типа
-      elif boolean_bilter:
-        filter: Filter = Filter(filter_name, 'boolean', [])
-        filters.append(filter)
+    boolean_filters: list[Filter] = self._execute(self.__get_boolean_filters, [])
+    range_filters: list[Filter] = self._execute(self.__get_range_filters, [])
+    enum_filters: list[Filter] = self._execute(self.__get_enum_filters, [])
+    filters.extend(boolean_filters)
+    filters.extend(range_filters)
+    filters.extend(enum_filters)
 
     return filters
                 
@@ -173,6 +223,15 @@ class CategoryScrapingService(BaseScrapingService):
       breadcrumb: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.breadcrumbs-item')
       #breadcrumb состоит из пунтка "Главная"+уровни категорий, тк расчет шел на 3-уровневую систему, то
       #учитываем, только страницы, где длина breadcrumb ("Главная"+3 уровня категорий)
+
+      flag: bool = False
+      bread_crumb_text: str = ''
+      for elem in breadcrumb:
+        bread_crumb_text += elem.text + ',' 
+
+      with open('breadcrumb_logs.txt', 'a', encoding='utf-8') as file:
+        file.write(f'breadcrumb len {len(breadcrumb)}, all text: {bread_crumb_text} ')
+
       if len(breadcrumb) == 4:
         category_1_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[1]).strip()
         category_2_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[2]).strip()
@@ -191,6 +250,7 @@ class CategoryScrapingService(BaseScrapingService):
 
             #Если такая категория 3 уровня не нашлась (должно выполняться всегда, тк названия категорий 3 уровня уникальны)
             if len(found_categories_3_level) == 0:
+              flag = True
               category_3_level: Category3Level - self.__get_category_3_level(category_3_level_name)
               category_2_level.categories3Level.append(category_3_level)
 
@@ -199,6 +259,7 @@ class CategoryScrapingService(BaseScrapingService):
             category_2_level: Category2Level = Category2Level(category_2_level_name, [])
             category_1_level.categories2Level.append(category_2_level)
 
+            flag = True
             category_3_level: Category3Level = self.__get_category_3_level(category_3_level_name)
             category_2_level.categories3Level.append(category_3_level)
 
@@ -210,9 +271,12 @@ class CategoryScrapingService(BaseScrapingService):
           category_2_level: Category2Level = Category2Level(category_2_level_name, [])
           category_1_level.categories2Level.append(category_2_level)
 
+          flag = True
           category_3_level: Category3Level = self.__get_category_3_level(category_3_level_name)
           category_2_level.categories3Level.append(category_3_level)
 
+    with open('breadcrumb_logs.txt', 'a', encoding='utf-8') as file:
+      file.write(f'getting into __get_category_3_level: {flag}\n')
     return categories_1_level
   
   def __get_category_3_level_links(self) -> set[str]:
@@ -251,8 +315,8 @@ class CategoryScrapingService(BaseScrapingService):
                 category_3_level_links.add(category_3_level_link)
 
                 #REMOVE
-                if len(list(category_3_level_links)) > 300:
-                  return category_3_level_links
+                # if len(list(category_3_level_links)) > 300:
+                #   return category_3_level_links
 
     return category_3_level_links
   
@@ -264,10 +328,10 @@ class CategoryScrapingService(BaseScrapingService):
     """
     
     self._init_driver()
-    self._driver.get(URL)
-    self.__open_catalog_popup()
-    self.__category_3_level_links = self.__get_category_3_level_links()
-    self._wait(3)
+    # self._driver.get(URL)
+    # self.__open_catalog_popup()
+    # self.__category_3_level_links = self.__get_category_3_level_links()
+    # self._wait(3)
     self.__categories_1_level = self.__get_categories_1_level()
     self._driver.quit()
 

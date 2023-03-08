@@ -194,7 +194,7 @@ class BaseScrapingService:
       return value
     except:
       func_name: str = getattr(callback, '__name__', 'Unknown name')
-      self.logger_service.error(f'Exception in "{func_name}" method with args ${args}, returned a {str(default_value)} value', 'BaseScrapingService')
+      self.logger_service.error(f'Exception in "{func_name}" method with args {args}, returned a {str(default_value)} value', 'BaseScrapingService')
       return default_value
 
   def _wait(self, secs: int) -> None:
