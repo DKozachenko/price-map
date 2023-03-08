@@ -82,8 +82,7 @@ export class Shop {
    * @memberof Shop
    */
   @OneToMany(() => Product, (product: Product) => product.shop, {
-    eager: false,
-    cascade: true,
+    eager: false
   })
   public products: Product[]
 }
