@@ -9,13 +9,16 @@
     "start:back": "nx serve backend",
     "start:scraper": "cd ./apps/scraper/scraper && poetry run python index.py",
     "poststart:scraper": "rimraf ./apps/scraper/scraper/app/__pycache__ && rimraf ./apps/scraper/scraper/constants/__pycache__ && rimraf ./apps/scraper/scraper/services/__pycache__ && rimraf ./apps/scraper/scraper/entities/__pycache__",
+    "prestart:overpass-requester": "nx g @nx-dotnet/core:restore",
+    "start:overpass-requester": "npx nx serve overpass-requester",
     "build:front": "nx build frontend",
     "build:back": "nx build backend",
+    "prebuild:overpass-requester": "nx g @nx-dotnet/core:restore",
+    "build:overpass-requester": "npx nx build overpass-requester",
     "lint:front": "nx lint frontend",
     "lint:back": "nx lint backend",
     "test:front": "nx test frontend",
-    "test:back": "nx test backend",
-    "prepare": "nx g @nx-dotnet/core:restore"
+    "test:back": "nx test backend"
   },
   "private": true,
   "dependencies": {
