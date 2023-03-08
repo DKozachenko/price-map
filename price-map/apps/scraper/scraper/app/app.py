@@ -45,12 +45,14 @@ class App:
     while is_working:
       try:
         categories: list[Category1Level] = self.scraping_service.scrape_categories()
+        self.logger_service.log(f'Categories were gotten, number: {len(categories)}', 'App')
         categories = self.filter_service.filter_categories_1_level(categories)
 
         if len(categories) > 0:
           self.rabbit_service.send_message(SCRAPER_EXCHANGE, CATEGORIES_ROUTING_KEY, categories)
 
         products: list[Product] = self.scraping_service.scrape_products()
+        self.logger_service.log(f'Products were gotten, number: {len(products)}', 'App')
         products = self.filter_service.filter_products(products)
 
         if len(products) > 0:

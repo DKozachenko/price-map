@@ -124,9 +124,10 @@ class CategoryScrapingService(BaseScrapingService):
       self.__expand_filter(filter_div)
 
       filter_name: str = self._execute(self._get_text_from_element, '', '.filter-title', filter_div).strip()
-      show_more_button: WebElement = self._execute(self._get_element_by_selector, None, '.show-more-button', filter_div)
+      show_more_button_exists: bool = self._is_element_exists_by_selector('.show-more-button', filter_div)
 
-      if show_more_button:
+      if show_more_button_exists:
+        show_more_button: WebElement = self._execute(self._get_element_by_selector, None, '.show-more-button', filter_div)
         self._click(show_more_button)
         self._wait(1)
 
@@ -178,9 +179,9 @@ class CategoryScrapingService(BaseScrapingService):
 
     #Отбор только тех блоков, у которых есть кнопка сравнения цен (в ином случае ссылка ведет сразу в магазин поставщика)
     for product_block_all in product_blocks_all:
-      compare_price_btn: WebElement = self._execute(self._get_element_by_selector, None, '.btn-compare-price', product_block_all)
+      compare_price_btn_exists: bool = self._is_element_exists_by_selector('.btn-compare-price', product_block_all)
 
-      if compare_price_btn:
+      if compare_price_btn_exists:
         product_blocks.append(product_block_all)
 
     if len(product_blocks) > 0:
@@ -205,7 +206,6 @@ class CategoryScrapingService(BaseScrapingService):
 
     filters: list[Filter] = self._execute(self.__get_filters, [])
     category_3_level: Category3Level = Category3Level(name, filters)
-    print(1, len(filters))
     self.__add_product_links(category_3_level)   
     return category_3_level
                 
@@ -224,16 +224,6 @@ class CategoryScrapingService(BaseScrapingService):
       breadcrumb: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.breadcrumbs-item')
       #breadcrumb состоит из пунтка "Главная"+уровни категорий, тк расчет шел на 3-уровневую систему, то
       #учитываем, только страницы, где длина breadcrumb ("Главная"+3 уровня категорий)
-
-      flag: bool = False
-      filters_length = 0
-      bread_crumb_text: str = ''
-      for elem in breadcrumb:
-        bread_crumb_text += elem.text + ',' 
-
-      with open('breadcrumb_logs.txt', 'a', encoding='utf-8') as file:
-        file.write(f'breadcrumb len {len(breadcrumb)}, all text: {bread_crumb_text} ')
-
       if len(breadcrumb) == 4:
         category_1_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[1]).strip()
         category_2_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[2]).strip()
@@ -252,9 +242,7 @@ class CategoryScrapingService(BaseScrapingService):
 
             #Если такая категория 3 уровня не нашлась (должно выполняться всегда, тк названия категорий 3 уровня уникальны)
             if len(found_categories_3_level) == 0:
-              flag = True
               category_3_level: Category3Level - self.__get_category_3_level(category_3_level_name)
-              filters_length = len(category_3_level.filters)
               category_2_level.categories3Level.append(category_3_level)
 
           #Если такая категория 2 уровня не нашлась
@@ -262,9 +250,7 @@ class CategoryScrapingService(BaseScrapingService):
             category_2_level: Category2Level = Category2Level(category_2_level_name, [])
             category_1_level.categories2Level.append(category_2_level)
 
-            flag = True
             category_3_level: Category3Level = self.__get_category_3_level(category_3_level_name)
-            filters_length = len(category_3_level.filters)
             category_2_level.categories3Level.append(category_3_level)
 
         #Если такая категория 1 уровня не нашлась
@@ -275,13 +261,9 @@ class CategoryScrapingService(BaseScrapingService):
           category_2_level: Category2Level = Category2Level(category_2_level_name, [])
           category_1_level.categories2Level.append(category_2_level)
 
-          flag = True
           category_3_level: Category3Level = self.__get_category_3_level(category_3_level_name)
-          filters_length = len(category_3_level.filters)
           category_2_level.categories3Level.append(category_3_level)
 
-      with open('breadcrumb_logs.txt', 'a', encoding='utf-8') as file:
-        file.write(f'getting into __get_category_3_level: {flag}, filters len: {filters_length}\n')
     return categories_1_level
   
   def __get_category_3_level_links(self) -> set[str]:

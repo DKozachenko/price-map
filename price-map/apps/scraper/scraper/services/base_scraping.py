@@ -72,6 +72,27 @@ class BaseScrapingService:
     else:
       element: WebElement = self._driver.find_element(By.CSS_SELECTOR, selector)
       return element
+    
+  def _is_element_exists_by_selector(self, selector: str, parent: WebElement | None = None) -> bool:
+    """ Существует ли элемент
+
+    Args:
+      selector (str): селектор
+      parent (WebElement | None, optional): родитель. Defaults to None.
+
+    Returns:
+      bool: true / false
+    """
+
+    try:
+      if parent:
+        element: WebElement = parent.find_element(By.CSS_SELECTOR, selector)
+        return True
+      else:
+        element: WebElement = self._driver.find_element(By.CSS_SELECTOR, selector)
+        return True
+    except:
+      return False
 
   def _get_elements_by_selector(self, selector: str, parent: WebElement | None = None) -> list[WebElement]:
     """ Получение элементов по селектору
