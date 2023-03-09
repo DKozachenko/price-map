@@ -57,8 +57,8 @@ class App:
 
         if len(products) > 0:
           self.rabbit_service.send_message(SCRAPER_EXCHANGE, PRODUCTS_ROUTING_KEY, products)
-          # matches: list[ProductShopMatch] = self.__get_product_shop_matches(products)
-          # self.rabbit_service.send_message(SCRAPER_EXCHANGE, PRODUCTS_OUT_ROUTING_KEY, matches)
+          matches: list[ProductShopMatch] = self.__get_product_shop_matches(products)
+          self.rabbit_service.send_message(SCRAPER_EXCHANGE, PRODUCTS_OUT_ROUTING_KEY, matches)
       except:
         self.logger_service.error('Error occured', 'App')
         self.logger_service.log('Application shut down', 'App')

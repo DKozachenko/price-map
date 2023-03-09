@@ -16,4 +16,8 @@ class JsonService {
     return result;
   }
 
+  public string SerializeToString<T>(T data) {
+    return JsonConvert.SerializeObject(data);
+  }
+
 }
