@@ -5,6 +5,7 @@ import { DeleteResult, Repository } from 'typeorm';
 import { from, Observable, of, switchMap, catchError } from 'rxjs';
 import { DbErrorCode, RabbitErrorCode } from '@core/types';
 import { RabbitService } from '../../../services';
+import { CATEGORIES_QUEUE } from '../../../models/constants';
 
 /**
  * Сервис категорий (всех уровней)
@@ -44,12 +45,21 @@ export class CategoriesService implements OnModuleInit {
   constructor(private readonly rabbitService: RabbitService) {}
 
   public onModuleInit(): void {      
+    this.subscribeOnCategoriesQueue();
+  }
+
+  /**
+   * Подписка на очередь с категориями
+   * @private
+   * @memberof CategoriesService
+   */
+  private subscribeOnCategoriesQueue(): void {
     const errorCodes: (RabbitErrorCode | DbErrorCode)[] = [
       'DB_ERROR',
       'GET_MESSAGE_ERROR'
     ];
 
-    this.rabbitService.getMessage<Omit<Category1Level, 'id'>[]>('categories_queue')
+    this.rabbitService.getMessage<Omit<Category1Level, 'id'>[]>(CATEGORIES_QUEUE)
       .pipe(
         switchMap((categories: Omit<Category1Level, 'id'>[]) => {
           return this.refreshAllCategoriesData(categories)
@@ -61,7 +71,7 @@ export class CategoriesService implements OnModuleInit {
             );
         }),
         catchError((err: Error) => {
-          Logger.error(`Error code: ${errorCodes[1]}, queue: ${'categories_queue'}, ${err}`, 'CategoriesService');
+          Logger.error(`Error code: ${errorCodes[1]}, queue: ${CATEGORIES_QUEUE}, ${err}`, 'CategoriesService');
           return of(null);
         })
       )

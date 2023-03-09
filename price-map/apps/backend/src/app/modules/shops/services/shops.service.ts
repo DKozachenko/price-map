@@ -3,8 +3,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Shop } from '@core/entities';
-import { Repository } from 'typeorm';
-import { from, Observable} from 'rxjs';
+import { DeleteResult, Repository } from 'typeorm';
+import { from, Observable, of, switchMap} from 'rxjs';
 
 /**
  * Сервис магазинов
@@ -50,5 +50,17 @@ export class ShopsService {
         products: true
       }
     }));
+  }
+
+  /**
+   * Удаление всех магазинов
+   * @return {*}  {Observable<number>} кол-во затронутых строк
+   * @memberof ShopsService
+   */
+  public deleteAll(): Observable<number> {
+    return from(this.shopRepository.delete({}))
+      .pipe(
+        switchMap((result: DeleteResult) => of(result.affected))
+      );
   }
 }

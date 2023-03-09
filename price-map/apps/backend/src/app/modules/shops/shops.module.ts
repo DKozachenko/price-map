@@ -16,6 +16,7 @@ import { JwtService } from '@nestjs/jwt';
     JwtService,
     ShopsGateway,
     ShopsService,
-  ]
+  ],
+  exports: [ShopsService]
 })
 export class ShopsModule {}
