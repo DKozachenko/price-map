@@ -1,6 +1,6 @@
-import { Organization, Product } from '.';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm"
-import { ICoordinates, ISchedule } from '../interfaces';
+import { Product } from '.';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm"
+import { ICoordinates } from '../interfaces';
 
 /**
  * Сущность магазина (филиала)
@@ -20,6 +20,17 @@ export class Shop {
   public id: string;
 
   /**
+   * Id точки в OSM
+   * @type {string}
+   * @memberof Shop
+   */
+  @Column({
+    type: 'bigint',
+    nullable: false
+  })
+  public osmNodeId: string;
+
+  /**
    * Название
    * @type {string}
    * @memberof Shop
@@ -32,18 +43,7 @@ export class Shop {
   public name: string;
 
   /**
-   * Расписание
-   * @type {ISchedule}
-   * @memberof Shop
-   */
-  @Column({
-    type: 'jsonb',
-    nullable: false
-  })
-  public schedule: ISchedule;
-
-  /**
-   * Путь до изображения
+   * Сайт
    * @type {string}
    * @memberof Shop
    */
@@ -52,7 +52,7 @@ export class Shop {
     length: 200,
     nullable: true
   })
-  public imagePath?: string;
+  public website?: string;
 
   /**
    * Координаты
@@ -64,17 +64,6 @@ export class Shop {
     nullable: false
   })
   public coordinates: ICoordinates;
-
-  /**
-   * Организация, к которой он относится
-   * @type {Organization}
-   * @memberof Shop
-   */
-  @ManyToOne(() => Organization, (organization: Organization) => organization.shops, {
-    orphanedRowAction: 'delete'
-  })
-  @JoinColumn()
-  public organization: Organization
 
   /**
    * Продукты, которые есть в этом магазине

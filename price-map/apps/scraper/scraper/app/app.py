@@ -40,6 +40,7 @@ class App:
   def start(self) -> None:
     """ Старт приложения
     """
+    self.logger_service.log('Application start', 'App')
 
     is_working: bool = True
     while is_working:

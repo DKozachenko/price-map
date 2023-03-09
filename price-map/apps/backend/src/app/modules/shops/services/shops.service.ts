@@ -30,8 +30,7 @@ export class ShopsService {
   public getAll(): Observable<Shop[]> {
     return from(this.shopRepository.find({
       relations: {
-        products: true,
-        organization: true
+        products: true
       }
     }));
   }
