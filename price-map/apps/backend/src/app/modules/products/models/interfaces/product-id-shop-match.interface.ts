@@ -6,7 +6,7 @@ import { Shop } from "@core/entities";
  * @interface IProductIdShopMatch
  */
 export interface IProductIdShopMatch {
-  [key: string]: string | Omit<Shop, 'id'>,
+  [key: string]: string | Shop
   /**
    * Id товара
    * @type {string}
@@ -15,8 +15,8 @@ export interface IProductIdShopMatch {
   productId: string,
   /**
    * Магазин
-   * @type {Omit<Shop, 'id'>}
+   * @type {Shop}
    * @memberof IProductIdShopMatch
    */
-  shop: Omit<Shop, 'id'>
+  shop: Shop
 }

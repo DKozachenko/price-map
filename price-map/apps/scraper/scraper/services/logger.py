@@ -40,4 +40,4 @@ class LoggerService:
     """
 
     formatted_now: str = self.__get_log_datetime()
-    print(f'\033[0;31m {formatted_now}\tLOG\033[0;33m [{context}]\033[0;31m {message}\033[0;37m')
+    print(f'\033[0;31m {formatted_now}\tERROR\033[0;33m [{context}]\033[0;31m {message}\033[0;37m')

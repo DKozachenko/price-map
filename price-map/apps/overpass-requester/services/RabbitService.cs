@@ -7,11 +7,14 @@ class RabbitService {
   private IConnection connection;
   private IModel channel;
   private JsonService jsonService;
+  private LoggerService loggerService;
   public IConnection Connection { get { return this.connection; } set { this.connection = value; } }
   public IModel Channel { get { return this.channel; } set { this.channel = value; } }
   public JsonService JsonService { get { return this.jsonService; } set { this.jsonService = value; } }
+  public LoggerService LoggerService { get { return this.loggerService; } set { this.loggerService = value; } }
   public RabbitService() {
     this.JsonService = new JsonService();
+    this.LoggerService = new LoggerService();
   }
 
   public void InitConnection() {
@@ -21,21 +24,20 @@ class RabbitService {
   }
 
   public void SendMessage<T>(string exchange, string routingKey, T data) {
-      // this.InitConnection();
-      // if (this.Connection == null) {
-      //   this.InitConnection();
-      // }
       string dataStr = this.JsonService.SerializeToString<T>(data);
       byte[] body = Encoding.UTF8.GetBytes(dataStr);
       this.Channel.BasicPublish(exchange: exchange, routingKey: routingKey, basicProperties: null, body: body);
-      // this.Connection.Close();
+      this.LoggerService.Log($"Send message to {exchange} with {routingKey} routing key, content length {body.Length} bytes", "RabbitService");
   }
 
   public void GetMessage<T>(string queueName, EventHandler<BasicDeliverEventArgs> callback) {
-    this.InitConnection();
     EventingBasicConsumer consumer = new EventingBasicConsumer(this.Channel);
     consumer.Received += callback;
     this.Channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+  }
+
+  public void CloseConnection() {
+    this.Connection.Close();
   }
     
 }

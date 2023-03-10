@@ -8,13 +8,17 @@ class App {
   private RabbitService rabbitService;
   private HttpService httpService;
   private JsonService jsonService;
+  private LoggerService loggerService;
   private List<OsmNode> nskNodes;
   private Random rand;
+  private List<Shop> shops;
   public RabbitService RabbitService { get { return this.rabbitService; } set { this.rabbitService = value; } }
   public HttpService HttpService { get { return this.httpService; } set { this.httpService = value; } }
   public JsonService JsonService { get { return this.jsonService; } set { this.jsonService = value; } }
+  public LoggerService LoggerService { get { return this.loggerService; } set { this.loggerService = value; } }
   public List<OsmNode> NskNodes { get { return this.nskNodes; } set { this.nskNodes = value; } }
   public Random Rand { get { return this.rand; } set { this.rand = value; } }
+  public List<Shop> Shops { get { return this.shops; } set { this.shops = value; } }
 
   public EventHandler<BasicDeliverEventArgs> handler = (model, ea) => {
     byte[] body = ea.Body.ToArray();
@@ -26,8 +30,10 @@ class App {
     this.RabbitService = new RabbitService();
     this.HttpService = new HttpService();
     this.JsonService = new JsonService();
+    this.LoggerService = new LoggerService();
     this.NskNodes = new List<OsmNode>();
     this.Rand = new Random();
+    this.Shops = new List<Shop>();
   }
 
   private HashSet<string> GetUniqueShopNames(List<ProductShopMatch> matches) {
@@ -84,41 +90,60 @@ class App {
   }
 
   private Shop GetShop(string shopName, OsmNode node) {
+    Shop? existedShop = this.Shops.Find(shop => shop.Name == shopName && shop.OsmNodeId == node.Id);
+    if (existedShop != null) {
+      return existedShop;
+    }
     Coordinates coordinates = new Coordinates(node.Lat, node.Lon);
-    return new Shop(node.Id, shopName, node?.Tags?.ContactWebsite ?? "", coordinates);
+    Shop shop = new Shop(node.Id, shopName, node?.Tags?.ContactWebsite ?? "", coordinates);
+    this.Shops.Add(shop);
+    return shop;
   }
 
   private List<ProductIdShopMatch> GetProductIdShopMatches(List<ProductShopMatch> productShopMatches, List<ShopNameNodeMatch> shopNameNodeMatches) {
     List<ProductIdShopMatch> result = new List<ProductIdShopMatch>();
 
     foreach (ProductShopMatch productShopMatch in productShopMatches) {
-      ShopNameNodeMatch shopNameNodeMatch = shopNameNodeMatches.Find(match => match.ShopName == productShopMatch.ShopName);
-      OsmNode node = this.GetRandomNode(shopNameNodeMatch.Nodes); 
-      Shop shop = this.GetShop(shopNameNodeMatch.ShopName, node);
-      ProductIdShopMatch productIdShopMatch = new ProductIdShopMatch(productShopMatch.ProductId, shop);
-      result.Add(productIdShopMatch);
+      ShopNameNodeMatch? shopNameNodeMatch = shopNameNodeMatches.Find(match => match.ShopName == productShopMatch.ShopName);
+      if (shopNameNodeMatch != null) {
+        OsmNode node = this.GetRandomNode(shopNameNodeMatch.Nodes);
+        Shop shop = this.GetShop(shopNameNodeMatch.ShopName, node);
+        ProductIdShopMatch productIdShopMatch = new ProductIdShopMatch(productShopMatch.ProductId, shop);
+        result.Add(productIdShopMatch);
+      }
     }
 
     return result;
   }
 
-  private EventHandler<BasicDeliverEventArgs> getHandler() {
+  private EventHandler<BasicDeliverEventArgs> getHandler(string queueName) {
     return async (consumer, args) => {
       byte[] bodyByteArray = args.Body.ToArray();
+      this.LoggerService.Log($"Message from {queueName}, content length {bodyByteArray.Length} bytes", "App");
       List<ProductShopMatch> productShopMatches = this.JsonService.DeserializeFromByteArray<List<ProductShopMatch>>(bodyByteArray);
-      Console.WriteLine($" [x] Received {productShopMatches.Count}");  
       HashSet<string> uniqueShopNames = this.GetUniqueShopNames(productShopMatches);
+      this.LoggerService.Log($"Unique shop names: {uniqueShopNames.Count}", "App");
       List<ShopNameNodeMatch> shopNameNodeMatches = await this.GetShopNameNodeMatches(uniqueShopNames);
       List<ProductIdShopMatch> productIdShopMatches = this.GetProductIdShopMatches(productShopMatches, shopNameNodeMatches);
       this.RabbitService.SendMessage<List<ProductIdShopMatch>>("osrm-requester-exchange", "shops_in", productIdShopMatches);
+      this.Shops.Clear();
     };
   }
 
 
   public void Start() {
-    this.LoadNskNodes();
-    this.RabbitService.InitConnection();
-    this.RabbitService.GetMessage<string>("products_out_queue", this.getHandler());
-    Console.ReadLine();
+    this.LoggerService.Log("Application start", "App");
+
+    try {
+      this.LoadNskNodes();
+      this.RabbitService.InitConnection();
+      this.RabbitService.GetMessage<string>("products_out_queue", this.getHandler("products_out_queue"));
+      Console.ReadLine();
+    }
+    catch (Exception err) {
+      this.RabbitService.CloseConnection();
+      this.LoggerService.Error("Error occured " + err.Message, "App");
+      this.LoggerService.Log("Application shut down", "App");
+    }
   }
 }
