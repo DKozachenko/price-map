@@ -12,6 +12,7 @@ class App {
   private List<OsmNode> nskNodes;
   private Random rand;
   private List<Shop> shops;
+  private List<OsmResponse> osmData;
   public RabbitService RabbitService { get { return this.rabbitService; } set { this.rabbitService = value; } }
   public HttpService HttpService { get { return this.httpService; } set { this.httpService = value; } }
   public JsonService JsonService { get { return this.jsonService; } set { this.jsonService = value; } }
@@ -19,6 +20,7 @@ class App {
   public List<OsmNode> NskNodes { get { return this.nskNodes; } set { this.nskNodes = value; } }
   public Random Rand { get { return this.rand; } set { this.rand = value; } }
   public List<Shop> Shops { get { return this.shops; } set { this.shops = value; } }
+  public List<OsmResponse> OsmData { get { return this.osmData; } set { this.osmData = value; } }
 
   public App() {
     this.RabbitService = new RabbitService();
@@ -28,6 +30,7 @@ class App {
     this.NskNodes = new List<OsmNode>();
     this.Rand = new Random();
     this.Shops = new List<Shop>();
+    this.OsmData = new List<OsmResponse>();
   }
 
   private HashSet<string> GetUniqueShopNames(List<ProductShopMatch> matches) {
@@ -67,19 +70,36 @@ class App {
     return result;
   }
 
+  private async Task AddOsmResponse(string url) {
+    this.LoggerService.Log($"Current thread name {Thread.CurrentThread.Name}, id {Thread.CurrentThread.ManagedThreadId}", "App");
+    OsmResponse osmResponse = await this.HttpService.Get<OsmResponse>(url);
+    System.Console.WriteLine($"Add osm data");
+    this.OsmData.Add(osmResponse);
+  }
+
   private async Task<List<ShopNameNodeMatch>> GetShopNameNodeMatches(HashSet<string> uniqueShopNames) {
     List<ShopNameNodeMatch> result = new List<ShopNameNodeMatch>();
+    List<Task> tasks = new List<Task>();
     foreach (string shopName in uniqueShopNames) {
-      OsmResponse osmResponse = await this.HttpService.Get<OsmResponse>($"https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json][timeout:60];area[place=city][name=\"Новосибирск\"] -> .nsk;node[name~\"{shopName}\",i](area.nsk) -> .data;.data out geom;");
-      List<OsmNode> nodes = new List<OsmNode>();
-      if (osmResponse.Elements.Count > 0) {
-        nodes = osmResponse.Elements;
-      } else {
-        nodes = this.GetRandomNodes();
-      }
-      ShopNameNodeMatch shopNameNodeMatch = new ShopNameNodeMatch(shopName, nodes);
-      result.Add(shopNameNodeMatch);
+      string url = $"https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json][timeout:60];area[place=city][name=\"Новосибирск\"] -> .nsk;node[name~\"{shopName}\",i](area.nsk) -> .data;.data out geom;";
+      Task task = this.AddOsmResponse(url);
+      
+      tasks.Add(task);
     }
+    System.Console.WriteLine($"Tasks len {tasks.Count}");
+    await Task.WhenAll(tasks);
+    System.Console.WriteLine(this.OsmData.Count);
+    // foreach (string shopName in uniqueShopNames) {
+    //   OsmResponse osmResponse = await this.HttpService.Get<OsmResponse>($"https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json][timeout:60];area[place=city][name=\"Новосибирск\"] -> .nsk;node[name~\"{shopName}\",i](area.nsk) -> .data;.data out geom;");
+    //   List<OsmNode> nodes = new List<OsmNode>();
+    //   if (osmResponse.Elements.Count > 0) {
+    //     nodes = osmResponse.Elements;
+    //   } else {
+    //     nodes = this.GetRandomNodes();
+    //   }
+    //   ShopNameNodeMatch shopNameNodeMatch = new ShopNameNodeMatch(shopName, nodes);
+    //   result.Add(shopNameNodeMatch);
+    // }
     return result;
   }
 
@@ -127,6 +147,7 @@ class App {
       List<ProductIdShopMatch> productIdShopMatches = this.GetProductIdShopMatches(productShopMatches, shopNameNodeMatches);
       this.RabbitService.SendMessage<List<ProductIdShopMatch>>(Constants.OsmRequesterExchange, Constants.ShopsInRoutingKey, productIdShopMatches);
       this.Shops.Clear();
+      this.OsmData.Clear();
     };
   }
 
