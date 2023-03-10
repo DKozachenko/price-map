@@ -12,7 +12,7 @@ class App {
   private List<OsmNode> nskNodes;
   private Random rand;
   private List<Shop> shops;
-  private List<OsmResponse> osmData;
+  private List<ShopNameNodeMatch> shopNameNodeMatches;
   public RabbitService RabbitService { get { return this.rabbitService; } set { this.rabbitService = value; } }
   public HttpService HttpService { get { return this.httpService; } set { this.httpService = value; } }
   public JsonService JsonService { get { return this.jsonService; } set { this.jsonService = value; } }
@@ -20,7 +20,7 @@ class App {
   public List<OsmNode> NskNodes { get { return this.nskNodes; } set { this.nskNodes = value; } }
   public Random Rand { get { return this.rand; } set { this.rand = value; } }
   public List<Shop> Shops { get { return this.shops; } set { this.shops = value; } }
-  public List<OsmResponse> OsmData { get { return this.osmData; } set { this.osmData = value; } }
+  public List<ShopNameNodeMatch> ShopNameNodeMatches { get { return this.shopNameNodeMatches; } set { this.shopNameNodeMatches = value; } }
 
   public App() {
     this.RabbitService = new RabbitService();
@@ -30,7 +30,7 @@ class App {
     this.NskNodes = new List<OsmNode>();
     this.Rand = new Random();
     this.Shops = new List<Shop>();
-    this.OsmData = new List<OsmResponse>();
+    this.ShopNameNodeMatches = new List<ShopNameNodeMatch>();
   }
 
   private HashSet<string> GetUniqueShopNames(List<ProductShopMatch> matches) {
@@ -70,37 +70,28 @@ class App {
     return result;
   }
 
-  private async Task AddOsmResponse(string url) {
-    this.LoggerService.Log($"Current thread name {Thread.CurrentThread.Name}, id {Thread.CurrentThread.ManagedThreadId}", "App");
+  private async Task AddShopNameNodeMatchAsync(string shopName) {
+    string url = $"https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json][timeout:60];area[place=city][name=\"Новосибирск\"] -> .nsk;node[name~\"{shopName}\",i](area.nsk) -> .data;.data out geom;";
     OsmResponse osmResponse = await this.HttpService.Get<OsmResponse>(url);
-    System.Console.WriteLine($"Add osm data");
-    this.OsmData.Add(osmResponse);
+
+    List<OsmNode> nodes = new List<OsmNode>();
+    if (osmResponse.Elements.Count > 0) {
+      nodes = osmResponse.Elements;
+    } else {
+      nodes = this.GetRandomNodes();
+    }
+    ShopNameNodeMatch shopNameNodeMatch = new ShopNameNodeMatch(shopName, nodes);
+    this.ShopNameNodeMatches.Add(shopNameNodeMatch);
   }
 
-  private async Task<List<ShopNameNodeMatch>> GetShopNameNodeMatches(HashSet<string> uniqueShopNames) {
+  private async Task FillShopNameNodeMatchesAsync(HashSet<string> uniqueShopNames) {
     List<ShopNameNodeMatch> result = new List<ShopNameNodeMatch>();
     List<Task> tasks = new List<Task>();
     foreach (string shopName in uniqueShopNames) {
-      string url = $"https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json][timeout:60];area[place=city][name=\"Новосибирск\"] -> .nsk;node[name~\"{shopName}\",i](area.nsk) -> .data;.data out geom;";
-      Task task = this.AddOsmResponse(url);
-      
+      Task task = this.AddShopNameNodeMatchAsync(shopName);
       tasks.Add(task);
     }
-    System.Console.WriteLine($"Tasks len {tasks.Count}");
     await Task.WhenAll(tasks);
-    System.Console.WriteLine(this.OsmData.Count);
-    // foreach (string shopName in uniqueShopNames) {
-    //   OsmResponse osmResponse = await this.HttpService.Get<OsmResponse>($"https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json][timeout:60];area[place=city][name=\"Новосибирск\"] -> .nsk;node[name~\"{shopName}\",i](area.nsk) -> .data;.data out geom;");
-    //   List<OsmNode> nodes = new List<OsmNode>();
-    //   if (osmResponse.Elements.Count > 0) {
-    //     nodes = osmResponse.Elements;
-    //   } else {
-    //     nodes = this.GetRandomNodes();
-    //   }
-    //   ShopNameNodeMatch shopNameNodeMatch = new ShopNameNodeMatch(shopName, nodes);
-    //   result.Add(shopNameNodeMatch);
-    // }
-    return result;
   }
 
   private Shop GetShop(string shopName, OsmNode node) {
@@ -114,11 +105,11 @@ class App {
     return shop;
   }
 
-  private List<ProductIdShopMatch> GetProductIdShopMatches(List<ProductShopMatch> productShopMatches, List<ShopNameNodeMatch> shopNameNodeMatches) {
+  private List<ProductIdShopMatch> GetProductIdShopMatches(List<ProductShopMatch> productShopMatches) {
     List<ProductIdShopMatch> result = new List<ProductIdShopMatch>();
 
     foreach (ProductShopMatch productShopMatch in productShopMatches) {
-      ShopNameNodeMatch? shopNameNodeMatch = shopNameNodeMatches.Find(match => match.ShopName == productShopMatch.ShopName);
+      ShopNameNodeMatch? shopNameNodeMatch = this.ShopNameNodeMatches.Find(match => match.ShopName == productShopMatch.ShopName.Trim().ToLower());
       if (shopNameNodeMatch != null) {
         OsmNode node = this.GetRandomNode(shopNameNodeMatch.Nodes);
         Shop shop = this.GetShop(shopNameNodeMatch.ShopName, node);
@@ -126,7 +117,6 @@ class App {
         result.Add(productIdShopMatch);
       }
     }
-
     return result;
   }
 
@@ -136,18 +126,11 @@ class App {
       this.LoggerService.Log($"Message from {queueName}, content length {bodyByteArray.Length} bytes", "App");
       List<ProductShopMatch> productShopMatches = this.JsonService.DeserializeFromByteArray<List<ProductShopMatch>>(bodyByteArray);
       HashSet<string> uniqueShopNames = this.GetUniqueShopNames(productShopMatches);
-      this.LoggerService.Log($"Unique shop names: {uniqueShopNames.Count}", "App");
-      Stopwatch stopWatch = new Stopwatch();
-      stopWatch.Start();
-      List<ShopNameNodeMatch> shopNameNodeMatches = await this.GetShopNameNodeMatches(uniqueShopNames);
-      stopWatch.Stop();
-      TimeSpan ts = stopWatch.Elapsed;
-      string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
-      Console.WriteLine("RunTime GetShopNameNodeMatches" + elapsedTime);
-      List<ProductIdShopMatch> productIdShopMatches = this.GetProductIdShopMatches(productShopMatches, shopNameNodeMatches);
+      await this.FillShopNameNodeMatchesAsync(uniqueShopNames);
+      List<ProductIdShopMatch> productIdShopMatches = this.GetProductIdShopMatches(productShopMatches);
       this.RabbitService.SendMessage<List<ProductIdShopMatch>>(Constants.OsmRequesterExchange, Constants.ShopsInRoutingKey, productIdShopMatches);
       this.Shops.Clear();
-      this.OsmData.Clear();
+      this.ShopNameNodeMatches.Clear();
     };
   }
 

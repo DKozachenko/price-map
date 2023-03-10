@@ -16,7 +16,6 @@ class HttpService {
   }
 
   public async Task<T> Get<T>(string url) {
-    // this.LoggerService.Log($"Current thread name {Thread.CurrentThread.Name}, id {Thread.CurrentThread.ManagedThreadId}", "HttpService");
     this.LoggerService.Log($"Request to {url}", "HttpService");
     using HttpResponseMessage response = await this.HttpClient.GetAsync(url);
     string content = await response.Content.ReadAsStringAsync();
