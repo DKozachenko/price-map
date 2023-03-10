@@ -2,12 +2,10 @@ using Newtonsoft.Json;
 namespace Models;
 
 class ProductIdShopMatch {
-  private string productId;
-  private Shop shop;
   [JsonProperty("productId")]
-  public string ProductId { get { return this.productId; } set { this.productId = value; } }
+  public string ProductId { get; set; }
   [JsonProperty("shop")]
-  public Shop Shop { get { return this.shop; } set { this.shop = value; } }
+  public Shop Shop { get; set; }
   public ProductIdShopMatch(string productId, Shop shop) {
     this.ProductId = productId;
     this.Shop = shop;

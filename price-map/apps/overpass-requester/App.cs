@@ -5,22 +5,14 @@ using Models;
 using System.Diagnostics;
 
 class App {
-  private RabbitService rabbitService;
-  private HttpService httpService;
-  private JsonService jsonService;
-  private LoggerService loggerService;
-  private List<OsmNode> nskNodes;
-  private Random rand;
-  private List<Shop> shops;
-  private List<ShopNameNodeMatch> shopNameNodeMatches;
-  public RabbitService RabbitService { get { return this.rabbitService; } set { this.rabbitService = value; } }
-  public HttpService HttpService { get { return this.httpService; } set { this.httpService = value; } }
-  public JsonService JsonService { get { return this.jsonService; } set { this.jsonService = value; } }
-  public LoggerService LoggerService { get { return this.loggerService; } set { this.loggerService = value; } }
-  public List<OsmNode> NskNodes { get { return this.nskNodes; } set { this.nskNodes = value; } }
-  public Random Rand { get { return this.rand; } set { this.rand = value; } }
-  public List<Shop> Shops { get { return this.shops; } set { this.shops = value; } }
-  public List<ShopNameNodeMatch> ShopNameNodeMatches { get { return this.shopNameNodeMatches; } set { this.shopNameNodeMatches = value; } }
+  public RabbitService RabbitService { get; set; }
+  public HttpService HttpService { get; set; }
+  public JsonService JsonService { get; set; }
+  public LoggerService LoggerService { get; set; }
+  public List<OsmNode> NskNodes { get; set; }
+  public Random Rand { get; set; }
+  public List<Shop> Shops { get; set; }
+  public List<ShopNameNodeMatch> ShopNameNodeMatches { get; set; }
 
   public App() {
     this.RabbitService = new RabbitService();
@@ -127,7 +119,9 @@ class App {
       List<ProductShopMatch> productShopMatches = this.JsonService.DeserializeFromByteArray<List<ProductShopMatch>>(bodyByteArray);
       HashSet<string> uniqueShopNames = this.GetUniqueShopNames(productShopMatches);
       await this.FillShopNameNodeMatchesAsync(uniqueShopNames);
+      this.LoggerService.Log($"ShopNameNodeMatches length: {this.ShopNameNodeMatches.Count}", "App");
       List<ProductIdShopMatch> productIdShopMatches = this.GetProductIdShopMatches(productShopMatches);
+      this.LoggerService.Log($"Shops length: {this.Shops.Count}", "App");
       this.RabbitService.SendMessage<List<ProductIdShopMatch>>(Constants.OsmRequesterExchange, Constants.ShopsInRoutingKey, productIdShopMatches);
       this.Shops.Clear();
       this.ShopNameNodeMatches.Clear();
