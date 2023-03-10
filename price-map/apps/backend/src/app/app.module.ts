@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule, UsersModule, ProductsModule, CategoriesModule, ExternalModule, ShopsModule } from './modules';
-import { Organization,
-  Shop,
+import { Shop,
   Product,
   User,
   Category1Level,
@@ -37,7 +36,6 @@ import { HashService, RabbitService } from './services';
       password: 'vkdima03',
       database: 'real_data_pm',
       entities: [
-        Organization,
         Shop,
         Product,
         User,

@@ -1,10 +1,11 @@
-import { CategoriesModule } from './../categories/categories.module';
 import { Module } from '@nestjs/common';
 import { ProductsService } from './services';
 import { ProductsGateway } from './gateways';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from '@core/entities';
 import { JwtService } from '@nestjs/jwt';
+import { CategoriesModule } from './../categories/categories.module';
+import { ShopsModule } from '../shops/shops.module';
 
 /**
  * Модуль товаров
@@ -14,12 +15,13 @@ import { JwtService } from '@nestjs/jwt';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Product], 'postgresConnect'),
-    CategoriesModule
+    CategoriesModule,
+    ShopsModule
   ],
   providers: [
     JwtService,
     ProductsGateway,
-    ProductsService,
+    ProductsService
   ]
 })
 export class ProductsModule {}

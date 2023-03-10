@@ -83,6 +83,7 @@ export class Product {
    * @memberof Product
    */
   @ManyToOne(() => Shop, (shop: Shop) => shop.products, {
+    cascade: true,
     orphanedRowAction: 'delete'
   })
   @JoinColumn()

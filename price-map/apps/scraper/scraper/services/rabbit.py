@@ -28,6 +28,7 @@ class RabbitService:
     Returns:
       str: строка
     """
+    
     jsonpickle.set_preferred_backend('json')
     jsonpickle.set_encoder_options('json', ensure_ascii=False)
     str_json_data = str(jsonpickle.encode(data, unpicklable=False))
