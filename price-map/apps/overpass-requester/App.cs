@@ -2,7 +2,6 @@ using System.Text;
 using RabbitMQ.Client.Events;
 using Services;
 using Models;
-using System.Diagnostics;
 
 class App {
   private RabbitService rabbitService;
@@ -19,12 +18,6 @@ class App {
   public List<OsmNode> NskNodes { get { return this.nskNodes; } set { this.nskNodes = value; } }
   public Random Rand { get { return this.rand; } set { this.rand = value; } }
   public List<Shop> Shops { get { return this.shops; } set { this.shops = value; } }
-
-  public EventHandler<BasicDeliverEventArgs> handler = (model, ea) => {
-    byte[] body = ea.Body.ToArray();
-    string message = Encoding.UTF8.GetString(body);
-    Console.WriteLine($" [x] Received {message}"); 
-  };
 
   public App() {
     this.RabbitService = new RabbitService();
@@ -47,7 +40,7 @@ class App {
   }
 
   private void LoadNskNodes() {
-    string str = File.ReadAllText("./data/nodes_nsk.json");
+    string str = File.ReadAllText(Constants.DataPath);
     OsmResponse osmResponse = this.JsonService.DeserializeFromString<OsmResponse>(str);
     this.NskNodes = osmResponse.Elements;
   }
@@ -63,7 +56,7 @@ class App {
   }
 
   private List<OsmNode> GetRandomNodes() {
-    int number = this.GetRandomInt(1, 25);
+    int number = this.GetRandomInt(1, Constants.MaxNodesNumber);
     List<OsmNode> result = new List<OsmNode>();
     for (int i = 0; i < number; ++i) {
       int ind = this.GetRandomInt(0, this.NskNodes.Count - 1);
@@ -125,7 +118,7 @@ class App {
       this.LoggerService.Log($"Unique shop names: {uniqueShopNames.Count}", "App");
       List<ShopNameNodeMatch> shopNameNodeMatches = await this.GetShopNameNodeMatches(uniqueShopNames);
       List<ProductIdShopMatch> productIdShopMatches = this.GetProductIdShopMatches(productShopMatches, shopNameNodeMatches);
-      this.RabbitService.SendMessage<List<ProductIdShopMatch>>("osrm-requester-exchange", "shops_in", productIdShopMatches);
+      this.RabbitService.SendMessage<List<ProductIdShopMatch>>(Constants.OsmRequesterExchange, Constants.ShopsInRoutingKey, productIdShopMatches);
       this.Shops.Clear();
     };
   }
@@ -137,7 +130,7 @@ class App {
     try {
       this.LoadNskNodes();
       this.RabbitService.InitConnection();
-      this.RabbitService.GetMessage<string>("products_out_queue", this.getHandler("products_out_queue"));
+      this.RabbitService.GetMessage<string>(Constants.ProductsOutQueue, this.getHandler(Constants.ProductsOutQueue));
       Console.ReadLine();
     }
     catch (Exception err) {
