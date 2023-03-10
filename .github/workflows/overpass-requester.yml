@@ -13,14 +13,17 @@ jobs:
     defaults:
       run:
         working-directory: ./price-map
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.x]
 
     steps:
     - name: Get repository code
       uses: actions/checkout@v3
-    - name: Use Node.js 16.0
+    - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
-        node-version: 16.0
+        node-version: ${{ matrix.node-version }}
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
       with:
