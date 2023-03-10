@@ -2,6 +2,7 @@ using System.Text;
 using RabbitMQ.Client.Events;
 using Services;
 using Models;
+using System.Diagnostics;
 
 class App {
   private RabbitService rabbitService;
@@ -33,7 +34,7 @@ class App {
     HashSet<string> shopNames = new HashSet<string>();
 
     foreach (ProductShopMatch match in matches) {
-      shopNames.Add(match.ShopName);
+      shopNames.Add(match.ShopName.Trim().ToLower());
     }
 
     return shopNames;
@@ -69,7 +70,7 @@ class App {
   private async Task<List<ShopNameNodeMatch>> GetShopNameNodeMatches(HashSet<string> uniqueShopNames) {
     List<ShopNameNodeMatch> result = new List<ShopNameNodeMatch>();
     foreach (string shopName in uniqueShopNames) {
-      OsmResponse osmResponse = await this.HttpService.Get<OsmResponse>($"https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json];area[place=city][name=\"Новосибирск\"] -> .nsk;node[name~\"{shopName}\"](area.nsk) -> .data;.data out geom;");
+      OsmResponse osmResponse = await this.HttpService.Get<OsmResponse>($"https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json][timeout:60];area[place=city][name=\"Новосибирск\"] -> .nsk;node[name~\"{shopName}\",i](area.nsk) -> .data;.data out geom;");
       List<OsmNode> nodes = new List<OsmNode>();
       if (osmResponse.Elements.Count > 0) {
         nodes = osmResponse.Elements;
@@ -116,7 +117,13 @@ class App {
       List<ProductShopMatch> productShopMatches = this.JsonService.DeserializeFromByteArray<List<ProductShopMatch>>(bodyByteArray);
       HashSet<string> uniqueShopNames = this.GetUniqueShopNames(productShopMatches);
       this.LoggerService.Log($"Unique shop names: {uniqueShopNames.Count}", "App");
+      Stopwatch stopWatch = new Stopwatch();
+      stopWatch.Start();
       List<ShopNameNodeMatch> shopNameNodeMatches = await this.GetShopNameNodeMatches(uniqueShopNames);
+      stopWatch.Stop();
+      TimeSpan ts = stopWatch.Elapsed;
+      string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+      Console.WriteLine("RunTime GetShopNameNodeMatches" + elapsedTime);
       List<ProductIdShopMatch> productIdShopMatches = this.GetProductIdShopMatches(productShopMatches, shopNameNodeMatches);
       this.RabbitService.SendMessage<List<ProductIdShopMatch>>(Constants.OsmRequesterExchange, Constants.ShopsInRoutingKey, productIdShopMatches);
       this.Shops.Clear();
