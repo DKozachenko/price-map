@@ -1,2 +1,2 @@
 ﻿App app = new App();
-app.Start();
+await app.Start();
