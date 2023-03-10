@@ -184,23 +184,39 @@ class App {
   }
 
   /// <summary>
+  /// Закрытие приложения
+  /// </summary>
+  /// <param name="errorMessage">Сообщение об ошибке</param>
+  private void Close(string errorMessage) {
+    this.RabbitService.CloseConnection();
+    this.LoggerService.Error($"Error occured {errorMessage}", "App");
+    this.LoggerService.Log("Application shut down", "App");
+    Environment.Exit(0);
+  }
+
+  /// <summary>
   /// Получение обработчика для очереди
   /// </summary>
   /// <param name="queueName">Название очереди</param>
   /// <returns>Обработчик</returns>
   private EventHandler<BasicDeliverEventArgs> getHandler(string queueName) {
     return async (consumer, args) => {
-      byte[] bodyByteArray = args.Body.ToArray();
-      this.LoggerService.Log($"Message from {queueName}, content length {bodyByteArray.Length} bytes", "App");
-      List<ProductIdShopNameMatch> productIdShopNameMatches = this.JsonService.DeserializeFromByteArray<List<ProductIdShopNameMatch>>(bodyByteArray);
-      HashSet<string> uniqueShopNames = this.GetUniqueShopNames(productIdShopNameMatches);
-      await this.FillShopNameNodeMatchesAsync(uniqueShopNames);
-      this.LoggerService.Log($"ShopNameNodeMatches length: {this.ShopNameNodeMatches.Count}", "App");
-      List<ProductIdShopMatch> productIdShopMatches = this.GetProductIdShopMatches(productIdShopNameMatches);
-      this.LoggerService.Log($"Shops length: {this.Shops.Count}", "App");
-      this.RabbitService.SendMessage<List<ProductIdShopMatch>>(Constants.OsmRequesterExchange, Constants.ShopsInRoutingKey, productIdShopMatches);
-      this.Shops.Clear();
-      this.ShopNameNodeMatches.Clear();
+      try {
+        byte[] bodyByteArray = args.Body.ToArray();
+        this.LoggerService.Log($"Message from {queueName}, content length {bodyByteArray.Length} bytes", "App");
+        List<ProductIdShopNameMatch> productIdShopNameMatches = this.JsonService.DeserializeFromByteArray<List<ProductIdShopNameMatch>>(bodyByteArray);
+        HashSet<string> uniqueShopNames = this.GetUniqueShopNames(productIdShopNameMatches);
+        await this.FillShopNameNodeMatchesAsync(uniqueShopNames);
+        this.LoggerService.Log($"ShopNameNodeMatches length: {this.ShopNameNodeMatches.Count}", "App");
+        List<ProductIdShopMatch> productIdShopMatches = this.GetProductIdShopMatches(productIdShopNameMatches);
+        this.LoggerService.Log($"Shops length: {this.Shops.Count}", "App");
+        this.RabbitService.SendMessage<List<ProductIdShopMatch>>(Constants.OsmRequesterExchange, Constants.ShopsInRoutingKey, productIdShopMatches);
+        this.Shops.Clear();
+        this.ShopNameNodeMatches.Clear();
+      } catch (Exception err) {
+        this.Close(err.Message);
+      }
+      
     };
   }
 
@@ -217,9 +233,7 @@ class App {
       Console.ReadLine();
     }
     catch (Exception err) {
-      this.RabbitService.CloseConnection();
-      this.LoggerService.Error("Error occured " + err.Message, "App");
-      this.LoggerService.Log("Application shut down", "App");
+      this.Close(err.Message);
     }
   }
 }

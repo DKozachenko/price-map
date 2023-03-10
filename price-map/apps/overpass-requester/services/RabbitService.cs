@@ -66,7 +66,9 @@ class RabbitService {
   /// Закрытие соединения
   /// </summary>
   public void CloseConnection() {
-    this.Connection.Close();
+    if (this.Connection != null) {
+      this.Connection.Close();
+    }
   }
     
 }
