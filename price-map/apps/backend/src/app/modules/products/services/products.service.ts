@@ -392,10 +392,11 @@ export class ProductsService implements OnModuleInit {
    * @memberof ProductsService
    */
   public updateAll(matches: IProductIdShopMatch[]): Observable<number> {
-    const queries: Observable<Product>[] = matches.map((match: IProductIdShopMatch) => from(this.productRepository.save({
-      id: match.productId,
-      shop: match.shop
-    })))
+    const queries: Observable<Product>[] = matches.map((match: IProductIdShopMatch) => 
+      from(this.productRepository.save({
+        id: match.productId,
+        shop: match.shop
+      })));
 
     return concat(queries)
       .pipe(() => of(matches.length));

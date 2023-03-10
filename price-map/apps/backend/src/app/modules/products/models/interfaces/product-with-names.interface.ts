@@ -1,4 +1,4 @@
-import { Product } from "@core/entities";
+import { Product } from '@core/entities';
 
 /**
  * Интерфейс товара с названиями вместо внешних ключей
