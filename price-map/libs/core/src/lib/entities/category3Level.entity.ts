@@ -48,6 +48,7 @@ export class Category3Level {
    * @memberof Category3Level
    */
   @ManyToOne(() => Category2Level, (category: Category2Level) => category.categories3Level, {
+    onDelete: 'CASCADE',
     orphanedRowAction: 'delete'
   })
   @JoinColumn() 

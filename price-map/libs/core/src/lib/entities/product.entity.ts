@@ -26,7 +26,7 @@ export class Product {
    */
   @Column({
     type: 'varchar',
-    length: 100,
+    length: 500,
     nullable: false
   })
   public name: string;
@@ -72,7 +72,7 @@ export class Product {
    */
   @Column({
     type: 'varchar',
-    length: 200,
+    length: 500,
     nullable: true
   })
   public imagePath?: string;
@@ -83,6 +83,7 @@ export class Product {
    * @memberof Product
    */
   @ManyToOne(() => Shop, (shop: Shop) => shop.products, {
+    cascade: true,
     orphanedRowAction: 'delete'
   })
   @JoinColumn()
@@ -94,6 +95,7 @@ export class Product {
    * @memberof Product
    */
   @ManyToOne(() => Category3Level, (category: Category3Level) => category.products, {
+    onDelete: 'CASCADE',
     orphanedRowAction: 'delete'
   })
   @JoinColumn()

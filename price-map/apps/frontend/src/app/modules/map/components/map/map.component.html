@@ -1,12 +1,12 @@
 <nb-layout>
-  <nb-layout-header>
+  <nb-layout-header class="header">
     <app-header></app-header>
   </nb-layout-header>
-  <nb-layout-column class="colored-column-warning">
+  <nb-layout-column>
     <div class="container">
       <div class="map" #map></div>
   
-      <price-map-filter></price-map-filter>
+      <price-map-filter *ngIf="isShowFilter"></price-map-filter>
   
       <price-map-route-review 
         *ngIf="isShowRouteReview"
@@ -14,4 +14,3 @@
     </div>
   </nb-layout-column>
 </nb-layout>
-<ng-template #dynamic></ng-template>

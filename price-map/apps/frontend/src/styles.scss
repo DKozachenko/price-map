@@ -3,6 +3,7 @@
 
 html {
   font-size: 10px!important;
+  overflow-y: hidden!important;
 }
 
 body {
@@ -31,10 +32,24 @@ body {
 }
 
 // Стили для попапа на карте
-.product__popup {
+.custom__popup {
   .mapboxgl-popup-content,
   .maplibregl-popup-content {
     padding: 0;
+  }
+}
+
+.popup__card {
+  margin-bottom: 0!important;
+
+  nb-card-header {
+    @include font(1.6rem, white);
+    padding-right: 3rem;
+  }
+
+  nb-card-body,
+  nb-card-body p {
+    @include font(1.4rem, white);
   }
 }
 
@@ -58,6 +73,10 @@ body {
       border-color: darken(white, 10%);
     }
   }
+}
+
+.header nav {
+  min-height: 5.7rem;
 }
 
 //Кастомные стили для карточек на карте
@@ -115,6 +134,19 @@ body {
       opacity: 0.5;
     }
   }
+
+  label {
+    @include font(1.3rem, white, 700);
+    margin-left: 1rem;
+  }
+}
+
+.nb-theme-cosmic [nbInput].status-basic {
+  border-color: #a16eff!important;
+
+  &:hover {
+    border-color: darken(#a16eff, 5%)!important;
+  }
 }
 
 .button {
@@ -122,7 +154,8 @@ body {
   width: 100%;
 }
 
-.auth {
+.auth,
+.setting {
   [nbButton].size-medium, 
   .nb-theme-cosmic .size-medium[nbButtonToggle] {
     @include font(1.6rem, white);
@@ -140,4 +173,21 @@ nb-toast {
   .message {
     @include font(1.4rem, white, 700);
   }
+}
+
+//Cтили для контролы для слоев, цены, радиуса
+.mapboxgl-ctrl-top-left, 
+.maplibregl-ctrl-top-left {
+  left: initial;
+  right: 25rem;
+
+  display: flex;
+  align-items: center;
+}
+
+//Cтили для контролы для масштабирования, геолокации и очистки маршрута
+.mapboxgl-ctrl-top-right, 
+.maplibregl-ctrl-top-right {
+  top: 50%;
+  transform: translateY(-50%);
 }

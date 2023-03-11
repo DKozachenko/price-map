@@ -1,13 +1,20 @@
-<nb-card class="route__review custom__map-card">
-  <nb-card-header>Маршрут</nb-card-header>
+<nb-card *ngIf="products.length" class="route__review custom__map-card" [ngClass]="{ 'collapsed': isCollapsed }">
+  <nb-card-header>
+    <p>Маршрут</p>
+    <nb-badge *ngIf="isCollapsed" [text]="products.length.toString()" status="success" position="top right"></nb-badge>
+    <div class="route__arrow" [ngClass]="{ 'route__arrow_up': !isCollapsed }" (click)="toggleCollapse()">
+      <nb-icon icon="arrow-ios-downward-outline"></nb-icon>
+    </div>
+  </nb-card-header>
 
   <nb-card-body class="route__review-body custom__scroll custom__map-card__body">
-    <div class="products">
-      <map-product-mini-card 
-        *ngFor="let product of products; trackBy: trackByProductFn" 
-        [product]="product"
-      ></map-product-mini-card>
-    </div>
+    <nb-list>
+      <nb-list-item *ngFor="let product of products; trackBy: trackByProductFn">
+        <map-product-mini-card
+          [product]="product"
+        ></map-product-mini-card>
+      </nb-list-item>
+    </nb-list>
 
     <button
       class="button"
@@ -17,6 +24,7 @@
       shape="round"
       type="button"
       (click)="buildRoute()"
+      [disabled]="products.length < 2"
     >
       Построить маршрут
     </button>

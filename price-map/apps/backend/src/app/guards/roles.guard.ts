@@ -1,15 +1,16 @@
-import { Injectable, CanActivate, ExecutionContext, ForbiddenException, mixin, Type } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, mixin, Type } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Role } from '@core/enums';
 import { secretKey, roleKey } from '../models/constants';
-import { AppErrorCode } from '@core/types';
+import { TokenErrorCode } from '@core/types';
 
 /**
  * Гвард для защиты роутов (проверяет соответствие ролей)
  * @export
  * @type { (failedEventName: string): Type<any> }
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const RolesAuthGuard = (failedEventName: string): Type<any> => {
   @Injectable()
   class RolesAuthGuardMixin implements CanActivate {
@@ -36,7 +37,7 @@ export const RolesAuthGuard = (failedEventName: string): Type<any> => {
       if (!requiredRoles.includes(role)) {
         client.emit(failedEventName, {
           statusCode: 403,
-          errorCode: <AppErrorCode>'FORBIDDEN_RESOURCE',
+          errorCode: <TokenErrorCode>'FORBIDDEN_RESOURCE',
           isError: true,
           data: null,
           message: 'Ошибка прав доступа'

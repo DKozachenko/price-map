@@ -36,6 +36,7 @@ export class Category2Level {
    * @memberof Category2Level
    */
   @ManyToOne(() => Category1Level, (category: Category1Level) => category.categories2Level, {
+    onDelete: 'CASCADE',
     orphanedRowAction: 'delete'
   })
   @JoinColumn() 
@@ -48,7 +49,7 @@ export class Category2Level {
    */
   @OneToMany(() => Category3Level, (category: Category3Level) => category.category2Level, {
     eager: true,
-    cascade: true,
+    cascade: ['insert', 'update', 'remove']
   })
   public categories3Level: Category3Level[]
 }

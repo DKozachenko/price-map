@@ -10,7 +10,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
  */
 @UntilDestroy()
 @Component({
-  selector: 'price-map-product-popup',
+  selector: 'map-product-popup',
   templateUrl: './product-popup.component.html',
   styleUrls: ['./product-popup.component.scss']
 })

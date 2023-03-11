@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing-module';
 import { appInitializer } from './initializers';
-import { NotificationService, TokenService, WebSocketService } from './services';
+import { NotificationService, TokenService, WebSocketService, SettingsService } from './services';
 import { HttpClientModule } from '@angular/common/http';
 import { NbThemeModule, NbToastrModule, NbToastrService, NbIconModule, NbLayoutModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
@@ -59,7 +59,8 @@ import { SettingsModule } from './modules/settings/settings.module';
     },
     NbToastrService,
     NotificationService,
-    CookieService
+    CookieService,
+    SettingsService
   ],
   bootstrap: [AppComponent],
 })

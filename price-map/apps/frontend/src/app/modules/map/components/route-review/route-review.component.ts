@@ -29,6 +29,13 @@ export class RouteReviewComponent implements OnInit {
   public products: Product[] = [];
 
   /**
+   * Свернут ли компонент
+   * @type {boolean}
+   * @memberof RouteReviewComponent
+   */
+  public isCollapsed: boolean = true;
+
+  /**
    * Получение массива координат
    * @private
    * @return {*}  {ICoordinates[]} массив координат
@@ -69,6 +76,14 @@ export class RouteReviewComponent implements OnInit {
   public buildRoute(): void {
     const coordinates: ICoordinates[] = this.getCoordinates();
     this.webSocketService.emit<ICoordinates[]>(ExternalEvents.BuildRouteAttempt, coordinates);
+  }
+
+  /**
+   * Свернуть развернуть компонент
+   * @memberof RouteReviewComponent
+   */
+  public toggleCollapse(): void {
+    this.isCollapsed = !this.isCollapsed;
   }
 
   /**

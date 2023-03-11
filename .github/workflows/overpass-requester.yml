@@ -1,4 +1,4 @@
-name: Overpass-requester CI
+name: Overpass Requester CI
 
 on:
   workflow_dispatch:
@@ -9,29 +9,26 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
     defaults:
       run:
         working-directory: ./price-map
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        node-version: [14.x, 16.x]
 
     steps:
-    - name: Get repository cod
+    - name: Get repository code
       uses: actions/checkout@v3
-    - name: Use Node.js 16.0
+    - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
       with:
-        node-version: 16.0
+        node-version: ${{ matrix.node-version }}
     - name: Install .NET Core
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v1.0.2
     - name: Install dependencies
       run: npm ci
     - name: Start build
       run: npm run build:overpass-requester
-

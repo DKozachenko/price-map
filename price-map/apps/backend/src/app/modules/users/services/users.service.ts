@@ -1,8 +1,8 @@
-import { from, Observable } from 'rxjs';
+import { from, Observable, of, switchMap } from 'rxjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@core/entities';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository, UpdateResult } from 'typeorm';
 
 /**
  * Сервис пользователей
@@ -21,37 +21,36 @@ export class UsersService {
   private readonly userRepository: Repository<User>;
 
   /**
-   * Получение по никнейму
-   * @param {string} nickname никнейм
+   * Получение по запросу
+   * @param {FindOptionsWhere<User>} query запрос
    * @return {*}  {(Observable<User | null>)} пользователь
    * @memberof UsersService
    */
-  public getByNickname(nickname: string): Observable<User | null> {
+  public getByQuery(query: FindOptionsWhere<User>): Observable<User | null> {
     return from(this.userRepository.findOne({
-      where: {
-        nickname
-      }
+      where: query
     }));
   }
 
   /**
-   * Получение по почте
-   * @param {string} mail почта
-   * @return {*}  {(Observable<User | null>)} пользователь
+   * Обновление по id
+   * @param {string} id id
+   * @param {Partial<User>} partialUser обновляемые данные
+   * @return {*}  {Observable<number>} кол-во затронутых строк
    * @memberof UsersService
    */
-  public getByMail(mail: string): Observable<User | null> {
-    return from(this.userRepository.findOne({
-      where: {
-        mail
-      }
-    }));
+  public updateById(id: string, partialUser: Partial<User>): Observable<number> {
+    return from(this.userRepository.update({ id }, { ...partialUser }))
+      .pipe(
+        switchMap((result: UpdateResult) => {
+          return of(result.affected);
+        })
+      );
   }
-
   /**
    * Добавление
    * @param {Omit<User, 'id'>} newUser новый пользователь
-   * @return {*}  {(Observable<User>)}
+   * @return {*}  {(Observable<User>)} сохраненный пользователь из БД
    * @memberof UsersService
    */
   public add(newUser: Omit<User, 'id'>): Observable<User> {

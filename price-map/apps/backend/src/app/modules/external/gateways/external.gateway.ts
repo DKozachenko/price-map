@@ -26,11 +26,11 @@ export class ExternalGateway {
   constructor(private readonly externalService: ExternalService) { }
 
   /**
-     * Событие построения маршрута
-     * @param {ICoordinates[]} coordinates коодинаты
-     * @return {*}  {(Observable<WsResponse<IResponseData<number[][] | null, AppErrorCode | null>>>)} ответ
-     * @memberof AppGateway
-     */
+   * Событие построения маршрута
+   * @param {ICoordinates[]} coordinates коодинаты
+   * @return {*}  {(Observable<WsResponse<IResponseData<number[][] | null, ExternalErrorCode | null>>>)} ответ
+   * @memberof AppGateway
+   */
   @Roles(Role.User, Role.Admin)
   @UseGuards(JwtAuthGuard(ExternalEvents.BuildRouteFailed), RolesAuthGuard(ExternalEvents.BuildRouteFailed))
   @SubscribeMessage(ExternalEvents.BuildRouteAttempt)
@@ -38,6 +38,7 @@ export class ExternalGateway {
     Observable<WsResponse<IResponseData<number[][] | null, ExternalErrorCode | null>>> {
     return this.externalService.buildRoute(coordinates)
       .pipe(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         switchMap((osrmData: any) => {
           const encodedPolyline: string = osrmData.data.routes[0].geometry;
           const decodedCoordinates: number[][] = polyline.decode(encodedPolyline);

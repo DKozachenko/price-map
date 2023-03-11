@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { IUserFilter } from '@core/interfaces';
-import { Subject, ReplaySubject } from 'rxjs';
+import { IPriceQuery, IUserFilter } from '@core/interfaces';
+import { Subject, ReplaySubject, BehaviorSubject } from 'rxjs';
 
 /**
  * Сервис фильтра
@@ -9,6 +9,10 @@ import { Subject, ReplaySubject } from 'rxjs';
  */
 @Injectable()
 export class FilterService {
+  public priceQuery: IPriceQuery = {
+    max: null,
+    min: null
+  };
   /**
    * Id выбранных категорий 3 уровня
    * @type {ReplaySubject<Set<string>>}
@@ -21,4 +25,11 @@ export class FilterService {
    * @memberof FilterService
    */
   public filterValues$: Subject<IUserFilter[]> = new Subject<IUserFilter[]>();
+
+  public currentMaxPrice$: Subject<IPriceQuery> = new Subject<IPriceQuery>();
+
+  public addPriceQuery(price: IPriceQuery): void {
+    this.priceQuery = price;
+    this.currentMaxPrice$.next(this.priceQuery);
+  }
 }

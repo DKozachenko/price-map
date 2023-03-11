@@ -1,4 +1,5 @@
 import { IUserLoginInfo } from '.';
+
 /**
  * Интерфейс информации для регистрации
  * @export

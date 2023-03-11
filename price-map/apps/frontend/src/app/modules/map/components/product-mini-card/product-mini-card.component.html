@@ -2,8 +2,8 @@
   <nb-card-header>{{ product.name }}</nb-card-header>
 
   <nb-card-body class="product__body">
-    <p>Из {{ product.shop.name }}</p>
-    <p>За {{ product.price }} р.</p>
+    <span>Из {{ product.shop.name }} </span>
+    <span>за {{ product.price }} р.</span>
   </nb-card-body>
 
   <nb-card-footer (click)="deleteProductFromRoute()">

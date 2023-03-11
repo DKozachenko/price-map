@@ -6,7 +6,11 @@ import { CharacteristicFilterComponent,
   MapComponent, 
   RouteReviewComponent, 
   ProductMiniCardComponent, 
-  ProductPopupComponent } from './components';
+  ProductPopupComponent, 
+  ClearControlComponent,
+  LayersControlComponent,
+  ShopPopupComponent, 
+  PriceControlComponent} from './components';
 import { MapRoutingModule } from './map-routing.module';
 import { FilterService, MapService, ProductService } from './services';
 import { NbCardModule, 
@@ -16,8 +20,10 @@ import { NbCardModule,
   NbLayoutModule, 
   NbRadioModule, 
   NbSelectModule, 
-  NbButtonModule } from '@nebular/theme';
-import { SharedModule } from '..';
+  NbButtonModule, 
+  NbListModule,
+  NbBadgeModule } from '@nebular/theme';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -27,7 +33,11 @@ import { SharedModule } from '..';
     RouteReviewComponent,
     CheckboxComponent,
     ProductMiniCardComponent,
-    ProductPopupComponent
+    ProductPopupComponent,
+    ShopPopupComponent,
+    ClearControlComponent,
+    LayersControlComponent,
+    PriceControlComponent
   ],
   imports: [
     CommonModule,
@@ -40,6 +50,8 @@ import { SharedModule } from '..';
     NbInputModule,
     NbSelectModule,
     NbButtonModule,
+    NbListModule,
+    NbBadgeModule,
     SharedModule
   ],
   providers: [

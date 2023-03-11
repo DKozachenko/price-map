@@ -1,4 +1,3 @@
-export { Organization } from './organization.entity';
 export { Shop } from './shop.entity';
 export { Product } from './product.entity';
 export { User } from './user.entity';

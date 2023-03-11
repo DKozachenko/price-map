@@ -11,8 +11,8 @@ import { IResponseData, IUserRegisterInfo, IUserLoginInfo } from '@core/interfac
 import { User } from '@core/entities';
 import { Role, AuthEvents } from '@core/enums';
 import { AuthErrorCode } from '@core/types';
-import { HashService } from '../services';
-import { IPartialData } from '../models/interfaces';
+import { HashService } from '../../../services';
+import { IPartialData } from '../../../models/interfaces';
 
 /**
  * Шлюз авторизации
@@ -70,14 +70,14 @@ export class AuthGateway {
       ]
     ]);
 
-    return this.usersService.getByNickname(userRegisterInfo.nickname)
+    return this.usersService.getByQuery({ nickname: userRegisterInfo.nickname })
       .pipe(
         switchMap((userWithSameNickname: User | null) => {
           if (userWithSameNickname) {
             errorCode = 'EXISTED_NICKNAME';
             return throwError(() => new Error(`Error code: ${errorCode}, nickname: ${userRegisterInfo.nickname}`));
           }
-          return this.usersService.getByMail(userRegisterInfo.mail);
+          return this.usersService.getByQuery({ mail: userRegisterInfo.mail });
         }),
         switchMap((userWithSameMail: User | null) => {
           if (userWithSameMail) {
@@ -164,7 +164,7 @@ export class AuthGateway {
     ]);
     let currentUser: User;
 
-    return this.usersService.getByNickname(userLoginInfo.nickname)
+    return this.usersService.getByQuery({ nickname: userLoginInfo.nickname })
       .pipe(
         switchMap((user: User) => {
           if (!user) {
