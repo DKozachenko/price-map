@@ -9,8 +9,11 @@ class RabbitService:
 
   def __init__(self) -> None:
     self.__connection: pika.BlockingConnection | None = None
+    """ Соединение """
     self.__channel: Any | None = None
+    """ Канал """
     self.logger_service: LoggerService = LoggerService()
+    """ Логер """
 
   def __init_connection(self) -> None:
     """ Инициализация соединения
@@ -19,7 +22,7 @@ class RabbitService:
     self.__connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672))
     self.__channel = self.__connection.channel()
 
-  def __json_stringify(self, data: Any) -> str:
+  def json_stringify(self, data: Any) -> str:
     """ Преобразование данных в строку
 
     Args:
@@ -43,7 +46,7 @@ class RabbitService:
       data (Any): произвольные данные
     """
 
-    str_json_data = self.__json_stringify(data)
+    str_json_data = self.json_stringify(data)
     self.__init_connection()
     self.__channel.basic_publish(exchange=exchange, routing_key=routing_key, body=str_json_data)
     self.logger_service.log(f'Send message to {exchange} with {routing_key} routing key', 'RabbitService')

@@ -26,7 +26,7 @@ export class Product {
    */
   @Column({
     type: 'varchar',
-    length: 100,
+    length: 500,
     nullable: false
   })
   public name: string;
@@ -72,7 +72,7 @@ export class Product {
    */
   @Column({
     type: 'varchar',
-    length: 200,
+    length: 500,
     nullable: true
   })
   public imagePath?: string;

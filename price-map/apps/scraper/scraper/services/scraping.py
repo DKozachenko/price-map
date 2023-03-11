@@ -9,7 +9,9 @@ class ScrapingService:
 
   def __init__(self) -> None:
     self.category_scraping_service: CategoryScrapingService = CategoryScrapingService()
+    """ Сервис-скрепер категорий """
     self.product_scraping_service: ProductScrapingService = ProductScrapingService()
+    """ Сервис-скрепер товаров """
 
   def scrape_categories(self) -> list[Category1Level]:
     """ Скрепинг категорий 1 уровня
@@ -26,5 +28,6 @@ class ScrapingService:
     Returns:
       list[Product]: список товаров
     """
+    
     products_map: dict[str, list[str]] = self.category_scraping_service.products_map
     return self.product_scraping_service.scrape(products_map)

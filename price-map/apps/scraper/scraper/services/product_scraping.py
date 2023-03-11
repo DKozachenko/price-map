@@ -1,7 +1,5 @@
 import re
 from selenium.webdriver.remote.webelement import WebElement
-from constants.url import URL
-from constants.offers_per_product import OFFERS_PER_PRODUCT
 from services.base_scraping import BaseScrapingService
 from entities.characteristic import Characteristic
 from entities.product import Product
@@ -14,7 +12,7 @@ class ProductScrapingService(BaseScrapingService):
   """
 
   def __init__(self) -> None:
-    pass
+    super().__init__()
 
   def has_numbers(self, input_str: str) -> bool:
     """ Содержаться ли числа в строке
@@ -91,16 +89,18 @@ class ProductScrapingService(BaseScrapingService):
     shop_a: WebElement = self._execute(self._get_element_by_selector, None, '.p-c-price__shop', offer_div)
     
     #Магазин может быть представлен как картинка и как текст
-    shop_image: WebElement = self._execute(self._get_element_by_selector, None, 'img', shop_a)
-    shop_span: WebElement = self._execute(self._get_element_by_selector, None, 'span', shop_a)
+    shop_image_exists: WebElement = self._is_element_exists_by_selector('img', shop_a)
+    shop_span_exists: WebElement = self._is_element_exists_by_selector('span', shop_a)
 
-    if shop_image:
+    if shop_image_exists:
+      shop_image: WebElement = self._execute(self._get_element_by_selector, None, 'img', shop_a)
       shop_name: str = self._execute(self._get_attribute_from_prop, '', shop_image, 'title').strip()
       price_str: str = self._execute(self._get_text_from_element, '', '.main-price', offer_div)
       price: float = self._execute(self.extract_number, 0.0, price_str)
       product: Product = Product(category_3_level_name, name, description, image_path, shop_name, price, characteristics)
       return product
-    elif shop_span:
+    elif shop_span_exists:
+      shop_span: WebElement = self._execute(self._get_element_by_selector, None, 'span', shop_a)
       shop_name: str = self._execute(self._get_text_from_prop, '', shop_span).strip()
       price_str: str = self._execute(self._get_text_from_element, '', '.main-price', offer_div)
       price: float = self._execute(self.extract_number, 0.0, price_str)
@@ -150,19 +150,25 @@ class ProductScrapingService(BaseScrapingService):
     name: str = self._execute(self._get_text_from_element, '', '.model-main h1')
     description: str = self._execute(self.__get_description, '')
     image_path: str = self._execute(self._get_attribute_from_element, '', 'src', '.slider img')
-    #Нажатие на раздел "Характеристики"
-    all_characteristic_button: WebElement = self._execute(self._get_element_by_selector, None, '.more.link')
-    self._click(all_characteristic_button)
-    self._wait(1)
 
-    characteristics: list[Characteristic] = self._execute(self.__get_сharacteristics, [])
+    all_characteristic_button_exists: WebElement = self._is_element_exists_by_selector('.more.link')
+    characteristics: list[Characteristic] = []
+    
+    #Не везде есть информация о товаре, поэтому сбор характеристик производится только там, где они есть
+    if all_characteristic_button_exists:
+      all_characteristic_button: WebElement = self._execute(self._get_element_by_selector, None, '.more.link')
+      #Нажатие на раздел "Характеристики"
+      self._click(all_characteristic_button)
+      self._wait(1)
+      characteristics = self._execute(self.__get_сharacteristics, [])
+
     #Нажатие на "Цены"
     offers_div: WebElement = self._execute(self._get_element_by_selector, None, '.offers')
     self._click(offers_div)
     self._wait(2)
     offer_divs: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.p-c-price')
     #Выбор первых 5 предложений
-    offer_divs = offer_divs[:OFFERS_PER_PRODUCT]
+    offer_divs = offer_divs[:self._config.offers_per_product]
     for offer_div in offer_divs:
       product: Product = self._execute(self.__get_product, Product('', '', '', '', '', 0, []), offer_div, category_3_level_name, name, description, image_path, characteristics)
       products.append(product)
@@ -185,9 +191,6 @@ class ProductScrapingService(BaseScrapingService):
         self._driver.get(link)
         products_by_category: list[Product] = self._execute(self.__get_products_by_category, [], category_3_level_name)
         products.extend(products_by_category)
-        #REMOVE
-        if len(products) > 300:
-          return products
 
     return products
   
@@ -202,7 +205,7 @@ class ProductScrapingService(BaseScrapingService):
     """
 
     self._init_driver()
-    self._driver.get(URL)
+    self._driver.get(self._config.url)
     self._wait(2)
     products: list[Product] = self._execute(self.__get_products, [], products_map)
     self._driver.quit()

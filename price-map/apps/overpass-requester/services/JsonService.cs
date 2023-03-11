@@ -6,7 +6,13 @@ namespace Services;
 /// JSON сервис
 /// </summary>
 class JsonService {
-  public JsonService() {}
+  /// <summary>
+  /// Логгер
+  /// </summary>
+  public LoggerService LoggerService { get; set; }
+  public JsonService() {
+    this.LoggerService = new LoggerService();
+  }
 
   /// <summary>
   /// Десериализация JSON из строки
@@ -14,9 +20,17 @@ class JsonService {
   /// <param name="str">Строка</param>
   /// <typeparam name="T">Тип возвращаемых данных</typeparam>
   /// <returns>Данные T типа</returns>
-  public T DeserializeFromString<T>(string str) {
-    T result = JsonConvert.DeserializeObject<T>(str);
-    return result;
+  public T? DeserializeFromString<T>(string str) {
+    try
+    {
+      T? result = JsonConvert.DeserializeObject<T>(str);
+      return result;
+    }
+    catch (Exception err)
+    {
+      this.LoggerService.Error($"Error while deserializing JSON from string: {str}", "JsonService");
+      throw err;
+    }
   }
 
   /// <summary>
@@ -25,7 +39,7 @@ class JsonService {
   /// <param name="arr">Массив байт</param>
   /// <typeparam name="T">Тип возвращаемых данных</typeparam>
   /// <returns>Данные T типа</returns>
-  public T DeserializeFromByteArray<T>(byte[] arr) {
+  public T? DeserializeFromByteArray<T>(byte[] arr) {
     string str = Encoding.UTF8.GetString(arr);
     return this.DeserializeFromString<T>(str);
   }
