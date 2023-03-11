@@ -1,2 +1,4 @@
-﻿App app = new App();
+﻿using AppNS;
+
+App app = new App();
 await app.Start();

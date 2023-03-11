@@ -1,7 +1,9 @@
+namespace AppNS;
+
 /// <summary>
-/// Класс констант
+/// Конфигурационный файл
 /// </summary>
-static class Constants {
+static class Config {
   /// <summary>
   /// Путь до файла с точками
   /// </summary>

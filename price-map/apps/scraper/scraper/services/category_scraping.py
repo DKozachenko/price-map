@@ -2,8 +2,6 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
-from constants.url import URL
-from constants.products_per_category import PRODUCTS_PER_CATEGORY
 from services.base_scraping import BaseScrapingService
 from entities.filter import Filter
 from entities.category_1_level import Category1Level
@@ -20,8 +18,11 @@ class CategoryScrapingService(BaseScrapingService):
   def __init__(self) -> None:
     super().__init__()
     self.__categories_1_level: list[Category1Level] = []
+    """ Категории 1 уровня """
     self.__category_3_level_links: set[str] = set()
+    """ Множество ссылок на категории 3 уровня """
     self.products_map: dict[str, list[str]] = dict()
+    """ Словарь ссылок на товары определенной категориии 3 уровня """
 
   def __open_catalog_popup(self) -> None:
     """ Открытие попапа каталога
@@ -31,6 +32,7 @@ class CategoryScrapingService(BaseScrapingService):
     catalog_popup_putton: WebElement = self._execute(self._get_element_by_selector, None, '.catalog > div > button')
     self._click(catalog_popup_putton)
 
+    self._wait(2)
     #Ожидание пока прогрузится каталог
     WebDriverWait(self._driver, timeout=10).until(EC.presence_of_element_located((By.CSS_SELECTOR, '.sidebar')))
 
@@ -186,7 +188,7 @@ class CategoryScrapingService(BaseScrapingService):
 
     if len(product_blocks) > 0:
       #Выбор первых 5 товаров
-      product_blocks = product_blocks[:PRODUCTS_PER_CATEGORY]
+      product_blocks = product_blocks[:self._config.products_per_category]
 
       for product_block in product_blocks:
         product_link: str = self._execute(self._get_attribute_from_element, '', 'href', '.p-card__title-link', product_block)
@@ -301,10 +303,6 @@ class CategoryScrapingService(BaseScrapingService):
                 category_3_level_link: str = self._execute(self._get_attribute_from_prop, '', categories_3_level_div, 'href')
                 category_3_level_links.add(category_3_level_link)
 
-                #REMOVE
-                # if len(list(category_3_level_links)) > 300:
-                #   return category_3_level_links
-
     return category_3_level_links
   
   def __scrape(self) -> list[Category1Level]:
@@ -315,7 +313,7 @@ class CategoryScrapingService(BaseScrapingService):
     """
     
     self._init_driver()
-    self._driver.get(URL)
+    self._driver.get(self._config.url)
     self.__open_catalog_popup()
     self.__category_3_level_links = self.__get_category_3_level_links()
     self._wait(3)

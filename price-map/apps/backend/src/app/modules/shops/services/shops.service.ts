@@ -53,6 +53,16 @@ export class ShopsService {
   }
 
   /**
+   * Сохранение магазинов
+   * @param {Shop[]} shops магазины
+   * @return {*}  {Observable<Shop[]>} сохраненые в БД записи
+   * @memberof ShopsService
+   */
+  public saveAll(shops: Shop[]): Observable<Shop[]> {
+    return from(this.shopRepository.save(shops));
+  }
+
+  /**
    * Удаление всех магазинов
    * @return {*}  {Observable<number>} кол-во затронутых строк
    * @memberof ShopsService

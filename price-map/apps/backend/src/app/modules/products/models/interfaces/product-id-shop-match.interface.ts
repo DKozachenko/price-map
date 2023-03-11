@@ -1,4 +1,4 @@
-import { Shop } from 'core/entities';
+import { Shop } from '@core/entities';
 
 /**
  * Интерфейс сопоставления id товара и магазина

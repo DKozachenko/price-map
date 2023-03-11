@@ -29,11 +29,11 @@ class HttpService {
   /// <param name="url">Адрес</param>
   /// <typeparam name="T">Тип возвращаемых данных</typeparam>
   /// <returns>Данные T типа</returns>
-  public async Task<T> Get<T>(string url) {
+  public async Task<T?> Get<T>(string url) {
     this.LoggerService.Log($"Request to {url}", "HttpService");
     using HttpResponseMessage response = await this.HttpClient.GetAsync(url);
     string content = await response.Content.ReadAsStringAsync();
-    T result = this.JsonService.DeserializeFromString<T>(content);
+    T? result = this.JsonService.DeserializeFromString<T>(content);
     return result;
   }
 

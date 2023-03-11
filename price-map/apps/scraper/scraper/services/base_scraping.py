@@ -1,3 +1,4 @@
+from app.config import Config
 from typing import Callable, TypeVar
 from selenium import webdriver
 from selenium.webdriver.remote.webelement import WebElement
@@ -18,7 +19,11 @@ class BaseScrapingService:
 
   def __init__(self) -> None:
     self._driver: webdriver.Chrome | None = None
-    self.logger_service: LoggerService = LoggerService()
+    """ Драйвер """
+    self._config: Config = Config()
+    """ Конфиг """
+    self.__logger_service: LoggerService = LoggerService()
+    """ Логер """
 
   def _init_driver(self) -> None:
     """ Инициализация драйвера
@@ -213,9 +218,9 @@ class BaseScrapingService:
     try:
       value: T = callback(*args)
       return value
-    except:
+    except Exception as err:
       func_name: str = getattr(callback, '__name__', 'Unknown name')
-      self.logger_service.error(f'Exception in "{func_name}" method with args {args}, returned a {str(default_value)} value', 'BaseScrapingService')
+      self.__logger_service.error(f'Exception in "{func_name}" method with args {args}, returned a {str(default_value)} value, error: {str(err)}', 'BaseScrapingService')
       return default_value
 
   def _wait(self, secs: int) -> None:

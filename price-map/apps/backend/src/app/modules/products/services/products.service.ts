@@ -3,7 +3,7 @@ import { Logger, OnModuleInit } from '@nestjs/common';
 /* eslint-disable indent */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Category3Level, Product } from '@core/entities';
+import { Category3Level, Product, Shop } from '@core/entities';
 import { Between, DeleteResult, FindOperator, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { catchError, concat, forkJoin, from, Observable, of, switchMap, throwError } from 'rxjs';
 import { IPriceQuery, IProductQuery, IUserFilter } from '@core/interfaces';
@@ -167,7 +167,39 @@ export class ProductsService implements OnModuleInit {
           number
         ]) => {
           Logger.warn(`Deleting shops: ${affectedRows} rows`, 'ProductsService');
-          return this.updateAll(matches)
+          const shopsToSave: Shop[] = this.getUniqueShops(matches);
+          return forkJoin([
+            of(matches),
+            this.getAllIds(),
+            this.shopsService.saveAll(shopsToSave)
+          ])
+            .pipe(
+              catchError((err: Error) => {
+                errorCode = errorCodes[0];
+                return throwError(() => err);
+              })
+            );
+        }),
+        switchMap(([
+          matches,
+          ids,
+          savedShops
+        ]: [
+          IProductIdShopMatch[],
+          string[],
+          Shop[]
+        ]) => {
+          Logger.log(`Successfully saving ${savedShops.length} shops`, 'ProductsService');
+          const matchesForUpdate: IProductIdShopMatch[] = [];
+          for (const match of matches) {
+            const existedId: string | undefined = ids.find((id: string) => id === match.productId);
+            
+            if (existedId) {
+              matchesForUpdate.push(match);
+            }
+          }
+
+          return this.updateAll(matchesForUpdate)
             .pipe(
               catchError((err: Error) => {
                 errorCode = errorCodes[0];
@@ -185,6 +217,25 @@ export class ProductsService implements OnModuleInit {
           Logger.log(`Successfully updated ${data} products`, 'ProductsService');
         }
       });
+  }
+
+  /**
+   * Получение уникальных магазинов
+   * @private
+   * @param {IProductIdShopMatch[]} matches сопоставления id товара и магазина
+   * @return {*}  {Shop[]} магазины
+   * @memberof ProductsService
+   */
+  private getUniqueShops(matches: IProductIdShopMatch[]): Shop[] {
+    const result: Shop[] = [];
+    for (const match of matches) {
+      const existedShop: Shop | undefined = result.find((shop: Shop) => shop.id === match.shop.id);
+      if (!existedShop) {
+        result.push(match.shop);
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -282,7 +333,6 @@ export class ProductsService implements OnModuleInit {
   private generateSql(query: IProductQuery): string {
     const withSql: string = this.generateWithSql(query);
     const whereSql: string = this.generateWhereSql(query.price);
-    console.log(whereSql);
     return `${withSql}
     SELECT p."id", p."name", p."description", p."price", p."characteristics", p."imagePath",
     json_build_object('id', s."id", 'name', s."name", 'schedule', s."schedule", 'imagePath',
@@ -382,6 +432,18 @@ export class ProductsService implements OnModuleInit {
     return from(this.productRepository.delete({}))
       .pipe(
         switchMap((result: DeleteResult) => of(result.affected))
+      );
+  }
+
+  /**
+   * Получение id всех товаров
+   * @return {*}  {Observable<string[]>} id всех товаров
+   * @memberof ProductsService
+   */
+  public getAllIds(): Observable<string[]> {
+    return from(this.productRepository.find({}))
+      .pipe(
+        switchMap((products: Product[]) => of(products.map((product: Product) => product.id)))
       );
   }
 
