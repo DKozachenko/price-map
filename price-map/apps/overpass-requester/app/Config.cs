@@ -9,11 +9,11 @@ static class Config {
   /// </summary>
   public const string DataPath = "./data/nodes_nsk.json";
   /// <summary>
-  /// Максимальное количество точек для выбора при генерации рандомной точки
+  /// Максимальное количество точек для выбора при генерации рандомных точек
   /// </summary>
   public const int MaxNodesNumber = 25;
   /// <summary>
-  /// Название обменника для сервиса
+  /// Название обменника
   /// </summary>
   public const string OsmRequesterExchange = "osrm-requester-exchange";
   /// <summary>
@@ -21,7 +21,7 @@ static class Config {
   /// </summary>
   public const string ShopsInRoutingKey = "shops_in";
   /// <summary>
-  /// Название очереди для споставления товаров и названий магазинов
+  /// Название очереди для сопоставления товаров и названий магазинов
   /// </summary>
   public const string ProductsOutQueue = "products_out_queue";
   /// <summary>
