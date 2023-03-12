@@ -392,10 +392,9 @@ export class MapService {
       properties: {
         id: shop.id,
         name: shop.name,
-        imagePath: shop.imagePath ?? '',
         productNumber: shop.products.length.toString(),
-        organizationDescription: shop.organization.description,
-        organizationWebsite: shop.organization.website ?? '',
+        website: shop.website ?? '',
+        osmNodeId: shop.osmNodeId,
         icon: 'shop'
       },
       geometry: {
@@ -645,7 +644,7 @@ export class MapService {
 
       //Перемещаем слой с маршрутом "под" кластеризованный слой
       const clustersLayer: CircleStyleLayer = <CircleStyleLayer>this.map.getLayer(this.clusterLayerId);
-      this.map.moveLayer(this.routeLayerId, clustersLayer ? this.clusterLayerId : undefined); 
+      this.map.moveLayer(this.routeLayerId, clustersLayer ? this.clusterLayerId : undefined);
     }
 
     this.addClearControl();
@@ -665,13 +664,13 @@ export class MapService {
           'icon-image': '{icon}',
           'icon-overlap': 'always',
           'text-field': [
-            'get', 
+            'get',
             'name'
           ],
           'text-font': ['Consolas'],
           'text-size': 14,
           'text-offset': [
-            0, 
+            0,
             0.75
           ],
           'text-anchor': 'top'
