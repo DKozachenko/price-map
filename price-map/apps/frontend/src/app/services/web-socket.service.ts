@@ -7,7 +7,7 @@ import { TokenService } from '.';
 /**
  * Сервис общения с сервером по webSocket'у
  * @export
- * @class WebSocketService 
+ * @class WebSocketService
  */
 @Injectable()
 export class WebSocketService implements OnDestroy {
@@ -86,12 +86,12 @@ export class WebSocketService implements OnDestroy {
   private subcribeOnDisconnect(): void {
     this.disconnectSub = this.on<[string, DisconnectDescription | undefined]>('disconnect')
       .subscribe(([
-        reason, 
+        reason,
         description
       ]: [
-        string, 
+        string,
         DisconnectDescription | undefined
-      ]) => 
+      ]) =>
         console.warn('Socket disconnected', 'reason ', reason, 'description', description)
       );
   }
@@ -101,9 +101,13 @@ export class WebSocketService implements OnDestroy {
    * @memberof WebSocketService
    */
   private addToken(): void {
-    this.socket.auth = {
-      token: this.tokenService.getToken()
-    };
+    const tokenObj: { token: string } | undefined = <{ token: string } | undefined>this.socket.auth;
+    if (!tokenObj || !tokenObj.token) {
+      this.socket.auth = {
+        token: this.tokenService.getToken()
+      };
+      this.socket.disconnect().connect();
+    }
   }
 
   /**
@@ -113,7 +117,7 @@ export class WebSocketService implements OnDestroy {
   public initSocket(): void {
     this.socket = io('http://localhost:3333', {
       transports: [
-        'websocket', 
+        'websocket',
         'polling'
       ]
     });
@@ -123,7 +127,7 @@ export class WebSocketService implements OnDestroy {
     this.subcribeOnDisconnect();
   }
 
-  /** 
+  /**
    * Отправка данных
    * @template T тип отправляемых данных
    * @param {string} eventName название события

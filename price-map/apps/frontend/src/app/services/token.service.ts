@@ -58,5 +58,5 @@ export class TokenService {
    */
   public hasToken(): boolean {
     return !!this.getToken();
-  } 
+  }
 }
