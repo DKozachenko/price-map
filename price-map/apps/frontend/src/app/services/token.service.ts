@@ -44,6 +44,16 @@ export class TokenService {
   }
 
   /**
+   * Проверка токена на протухание
+   * @return {*} {boolean} true / false
+   * @memberof TokenService
+   */
+  public isExpires(): boolean {
+    const payload: IPayload = this.getPayload();
+    return +new Date() > payload.exp * 1000; 
+  }
+
+  /**
    * Удаление токена
    * @memberof TokenService
    */

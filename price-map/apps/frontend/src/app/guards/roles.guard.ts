@@ -20,8 +20,7 @@ export class RolesGuard implements CanActivate {
   ) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot
-  ): boolean {
+  public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const roles: string[] = route.data['roles'];    
     const payload: IPayload = this.tokenService.getPayload();
     const currentRole: string = payload.role;

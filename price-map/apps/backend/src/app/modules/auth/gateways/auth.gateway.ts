@@ -185,7 +185,7 @@ export class AuthGateway {
             nickname: currentUser.nickname,
             role: currentUser.role
           }, {
-            expiresIn: '10h',
+            expiresIn: "100y",
             secret: secretKey
           });
           

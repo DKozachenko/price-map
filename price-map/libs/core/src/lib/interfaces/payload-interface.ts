@@ -8,7 +8,7 @@ import { Role } from "../enums";
 export interface IPayload {
   [key: string]: number | string,
   /**
-   * Время (timestamp), когда токен станет невалидным
+   * Время (timestamp сек), когда токен станет невалидным
    * @type {number}
    * @memberof IPayload
    */
