@@ -82,8 +82,10 @@ export class CharacteristicFilterComponent implements OnInit {
     const filterElem: IUserFilter | undefined = this.currentFilter.find((currentFilterElem: IUserFilter) =>
       currentFilterElem.name === filter.name);
 
-    if (filterElem) {
+    if (filterElem && value) {
       filterElem.value = value;
+    } else if (filterElem && !value) {
+      this.currentFilter = this.currentFilter.filter((item: IUserFilter) => item.name !== filterElem.name);
     } else {
       this.currentFilter.push({
         name: filter.name,
