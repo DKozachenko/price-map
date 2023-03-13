@@ -27,7 +27,7 @@ export class FilterComponent implements OnInit {
    * @memberof FilterComponent
    */
   private setChechedCategory3LevelIds: Set<string> = new Set<string>();
-  
+
   /**
    * Категории 1 уровня для отображения
    * @type {ICategory1LevelForView[]}
@@ -89,7 +89,7 @@ export class FilterComponent implements OnInit {
       showCategories2Level: false,
       checked: false
     };
-  } 
+  }
 
   /**
    * Показать категории 2 уровня
@@ -226,7 +226,7 @@ export class FilterComponent implements OnInit {
    * @return {*}  {string} id категории
    * @memberof FilterComponent
    */
-  public trackByCategory1LevelFn(index: number, item: ICategory1LevelForView): string {   
+  public trackByCategory1LevelFn(index: number, item: ICategory1LevelForView): string {
     return item.id ?? index;
   }
 
@@ -237,7 +237,7 @@ export class FilterComponent implements OnInit {
    * @return {*}  {string} id категории
    * @memberof FilterComponent
    */
-  public trackByCategory2LevelFn(index: number, item: ICategory2LevelForView): string {   
+  public trackByCategory2LevelFn(index: number, item: ICategory2LevelForView): string {
     return item.id ?? index;
   }
 
@@ -248,7 +248,7 @@ export class FilterComponent implements OnInit {
    * @return {*}  {string} id категории
    * @memberof FilterComponent
    */
-  public trackByCategory3LevelFn(index: number, item: ICategory3LevelForView): string {   
+  public trackByCategory3LevelFn(index: number, item: ICategory3LevelForView): string {
     return item.id ?? index;
   }
 }

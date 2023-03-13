@@ -104,8 +104,8 @@ export class WebSocketService implements OnDestroy {
     // В данной библиотеке дополнительные данные можно слать в поле auth, но все доп. данные передаются
     // в объекте handshake при начальной установке соединения, для того, чтобы обновить поле auth необходимо
     // вручную переподключиться (https://socket.io/docs/v4/client-options/#auth)
-    const tokenObj: { token: string } | undefined = <{ token: string } | undefined>this.socket.auth;
-    if (!tokenObj || !tokenObj.token) {
+    const tokenObj: { token: string } = <{ token: string }>this.socket.auth;
+    if (!tokenObj.token) {
       this.socket.auth = {
         token: this.tokenService.getToken()
       };
@@ -122,7 +122,10 @@ export class WebSocketService implements OnDestroy {
       transports: [
         'websocket',
         'polling'
-      ]
+      ],
+      auth: {
+        token: this.tokenService.getToken()
+      }
     });
 
     this.subscribeOnConnect();
