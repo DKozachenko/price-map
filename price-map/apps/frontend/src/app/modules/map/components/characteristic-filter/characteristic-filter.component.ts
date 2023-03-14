@@ -60,7 +60,7 @@ export class CharacteristicFilterComponent implements OnInit {
 
     customCombineLastest([
       this.filterService.filterValues$.pipe(debounceTime(400)),
-      this.filterService.currentMaxPrice$
+      this.filterService.currentPriceQuery$
     ])
       .pipe(untilDestroyed(this))
       .subscribe(([filters, priceQuery]: any[]) => {

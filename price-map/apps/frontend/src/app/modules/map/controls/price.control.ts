@@ -1,9 +1,7 @@
 import { ComponentFactoryResolver, Injector } from "@angular/core";
 import { PriceControlComponent } from "../components";
 import { FilterService } from "../services";
-import {
-  IControl,
-} from 'maplibre-gl';
+import { IControl } from 'maplibre-gl';
 
 export class PriceControl implements IControl {
   private container: HTMLDivElement;

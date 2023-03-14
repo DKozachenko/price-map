@@ -56,7 +56,7 @@ export class ProductsService implements OnModuleInit {
       .pipe(
         switchMap((products: IProductWithNames[]) => {
           return forkJoin([
-            of(products), 
+            of(products),
             this.deleteAll()
           ])
             .pipe(
@@ -75,7 +75,7 @@ export class ProductsService implements OnModuleInit {
         ]) => {
           Logger.warn(`Deleting products: ${affectedRows} rows`, 'ProductsService');
           return forkJoin([
-            of(products), 
+            of(products),
             this.categoriesService.getAllCategories3Level()
           ])
             .pipe(
@@ -95,9 +95,9 @@ export class ProductsService implements OnModuleInit {
 
           const productsForSave: (Omit<Product, | 'shop'>)[] = [];
           for (const product of products) {
-            const existedCategory3Level: Category3Level | undefined 
+            const existedCategory3Level: Category3Level | undefined
               = categories3Level.find((item: Category3Level) => item.name === product.category3LevelName);
-            
+
             if (existedCategory3Level) {
               productsForSave.push({
                 id: product.id,
@@ -149,7 +149,7 @@ export class ProductsService implements OnModuleInit {
       .pipe(
         switchMap((matches: IProductIdShopMatch[]) => {
           return forkJoin([
-            of(matches), 
+            of(matches),
             this.shopsService.deleteAll()
           ])
             .pipe(
@@ -193,7 +193,7 @@ export class ProductsService implements OnModuleInit {
           const matchesForUpdate: IProductIdShopMatch[] = [];
           for (const match of matches) {
             const existedId: string | undefined = ids.find((id: string) => id === match.productId);
-            
+
             if (existedId) {
               matchesForUpdate.push(match);
             }
@@ -454,13 +454,38 @@ export class ProductsService implements OnModuleInit {
    * @memberof ProductsService
    */
   public updateAll(matches: IProductIdShopMatch[]): Observable<number> {
-    const queries: Observable<Product>[] = matches.map((match: IProductIdShopMatch) => 
+    const queries: Observable<Product>[] = matches.map((match: IProductIdShopMatch) =>
       from(this.productRepository.save({
         id: match.productId,
         shop: match.shop
       })));
 
     return concat(queries)
+    //TODO: эм, поч просто пайп
       .pipe(() => of(matches.length));
+  }
+
+  /**
+   * Получение диапазона цен товаров (минимальная и максимальные цены)
+   * @return {*}  {Observable<IPriceQuery>} диапазон цен
+   * @memberof ProductsService
+   */
+  public getPriceRange(): Observable<IPriceQuery> {
+    return forkJoin([
+      from(this.productRepository.query('SELECT MIN(price) AS price FROM "Products" p;')),
+      from(this.productRepository.query('SELECT MAX(price) AS price FROM "Products" p;')),
+    ])
+      .pipe(
+        switchMap(([
+          minArr,
+          maxArr
+        ]:[
+          { price: number }[],
+          { price: number }[]
+        ]) => of({
+          min: minArr[0]?.price,
+          max: maxArr[0]?.price
+        }))
+      );
   }
 }

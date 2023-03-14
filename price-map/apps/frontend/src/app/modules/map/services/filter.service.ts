@@ -9,6 +9,8 @@ import { Subject, ReplaySubject, BehaviorSubject } from 'rxjs';
  */
 @Injectable()
 export class FilterService {
+  public initialPriceQuery$: Subject<IPriceQuery> = new Subject();
+
   public priceQuery: IPriceQuery = {
     max: null,
     min: null
@@ -26,10 +28,10 @@ export class FilterService {
    */
   public filterValues$: Subject<IUserFilter[]> = new Subject<IUserFilter[]>();
 
-  public currentMaxPrice$: Subject<IPriceQuery> = new Subject<IPriceQuery>();
+  public currentPriceQuery$: Subject<IPriceQuery> = new Subject<IPriceQuery>();
 
   public addPriceQuery(price: IPriceQuery): void {
     this.priceQuery = price;
-    this.currentMaxPrice$.next(this.priceQuery);
+    this.currentPriceQuery$.next(this.priceQuery);
   }
 }

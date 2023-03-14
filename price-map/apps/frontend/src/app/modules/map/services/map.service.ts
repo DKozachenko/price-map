@@ -29,6 +29,7 @@ import { ClearControl, LayersControl, PriceControl } from '../controls';
 import { WebSocketService } from '../../../services';
 import { LayerType } from '../models/types';
 import { ShopPopupComponent, ProductPopupComponent } from '../components';
+import { IPriceQuery } from '@core/interfaces';
 
 /**
  * Сервис по работе с картой
@@ -206,15 +207,14 @@ export class MapService {
       },
       trackUserLocation: true,
     });
+    geoControl.on('geolocate', this.onGeolocate);
     this.map.addControl(geoControl);
-
-    const layersControl: LayersControl = new LayersControl(this.resolver, this, this.webSocketService);
-    this.map.addControl(layersControl, 'top-left');
 
     const priceControl: PriceControl = new PriceControl(this.resolver, this.filterService);
     this.map.addControl(priceControl, 'top-left');
 
-    geoControl.on('geolocate', this.onGeolocate);
+    const layersControl: LayersControl = new LayersControl(this.resolver, this, this.webSocketService);
+    this.map.addControl(layersControl, 'top-left');
   }
 
   public addClearControl(): void {
@@ -223,7 +223,8 @@ export class MapService {
   }
 
   public removeClearControl(): void {
-    const clearControl: ClearControl | undefined = <ClearControl | undefined>this.map._controls.find((control: IControl) => control instanceof ClearControl);
+    const clearControl: ClearControl | undefined
+      = <ClearControl | undefined>this.map._controls.find((control: IControl) => control instanceof ClearControl);
     if (clearControl) {
       this.map.removeControl(clearControl);
     }

@@ -10,4 +10,7 @@ export enum ProductEvents {
   GetProductAttempt = 'get product attempt',
   GetProductFailed = 'get product failed',
   GetProductSuccessed = 'get product successed',
+  GetPriceRangeAttempt = 'get price range attempt',
+  GetPriceRangeFailed = 'get price range failed',
+  GetPriceRangeSuccessed = 'get price range successed',
 }

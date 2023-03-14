@@ -74,7 +74,7 @@ export class SettingsComponent implements OnInit {
 
     const payload: IPayload = this.tokenService.getPayload();
     const userId: string = payload.userId;
-    this.webSocketService.emit<string>(UserEvents.GetUserAttempt, userId);    
+    this.webSocketService.emit<string>(UserEvents.GetUserAttempt, userId);
   }
 
   /**
@@ -89,16 +89,16 @@ export class SettingsComponent implements OnInit {
         Validators.maxLength(100)
       ]),
       lastName: new FormControl(undefined, [
-        Validators.required, 
+        Validators.required,
         Validators.maxLength(100)
       ]),
       mail: new FormControl(undefined, [
-        Validators.required, 
-        Validators.maxLength(150), 
+        Validators.required,
+        Validators.maxLength(150),
         Validators.email
       ]),
       nickname: new FormControl(undefined, [
-        Validators.required, 
+        Validators.required,
         Validators.maxLength(150)
       ]),
       password: new FormControl(undefined, [
@@ -107,13 +107,13 @@ export class SettingsComponent implements OnInit {
       ]),
     });
   }
-  
+
   /**
    * Отправка формы
    * @memberof SettingsComponent
    */
   public submit(): void {
-    this.webSocketService.emit<User>(UserEvents.UpdateUserAttempt, { 
+    this.webSocketService.emit<User>(UserEvents.UpdateUserAttempt, {
       ...this.user,
       ...this.form.value
     });

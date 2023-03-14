@@ -74,6 +74,18 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Shop[]>) => this.mapService.addShops(response.data));
 
+    this.webSocketService.on<IResponseData<IPriceQuery>>(ProductEvents.GetPriceRangeSuccessed)
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<IPriceQuery>) => {
+        this.filterService.initialPriceQuery$.next(response.data);
+      });
+
+    this.webSocketService.on<IResponseData<IPriceQuery>>(ProductEvents.GetPriceRangeFailed)
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<IPriceQuery>) => this.notificationService.showError(response.message));
+
+    this.webSocketService.emit<null>(ProductEvents.GetPriceRangeAttempt, null);
+
     this.mapService.currentLayer$
       .pipe(untilDestroyed(this))
       .subscribe((layer: LayerType) => {
@@ -85,14 +97,13 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
         }
       });
 
-
     this.productService.productIdsToRoute$
       .pipe(untilDestroyed(this))
       .subscribe((data) => this.isShowRouteReview = data.size > 0);
 
     customCombineLastest([
       this.filterService.chechedCategory3LevelIds$,
-      this.filterService.currentMaxPrice$
+      this.filterService.currentPriceQuery$
     ])
       .pipe(untilDestroyed(this))
       .subscribe(([ids, priceQuery]: any[]) => {
