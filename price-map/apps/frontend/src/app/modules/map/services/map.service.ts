@@ -29,7 +29,6 @@ import { ClearControl, LayersControl, PriceControl } from '../controls';
 import { WebSocketService } from '../../../services';
 import { LayerType } from '../models/types';
 import { ShopPopupComponent, ProductPopupComponent } from '../components';
-import { IPriceQuery } from '@core/interfaces';
 
 /**
  * Сервис по работе с картой
@@ -210,11 +209,14 @@ export class MapService {
     geoControl.on('geolocate', this.onGeolocate);
     this.map.addControl(geoControl);
 
-    const priceControl: PriceControl = new PriceControl(this.resolver, this.filterService);
-    this.map.addControl(priceControl, 'top-left');
-
     const layersControl: LayersControl = new LayersControl(this.resolver, this, this.webSocketService);
     this.map.addControl(layersControl, 'top-left');
+    this.addPriceControl();
+  }
+
+  public addPriceControl(): void {
+    const priceControl: PriceControl = new PriceControl(this.resolver, this.filterService);
+    this.map.addControl(priceControl, 'top-left');
   }
 
   public addClearControl(): void {
@@ -227,6 +229,14 @@ export class MapService {
       = <ClearControl | undefined>this.map._controls.find((control: IControl) => control instanceof ClearControl);
     if (clearControl) {
       this.map.removeControl(clearControl);
+    }
+  }
+
+  public removePriceControl(): void {
+    const priceControl: PriceControl | undefined
+      = <PriceControl | undefined>this.map._controls.find((control: IControl) => control instanceof PriceControl);
+    if (priceControl) {
+      this.map.removeControl(priceControl);
     }
   }
 
@@ -662,7 +672,8 @@ export class MapService {
         type: 'symbol',
         source: this.shopsSourceName,
         layout: {
-          'icon-image': '{icon}',
+          'icon-size': 1,
+          'icon-image': 'shop',
           'icon-overlap': 'always',
           'text-field': [
             'get',

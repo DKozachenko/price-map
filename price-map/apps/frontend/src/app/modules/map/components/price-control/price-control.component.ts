@@ -12,6 +12,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   styleUrls: ['./price-control.component.scss']
 })
 export class PriceControlComponent implements OnInit {
+  private slider: JQuery<HTMLDivElement>;
   public filterService: FilterService;
 
   public ngOnInit(): void {
@@ -22,8 +23,8 @@ export class PriceControlComponent implements OnInit {
     this.filterService.initialPriceQuery$
       .pipe(untilDestroyed(this))
       .subscribe((initialPriceQuery: IPriceQuery) => {
-        const slider: JQuery<HTMLDivElement> = $('#slider');
-        (<any>slider).roundSlider({
+        this.slider = $('#slider');
+        (<any>this.slider).roundSlider({
           radius: 50,
           circleShape: 'pie',
           sliderType: 'range',
@@ -43,7 +44,7 @@ export class PriceControlComponent implements OnInit {
         });
 
         //Теряет контекст, поэтому напрямую передаем
-        slider.on('change', this.changePrice.bind(this));
+        this.slider.on('change', this.changePrice.bind(this));
       });
   }
 
@@ -60,5 +61,9 @@ export class PriceControlComponent implements OnInit {
       max: currentPriceQuery.max === initialPriceQuery.max ? null : currentPriceQuery.max,
       min: currentPriceQuery.min === initialPriceQuery.min ? null : currentPriceQuery.min
     });
+  }
+
+  public destroySlider(): void {
+    (<any>this.slider).roundSlider('destroy');
   }
 }

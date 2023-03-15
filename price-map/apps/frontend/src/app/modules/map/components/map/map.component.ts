@@ -94,6 +94,9 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
         this.mapService.removeAllLayers();
         if (layer === 'shops') {
           this.webSocketService.emit<null>(ShopEvents.GetShopsAttempt);
+          this.mapService.removePriceControl();
+        } else {
+          this.mapService.addPriceControl();
         }
       });
 

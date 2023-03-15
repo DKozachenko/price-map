@@ -9,7 +9,7 @@ import { Subject, ReplaySubject, BehaviorSubject } from 'rxjs';
  */
 @Injectable()
 export class FilterService {
-  public initialPriceQuery$: Subject<IPriceQuery> = new Subject();
+  public initialPriceQuery$: ReplaySubject<IPriceQuery> = new ReplaySubject(1);
 
   public priceQuery: IPriceQuery = {
     max: null,
