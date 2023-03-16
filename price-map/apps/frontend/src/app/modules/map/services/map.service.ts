@@ -5,7 +5,7 @@ import {
   Injectable,
   Injector
 } from '@angular/core';
-import { FeatureCollection, Point, Feature } from 'geojson';
+import { Point, Feature, Geometry, GeoJsonProperties } from 'geojson';
 import {
   CircleStyleLayer,
   GeoJSONSource,
@@ -28,7 +28,7 @@ import { IProductInfo, IShopInfo } from '../models/interfaces';
 import { ClearControl, LayersControl, PriceControl } from '../controls';
 import { WebSocketService } from '../../../services';
 import { LayerType } from '../models/types';
-import { ShopPopupComponent, ProductPopupComponent } from '../components';
+import { ShopPopupComponent } from '../components';
 
 /**
  * Сервис по работе с картой
@@ -63,6 +63,30 @@ export class MapService {
    * @memberof MapService
    */
   private productsSourceName: string = 'products';
+  /**
+   * Id слоя для кластеризации
+   * @private
+   * @type {string}
+   * @memberof MapService
+   */
+  private productClusterLayerId: string = 'product-cluster';
+  /**
+   * Id слоя с счетчиками кластеризации
+   * @private
+   * @type {string}
+   * @memberof MapService
+   */
+  private productClusterCountLayerId: string = 'product-cluster-count';
+
+  /**
+   * Id слоя с некластеризированными элементами
+   * @private
+   * @type {string}
+   * @memberof MapService
+   */
+  private productUnclusterLayerId: string = 'product-uncluster';
+
+  private productUnclusterCountLayerId: string = 'product-uncluster-count';
 
   private shopsSourceName: string = 'shops';
   private shopLayerId: string = 'shop';
@@ -82,32 +106,6 @@ export class MapService {
    * @memberof MapService
    */
   private routeLayerId: string = 'route';
-
-  /**
-   * Id слоя для кластеризации
-   * @private
-   * @type {string}
-   * @memberof MapService
-   */
-  private clusterLayerId: string = 'clusters';
-
-  /**
-   * Id слоя с счетчиками кластеризации
-   * @private
-   * @type {string}
-   * @memberof MapService
-   */
-  private clusterCountLayerId: string = 'cluster-count';
-
-  /**
-   * Id слоя с некластеризированными элементами
-   * @private
-   * @type {string}
-   * @memberof MapService
-   */
-  private unclusterPointLayerId: string = 'unclustered-point';
-
-  private unclusterCountLayerId: string = 'uncluster-count';
 
   public currentLayer$: Subject<LayerType> = new Subject<LayerType>();
 
@@ -143,18 +141,11 @@ export class MapService {
     console.log('GEOLOCATE', position.coords.latitude, position.coords.longitude);
   }
 
-  public loadProductImage(): void {
-    this.map.loadImage(
-      '../../../../assets/wood.png',
-      (error: any, image: any) => {
-        if (error) throw error;
-        if (!this.map?.hasImage('shop')) {
-          if (image) {
-            this.map?.addImage('shop', image);
-          }
-        }
-      },
-    );
+  private centerMap(coordinates: LngLatLike): void {
+    this.map.easeTo({
+      center: coordinates,
+      zoom: 15,
+    });
   }
 
   public loadShopImage(): void {
@@ -172,17 +163,17 @@ export class MapService {
   }
 
   public removeAllLayers(): void {
-    const clustersLayer: CircleStyleLayer = <CircleStyleLayer>this.map.getLayer(this.clusterLayerId);
-    if (clustersLayer) {
-      this.map.removeLayer(this.clusterLayerId);
+    const productClusterLayer: CircleStyleLayer = <CircleStyleLayer>this.map.getLayer(this.productClusterLayerId);
+    if (productClusterLayer) {
+      this.map.removeLayer(this.productClusterLayerId);
     }
-    const clusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.clusterCountLayerId);
-    if (clusterCountLayer) {
-      this.map.removeLayer(this.clusterCountLayerId);
+    const productClusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.productClusterCountLayerId);
+    if (productClusterCountLayer) {
+      this.map.removeLayer(this.productClusterCountLayerId);
     }
-    const unclasteredPointLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.unclusterPointLayerId);
-    if (unclasteredPointLayer) {
-      this.map.removeLayer(this.unclusterPointLayerId);
+    const productUnclasteredLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.productUnclusterLayerId);
+    if (productUnclasteredLayer) {
+      this.map.removeLayer(this.productUnclusterLayerId);
     }
     const lineLayer: LineStyleLayer = <LineStyleLayer>this.map.getLayer(this.routeLayerId);
     if (lineLayer) {
@@ -244,124 +235,12 @@ export class MapService {
     }
   }
 
-  /**
-   * Установка события на клик по слою кластеризации
-   * @private
-   * @memberof MapService
-   */
-  private setClusterClick(): void {
-    this.map.on('click', this.clusterLayerId, (e: MapMouseEvent) => {
-      console.log('cluster click', e, e.point);
-      const features: MapGeoJSONFeature[] = this.map.queryRenderedFeatures(e.point, {
-        layers: [this.clusterLayerId],
-      });
-      console.log('features', features)
-
-      const clusterId: number = features[0].properties['cluster_id'];
-      console.log('clusterId', clusterId)
-      const source: GeoJSONSource | undefined = <GeoJSONSource | undefined>this.map.getSource(this.productsSourceName);
-
-      source?.getClusterExpansionZoom(clusterId, (error?: Error | null, zoom?: number | null) => {
-        if (error) return;
-        console.log(error, zoom)
-
-        const geometry: Point = <Point>features?.[0]?.geometry;
-        const coordinates: LngLatLike = <LngLatLike>geometry?.coordinates?.slice();
-        this.map.easeTo({
-          center: coordinates,
-          zoom: 15,
-        });
-      });
-
-      const pointCount = features[0].properties['point_count'];
-      console.log(pointCount)
-      source?.getClusterLeaves(clusterId, pointCount, 0, (error?: Error | null, features?: any) => {
-        console.log('getClusterLeaves', features)
-      })
-    });
-  }
-
-  /**
-   * Установка события на клик по слою с счетчиками
-   * @memberof MapService
-   */
-  private setClusterCountClick(): void {
-    this.map.on('click', this.clusterCountLayerId, (e) => {
-      console.log('cluster-count click', e);
-    });
-  }
-
-  /**
-   * Получение фич по переданным координатам из источника данных
-   * @private
-   * @param {[number, number]} coordinates координаты
-   * @return {*}  {Feature<Point, IProductInfo>[]} фичи
-   * @memberof MapService
-   */
-  private featuresByCoordinates(coordinates: [number, number]): Feature<Point, IProductInfo>[] {
-    coordinates[0] = +coordinates[0].toFixed(6);
-    coordinates[1] = +coordinates[1].toFixed(6);
-    const source: GeoJSONSource | undefined = <GeoJSONSource | undefined>this.map.getSource(this.productsSourceName);
-    //Гоняем по сурцам слоя, чтобы выцепить еще фичи с такими координатами
-    return (<FeatureCollection<Point, IProductInfo>>source?._data)?.features?.filter(
-      (feature: Feature<Point, IProductInfo>) =>
-        feature.geometry.coordinates[0] === coordinates[0] && feature.geometry.coordinates[1] === coordinates[1],
-    );
-  }
-
-  /**
-   * Создание HTML контента для попапа
-   * @private
-   * @param {IProductInfo} productInfo инцормация о товаре
-   * @return {*}  {HTMLDivElement} див
-   * @memberof MapService
-   */
-  private createProductPopupDomContent(productInfo: IProductInfo): HTMLDivElement {
-    const componentFactory = this.resolver.resolveComponentFactory(ProductPopupComponent);
-    // const injector = Injector.create({ providers: [{provide: ProductService, deps: []}] } );
-    // const component = componentFactory.create(this.injector);
-    const component = componentFactory.create(Injector.create([]));
-    component.instance.productInfo = productInfo;
-    //Своеобразный DI, тк через через конструктор не вышло
-    component.instance.productService = this.productService;
-    component.changeDetectorRef.detectChanges();
-    return <HTMLDivElement>component.location.nativeElement;
-  }
-
   private createShopPopupDomContent(shopInfo: IShopInfo): HTMLDivElement {
     const componentFactory = this.resolver.resolveComponentFactory(ShopPopupComponent);
     const component = componentFactory.create(Injector.create([]));
     component.instance.shopInfo = shopInfo;
     component.changeDetectorRef.detectChanges();
     return <HTMLDivElement>component.location.nativeElement;
-  }
-
-  /**
-   * Установка события на клик по слою некластеризированных объектов
-   * @private
-   * @memberof MapService
-   */
-  private setUnclusteredPointClick(): void {
-    this.map.on('click', this.unclusterPointLayerId, (e: MapLayerMouseEvent) => {
-      console.log('unclustered-point', e);
-      const feature: Feature<Point, IProductInfo> = <Feature<Point, IProductInfo>>e.features?.[0];
-      const geometry: Point = feature?.geometry;
-      const coordinates: [number, number] = <[number, number]>geometry?.coordinates?.slice();
-
-      console.log(feature)
-      while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-        coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-      }
-
-      this.map.easeTo({
-        center: coordinates,
-        zoom: 15,
-      });
-
-      const content = this.createProductPopupDomContent(feature.properties);
-      const popup: Popup = new Popup({ className: 'custom__popup' }).setLngLat(coordinates).setDOMContent(content);
-      popup.addTo(this.map);
-    });
   }
 
   private setShopPointClick(): void {
@@ -377,15 +256,53 @@ export class MapService {
     });
   }
 
+  private setProductUnclusterClick(): void {
+    this.map.on('click', this.productUnclusterLayerId, (e: MapLayerMouseEvent) => {
+      const feature: Feature<Point, IProductInfo> = <Feature<Point, IProductInfo>>e.features?.[0];
+      console.log(feature)
+      const geometry: Point = feature?.geometry;
+      const coordinates: [number, number] = <[number, number]>geometry?.coordinates?.slice();
+      this.centerMap(coordinates);
+    });
+  }
+
+  private setProductClusterClick(): void {
+    this.map.on('click', this.productClusterLayerId, (e: MapMouseEvent) => {
+      const features: MapGeoJSONFeature[] = this.map.queryRenderedFeatures(e.point, {
+        layers: [this.productClusterLayerId],
+      });
+
+      const clusterId: number = features[0].properties['cluster_id'];
+      const pointCount: number = features[0].properties['point_count'];
+      const source: GeoJSONSource | undefined = <GeoJSONSource | undefined>this.map.getSource(this.productsSourceName);
+
+      if (source) {
+        source.getClusterExpansionZoom(clusterId, (error?: Error | null, zoom?: number | null) => {
+          if (error) return;
+          const geometry: Point = <Point>features?.[0]?.geometry;
+          const coordinates: LngLatLike = <LngLatLike>geometry?.coordinates?.slice();
+          this.centerMap(coordinates);
+        });
+  
+        
+        source.getClusterLeaves(clusterId, pointCount, 0, (error?: Error | null, data?: Feature<Geometry, GeoJsonProperties>[] | null) => {
+          if (error) return;
+          const features: Feature<Point, IProductInfo>[] = <Feature<Point, IProductInfo>[]>data;
+          console.log('getClusterLeaves', features)
+        })
+      }
+      
+    });
+  }
+
   /**
    * Установка всех событий кликов
    * @private
    * @memberof MapService
    */
   private setClicks(): void {
-    this.setClusterClick();
-    this.setClusterCountClick();
-    this.setUnclusteredPointClick();
+    this.setProductClusterClick();
+    this.setProductUnclusterClick();
     this.setShopPointClick();
   }
 
@@ -457,20 +374,19 @@ export class MapService {
     };
   }
 
-  //TODO: стили поковырять
   /**
    * Добавление слоя кластеризации
    * @private
    * @memberof MapService
    */
-  private addClusterLayer(): void {
-    const clustersLayer: CircleStyleLayer = <CircleStyleLayer>this.map.getLayer(this.clusterLayerId);
+  private addProductClusterLayer(): void {
+    const productClustersLayer: CircleStyleLayer = <CircleStyleLayer>this.map.getLayer(this.productClusterLayerId);
 
-    if (clustersLayer) {
-      clustersLayer.source = this.productsSourceName;
+    if (productClustersLayer) {
+      productClustersLayer.source = this.productsSourceName;
     } else {
       this.map.addLayer({
-        id: this.clusterLayerId,
+        id: this.productClusterLayerId,
         type: 'circle',
         source: this.productsSourceName,
         filter: [
@@ -484,11 +400,9 @@ export class MapService {
               'get',
               'point_count'
             ],
-            '#51bbd6',
+            '#a16eff',
             100,
-            '#f1f075',
-            750,
-            '#f28cb1'
+            '#323259'
           ],
           'circle-radius': [
             'step',
@@ -512,14 +426,14 @@ export class MapService {
    * @private
    * @memberof MapService
    */
-  private addClusterCountLayer(): void {
-    const clusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.clusterCountLayerId);
+  private addProductClusterCountLayer(): void {
+    const productClusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.productClusterCountLayerId);
 
-    if (clusterCountLayer) {
-      clusterCountLayer.source = this.productsSourceName;
+    if (productClusterCountLayer) {
+      productClusterCountLayer.source = this.productsSourceName;
     } else {
       this.map.addLayer({
-        id: this.clusterCountLayerId,
+        id: this.productClusterCountLayerId,
         type: 'symbol',
         source: this.productsSourceName,
         filter: [
@@ -528,10 +442,7 @@ export class MapService {
         ],
         layout: {
           'text-field': '{point_count_abbreviated}',
-          'text-font': [
-            'DIN Offc Pro Medium',
-            'Arial Unicode MS Bold'
-          ],
+          'text-font': ['Consolas'],
           'text-size': 12,
         },
       });
@@ -543,14 +454,14 @@ export class MapService {
    * @private
    * @memberof MapService
    */
-  private addUnclusteredPointLayer(): void {
-    const unclasteredPointLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.unclusterPointLayerId);
+  private addProductUnclusterLayer(): void {
+    const productUnclasteredLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.productUnclusterLayerId);
 
-    if (unclasteredPointLayer) {
-      unclasteredPointLayer.source = this.productsSourceName;
+    if (productUnclasteredLayer) {
+      productUnclasteredLayer.source = this.productsSourceName;
     } else {
       this.map.addLayer({
-        id: this.unclusterPointLayerId,
+        id: this.productUnclusterLayerId,
         type: 'circle',
         source: this.productsSourceName,
         filter: [
@@ -561,21 +472,21 @@ export class MapService {
           ]
         ],
         paint: {
-          'circle-color': '#11b4da',
+          'circle-color': '#a16eff',
           'circle-radius': 20
         },
       });
     }
   }
 
-  private addUnclusterCountLayer(): void {
-    const unclusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.unclusterCountLayerId);
+  private addProductUnclusterCountLayer(): void {
+    const productUnclusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.productUnclusterCountLayerId);
 
-    if (unclusterCountLayer) {
-      unclusterCountLayer.source = this.productsSourceName;
+    if (productUnclusterCountLayer) {
+      productUnclusterCountLayer.source = this.productsSourceName;
     } else {
       this.map.addLayer({
-        id: this.unclusterCountLayerId,
+        id: this.productUnclusterCountLayerId,
         type: 'symbol',
         source: this.productsSourceName,
         filter: [
@@ -597,16 +508,12 @@ export class MapService {
     }
   }
 
-  /**
-   * Добавление слоев для кластеризации
-   * @private
-   * @memberof MapService
-   */
-  private addClusterLayers(): void {
-    this.addClusterLayer();
-    this.addClusterCountLayer();
-    this.addUnclusteredPointLayer();
-    this.addUnclusterCountLayer();
+
+  private addProductLayers(): void {
+    this.addProductClusterLayer();
+    this.addProductClusterCountLayer();
+    this.addProductUnclusterLayer();
+    this.addProductUnclusterCountLayer();
   }
 
   /**
@@ -692,8 +599,8 @@ export class MapService {
       });
 
       //Перемещаем слой с маршрутом "под" кластеризованный слой
-      const clustersLayer: CircleStyleLayer = <CircleStyleLayer>this.map.getLayer(this.clusterLayerId);
-      this.map.moveLayer(this.routeLayerId, clustersLayer ? this.clusterLayerId : undefined);
+      const productClustersLayer: CircleStyleLayer = <CircleStyleLayer>this.map.getLayer(this.productClusterLayerId);
+      this.map.moveLayer(this.routeLayerId, productClustersLayer ? this.productClusterLayerId : undefined);
     }
 
     this.addClearControl();
@@ -763,7 +670,7 @@ export class MapService {
    */
   public addProducts(products: Product[]): void {
     this.addProductsSource(products);
-    this.addClusterLayers();
+    this.addProductLayers();
   }
 
   /**
