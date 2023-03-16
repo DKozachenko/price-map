@@ -107,6 +107,8 @@ export class MapService {
    */
   private unclusterPointLayerId: string = 'unclustered-point';
 
+  private unclusterCountLayerId: string = 'uncluster-count';
+
   public currentLayer$: Subject<LayerType> = new Subject<LayerType>();
 
   constructor(private readonly productService: ProductService,
@@ -532,6 +534,31 @@ export class MapService {
     } else {
       this.map.addLayer({
         id: this.unclusterPointLayerId,
+        type: 'circle',
+        source: this.productsSourceName,
+        filter: [
+          '!',
+          [
+            'has',
+            'point_count'
+          ]
+        ],
+        paint: {
+          'circle-color': '#11b4da',
+          'circle-radius': 20
+        },
+      });
+    }
+  }
+
+  private addUnclusterCountLayer(): void {
+    const unclusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.unclusterCountLayerId);
+
+    if (unclusterCountLayer) {
+      unclusterCountLayer.source = this.productsSourceName;
+    } else {
+      this.map.addLayer({
+        id: this.unclusterCountLayerId,
         type: 'symbol',
         source: this.productsSourceName,
         filter: [
@@ -542,19 +569,12 @@ export class MapService {
           ]
         ],
         layout: {
-          'icon-image': '{icon}',
-          'icon-overlap': 'always',
-          'text-field': [
-            'get',
-            'price'
+          'text-field': '1',
+          'text-font': [
+            'DIN Offc Pro Medium',
+            'Arial Unicode MS Bold'
           ],
-          'text-font': ['Open Sans Semibold'],
-          'text-size': 18,
-          'text-offset': [
-            0,
-            0.5
-          ],
-          'text-anchor': 'top',
+          'text-size': 12,
         },
       });
     }
@@ -569,6 +589,7 @@ export class MapService {
     this.addClusterLayer();
     this.addClusterCountLayer();
     this.addUnclusteredPointLayer();
+    this.addUnclusterCountLayer();
   }
 
   /**

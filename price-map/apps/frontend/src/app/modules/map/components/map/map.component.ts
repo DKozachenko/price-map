@@ -5,7 +5,6 @@ import { IResponseData, IProductQuery, IPriceQuery } from '@core/interfaces';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService, MapService, ProductService } from '../../services';
 import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
-import { debounceTime, delay } from 'rxjs';
 import { LayerType } from '../../models/types';
 import { customCombineLastest } from '../operators';
 
@@ -129,9 +128,6 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
   public ngAfterViewInit() {
     this.mapService.initMap(this.mapContainer);
-    console.log(document.querySelectorAll('.maplibregl-ctrl-top-right'))
-    console.log(document.querySelectorAll('.maplibregl-ctrl-bottom-right'))
-    console.log(document.querySelectorAll('.maplibregl-ctrl-top-left'))
   }
 
   public ngOnDestroy() {
