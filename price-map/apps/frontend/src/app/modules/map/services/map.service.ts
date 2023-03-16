@@ -130,33 +130,6 @@ export class MapService {
   }
 
   /**
-   * Удаление всех слоев
-   * @memberof MapService
-   */
-  public removeAllLayers(): void {
-    const clusterPostfixes: string[] = ['cluster', 'cluster-count', 'uncluster', 'uncluster-count'];
-    for (const clusterPostfix of clusterPostfixes) {
-      const layerId: string = `${this.shopsSourceName}-${clusterPostfix}`;
-      const existedLayer: CircleStyleLayer | SymbolStyleLayer 
-        = <CircleStyleLayer | SymbolStyleLayer>this.map.getLayer(layerId);
-      if (existedLayer) {
-        this.map.removeLayer(layerId);
-      }
-    }
-
-    for (const clusterPostfix of clusterPostfixes) {
-      const layerId: string = `${this.productsSourceName}-${clusterPostfix}`;
-      const existedLayer: CircleStyleLayer | SymbolStyleLayer 
-        = <CircleStyleLayer | SymbolStyleLayer>this.map.getLayer(layerId);
-      if (existedLayer) {
-        this.map.removeLayer(layerId);
-      }
-    }
-
-    this.removeRouteLayer();
-  }
-
-  /**
    * Добавление контролов
    * @private
    * @memberof MapService
@@ -178,32 +151,6 @@ export class MapService {
     const layersControl: LayersControl = new LayersControl(this.resolver, this, this.webSocketService);
     this.map.addControl(layersControl, 'top-left');
     this.addPriceControl();
-  }
-
-  public addPriceControl(): void {
-    const priceControl: PriceControl = new PriceControl(this.resolver, this.filterService);
-    this.map.addControl(priceControl, 'top-left');
-  }
-
-  public addClearControl(): void {
-    const clearControl: ClearControl = new ClearControl(this.resolver, this);
-    this.map.addControl(clearControl, 'top-right');
-  }
-
-  public removeClearControl(): void {
-    const clearControl: ClearControl | undefined
-      = <ClearControl | undefined>this.map._controls.find((control: IControl) => control instanceof ClearControl);
-    if (clearControl) {
-      this.map.removeControl(clearControl);
-    }
-  }
-
-  public removePriceControl(): void {
-    const priceControl: PriceControl | undefined
-      = <PriceControl | undefined>this.map._controls.find((control: IControl) => control instanceof PriceControl);
-    if (priceControl) {
-      this.map.removeControl(priceControl);
-    }
   }
 
   /**
@@ -577,20 +524,6 @@ export class MapService {
   }
 
   /**
-   * Удаление слоя с марщрутом
-   * @memberof MapService
-   */
-  public removeRouteLayer(): void {
-    const lineLayer: LineStyleLayer = <LineStyleLayer>this.map.getLayer(this.routeSourceName);
-
-    if (lineLayer) {
-      this.map.removeLayer(this.routeSourceName);
-    }
-
-    this.removeClearControl();
-  }
-
-  /**
    * Добавление источника данных для маршрута
    * @private
    * @param {number[][]} coordinates координаты
@@ -605,6 +538,89 @@ export class MapService {
     } else {
       this.map.addSource(this.routeSourceName, actualSource);
     }
+  }
+
+  /**
+   * Добавление контрола цены
+   * @memberof MapService
+   */
+  public addPriceControl(): void {
+    const priceControl: PriceControl = new PriceControl(this.resolver, this.filterService);
+    this.map.addControl(priceControl, 'top-left');
+  }
+
+  /**
+   * Удаление контрола цены
+   * @memberof MapService
+   */
+  public removePriceControl(): void {
+    const priceControl: PriceControl | undefined
+      = <PriceControl | undefined>this.map._controls.find((control: IControl) => control instanceof PriceControl);
+    if (priceControl) {
+      this.map.removeControl(priceControl);
+    }
+  }
+
+  /**
+   * Добавление контрола для очистки карты
+   * @memberof MapService
+   */
+  public addClearControl(): void {
+    const clearControl: ClearControl = new ClearControl(this.resolver, this);
+    this.map.addControl(clearControl, 'top-right');
+  }
+
+  /**
+   * Удаление контрола для очистки карты
+   * @memberof MapService
+   */
+  public removeClearControl(): void {
+    const clearControl: ClearControl | undefined
+      = <ClearControl | undefined>this.map._controls.find((control: IControl) => control instanceof ClearControl);
+    if (clearControl) {
+      this.map.removeControl(clearControl);
+    }
+  }
+
+  /**
+   * Удаление всех слоев
+   * @memberof MapService
+   */
+  public removeAllLayers(): void {
+    const clusterPostfixes: string[] = ['cluster', 'cluster-count', 'uncluster', 'uncluster-count'];
+    for (const clusterPostfix of clusterPostfixes) {
+      const layerId: string = `${this.shopsSourceName}-${clusterPostfix}`;
+      const existedLayer: CircleStyleLayer | SymbolStyleLayer 
+        = <CircleStyleLayer | SymbolStyleLayer>this.map.getLayer(layerId);
+      if (existedLayer) {
+        this.map.removeLayer(layerId);
+      }
+    }
+
+    for (const clusterPostfix of clusterPostfixes) {
+      const layerId: string = `${this.productsSourceName}-${clusterPostfix}`;
+      const existedLayer: CircleStyleLayer | SymbolStyleLayer 
+        = <CircleStyleLayer | SymbolStyleLayer>this.map.getLayer(layerId);
+      if (existedLayer) {
+        this.map.removeLayer(layerId);
+      }
+    }
+
+    this.removeRouteLayer();
+  }
+
+  /**
+   * Удаление слоя с марщрутом
+   * @memberof MapService
+   */
+  public removeRouteLayer(): void {
+    const lineLayer: LineStyleLayer = <LineStyleLayer>this.map.getLayer(this.routeSourceName);
+
+    if (lineLayer) {
+      this.map.removeLayer(this.routeSourceName);
+    }
+
+    this.removeClearControl();
   }
 
   /**
