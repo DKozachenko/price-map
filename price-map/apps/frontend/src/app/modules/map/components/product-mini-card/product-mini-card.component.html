@@ -1,7 +1,7 @@
-<nb-card *ngIf="product" class="product">
+<nb-card *ngIf="product" class="product__mini">
   <nb-card-header>{{ product.name }}</nb-card-header>
 
-  <nb-card-body class="product__body">
+  <nb-card-body class="product__mini-body">
     <span>Из {{ product.shop.name }} </span>
     <span>за {{ product.price }} р.</span>
   </nb-card-body>

@@ -1,9 +1,9 @@
 @import "../../../../../assets/styles/mixins";
 
-.product {
+.product__mini {
   border: 1px solid white;
 
-  &__body {
+  &-body {
     span {
       @include font(1.2rem, white, 400);
     }
@@ -11,7 +11,7 @@
 }
 
 ::ng-deep {
-  .product {
+  .product__mini {
     nb-card-header {
       @include font(1.3rem, white, 700);
       border-bottom-color: white;

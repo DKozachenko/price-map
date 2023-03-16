@@ -1,4 +1,4 @@
-<nb-card *ngIf="product" class="product">
+<nb-card *ngIf="product" class="product" [class.in_route]="isInRoute">
   <nb-card-header>{{ product.name }}</nb-card-header>
 
   <nb-card-body class="product__body">
@@ -12,7 +12,12 @@
   <nb-card-footer>
     <nb-actions>
       <nb-action icon="heart-outline" nbTooltip="Добавить в изранное"></nb-action>
-      <nb-action icon="car-outline" nbTooltip="Добавить в маршрут"></nb-action>
+      <nb-action 
+        icon="car-outline"
+        [class.in_route]="isInRoute"
+        [nbTooltip]="isInRoute ? 'Убрать из маршрута' : 'Добавить в маршрут'" 
+        (click)="routeAction()"
+      ></nb-action>
       <nb-action icon="info-outline" nbTooltip="Подробнее"></nb-action>
     </nb-actions>
   </nb-card-footer>

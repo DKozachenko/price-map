@@ -164,7 +164,6 @@ export class MapService {
     const layerId: string = `${sourceName}-uncluster`;
     this.map.on('click', layerId, (e: MapLayerMouseEvent) => {
       const feature: Feature<Point, IFeatureProps> = <Feature<Point, IFeatureProps>>e.features?.[0];
-      console.log(feature)
       const geometry: Point = feature?.geometry;
       const coordinates: [number, number] = <[number, number]>geometry?.coordinates?.slice();
       this.centerMap(coordinates);
@@ -201,7 +200,6 @@ export class MapService {
         source.getClusterLeaves(clusterId, pointCount, 0, (error?: Error | null, data?: Feature<Geometry, GeoJsonProperties>[] | null) => {
           if (error) return;
           const features: Feature<Point, IFeatureProps>[] = <Feature<Point, IFeatureProps>[]>data;
-          console.log('getClusterLeaves', features)
           const itemIds: string[] = features.map((feature: Feature<Point, IFeatureProps>) => feature.properties.id);
           service.productIdsToShow$.next(itemIds);
         })

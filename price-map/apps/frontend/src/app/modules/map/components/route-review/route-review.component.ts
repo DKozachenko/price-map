@@ -59,7 +59,10 @@ export class RouteReviewComponent implements OnInit {
 
     this.webSocketService.on<IResponseData<Product>>(ProductEvents.GetProductSuccessed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<Product>) => this.products.push(response.data));
+      .subscribe((response: IResponseData<Product>) => {
+        this.products.push(response.data);
+        this.productsService.productAction$.next({ id: response.data.id, action: 'route', direction: 'add' });
+      });
 
     this.productsService.addProductIdToRoute$
       .pipe(untilDestroyed(this))
@@ -67,7 +70,10 @@ export class RouteReviewComponent implements OnInit {
 
     this.productsService.deleteProductIdFromRoute$
       .pipe(untilDestroyed(this))
-      .subscribe((id: string) => this.products = this.products.filter((product: Product) => product.id !== id));
+      .subscribe((id: string) => {
+        this.products = this.products.filter((product: Product) => product.id !== id);
+        this.productsService.productAction$.next({ id, action: 'route', direction: 'remove' });
+      });
   }
   /**
    * Построение маршрута

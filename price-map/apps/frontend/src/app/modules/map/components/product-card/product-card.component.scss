@@ -51,8 +51,12 @@
       display: block;
 
       &:hover {
-        background-color: transparent;
-        cursor: initial;
+        background-color: transparent!important;
+        cursor: initial!important;
+      }
+
+      nb-actions {
+        flex-grow: 1;
       }
 
       nb-action {
@@ -60,6 +64,12 @@
         border-left: 1px solid white!important;
         flex-grow: 1;
         justify-content: center;
+
+        &.in_route {
+          svg {
+            fill:#a16eff;
+          }
+        }
 
         &:hover {
           nb-icon {
