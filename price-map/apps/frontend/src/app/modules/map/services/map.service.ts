@@ -24,7 +24,7 @@ import {
 } from 'maplibre-gl';
 import { FilterService, ProductService } from '.';
 import { Product, Shop } from '@core/entities';
-import { IProductInfo, IShopInfo } from '../models/interfaces';
+import { IFeatureProps, IShopInfo } from '../models/interfaces';
 import { ClearControl, LayersControl, PriceControl } from '../controls';
 import { WebSocketService } from '../../../services';
 import { LayerType } from '../models/types';
@@ -258,7 +258,7 @@ export class MapService {
 
   private setProductUnclusterClick(): void {
     this.map.on('click', this.productUnclusterLayerId, (e: MapLayerMouseEvent) => {
-      const feature: Feature<Point, IProductInfo> = <Feature<Point, IProductInfo>>e.features?.[0];
+      const feature: Feature<Point, IFeatureProps> = <Feature<Point, IFeatureProps>>e.features?.[0];
       console.log(feature)
       const geometry: Point = feature?.geometry;
       const coordinates: [number, number] = <[number, number]>geometry?.coordinates?.slice();
@@ -287,7 +287,7 @@ export class MapService {
         
         source.getClusterLeaves(clusterId, pointCount, 0, (error?: Error | null, data?: Feature<Geometry, GeoJsonProperties>[] | null) => {
           if (error) return;
-          const features: Feature<Point, IProductInfo>[] = <Feature<Point, IProductInfo>[]>data;
+          const features: Feature<Point, IFeatureProps>[] = <Feature<Point, IFeatureProps>[]>data;
           console.log('getClusterLeaves', features)
         })
       }
@@ -306,21 +306,11 @@ export class MapService {
     this.setShopPointClick();
   }
 
-  /**
-   * Преобразования товара из БД в фичу
-   * @private
-   * @param {Product} product товар
-   * @return {*}  {Feature<Point, IProductInfo>} фича (координаты в формате {longitude},{latitude})
-   * @memberof MapService
-   */
-  private mapProduct(product: Product): Feature<Point, IProductInfo> {
+  private mapProduct(product: Product): Feature<Point, IFeatureProps> {
     return {
       type: 'Feature',
       properties: {
-        id: product.id,
-        price: `${product.price} р.`,
-        name: product.name,
-        description: product.description,
+        id: product.id
       },
       geometry: {
         type: 'Point',
@@ -360,7 +350,7 @@ export class MapService {
    * @return {*}  {GeoJSONSourceSpecification} источник данных с переданными фичами
    * @memberof MapService
    */
-  private setFeaturesToJsonSource(features: Feature<Point, IProductInfo | IShopInfo>[]): GeoJSONSourceSpecification {
+  private setFeaturesToJsonSource(features: Feature<Point, IFeatureProps | IShopInfo>[]): GeoJSONSourceSpecification {
     return {
       type: 'geojson',
       data: {
@@ -523,7 +513,7 @@ export class MapService {
    * @memberof MapService
    */
   private addProductsSource(products: Product[]): void {
-    const features: Feature<Point, IProductInfo>[] = products.map((product: Product) => this.mapProduct(product));
+    const features: Feature<Point, IFeatureProps>[] = products.map((product: Product) => this.mapProduct(product));
     const actualSource: GeoJSONSourceSpecification = this.setFeaturesToJsonSource(features);
 
     const productsSource: GeoJSONSource | undefined = <GeoJSONSource | undefined>(
