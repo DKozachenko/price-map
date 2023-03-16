@@ -44,17 +44,39 @@
     }
   
     nb-card-footer {
+      padding: 1rem .4rem;
       border-top-color: white;
       transition: background-color .2s linear;
 
-      display: flex;
-      justify-content: center;
+      display: block;
 
       &:hover {
-        background-color: darken(#323259, 10%);
-        cursor: pointer;
+        background-color: transparent;
+        cursor: initial;
+      }
+
+      nb-action {
+        padding: 0 .75rem!important;
+        border-left: 1px solid white!important;
+        flex-grow: 1;
+        justify-content: center;
+
+        &:hover {
+          nb-icon {
+            transform: scale(1.15);
+          }
+        }
+
+        nb-icon {
+          color: white;
+          transition: transform .2s linear;
+        }
       }
     }
+  }
+
+  nb-tooltip .content {
+    @include font(1.2rem, black, 400);
   }
 }
 

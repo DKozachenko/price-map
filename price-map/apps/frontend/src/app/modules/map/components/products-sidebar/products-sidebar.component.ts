@@ -14,7 +14,7 @@ import { ProductEvents } from '@core/enums';
   styleUrls: ['./products-sidebar.component.scss'],
 })
 export class ProductsSidebarComponent implements OnInit {
-  public products: Product[] = []
+  public products: Product[] = [];
 
   constructor(private readonly productsService: ProductService,
     private readonly webSocketSevice: WebSocketService,
