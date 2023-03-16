@@ -8,7 +8,6 @@ import { CharacteristicFilterComponent,
   ProductMiniCardComponent,
   ClearControlComponent,
   LayersControlComponent,
-  ShopPopupComponent, 
   PriceControlComponent} from './components';
 import { MapRoutingModule } from './map-routing.module';
 import { FilterService, MapService, ProductService } from './services';
@@ -33,7 +32,6 @@ import { SharedModule } from '../shared/shared.module';
     RouteReviewComponent,
     CheckboxComponent,
     ProductMiniCardComponent,
-    ShopPopupComponent,
     ClearControlComponent,
     LayersControlComponent,
     PriceControlComponent

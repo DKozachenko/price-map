@@ -2,8 +2,7 @@ import { Subject } from 'rxjs';
 import {
   ComponentFactoryResolver,
   ElementRef,
-  Injectable,
-  Injector
+  Injectable
 } from '@angular/core';
 import { Point, Feature, Geometry, GeoJsonProperties } from 'geojson';
 import {
@@ -24,11 +23,10 @@ import {
 } from 'maplibre-gl';
 import { FilterService, ProductService } from '.';
 import { Product, Shop } from '@core/entities';
-import { IFeatureProps, IShopInfo } from '../models/interfaces';
+import { IFeatureProps } from '../models/interfaces';
 import { ClearControl, LayersControl, PriceControl } from '../controls';
 import { WebSocketService } from '../../../services';
 import { LayerType } from '../models/types';
-import { ShopPopupComponent } from '../components';
 
 /**
  * Сервис по работе с картой
@@ -89,7 +87,14 @@ export class MapService {
   private productUnclusterCountLayerId: string = 'product-uncluster-count';
 
   private shopsSourceName: string = 'shops';
-  private shopLayerId: string = 'shop';
+  private shopClusterLayerId: string = 'shop-cluster';
+
+  private shopClusterCountLayerId: string = 'shop-cluster-count';
+
+
+  private shopUnclusterLayerId: string = 'shop-uncluster';
+
+  private shopUnclusterCountLayerId: string = 'shop-uncluster-count';
 
   /**
    * Название источника данных для маршрута
@@ -109,10 +114,8 @@ export class MapService {
 
   public currentLayer$: Subject<LayerType> = new Subject<LayerType>();
 
-  public colors = ['#fed976', '#feb24c', '#fd8d3c', '#fc4e2a', '#e31a1c'];
 
-  constructor(private readonly productService: ProductService,
-    private readonly webSocketService: WebSocketService,
+  constructor(private readonly webSocketService: WebSocketService,
     private readonly filterService: FilterService,
     private readonly resolver: ComponentFactoryResolver) { }
 
@@ -175,13 +178,29 @@ export class MapService {
     if (productUnclasteredLayer) {
       this.map.removeLayer(this.productUnclusterLayerId);
     }
+    const productUnclasteredCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.productUnclusterCountLayerId);
+    if (productUnclasteredCountLayer) {
+      this.map.removeLayer(this.productUnclusterCountLayerId);
+    }
     const lineLayer: LineStyleLayer = <LineStyleLayer>this.map.getLayer(this.routeLayerId);
     if (lineLayer) {
       this.map.removeLayer(this.routeLayerId);
     }
-    const shopLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.shopLayerId);
-    if (shopLayer) {
-      this.map.removeLayer(this.shopLayerId);
+    const shopClusterLayer: CircleStyleLayer = <CircleStyleLayer>this.map.getLayer(this.shopClusterLayerId);
+    if (shopClusterLayer) {
+      this.map.removeLayer(this.shopClusterLayerId);
+    }
+    const shopClusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.shopClusterCountLayerId);
+    if (shopClusterCountLayer) {
+      this.map.removeLayer(this.shopClusterCountLayerId);
+    }
+    const shopUnclasteredLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.shopUnclusterLayerId);
+    if (shopUnclasteredLayer) {
+      this.map.removeLayer(this.shopUnclusterLayerId);
+    }
+    const shopUnclasteredCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.shopUnclusterCountLayerId);
+    if (shopUnclasteredCountLayer) {
+      this.map.removeLayer(this.shopUnclusterCountLayerId);
     }
   }
 
@@ -235,27 +254,6 @@ export class MapService {
     }
   }
 
-  private createShopPopupDomContent(shopInfo: IShopInfo): HTMLDivElement {
-    const componentFactory = this.resolver.resolveComponentFactory(ShopPopupComponent);
-    const component = componentFactory.create(Injector.create([]));
-    component.instance.shopInfo = shopInfo;
-    component.changeDetectorRef.detectChanges();
-    return <HTMLDivElement>component.location.nativeElement;
-  }
-
-  private setShopPointClick(): void {
-    this.map.on('click', this.shopLayerId, (e: MapLayerMouseEvent) => {
-      console.log('shop-layer', e);
-      const feature: Feature<Point, IShopInfo> = <Feature<Point, IShopInfo>>e.features?.[0];
-      const geometry: Point = feature?.geometry;
-      const coordinates: [number, number] = <[number, number]>geometry?.coordinates?.slice();
-
-      const content = this.createShopPopupDomContent(feature.properties);
-      const popup: Popup = new Popup({ className: 'custom__popup' }).setLngLat(coordinates).setDOMContent(content);
-      popup.addTo(this.map);
-    });
-  }
-
   private setProductUnclusterClick(): void {
     this.map.on('click', this.productUnclusterLayerId, (e: MapLayerMouseEvent) => {
       const feature: Feature<Point, IFeatureProps> = <Feature<Point, IFeatureProps>>e.features?.[0];
@@ -295,16 +293,45 @@ export class MapService {
     });
   }
 
-  /**
-   * Установка всех событий кликов
-   * @private
-   * @memberof MapService
-   */
-  private setClicks(): void {
-    this.setProductClusterClick();
-    this.setProductUnclusterClick();
-    this.setShopPointClick();
+  private setShopUnclusterClick(): void {
+    this.map.on('click', this.shopUnclusterLayerId, (e: MapLayerMouseEvent) => {
+      const feature: Feature<Point, IFeatureProps> = <Feature<Point, IFeatureProps>>e.features?.[0];
+      console.log(feature)
+      const geometry: Point = feature?.geometry;
+      const coordinates: [number, number] = <[number, number]>geometry?.coordinates?.slice();
+      this.centerMap(coordinates);
+    });
   }
+
+  private setShopClusterClick(): void {
+    this.map.on('click', this.shopClusterLayerId, (e: MapMouseEvent) => {
+      const features: MapGeoJSONFeature[] = this.map.queryRenderedFeatures(e.point, {
+        layers: [this.shopClusterLayerId],
+      });
+
+      const clusterId: number = features[0].properties['cluster_id'];
+      const pointCount: number = features[0].properties['point_count'];
+      const source: GeoJSONSource | undefined = <GeoJSONSource | undefined>this.map.getSource(this.shopsSourceName);
+
+      if (source) {
+        source.getClusterExpansionZoom(clusterId, (error?: Error | null, zoom?: number | null) => {
+          if (error) return;
+          const geometry: Point = <Point>features?.[0]?.geometry;
+          const coordinates: LngLatLike = <LngLatLike>geometry?.coordinates?.slice();
+          this.centerMap(coordinates);
+        });
+  
+        
+        source.getClusterLeaves(clusterId, pointCount, 0, (error?: Error | null, data?: Feature<Geometry, GeoJsonProperties>[] | null) => {
+          if (error) return;
+          const features: Feature<Point, IFeatureProps>[] = <Feature<Point, IFeatureProps>[]>data;
+          console.log('getClusterLeaves', features)
+        })
+      }
+      
+    });
+  }
+
 
   private mapProduct(product: Product): Feature<Point, IFeatureProps> {
     return {
@@ -322,16 +349,11 @@ export class MapService {
     };
   }
 
-  private mapShop(shop: Shop): Feature<Point, IShopInfo & { icon: string }> {
+  private mapShop(shop: Shop): Feature<Point, IFeatureProps> {
     return {
       type: 'Feature',
       properties: {
         id: shop.id,
-        name: shop.name,
-        productNumber: shop.products.length.toString(),
-        website: shop.website ?? '',
-        osmNodeId: shop.osmNodeId,
-        icon: 'shop'
       },
       geometry: {
         type: 'Point',
@@ -350,7 +372,7 @@ export class MapService {
    * @return {*}  {GeoJSONSourceSpecification} источник данных с переданными фичами
    * @memberof MapService
    */
-  private setFeaturesToJsonSource(features: Feature<Point, IFeatureProps | IShopInfo>[]): GeoJSONSourceSpecification {
+  private setFeaturesToJsonSource(features: Feature<Point, IFeatureProps>[]): GeoJSONSourceSpecification {
     return {
       type: 'geojson',
       data: {
@@ -369,7 +391,7 @@ export class MapService {
    * @private
    * @memberof MapService
    */
-  private addProductClusterLayer(): void {
+  private addProductsClusterLayer(): void {
     const productClustersLayer: CircleStyleLayer = <CircleStyleLayer>this.map.getLayer(this.productClusterLayerId);
 
     if (productClustersLayer) {
@@ -416,7 +438,7 @@ export class MapService {
    * @private
    * @memberof MapService
    */
-  private addProductClusterCountLayer(): void {
+  private addProductsClusterCountLayer(): void {
     const productClusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.productClusterCountLayerId);
 
     if (productClusterCountLayer) {
@@ -444,7 +466,7 @@ export class MapService {
    * @private
    * @memberof MapService
    */
-  private addProductUnclusterLayer(): void {
+  private addProductsUnclusterLayer(): void {
     const productUnclasteredLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.productUnclusterLayerId);
 
     if (productUnclasteredLayer) {
@@ -469,7 +491,7 @@ export class MapService {
     }
   }
 
-  private addProductUnclusterCountLayer(): void {
+  private addProductsUnclusterCountLayer(): void {
     const productUnclusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.productUnclusterCountLayerId);
 
     if (productUnclusterCountLayer) {
@@ -499,11 +521,11 @@ export class MapService {
   }
 
 
-  private addProductLayers(): void {
-    this.addProductClusterLayer();
-    this.addProductClusterCountLayer();
-    this.addProductUnclusterLayer();
-    this.addProductUnclusterCountLayer();
+  private addProductsLayers(): void {
+    this.addProductsClusterLayer();
+    this.addProductsClusterCountLayer();
+    this.addProductsUnclusterLayer();
+    this.addProductsUnclusterCountLayer();
   }
 
   /**
@@ -528,7 +550,7 @@ export class MapService {
   }
 
   private addShopsSource(shops: Shop[]): void {
-    const features: Feature<Point, IShopInfo>[] = shops.map((shop: Shop) => this.mapShop(shop));
+    const features: Feature<Point, IFeatureProps>[] = shops.map((shop: Shop) => this.mapShop(shop));
     const actualSource: GeoJSONSourceSpecification = this.setFeaturesToJsonSource(features);
 
     const shopsSource: GeoJSONSource | undefined = <GeoJSONSource | undefined>(
@@ -596,34 +618,136 @@ export class MapService {
     this.addClearControl();
   }
 
-  private addShopsLayer(): void {
-    const shopLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.shopLayerId);
+  private addShopsClusterLayer(): void {
+    const shopClustersLayer: CircleStyleLayer = <CircleStyleLayer>this.map.getLayer(this.shopClusterLayerId);
 
-    if (shopLayer) {
-      shopLayer.source = this.shopsSourceName;
+    if (shopClustersLayer) {
+      shopClustersLayer.source = this.shopsSourceName;
     } else {
       this.map.addLayer({
-        id: this.shopLayerId,
-        type: 'symbol',
+        id: this.shopClusterLayerId,
+        type: 'circle',
         source: this.shopsSourceName,
-        layout: {
-          'icon-size': 1,
-          'icon-image': 'shop',
-          'icon-overlap': 'always',
-          'text-field': [
-            'get',
-            'name'
+        filter: [
+          'has',
+          'point_count'
+        ],
+        paint: {
+          'circle-color': [
+            'step',
+            [
+              'get',
+              'point_count'
+            ],
+            '#a16eff',
+            100,
+            '#323259'
           ],
-          'text-font': ['Consolas'],
-          'text-size': 14,
-          'text-offset': [
-            0,
-            0.75
+          'circle-radius': [
+            'step',
+            [
+              'get',
+              'point_count'
+            ],
+            20,
+            100,
+            30,
+            750,
+            40
           ],
-          'text-anchor': 'top'
-        }
+        },
       });
     }
+  }
+
+  /**
+   * Добавление слоя с счетчиками класстеризированных элементов
+   * @private
+   * @memberof MapService
+   */
+  private addShopsClusterCountLayer(): void {
+    const shopClusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.shopClusterCountLayerId);
+
+    if (shopClusterCountLayer) {
+      shopClusterCountLayer.source = this.shopsSourceName;
+    } else {
+      this.map.addLayer({
+        id: this.shopClusterCountLayerId,
+        type: 'symbol',
+        source: this.shopsSourceName,
+        filter: [
+          'has',
+          'point_count'
+        ],
+        layout: {
+          'text-field': '{point_count_abbreviated}',
+          'text-font': ['Consolas'],
+          'text-size': 12,
+        },
+      });
+    }
+  }
+
+
+  private addShopsUnclusterLayer(): void {
+    const shopUnclasteredLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.shopUnclusterLayerId);
+
+    if (shopUnclasteredLayer) {
+      shopUnclasteredLayer.source = this.shopsSourceName;
+    } else {
+      this.map.addLayer({
+        id: this.shopUnclusterLayerId,
+        type: 'circle',
+        source: this.shopsSourceName,
+        filter: [
+          '!',
+          [
+            'has',
+            'point_count'
+          ]
+        ],
+        paint: {
+          'circle-color': '#a16eff',
+          'circle-radius': 20
+        },
+      });
+    }
+  }
+
+  private addShopsUnclusterCountLayer(): void {
+    const shopUnclusterCountLayer: SymbolStyleLayer = <SymbolStyleLayer>this.map.getLayer(this.shopUnclusterCountLayerId);
+
+    if (shopUnclusterCountLayer) {
+      shopUnclusterCountLayer.source = this.shopsSourceName;
+    } else {
+      this.map.addLayer({
+        id: this.shopUnclusterCountLayerId,
+        type: 'symbol',
+        source: this.shopsSourceName,
+        filter: [
+          '!',
+          [
+            'has',
+            'point_count'
+          ]
+        ],
+        layout: {
+          'text-field': '1',
+          'text-font': [
+            'DIN Offc Pro Medium',
+            'Arial Unicode MS Bold'
+          ],
+          'text-size': 12,
+        },
+      });
+    }
+  }
+
+  private addShopsLayer(): void {
+    this.addShopsClusterLayer();
+    this.addShopsClusterCountLayer();
+    this.addShopsUnclusterLayer();
+    this.addShopsUnclusterCountLayer();
   }
 
   public removeRouteLayer(): void {
@@ -660,7 +784,9 @@ export class MapService {
    */
   public addProducts(products: Product[]): void {
     this.addProductsSource(products);
-    this.addProductLayers();
+    this.addProductsLayers();
+    this.setProductClusterClick();
+    this.setProductUnclusterClick();
   }
 
   /**
@@ -676,6 +802,8 @@ export class MapService {
   public addShops(shops: Shop[]): void {
     this.addShopsSource(shops);
     this.addShopsLayer();
+    this.setShopClusterClick();
+    this.setShopUnclusterClick();
   }
 
   /**
@@ -687,7 +815,6 @@ export class MapService {
     this.setMap(container);
     this.loadShopImage();
     this.addControls();
-    this.setClicks();
   }
 
   /**
