@@ -20,7 +20,7 @@ import {
   NavigationControl,
   SymbolStyleLayer
 } from 'maplibre-gl';
-import { FilterService } from '.';
+import { FilterService, ProductService } from '.';
 import { Product, Shop } from '@core/entities';
 import { IFeatureProps } from '../models/interfaces';
 import { ClearControl, LayersControl, PriceControl } from '../controls';
@@ -87,7 +87,8 @@ export class MapService {
 
   public currentLayer$: Subject<LayerType> = new Subject<LayerType>();
 
-  constructor(private readonly webSocketService: WebSocketService,
+  constructor(private readonly productService: ProductService,
+    private readonly webSocketService: WebSocketService,
     private readonly filterService: FilterService,
     private readonly resolver: ComponentFactoryResolver) { }
 
@@ -159,7 +160,7 @@ export class MapService {
    * @param {string} sourceName название источника данных
    * @memberof MapService
    */
-  private setUnclusterClick(sourceName: string): void {
+  private setUnclusterClick(sourceName: string, service: ProductService): void {
     const layerId: string = `${sourceName}-uncluster`;
     this.map.on('click', layerId, (e: MapLayerMouseEvent) => {
       const feature: Feature<Point, IFeatureProps> = <Feature<Point, IFeatureProps>>e.features?.[0];
@@ -167,6 +168,7 @@ export class MapService {
       const geometry: Point = feature?.geometry;
       const coordinates: [number, number] = <[number, number]>geometry?.coordinates?.slice();
       this.centerMap(coordinates);
+      service.productIdsToShow$.next([feature.properties.id]);
     });
   }
 
@@ -176,7 +178,7 @@ export class MapService {
    * @param {string} sourceName название источника данных
    * @memberof MapService
    */
-  private setClusterClick(sourceName: string): void {
+  private setClusterClick(sourceName: string, service: ProductService): void {
     const layerId: string = `${sourceName}-cluster`;
     this.map.on('click', layerId, (e: MapMouseEvent) => {
       const features: MapGeoJSONFeature[] = this.map.queryRenderedFeatures(e.point, {
@@ -185,7 +187,7 @@ export class MapService {
 
       const clusterId: number = features[0].properties['cluster_id'];
       const pointCount: number = features[0].properties['point_count'];
-      const source: GeoJSONSource | undefined = <GeoJSONSource | undefined>this.map.getSource(this.shopsSourceName);
+      const source: GeoJSONSource | undefined = <GeoJSONSource | undefined>this.map.getSource(sourceName);
 
       if (source) {
         source.getClusterExpansionZoom(clusterId, (error?: Error | null, zoom?: number | null) => {
@@ -200,6 +202,8 @@ export class MapService {
           if (error) return;
           const features: Feature<Point, IFeatureProps>[] = <Feature<Point, IFeatureProps>[]>data;
           console.log('getClusterLeaves', features)
+          const itemIds: string[] = features.map((feature: Feature<Point, IFeatureProps>) => feature.properties.id);
+          service.productIdsToShow$.next(itemIds);
         })
       }
       
@@ -518,9 +522,9 @@ export class MapService {
    * @param {string} sourceName название источника данных
    * @memberof MapService
    */
-  private setClusterLayersClicks(sourceName: string): void {
-    this.setClusterClick(sourceName);
-    this.setUnclusterClick(sourceName);
+  private setClusterLayersClicks(sourceName: string, service: ProductService): void {
+    this.setClusterClick(sourceName, service);
+    this.setUnclusterClick(sourceName, service);
   }
 
   /**
@@ -641,7 +645,6 @@ export class MapService {
   public addProducts(products: Product[]): void {
     this.addClusterSource<Product>(this.productsSourceName, products, this.mapProduct);
     this.addClusterLayers(this.productsSourceName);
-    this.setClusterLayersClicks(this.productsSourceName);
   }
 
   /**
@@ -652,7 +655,6 @@ export class MapService {
   public addShops(shops: Shop[]): void {
     this.addClusterSource<Shop>(this.shopsSourceName, shops, this.mapShop);
     this.addClusterLayers(this.shopsSourceName);
-    this.setClusterLayersClicks(this.shopsSourceName);
   }
 
   /**
@@ -663,6 +665,9 @@ export class MapService {
   public initMap(container: ElementRef<HTMLElement>): void {
     this.setMap(container);
     this.addControls();
+    // Установка кликов только 1 раз
+    this.setClusterLayersClicks(this.productsSourceName, this.productService);
+    this.setClusterLayersClicks(this.shopsSourceName, this.productService);
   }
 
   /**

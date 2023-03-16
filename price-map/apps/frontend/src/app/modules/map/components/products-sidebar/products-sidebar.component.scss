@@ -1,0 +1,35 @@
+@import "../../../../../assets/styles/mixins";
+
+.sidebar {
+  left: 0;
+  border: none;
+  border-right: 1px solid #13132b;
+  width: 20.5vw;
+
+  &__body {
+    flex-grow: 1;
+    flex-basis: fit-content;
+  }
+}
+
+.products {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+::ng-deep {
+  .sidebar {  
+    nb-card-footer {
+      transition: background-color .2s linear;
+
+      display: flex;
+      justify-content: center;
+
+      &:hover {
+        background-color: darken(#323259, 10%);
+        cursor: pointer;
+      }
+    }
+  }
+}

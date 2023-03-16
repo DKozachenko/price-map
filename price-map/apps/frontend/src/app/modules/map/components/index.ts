@@ -7,3 +7,5 @@ export { ProductMiniCardComponent } from './product-mini-card/product-mini-card.
 export { ClearControlComponent } from './clear-control/clear-control.component';
 export { LayersControlComponent } from './layers-control/layers-control.component';
 export { PriceControlComponent } from './price-control/price-control.component';
+export { ProductsSidebarComponent } from './products-sidebar/products-sidebar.component';
+export { ProductCardComponent } from './product-card/product-card.component';

@@ -1,0 +1,18 @@
+<nb-card *ngIf="product" class="product">
+  <nb-card-header>{{ product.name }}</nb-card-header>
+
+  <nb-card-body class="product__body">
+    <div class="product__body-img">
+      <img [src]="product.imagePath" alt="Изображение">
+    </div>
+
+    <span>Цена: {{ product.price }} р.</span>
+  </nb-card-body>
+
+  <nb-card-footer>
+    <nb-icon icon="close-outline"></nb-icon>
+  </nb-card-footer>
+</nb-card>
+
+
+

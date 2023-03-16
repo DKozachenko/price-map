@@ -7,6 +7,7 @@
       <div class="map" [class.loader]="isLoading" #map></div>
   
       <price-map-filter *ngIf="isShowFilter"></price-map-filter>
+      <price-map-products-sidebar *ngIf="isShowProductsSidebar"></price-map-products-sidebar>
   
       <price-map-route-review 
         *ngIf="isShowRouteReview"

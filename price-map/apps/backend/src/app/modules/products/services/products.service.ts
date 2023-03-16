@@ -488,4 +488,16 @@ export class ProductsService implements OnModuleInit {
         }))
       );
   }
+
+  /**
+   * Получение нескольких товаров по id
+   * @param {string[]} ids массив id
+   * @return {*}  {Observable<Product[]>} товары
+   * @memberof ProductsService
+   */
+  public getByIds(ids: string[]): Observable<Product[]> {
+    return from(this.productRepository.findBy({
+      id: In(ids)
+    }))
+  }
 }

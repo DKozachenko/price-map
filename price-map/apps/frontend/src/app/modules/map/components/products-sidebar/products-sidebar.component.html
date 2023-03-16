@@ -1,0 +1,18 @@
+<nb-card class="sidebar custom__map-card">
+  <nb-card-header>Товары</nb-card-header>
+
+  <nb-card-body class="sidebar__body custom__scroll custom__map-card__body">
+    <div class="products">
+      <map-product-card *ngFor="let product of products; trackBy: trackByProduct"
+        [product]="product"
+      ></map-product-card>
+    </div>
+    
+  </nb-card-body>
+
+  <nb-card-footer (click)="close()">
+    <nb-icon icon="close-outline"></nb-icon>
+  </nb-card-footer>
+</nb-card>
+
+

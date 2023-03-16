@@ -39,6 +39,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   public isShowRouteReview: boolean = false;
 
   public isShowFilter: boolean = true;
+  public isShowProductsSidebar: boolean = false;
   public isLoading: boolean = false;
 
   constructor(private readonly webSocketService: WebSocketService,
@@ -103,7 +104,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.productService.productIdsToRoute$
       .pipe(untilDestroyed(this))
-      .subscribe((data) => this.isShowRouteReview = data.size > 0);
+      .subscribe((data: Set<string>) => this.isShowRouteReview = data.size > 0);
+
+    this.productService.productIdsToShow$
+      .pipe(untilDestroyed(this))
+      .subscribe((data: string[]) => this.isShowProductsSidebar = !!data.length)
 
     this.filterService.loading$
       .pipe(untilDestroyed(this))

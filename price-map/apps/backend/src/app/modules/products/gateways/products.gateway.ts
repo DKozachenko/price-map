@@ -144,4 +144,44 @@ export class ProductsGateway {
         })
       );
   }
+
+  /**
+   * Получение товаров по id
+   * @param {string[]} ids массив id
+   * @return {*}  {(Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>>)} массив товаров
+   * @memberof ProductsGateway
+   */
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(JwtAuthGuard(ProductEvents.GetProductsByIdsFailed), RolesAuthGuard(ProductEvents.GetProductsByIdsFailed))
+  @SubscribeMessage(ProductEvents.GetProductsByIdsAttempt)
+  public getByIds(@MessageBody() ids: string[]): Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>> {
+    return this.productsService.getByIds(ids)
+      .pipe(
+        switchMap((product: Product[] | null) => {
+          return of({
+            event: ProductEvents.GetProductsByIdsSuccessed,
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: product,
+              message: 'Товары по id успешно получен'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'ProductsGateway');
+          return of({
+            event: ProductEvents.GetProductsByIdsFailed,
+            data: {
+              statusCode: 500,
+              errorCode: <DbErrorCode>'DB_ERROR',
+              isError: false,
+              data: null,
+              message: 'Ошибка при получении товаров по id'
+            }
+          });
+        })
+      );
+  }
 }

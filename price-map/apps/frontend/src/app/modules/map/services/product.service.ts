@@ -7,6 +7,7 @@ export class ProductService {
   public productIdsToRoute$: Subject<Set<string>> = new Subject<Set<string>>();
   public addProductIdToRoute$: ReplaySubject<string> = new ReplaySubject<string>(1);
   public deleteProductIdFromRoute$: Subject<string> = new Subject<string>();
+  public productIdsToShow$: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
 
   public addProductIdToRoute(id: string): void {
     this.productIdsToRoute.add(id);
