@@ -111,6 +111,8 @@ export class MapService {
 
   public currentLayer$: Subject<LayerType> = new Subject<LayerType>();
 
+  public colors = ['#fed976', '#feb24c', '#fd8d3c', '#fc4e2a', '#e31a1c'];
+
   constructor(private readonly productService: ProductService,
     private readonly webSocketService: WebSocketService,
     private readonly filterService: FilterService,
@@ -253,20 +255,29 @@ export class MapService {
       const features: MapGeoJSONFeature[] = this.map.queryRenderedFeatures(e.point, {
         layers: [this.clusterLayerId],
       });
+      console.log('features', features)
 
       const clusterId: number = features[0].properties['cluster_id'];
+      console.log('clusterId', clusterId)
       const source: GeoJSONSource | undefined = <GeoJSONSource | undefined>this.map.getSource(this.productsSourceName);
 
       source?.getClusterExpansionZoom(clusterId, (error?: Error | null, zoom?: number | null) => {
         if (error) return;
+        console.log(error, zoom)
 
         const geometry: Point = <Point>features?.[0]?.geometry;
         const coordinates: LngLatLike = <LngLatLike>geometry?.coordinates?.slice();
         this.map.easeTo({
           center: coordinates,
-          zoom: zoom ?? 1,
+          zoom: 15,
         });
       });
+
+      const pointCount = features[0].properties['point_count'];
+      console.log(pointCount)
+      source?.getClusterLeaves(clusterId, pointCount, 0, (error?: Error | null, features?: any) => {
+        console.log('getClusterLeaves', features)
+      })
     });
   }
 
@@ -336,11 +347,16 @@ export class MapService {
       const feature: Feature<Point, IProductInfo> = <Feature<Point, IProductInfo>>e.features?.[0];
       const geometry: Point = feature?.geometry;
       const coordinates: [number, number] = <[number, number]>geometry?.coordinates?.slice();
-      const featuresByCoordinates: Feature<Point, IProductInfo>[] = this.featuresByCoordinates(coordinates);
 
+      console.log(feature)
       while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
         coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
       }
+
+      this.map.easeTo({
+        center: coordinates,
+        zoom: 15,
+      });
 
       const content = this.createProductPopupDomContent(feature.properties);
       const popup: Popup = new Popup({ className: 'custom__popup' }).setLngLat(coordinates).setDOMContent(content);
@@ -435,7 +451,8 @@ export class MapService {
         features,
       },
       cluster: true,
-      clusterMaxZoom: 14,
+      //24 - максимальный зум для карты
+      clusterMaxZoom: 25,
       clusterRadius: 50,
     };
   }
