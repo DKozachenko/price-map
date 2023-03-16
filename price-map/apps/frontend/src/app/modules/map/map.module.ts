@@ -22,7 +22,8 @@ import { NbCardModule,
   NbSelectModule, 
   NbButtonModule, 
   NbListModule,
-  NbBadgeModule } from '@nebular/theme';
+  NbBadgeModule, 
+  NbSpinnerModule} from '@nebular/theme';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -52,6 +53,7 @@ import { SharedModule } from '../shared/shared.module';
     NbButtonModule,
     NbListModule,
     NbBadgeModule,
+    NbSpinnerModule,
     SharedModule
   ],
   providers: [

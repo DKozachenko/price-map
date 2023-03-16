@@ -29,6 +29,7 @@ export class FilterService {
   public filterValues$: Subject<IUserFilter[]> = new Subject<IUserFilter[]>();
 
   public currentPriceQuery$: Subject<IPriceQuery> = new Subject<IPriceQuery>();
+  public loading$: Subject<boolean> = new Subject<boolean>();
 
   public addPriceQuery(price: IPriceQuery): void {
     this.priceQuery = price;

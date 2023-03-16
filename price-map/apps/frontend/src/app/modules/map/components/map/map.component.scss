@@ -8,6 +8,23 @@
 
 .map {
   height: 100%;
+  width: 100%;
+
+  &.loader {
+    filter: blur(2px);
+  }
+}
+
+::ng-deep.container {
+  nb-spinner.size-medium  {
+    font-size: 9.5rem;
+  }
+
+  &.with_filter {
+    nb-spinner.size-medium {
+      left: 20.5vw;
+    }
+  }
 }
 
 ::ng-deep.nb-theme-cosmic nb-layout .layout .layout-container .content .columns nb-layout-column {

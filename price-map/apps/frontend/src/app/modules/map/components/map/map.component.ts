@@ -5,7 +5,7 @@ import { IResponseData, IProductQuery, IPriceQuery } from '@core/interfaces';
 import { NotificationService, WebSocketService } from '../../../../services';
 import { FilterService, MapService, ProductService } from '../../services';
 import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
-import { debounceTime } from 'rxjs';
+import { debounceTime, delay } from 'rxjs';
 import { LayerType } from '../../models/types';
 import { customCombineLastest } from '../operators';
 
@@ -40,8 +40,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   public isShowRouteReview: boolean = false;
 
   public isShowFilter: boolean = true;
-
-
+  public isLoading: boolean = false;
 
   constructor(private readonly webSocketService: WebSocketService,
     private readonly notificationService: NotificationService,
@@ -56,7 +55,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.webSocketService.on<IResponseData<Product[]>>(ProductEvents.GetProductsSuccessed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<Product[]>) => this.mapService.addProducts(response.data));
+      .subscribe((response: IResponseData<Product[]>) => {
+        this.mapService.addProducts(response.data)
+        this.filterService.loading$.next(false);
+      });
 
     this.webSocketService.on<IResponseData<number[][]>>(ExternalEvents.BuildRouteSuccessed)
       .pipe(untilDestroyed(this))
@@ -104,6 +106,12 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((data) => this.isShowRouteReview = data.size > 0);
 
+    this.filterService.loading$
+      .pipe(untilDestroyed(this))
+      .subscribe((loading: boolean) => {
+        this.isLoading = loading;
+      })
+
     customCombineLastest([
       this.filterService.chechedCategory3LevelIds$,
       this.filterService.currentPriceQuery$
@@ -111,15 +119,19 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       .pipe(untilDestroyed(this))
       .subscribe(([ids, priceQuery]: any[]) => {
         this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
-          category3LevelIds: [...ids],
+          category3LevelIds: ids ? [...ids] : [],
           filters: [],
           price: priceQuery ?? { max: null, min: null }
         });
+        this.filterService.loading$.next(true);
       });
   }
 
   public ngAfterViewInit() {
     this.mapService.initMap(this.mapContainer);
+    console.log(document.querySelectorAll('.maplibregl-ctrl-top-right'))
+    console.log(document.querySelectorAll('.maplibregl-ctrl-bottom-right'))
+    console.log(document.querySelectorAll('.maplibregl-ctrl-top-left'))
   }
 
   public ngOnDestroy() {
