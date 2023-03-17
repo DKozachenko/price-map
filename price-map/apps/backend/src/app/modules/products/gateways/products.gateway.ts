@@ -154,7 +154,8 @@ export class ProductsGateway {
   @Roles(Role.User, Role.Admin)
   @UseGuards(JwtAuthGuard(ProductEvents.GetProductsByIdsFailed), RolesAuthGuard(ProductEvents.GetProductsByIdsFailed))
   @SubscribeMessage(ProductEvents.GetProductsByIdsAttempt)
-  public getByIds(@MessageBody() ids: string[]): Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>> {
+  public getByIds(@MessageBody() ids: string[]): 
+    Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>> {
     return this.productsService.getByIds(ids)
       .pipe(
         switchMap((product: Product[] | null) => {

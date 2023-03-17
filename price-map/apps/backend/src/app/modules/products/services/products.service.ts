@@ -498,6 +498,6 @@ export class ProductsService implements OnModuleInit {
   public getByIds(ids: string[]): Observable<Product[]> {
     return from(this.productRepository.findBy({
       id: In(ids)
-    }))
+    }));
   }
 }

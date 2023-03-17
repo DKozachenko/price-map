@@ -12,12 +12,10 @@ import { HashService } from '../../services';
  * @class UsersModule
  */
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      User, 
-      Product
-    ], 'postgresConnect'),
-  ],
+  imports: [TypeOrmModule.forFeature([
+    User, 
+    Product
+  ], 'postgresConnect')],
   providers: [
     UsersService,
     HashService,
