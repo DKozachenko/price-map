@@ -65,7 +65,8 @@
         flex-grow: 1;
         justify-content: center;
 
-        &.in_route {
+        &.in_route,
+        &.favorite {
           svg {
             fill:#a16eff;
           }

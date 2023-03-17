@@ -1,4 +1,4 @@
-import { MessageBody,
+import { ConnectedSocket, MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WsResponse } from '@nestjs/websockets';
@@ -14,6 +14,9 @@ import { UsersService } from '../services';
 import { HashService } from '../../../services';
 import { IPartialData } from '../../../models/interfaces';
 import { Not } from 'typeorm';
+import { Socket } from 'net';
+import { JwtService } from '@nestjs/jwt';
+import { secretKey } from '../../../models/constants';
 
 /**
  * Шлюз пользователей
@@ -27,10 +30,11 @@ import { Not } from 'typeorm';
 })
 export class UsersGateway {
   constructor (private readonly usersService: UsersService,
-    private readonly hashService: HashService) {}
+    private readonly hashService: HashService,
+    private readonly jwtService: JwtService) {}
 
   /**
-   * Получение ползователя по id
+   * Получение пользователя по id
    * @param {string} id id
    * @return {*}  {(Observable<WsResponse<IResponseData<User | null, DbErrorCode | null>>>)} пользователь
    * @memberof UsersGateway
@@ -41,7 +45,7 @@ export class UsersGateway {
   @SubscribeMessage(UserEvents.GetUserAttempt)
   public getUserById(@MessageBody() id: string): 
     Observable<WsResponse<IResponseData<User | null, DbErrorCode | null>>> {
-    return this.usersService.getByQuery({ id })
+    return this.usersService.getByQuery({ id }, true)
       .pipe(
         switchMap((user: User) => {
           return of({
@@ -204,6 +208,55 @@ export class UsersGateway {
               isError: true,
               data: null,
               message: partialData?.message ?? 'Неизвестная ошибка'
+            }
+          });
+        })
+      );
+  }
+
+  /**
+   * Обновление связанных товаров
+   * @param {string[]} productIds id товаров
+   * @param {Socket} client подсоединенный клиент
+   * @return {*}  {(Observable<WsResponse<IResponseData<User | null, DbErrorCode | null>>>)} пользователь с обновленными товарами
+   * @memberof UsersGateway
+   */
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(JwtAuthGuard(UserEvents.UpdateFavoriteProductsFailed), 
+    RolesAuthGuard(UserEvents.UpdateFavoriteProductsFailed))
+  @SubscribeMessage(UserEvents.UpdateFavoriteProductsAttempt)
+  public updateFavoriteProducts(@MessageBody() productIds: string[], @ConnectedSocket() client: Socket): 
+    Observable<WsResponse<IResponseData<User | null, DbErrorCode | null>>> {
+    const token: string = client['handshake']?.auth?.token;
+    const tokenWithoutBearer: string = token.split(' ')?.[1];
+    const userId: string = this.jwtService.verify(tokenWithoutBearer, {
+      secret: secretKey
+    })?.userId;
+
+    return this.usersService.updateFavoriteProducts(userId, productIds)
+      .pipe(
+        switchMap((user: User) => {
+          return of({
+            event: UserEvents.UpdateFavoriteProductsSuccessed,
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: user,
+              message: 'Товар успешно добавлен в избранное'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'UsersGateway');
+          return of({
+            event: UserEvents.UpdateFavoriteProductsFailed,
+            data: {
+              statusCode: 500,
+              errorCode: <DbErrorCode>'DB_ERROR',
+              isError: false,
+              data: null,
+              message: 'Ошибка при добавлении товара в избранное'
             }
           });
         })

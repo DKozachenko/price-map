@@ -61,7 +61,7 @@ export class RouteReviewComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Product>) => {
         this.products.push(response.data);
-        this.productsService.productAction$.next({ id: response.data.id, action: 'route', direction: 'add' });
+        this.productsService.productAction$.next({ id: response.data.id, name: 'route', direction: 'add' });
       });
 
     this.productsService.addProductIdToRoute$
@@ -72,7 +72,7 @@ export class RouteReviewComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((id: string) => {
         this.products = this.products.filter((product: Product) => product.id !== id);
-        this.productsService.productAction$.next({ id, action: 'route', direction: 'remove' });
+        this.productsService.productAction$.next({ id, name: 'route', direction: 'remove' });
       });
   }
   /**

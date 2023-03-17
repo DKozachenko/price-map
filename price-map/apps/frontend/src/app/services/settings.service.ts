@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { User } from '@core/entities';
 import { Subject } from 'rxjs';
 
 /**
@@ -8,6 +9,8 @@ import { Subject } from 'rxjs';
  */
 @Injectable()
 export class SettingsService {
+  public currentUser: User;
+
   /**
    * Обновление пользователя
    * @type {Subject<void>}

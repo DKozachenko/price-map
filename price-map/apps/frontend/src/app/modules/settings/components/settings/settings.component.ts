@@ -55,11 +55,11 @@ export class SettingsComponent implements OnInit {
         this.notificationService.showError(response.message);
       });
 
-    this.webSocketService.on<IResponseData<Partial<User>>>(UserEvents.UpdateUserSuccessed)
+    this.webSocketService.on<IResponseData<Omit<User, 'password'> & { password?: string }>>(UserEvents.UpdateUserSuccessed)
       .pipe(
         untilDestroyed(this)
       )
-      .subscribe((response: IResponseData<Partial<User> >) => {
+      .subscribe((response: IResponseData<Omit<User, 'password'> & { password?: string }>) => {
         this.settingsService.updateUser$.next();
         this.notificationService.showSuccess(response.message);
       });

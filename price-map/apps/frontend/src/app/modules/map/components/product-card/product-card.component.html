@@ -11,7 +11,12 @@
 
   <nb-card-footer>
     <nb-actions>
-      <nb-action icon="heart-outline" nbTooltip="Добавить в изранное"></nb-action>
+      <nb-action 
+        icon="heart-outline" 
+        [class.favorite]="isFavorite"
+        [nbTooltip]="isFavorite ? 'Убрать из избраного' : 'Добавить в избраное'" 
+        (click)="favoriteAction()"
+      ></nb-action>
       <nb-action 
         icon="car-outline"
         [class.in_route]="isInRoute"

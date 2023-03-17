@@ -3,7 +3,7 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { secretKey } from '../../models/constants';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '@core/entities';
+import { Product, User } from '@core/entities';
 import { UsersService } from '../users/services';
 import { HashService } from '../../services';
 import { AuthGateway } from './gateways';
@@ -15,7 +15,10 @@ import { AuthGateway } from './gateways';
  */
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User], 'postgresConnect'),
+    TypeOrmModule.forFeature([
+      User, 
+      Product
+    ], 'postgresConnect'),
     PassportModule,
     JwtModule.register({
       secret: secretKey,

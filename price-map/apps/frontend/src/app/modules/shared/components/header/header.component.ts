@@ -49,6 +49,7 @@ export class HeaderComponent implements OnInit {
       )
       .subscribe((response: IResponseData<User>) => {
         this.currentUser = response.data;
+        this.settingsService.currentUser = response.data;
       });
 
     this.webSocketService.emit<string>(UserEvents.GetUserAttempt, this.userId);

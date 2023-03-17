@@ -10,4 +10,7 @@ export enum UserEvents {
   UpdateUserAttempt = 'update user attempt',
   UpdateUserFailed = 'update user failed',
   UpdateUserSuccessed = 'update user successed',
+  UpdateFavoriteProductsAttempt = 'update favorite products attempt',
+  UpdateFavoriteProductsFailed = 'update favorite products failed',
+  UpdateFavoriteProductsSuccessed = 'update favorite products successed',
 }

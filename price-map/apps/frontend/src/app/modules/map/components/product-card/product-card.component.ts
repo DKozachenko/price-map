@@ -1,10 +1,10 @@
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Product } from '@core/entities';
 import { ProductService } from '../../services';
-import { WebSocketService } from './../../../../services';
-import { IResponseData } from '@core/interfaces';
-import { ProductEvents } from '@core/enums';
+import { SettingsService, WebSocketService } from './../../../../services';
+import { UserEvents } from '@core/enums';
+import { IAction } from '../../models/interfaces';
 
 @UntilDestroy()
 @Component({
@@ -15,18 +15,24 @@ import { ProductEvents } from '@core/enums';
 export class ProductCardComponent implements OnInit {
   @Input() public product: Product | null = null;
   public isInRoute: boolean = false;
+  public isFavorite: boolean = false;
 
-  constructor (private readonly productService: ProductService) {}
+  constructor (private readonly productService: ProductService,
+    private readonly webSocketService: WebSocketService) {}
 
   public ngOnInit(): void {
     this.isInRoute = [...this.productService.productIdsToRoute].includes(this.product?.id ?? '');
+    this.isFavorite = [...this.productService.favoriteProductIds].includes(this.product?.id ?? '');
 
     this.productService.productAction$
       .pipe(untilDestroyed(this))
-      .subscribe((data: { id: string, action: string, direction: string }) => {
-        if (data.id === this.product?.id) {
-          if (data.action === 'route') {
-            this.isInRoute = data.direction === 'add';
+      .subscribe((action: IAction) => {
+        if (action.id === this.product?.id) {
+          if (action.name === 'route') {
+            this.isInRoute = action.direction === 'add';
+          }
+          if (action.name === 'favorite') { 
+            this.isFavorite = action.direction === 'add';
           }
         }
       })
@@ -38,5 +44,15 @@ export class ProductCardComponent implements OnInit {
     } else {
       this.productService.deleteProductIdFromRoute(this.product?.id ?? '');
     }
+  }
+
+  public favoriteAction(): void {
+    if (!this.isFavorite) {
+      this.productService.favoriteProductIds.add(this.product?.id ?? '');
+    } else {
+      this.productService.favoriteProductIds.delete(this.product?.id ?? '');
+    }
+
+    this.webSocketService.emit<string[]>(UserEvents.UpdateFavoriteProductsAttempt, [...this.productService.favoriteProductIds]);
   }
 }
