@@ -88,4 +88,17 @@ export class UsersService {
         })))
       );
   }
+
+  /**
+   * Получение всех пользователей
+   * @return {*}  {Observable<User[]>} пользователи
+   * @memberof UsersService
+   */
+  public getAll(): Observable<User[]> {
+    return from(this.userRepository.find({
+      relations: {
+        products: true
+      }
+    }));
+  }
 }

@@ -152,6 +152,7 @@ body {
 .button {
   margin-top: 0;
   width: 100%;
+  letter-spacing: 0.2rem;
 }
 
 .auth,
@@ -225,4 +226,23 @@ nb-toast {
 
 nb-tooltip .content {
   @include font(1.2rem, black, 400);
+}
+
+//Стили для отдельного модуля (секции)
+.section {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__body {
+    max-width: 60rem;
+
+    &-title {
+      @include font(3.5rem, #a16eff);
+      text-align: center;
+  
+      margin-bottom: 2.5rem;
+    }
+  }
 }

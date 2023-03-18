@@ -3,9 +3,9 @@
     <app-header></app-header>
   </nb-layout-header>
   <nb-layout-column>
-    <div class="setting favorite">
-      <div class="setting__body">
-        <h3 class="setting__body-title">Избранное</h3>
+    <div class="section">
+      <div class="section__body">
+        <h3 class="section__body-title">Избранное</h3>
 
         <ng-container *ngIf="!!favoriteProducts.length; else noProducts">
           <div class="favorite__products custom__scroll">
@@ -16,7 +16,7 @@
         </ng-container>
           
         <ng-template #noProducts>
-          <p>Нет товаров в избранном</p>
+          <p class="favorite__products-hint">Нет товаров в избранном</p>
         </ng-template>
       </div>
     </div>

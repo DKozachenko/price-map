@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Product } from '@core/entities';
 import { UserEvents } from '@core/enums';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { WebSocketService, SettingsService, ProductService } from '../../../../services';
+import { WebSocketService, ProductService } from '../../../../services';
 
 @UntilDestroy()
 @Component({
@@ -14,7 +14,6 @@ export class FavoriteItemComponent {
   @Input() product: Product | null = null;
 
   constructor(private readonly webSocketService: WebSocketService,
-    private readonly settingService: SettingsService,
     private readonly productService: ProductService) {}
 
   public remove(): void {

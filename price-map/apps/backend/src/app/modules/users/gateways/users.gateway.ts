@@ -68,7 +68,7 @@ export class UsersGateway {
               errorCode: <DbErrorCode>'DB_ERROR',
               isError: false,
               data: null,
-              message: 'Ошибка при получения пользователя'
+              message: 'Ошибка при получении пользователя'
             }
           });
         })
@@ -257,6 +257,45 @@ export class UsersGateway {
               isError: false,
               data: null,
               message: 'Ошибка при добавлении товара в избранное'
+            }
+          });
+        })
+      );
+  }
+
+  /**
+   * Получение всех пользователей
+   * @return {*}  {(Observable<WsResponse<IResponseData<User[] | null, DbErrorCode | null>>>)} пользователи
+   * @memberof UsersGateway
+   */
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard(UserEvents.GetUsersFailed), RolesAuthGuard(UserEvents.GetUsersFailed))
+  @SubscribeMessage(UserEvents.GetUsersAttempt)
+  public getUsers(): Observable<WsResponse<IResponseData<User[] | null, DbErrorCode | null>>> {
+    return this.usersService.getAll()
+      .pipe(
+        switchMap((users: User[]) => {
+          return of({
+            event: UserEvents.GetUsersSuccessed,
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: users,
+              message: 'Пользователи успешно получены'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'UsersGateway');
+          return of({
+            event: UserEvents.GetUsersFailed,
+            data: {
+              statusCode: 500,
+              errorCode: <DbErrorCode>'DB_ERROR',
+              isError: false,
+              data: null,
+              message: 'Ошибка при получении пользователей'
             }
           });
         })

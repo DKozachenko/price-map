@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { AdminComponent } from './components';
+import { UserListComponent } from './components';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'admin',
-    component: AdminComponent
+    component: UserListComponent
   },
   {
     path: '**',
