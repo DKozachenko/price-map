@@ -335,8 +335,8 @@ export class ProductsService implements OnModuleInit {
     const whereSql: string = this.generateWhereSql(query.price);
     return `${withSql}
     SELECT p."id", p."name", p."description", p."price", p."characteristics", p."imagePath",
-    json_build_object('id', s."id", 'name', s."name", 'schedule', s."schedule", 'imagePath',
-    s."imagePath", 'coordinates', s."coordinates") AS shop,
+    json_build_object('id', s."id", 'name', s."name", 'osmNodeId', s."osmNodeId", 'website',
+    s."website", 'coordinates', s."coordinates") AS shop,
     json_build_object('id', cl."id", 'name', cl."name", 'filters', cl."filters") AS category3Level
     FROM approachIds
     INNER JOIN "Products" p ON approachIds."id" = p."id"
@@ -496,8 +496,14 @@ export class ProductsService implements OnModuleInit {
    * @memberof ProductsService
    */
   public getByIds(ids: string[]): Observable<Product[]> {
-    return from(this.productRepository.findBy({
-      id: In(ids)
+    return from(this.productRepository.find({
+      where: {
+        id: In(ids)
+      },
+      relations: {
+        shop: true,
+        category3Level: true
+      }
     }));
   }
 }

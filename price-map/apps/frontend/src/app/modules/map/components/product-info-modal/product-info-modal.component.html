@@ -1,0 +1,42 @@
+<nb-card *ngIf="product" class="product info">
+  <nb-card-header>
+    <p>{{ product.name }} <sub>({{ product.category3Level.name }})</sub></p>
+
+    <nb-icon icon="close-outline" (click)="close()"></nb-icon>
+  </nb-card-header>
+
+  <nb-card-body class="product__body custom__scroll">
+    <div class="product__body-img">
+      <img [src]="product.imagePath" alt="Изображение товара">
+    </div>
+
+    <div class="product__body-info">
+      <p>{{ product.description ? product.description : 'Нет описания' }}</p>
+      <p>Цена: {{ product.price }} р. из 
+        <ng-container *ngIf="product.shop.website; else noWebsite">
+          <a [href]="product.shop.website" target="_blank">{{ product.shop.name }}</a>
+        </ng-container>
+        <ng-template #noWebsite>
+          <span>{{ product.shop.name }}</span>
+        </ng-template>
+      </p>
+    </div>    
+  </nb-card-body>
+
+  <nb-card-footer class="product__body-characteristics">
+    <p *ngFor="let characteristic of product.characteristics; trackBy: trackByCharacteristic">
+      <span>{{ characteristic.name }}:</span>
+      <!-- Очень тупой хак на проверку является ли значение булевым -->
+      <ng-container *ngIf="!!characteristic.value === characteristic.value; else notBooleanValue">
+        {{ characteristic.value ? 'Да' : 'Нет' }}
+      </ng-container>
+      <ng-template #notBooleanValue>
+        {{ characteristic.value }}
+      </ng-template>
+    </p>
+  </nb-card-footer>
+</nb-card>
+
+
+
+

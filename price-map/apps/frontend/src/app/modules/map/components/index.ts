@@ -9,3 +9,4 @@ export { LayersControlComponent } from './layers-control/layers-control.componen
 export { PriceControlComponent } from './price-control/price-control.component';
 export { ProductsSidebarComponent } from './products-sidebar/products-sidebar.component';
 export { ProductCardComponent } from './product-card/product-card.component';
+export { ProductInfoModalComponent } from './product-info-modal/product-info-modal.component';

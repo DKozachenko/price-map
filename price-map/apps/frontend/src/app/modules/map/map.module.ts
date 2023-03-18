@@ -10,7 +10,8 @@ import { CharacteristicFilterComponent,
   LayersControlComponent,
   PriceControlComponent,
   ProductsSidebarComponent,
-  ProductCardComponent
+  ProductCardComponent,
+  ProductInfoModalComponent
 } from './components';
 import { MapRoutingModule } from './map-routing.module';
 import { FilterService, MapService, ProductService } from './services';
@@ -26,7 +27,9 @@ import { NbCardModule,
   NbBadgeModule, 
   NbSpinnerModule,
   NbActionsModule,
-  NbTooltipModule} from '@nebular/theme';
+  NbTooltipModule,
+  NbDialogService,
+  NbDialogModule} from '@nebular/theme';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -41,7 +44,8 @@ import { SharedModule } from '../shared/shared.module';
     LayersControlComponent,
     PriceControlComponent,
     ProductsSidebarComponent,
-    ProductCardComponent
+    ProductCardComponent,
+    ProductInfoModalComponent
   ],
   imports: [
     CommonModule,
@@ -59,9 +63,15 @@ import { SharedModule } from '../shared/shared.module';
     NbSpinnerModule,
     NbActionsModule,
     NbTooltipModule,
+    NbDialogModule.forChild({
+      closeOnBackdropClick: false,
+      hasBackdrop: true,
+      hasScroll: true
+    }),
     SharedModule
   ],
   providers: [
+    NbDialogService,
     MapService,
     FilterService,
     ProductService,

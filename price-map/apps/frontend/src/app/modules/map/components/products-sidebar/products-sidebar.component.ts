@@ -39,6 +39,8 @@ export class ProductsSidebarComponent implements OnInit {
     this.webSocketService.on<IResponseData<User>>(UserEvents.UpdateFavoriteProductsSuccessed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<User>) => {
+        // Если в ответе больше избранных, соответственно произошло добавление
+        // если меньше, соответственно произошло удаление
         if (response.data.products.length > this.settingService.currentUser.products.length) {
           for (const product of response.data.products) {
             if (!this.settingService.currentUser.products.map((product: Product) => product.id).includes(product.id)) {

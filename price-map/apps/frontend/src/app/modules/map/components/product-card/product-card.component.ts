@@ -5,6 +5,8 @@ import { ProductService } from '../../services';
 import { SettingsService, WebSocketService } from './../../../../services';
 import { UserEvents } from '@core/enums';
 import { IAction } from '../../models/interfaces';
+import { NbDialogService } from '@nebular/theme';
+import { ProductInfoModalComponent } from '..';
 
 @UntilDestroy()
 @Component({
@@ -18,7 +20,8 @@ export class ProductCardComponent implements OnInit {
   public isFavorite: boolean = false;
 
   constructor (private readonly productService: ProductService,
-    private readonly webSocketService: WebSocketService) {}
+    private readonly webSocketService: WebSocketService,
+    private readonly dialogService: NbDialogService) {}
 
   public ngOnInit(): void {
     this.isInRoute = [...this.productService.productIdsToRoute].includes(this.product?.id ?? '');
@@ -54,5 +57,13 @@ export class ProductCardComponent implements OnInit {
     }
 
     this.webSocketService.emit<string[]>(UserEvents.UpdateFavoriteProductsAttempt, [...this.productService.favoriteProductIds]);
+  }
+
+  public openInfoDialog(): void {
+    this.dialogService.open<ProductInfoModalComponent>(ProductInfoModalComponent, {
+      context: {
+        product: this.product
+      },
+    });
   }
 }

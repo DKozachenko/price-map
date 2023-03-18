@@ -23,7 +23,7 @@
         [nbTooltip]="isInRoute ? 'Убрать из маршрута' : 'Добавить в маршрут'" 
         (click)="routeAction()"
       ></nb-action>
-      <nb-action icon="info-outline" nbTooltip="Подробнее"></nb-action>
+      <nb-action icon="info-outline" nbTooltip="Подробнее" (click)="openInfoDialog()"></nb-action>
     </nb-actions>
   </nb-card-footer>
 </nb-card>
