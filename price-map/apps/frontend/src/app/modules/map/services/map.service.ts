@@ -20,6 +20,8 @@ import {
   NavigationControl,
   SymbolStyleLayer
 } from 'maplibre-gl';
+import * as maplibreGl from 'maplibre-gl-draw-circle';
+import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import { FilterService, ShopService } from '.';
 import { Product, Shop } from '@core/entities';
 import { IFeatureProps } from '../models/interfaces';
@@ -153,6 +155,23 @@ export class MapService {
     const layersControl: LayersControl = new LayersControl(this.resolver, this, this.webSocketService);
     this.map.addControl(layersControl, 'top-left');
     this.addPriceControl();
+
+    const draw = new MapboxDraw({
+      defaultMode: "draw_circle",
+      userProperties: true,
+      modes: {
+        ...MapboxDraw.modes,
+        draw_circle  : maplibreGl.CircleMode,
+        drag_circle  : maplibreGl.DragCircleMode,
+        direct_select: maplibreGl.DirectMode,
+        simple_select: maplibreGl.SimpleSelectMode
+      }
+    });
+    // console.log(draw)
+    // draw.changeMode('draw_circle', { initialRadiusInKm: 1 });
+    
+    // this.map.addControl(<IControl><unknown>draw);
+    
   }
 
   /**
