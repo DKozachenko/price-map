@@ -16,4 +16,7 @@ export enum UserEvents {
   GetUsersAttempt = 'get users attempt',
   GetUsersFailed = 'get users failed',
   GetUsersSuccessed = 'get users successed',
+  DeleteUserAttempt = 'delete user attempt',
+  DeleteUserFailed = 'delete user failed',
+  DeleteUserSuccessed = 'delete user successed',
 }

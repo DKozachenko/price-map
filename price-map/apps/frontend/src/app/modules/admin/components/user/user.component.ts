@@ -1,9 +1,8 @@
-import { SettingsService } from './../../../../services';
+import { SettingsService, WebSocketService } from './../../../../services';
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from '@core/entities';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UserEvents } from '@core/enums';
 
-@UntilDestroy()
 @Component({
   selector: 'price-map-user',
   templateUrl: './user.component.html',
@@ -13,13 +12,14 @@ export class UserComponent implements OnInit {
   @Input() user: User | null = null;
   public isCurrentUser: boolean = false;
 
-  constructor(private readonly settingsService: SettingsService) {}
+  constructor(private readonly settingsService: SettingsService,
+    private readonly webSocketService: WebSocketService) {}
 
   public ngOnInit(): void {
     this.isCurrentUser = this.settingsService.currentUser.id === this.user?.id;
   }
 
   public remove(): void {
-    
+    this.webSocketService.emit<string>(UserEvents.DeleteUserAttempt, this.user?.id ?? '');
   }
 }

@@ -24,10 +24,15 @@ export class UserListComponent implements OnInit {
 
     this.webSocketService.on<IResponseData<User[]>>(UserEvents.GetUsersSuccessed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<User[]>) => {
-        this.users = response.data;
-        console.log(this.users)
-      });
+      .subscribe((response: IResponseData<User[]>) => this.users = response.data);
+
+    this.webSocketService.on<IResponseData<null>>(UserEvents.DeleteUserFailed)
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+
+    this.webSocketService.on<IResponseData<string>>(UserEvents.DeleteUserSuccessed)
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<string>) => this.webSocketService.emit<null>(UserEvents.GetUsersAttempt, null));
 
     this.webSocketService.emit<null>(UserEvents.GetUsersAttempt, null);
   }

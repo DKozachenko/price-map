@@ -301,4 +301,46 @@ export class UsersGateway {
         })
       );
   }
+
+  /**
+   * Удаление пользователя по id
+   * @param {string} id id
+   * @return {*}  {(Observable<WsResponse<IResponseData<number | null, DbErrorCode | null>>>)} кол-во затронутых записей
+   * @memberof UsersGateway
+   */
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard(UserEvents.DeleteUserFailed), RolesAuthGuard(UserEvents.DeleteUserFailed))
+  @SubscribeMessage(UserEvents.DeleteUserAttempt)
+  public deleteUser(@MessageBody() id: string): Observable<WsResponse<IResponseData<number | null, DbErrorCode | null>>> {
+    return this.usersService.deleteById(id)
+      .pipe(
+        switchMap((affectedRows: number) => {
+          Logger.warn(`Deleting user: ${affectedRows} rows`, 'UsersGateway');
+
+          return of({
+            event: UserEvents.DeleteUserSuccessed,
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: affectedRows,
+              message: 'Пользователь успешно удален'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'UsersGateway');
+          return of({
+            event: UserEvents.DeleteUserFailed,
+            data: {
+              statusCode: 500,
+              errorCode: <DbErrorCode>'DB_ERROR',
+              isError: false,
+              data: null,
+              message: 'Ошибка при удалении пользователя'
+            }
+          });
+        })
+      );
+  }
 }

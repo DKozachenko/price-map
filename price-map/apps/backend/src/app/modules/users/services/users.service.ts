@@ -2,7 +2,7 @@ import { Observable, of, switchMap, from } from 'rxjs';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product, User } from '@core/entities';
-import { FindOptionsWhere, In, Repository, UpdateResult } from 'typeorm';
+import { FindOptionsWhere, In, Repository, UpdateResult, DeleteResult } from 'typeorm';
 
 /**
  * Сервис пользователей
@@ -100,5 +100,18 @@ export class UsersService {
         products: true
       }
     }));
+  }
+
+  /**
+   * Удаление по id
+   * @param {string} id id
+   * @return {*}  {Observable<number>} кол-во затронутых записей
+   * @memberof UsersService
+   */
+  public deleteById(id: string): Observable<number> {
+    return from(this.userRepository.delete({ id }))
+      .pipe(
+        switchMap((result: DeleteResult) => of(result.affected))
+      )
   }
 }
