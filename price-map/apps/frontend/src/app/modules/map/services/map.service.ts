@@ -20,11 +20,11 @@ import {
   NavigationControl,
   SymbolStyleLayer
 } from 'maplibre-gl';
-import { FilterService, ProductService, ShopService } from '.';
+import { FilterService, ShopService } from '.';
 import { Product, Shop } from '@core/entities';
 import { IFeatureProps } from '../models/interfaces';
 import { ClearControl, LayersControl, PriceControl } from '../controls';
-import { WebSocketService } from '../../../services';
+import { ProductService, WebSocketService } from '../../../services';
 import { LayerType } from '../models/types';
 
 /**

@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routing-module';
 import { appInitializer } from './initializers';
-import { NotificationService, TokenService, WebSocketService, SettingsService } from './services';
+import { NotificationService, TokenService, WebSocketService, SettingsService, ProductService } from './services';
 import { HttpClientModule } from '@angular/common/http';
 import { NbThemeModule, NbToastrModule, NbToastrService, NbIconModule, NbLayoutModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
@@ -16,6 +16,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { SharedModule } from './modules/shared/shared.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { SettingsModule } from './modules/settings/settings.module';
+import { FavoriteModule } from './modules/favorite/favorite.module';
 
 /**
  * Главный модуль приложения
@@ -44,6 +45,7 @@ import { SettingsModule } from './modules/settings/settings.module';
     MapModule,
     SettingsModule,
     AdminModule,
+    FavoriteModule,
     SharedModule
   ],
   providers: [
@@ -60,7 +62,8 @@ import { SettingsModule } from './modules/settings/settings.module';
     NbToastrService,
     NotificationService,
     CookieService,
-    SettingsService
+    SettingsService,
+    ProductService
   ],
   bootstrap: [AppComponent],
 })

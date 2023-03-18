@@ -45,6 +45,21 @@ const routes: Routes = [
     title: 'Настройки'
   },
   {
+    path: 'favorite',
+    canActivate: [
+      AuthGuard,
+      RolesGuard
+    ],
+    data: {
+      roles: [
+        Role.User,
+        Role.Admin
+      ]
+    },
+    loadChildren: () => import('./modules/favorite/favorite.module').then(m => m.FavoriteModule),
+    title: 'Избранное'
+  },
+  {
     path: 'admin',
     canActivate: [
       AuthGuard,

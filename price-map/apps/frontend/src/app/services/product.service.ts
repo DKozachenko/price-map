@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
-import { IAction } from '../models/interfaces';
+import { IAction } from '../modules/map/models/interfaces';
 
 @Injectable()
 export class ProductService {

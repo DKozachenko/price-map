@@ -1,7 +1,6 @@
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Component, OnInit } from '@angular/core';
-import { NotificationService, SettingsService, WebSocketService } from '../../../../services';
-import { ProductService } from '../../services';
+import { NotificationService, ProductService, SettingsService, WebSocketService } from '../../../../services';
 import { Product, User } from '@core/entities';
 import { IResponseData } from '@core/interfaces';
 import { ProductEvents, UserEvents } from '@core/enums';
@@ -39,6 +38,7 @@ export class ProductsSidebarComponent implements OnInit {
     this.webSocketService.on<IResponseData<User>>(UserEvents.UpdateFavoriteProductsSuccessed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<User>) => {
+        console.log(1123213)
         // Если в ответе больше избранных, соответственно произошло добавление
         // если меньше, соответственно произошло удаление
         if (response.data.products.length > this.settingService.currentUser.products.length) {

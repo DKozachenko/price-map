@@ -1,0 +1,30 @@
+@import "../../../../../assets/styles/mixins";
+
+.setting {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__body {
+    max-width: 60rem;
+
+    &-title {
+      @include font(3.5rem, #a16eff);
+      text-align: center;
+  
+      margin-bottom: 2.5rem;
+    }
+
+    p {
+      @include font(2.5rem, white);
+    }
+  }
+}
+
+.favorite__products {
+  max-height: 80vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: .4rem;
+}

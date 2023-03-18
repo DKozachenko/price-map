@@ -1,0 +1,24 @@
+<nb-layout>
+  <nb-layout-header class="header">
+    <app-header></app-header>
+  </nb-layout-header>
+  <nb-layout-column>
+    <div class="setting favorite">
+      <div class="setting__body">
+        <h3 class="setting__body-title">Избранное</h3>
+
+        <ng-container *ngIf="!!favoriteProducts.length; else noProducts">
+          <div class="favorite__products custom__scroll">
+            <price-map-favorite-item *ngFor="let product of favoriteProducts; trackBy: trackByProduct"
+              [product]="product"
+            ></price-map-favorite-item>
+          </div>
+        </ng-container>
+          
+        <ng-template #noProducts>
+          <p>Нет товаров в избранном</p>
+        </ng-template>
+      </div>
+    </div>
+  </nb-layout-column>
+</nb-layout>

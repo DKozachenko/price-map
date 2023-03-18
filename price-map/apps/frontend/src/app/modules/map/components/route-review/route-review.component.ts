@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Product } from '@core/entities';
-import { NotificationService, WebSocketService } from '../../../../services';
-import { ProductService } from '../../services';
+import { NotificationService, ProductService, WebSocketService } from '../../../../services';
 import { ICoordinates, IResponseData } from '@core/interfaces';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ExternalEvents, ProductEvents } from '@core/enums';

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Product } from '@core/entities';
-import { ProductService } from '../../services';
+import { ProductService } from '../../../../services';
 
 /**
  * Компонент карточки товара для отображения в маршруте
