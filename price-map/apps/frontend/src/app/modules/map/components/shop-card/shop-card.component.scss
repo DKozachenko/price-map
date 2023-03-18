@@ -1,46 +1,25 @@
 @import "../../../../../assets/styles/mixins";
 
 :host {
-  flex-basis: 48%;
-  max-width: 48%;
+  flex-basis: 32%;
+  max-width: 32%;
 
   display: flex;
 }
 
-.product {
+.shop {
   border: 1px solid white;
-  min-height: 30rem;
-
-  &__body {
-    span {
-      @include font(1.3rem, white, 400);
-    }
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    &-img {
-      max-height: 12rem;
-      margin-bottom: 1rem;
-
-      img {
-        display: block;
-        object-fit: cover;
-        height: 100%;
-      }
-    }
-  } 
+  width: 100%;
 }
 
 ::ng-deep {
-  .product {
+  .shop {
     nb-card-header {
       @include font(1.3rem, white, 700);
       text-overflow: ellipsis;
       word-break: break-word;
       border-bottom-color: white;
+      border-bottom: 0;
     }
   
     nb-card-footer {

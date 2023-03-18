@@ -11,3 +11,4 @@ export { ProductsSidebarComponent } from './products-sidebar/products-sidebar.co
 export { ProductCardComponent } from './product-card/product-card.component';
 export { ProductInfoModalComponent } from './product-info-modal/product-info-modal.component';
 export { ShopsSidebarComponent } from './shops-sidebar/shops-sidebar.component';
+export { ShopCardComponent } from './shop-card/shop-card.component';

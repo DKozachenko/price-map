@@ -12,7 +12,8 @@ import { CharacteristicFilterComponent,
   ProductsSidebarComponent,
   ProductCardComponent,
   ProductInfoModalComponent,
-  ShopsSidebarComponent
+  ShopsSidebarComponent,
+  ShopCardComponent
 } from './components';
 import { MapRoutingModule } from './map-routing.module';
 import { FilterService, MapService, ProductService, ShopService } from './services';
@@ -47,7 +48,8 @@ import { SharedModule } from '../shared/shared.module';
     ProductsSidebarComponent,
     ProductCardComponent,
     ProductInfoModalComponent,
-    ShopsSidebarComponent
+    ShopsSidebarComponent,
+    ShopCardComponent
   ],
   imports: [
     CommonModule,

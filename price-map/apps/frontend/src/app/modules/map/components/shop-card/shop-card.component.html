@@ -1,0 +1,27 @@
+<nb-card *ngIf="shop" class="shop">
+  <nb-card-header>
+    <ng-container *ngIf="shop.website; else noWebsite">
+      <a [href]="shop.website" target="_blank">{{ shop.name }}</a>
+    </ng-container>
+    <ng-template #noWebsite>
+      <span>{{ shop.name }}</span>
+    </ng-template>
+  </nb-card-header>
+
+  <!-- <nb-card-body class="product__body">
+    <div class="product__body-img">
+      <img [src]="product.imagePath" alt="Изображение">
+    </div>
+
+    <span>Цена: {{ product.price }} р.</span>
+  </nb-card-body> -->
+
+  <nb-card-footer>
+    <nb-actions>
+      <nb-action icon="layers-outline" nbTooltip="Подробнее"></nb-action>
+    </nb-actions>
+  </nb-card-footer>
+</nb-card>
+
+
+

@@ -222,3 +222,7 @@ nb-toast {
     }
   }
 }
+
+nb-tooltip .content {
+  @include font(1.2rem, black, 400);
+}
