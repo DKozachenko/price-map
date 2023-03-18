@@ -20,7 +20,7 @@ import {
   NavigationControl,
   SymbolStyleLayer
 } from 'maplibre-gl';
-import { FilterService, ProductService } from '.';
+import { FilterService, ProductService, ShopService } from '.';
 import { Product, Shop } from '@core/entities';
 import { IFeatureProps } from '../models/interfaces';
 import { ClearControl, LayersControl, PriceControl } from '../controls';
@@ -88,6 +88,7 @@ export class MapService {
   public currentLayer$: Subject<LayerType> = new Subject<LayerType>();
 
   constructor(private readonly productService: ProductService,
+    private readonly shopService: ShopService,
     private readonly webSocketService: WebSocketService,
     private readonly filterService: FilterService,
     private readonly resolver: ComponentFactoryResolver) { }
@@ -160,14 +161,18 @@ export class MapService {
    * @param {string} sourceName название источника данных
    * @memberof MapService
    */
-  private setUnclusterClick(sourceName: string, service: ProductService): void {
+  private setUnclusterClick(sourceName: string, service: ProductService | ShopService): void {
     const layerId: string = `${sourceName}-uncluster`;
     this.map.on('click', layerId, (e: MapLayerMouseEvent) => {
       const feature: Feature<Point, IFeatureProps> = <Feature<Point, IFeatureProps>>e.features?.[0];
       const geometry: Point = feature?.geometry;
       const coordinates: [number, number] = <[number, number]>geometry?.coordinates?.slice();
       this.centerMap(coordinates);
-      service.productIdsToShow$.next([feature.properties.id]);
+      if (service instanceof ProductService) {
+        service.productIdsToShow$.next([feature.properties.id]);
+      } else {
+        service.shopIdsToShow$.next([feature.properties.id]);
+      }
     });
   }
 
@@ -177,7 +182,7 @@ export class MapService {
    * @param {string} sourceName название источника данных
    * @memberof MapService
    */
-  private setClusterClick(sourceName: string, service: ProductService): void {
+  private setClusterClick(sourceName: string, service: ProductService | ShopService): void {
     const layerId: string = `${sourceName}-cluster`;
     this.map.on('click', layerId, (e: MapMouseEvent) => {
       const features: MapGeoJSONFeature[] = this.map.queryRenderedFeatures(e.point, {
@@ -201,7 +206,11 @@ export class MapService {
           if (error) return;
           const features: Feature<Point, IFeatureProps>[] = <Feature<Point, IFeatureProps>[]>data;
           const itemIds: string[] = features.map((feature: Feature<Point, IFeatureProps>) => feature.properties.id);
-          service.productIdsToShow$.next(itemIds);
+          if (service instanceof ProductService) {
+            service.productIdsToShow$.next(itemIds);
+          } else {
+            service.shopIdsToShow$.next(itemIds);
+          }
         })
       }
       
@@ -520,7 +529,7 @@ export class MapService {
    * @param {string} sourceName название источника данных
    * @memberof MapService
    */
-  private setClusterLayersClicks(sourceName: string, service: ProductService): void {
+  private setClusterLayersClicks(sourceName: string, service: ProductService | ShopService): void {
     this.setClusterClick(sourceName, service);
     this.setUnclusterClick(sourceName, service);
   }
@@ -665,7 +674,7 @@ export class MapService {
     this.addControls();
     // Установка кликов только 1 раз
     this.setClusterLayersClicks(this.productsSourceName, this.productService);
-    this.setClusterLayersClicks(this.shopsSourceName, this.productService);
+    this.setClusterLayersClicks(this.shopsSourceName, this.shopService);
   }
 
   /**

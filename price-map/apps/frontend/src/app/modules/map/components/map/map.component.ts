@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } fr
 import { Product, Shop } from '@core/entities';
 import { IResponseData, IProductQuery, IPriceQuery } from '@core/interfaces';
 import { NotificationService, WebSocketService } from '../../../../services';
-import { FilterService, MapService, ProductService } from '../../services';
+import { FilterService, MapService, ProductService, ShopService } from '../../services';
 import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
 import { LayerType } from '../../models/types';
 import { customCombineLastest } from '../operators';
@@ -40,13 +40,15 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
   public isShowFilter: boolean = true;
   public isShowProductsSidebar: boolean = false;
+  public isShowShopsSidebar: boolean = false;
   public isLoading: boolean = false;
 
   constructor(private readonly webSocketService: WebSocketService,
     private readonly notificationService: NotificationService,
     private readonly mapService: MapService,
     private readonly filterService: FilterService,
-    private readonly productService: ProductService) {}
+    private readonly productService: ProductService,
+    private readonly shopService: ShopService) {}
 
   public ngOnInit(): void {
     this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductsFailed)
@@ -97,8 +99,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
         if (layer === 'shops') {
           this.webSocketService.emit<null>(ShopEvents.GetShopsAttempt);
           this.mapService.removePriceControl();
+          this.isShowProductsSidebar = false;
         } else {
           this.mapService.addPriceControl();
+          this.isShowShopsSidebar = false;
         }
       });
 
@@ -108,7 +112,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.productService.productIdsToShow$
       .pipe(untilDestroyed(this))
-      .subscribe((data: string[]) => this.isShowProductsSidebar = !!data.length)
+      .subscribe((data: string[]) => this.isShowProductsSidebar = !!data.length);
+
+    this.shopService.shopIdsToShow$
+      .pipe(untilDestroyed(this))
+      .subscribe((data: string[]) => this.isShowShopsSidebar = !!data.length);
 
     this.filterService.loading$
       .pipe(untilDestroyed(this))

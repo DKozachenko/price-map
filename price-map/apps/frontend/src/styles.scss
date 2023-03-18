@@ -191,3 +191,34 @@ nb-toast {
   top: 50%;
   transform: translateY(-50%);
 }
+
+//Стили для сайдбаров
+.sidebar {
+  left: 0;
+  border: none!important;
+  border-right: 1px solid #13132b;
+  width: 20.5vw;
+
+  &__body {
+    flex-grow: 1;
+    flex-basis: fit-content;
+
+    &-items {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+  }
+
+  nb-card-footer {
+    transition: background-color .2s linear;
+
+    display: flex;
+    justify-content: center;
+
+    &:hover {
+      background-color: darken(#323259, 10%);
+      cursor: pointer;
+    }
+  }
+}

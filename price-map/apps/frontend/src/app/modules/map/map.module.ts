@@ -11,10 +11,11 @@ import { CharacteristicFilterComponent,
   PriceControlComponent,
   ProductsSidebarComponent,
   ProductCardComponent,
-  ProductInfoModalComponent
+  ProductInfoModalComponent,
+  ShopsSidebarComponent
 } from './components';
 import { MapRoutingModule } from './map-routing.module';
-import { FilterService, MapService, ProductService } from './services';
+import { FilterService, MapService, ProductService, ShopService } from './services';
 import { NbCardModule, 
   NbCheckboxModule, 
   NbIconModule, 
@@ -45,7 +46,8 @@ import { SharedModule } from '../shared/shared.module';
     PriceControlComponent,
     ProductsSidebarComponent,
     ProductCardComponent,
-    ProductInfoModalComponent
+    ProductInfoModalComponent,
+    ShopsSidebarComponent
   ],
   imports: [
     CommonModule,
@@ -75,6 +77,7 @@ import { SharedModule } from '../shared/shared.module';
     MapService,
     FilterService,
     ProductService,
+    ShopService
   ]
 })
 export class MapModule { }

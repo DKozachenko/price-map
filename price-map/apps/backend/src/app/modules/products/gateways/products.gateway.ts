@@ -166,7 +166,7 @@ export class ProductsGateway {
               errorCode: null,
               isError: false,
               data: product,
-              message: 'Товары по id успешно получен'
+              message: 'Товары по id успешно получены'
             }
           });
         }),
