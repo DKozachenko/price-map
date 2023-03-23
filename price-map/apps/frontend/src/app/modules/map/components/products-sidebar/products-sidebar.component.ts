@@ -8,7 +8,7 @@ import { ProductEvents, UserEvents } from '@core/enums';
 
 @UntilDestroy()
 @Component({
-  selector: 'price-map-products-sidebar',
+  selector: 'map-products-sidebar',
   templateUrl: './products-sidebar.component.html',
   styleUrls: ['./products-sidebar.component.scss'],
 })

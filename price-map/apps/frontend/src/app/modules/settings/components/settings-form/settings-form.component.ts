@@ -8,16 +8,16 @@ import { NotificationService, SettingsService, TokenService, WebSocketService } 
 
 @UntilDestroy()
 @Component({
-  selector: 'price-map-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss'],
+  selector: 'settings-settings-form',
+  templateUrl: './settings-form.component.html',
+  styleUrls: ['./settings-form.component.scss'],
 })
-export class SettingsComponent implements OnInit {
+export class SettingsFormComponent implements OnInit {
   /**
    * Текущий пользователь
    * @private
    * @type {User}
-   * @memberof SettingsComponent
+   * @memberof SettingsComponent 
    */
   private user: User;
   /**

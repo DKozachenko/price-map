@@ -15,7 +15,7 @@ import { CategoryEvents } from '@core/enums';
  */
 @UntilDestroy()
 @Component({
-  selector: 'price-map-characteristic-filter',
+  selector: 'map-characteristic-filter',
   templateUrl: './characteristic-filter.component.html',
   styleUrls: ['./characteristic-filter.component.scss'],
 })

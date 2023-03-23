@@ -15,7 +15,7 @@ import { delay } from 'rxjs';
  */
 @UntilDestroy()
 @Component({
-  selector: 'app-header',
+  selector: 'shared-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })

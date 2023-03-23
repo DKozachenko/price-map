@@ -15,7 +15,7 @@ import { delay } from 'rxjs';
  */
 @UntilDestroy()
 @Component({
-  selector: 'price-map-route-review',
+  selector: 'map-route-review',
   templateUrl: './route-review.component.html',
   styleUrls: ['./route-review.component.scss'],
 })

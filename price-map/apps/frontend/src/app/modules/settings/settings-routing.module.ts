@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { SettingsComponent } from './components';
+import { SettingsFormComponent } from './components';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
     path: '',
-    component: SettingsComponent
+    component: SettingsFormComponent
   },
   {
     path: '**',

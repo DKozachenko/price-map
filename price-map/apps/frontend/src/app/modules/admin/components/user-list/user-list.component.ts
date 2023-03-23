@@ -7,7 +7,7 @@ import { NotificationService, WebSocketService } from '../../../../services';
 
 @UntilDestroy()
 @Component({
-  selector: 'price-map-user-list',
+  selector: 'admin-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss'],
 })

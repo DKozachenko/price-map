@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SettingsComponent } from './components';
+import { SettingsFormComponent } from './components';
 import { SettingsRoutingModule } from './settings-routing.module';
 import { NbCardModule, 
   NbCheckboxModule, 
@@ -14,7 +14,7 @@ import { SharedModule } from '../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [SettingsComponent],
+  declarations: [SettingsFormComponent],
   imports: [
     CommonModule,
     FormsModule,

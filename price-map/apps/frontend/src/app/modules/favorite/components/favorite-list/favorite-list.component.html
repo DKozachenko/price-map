@@ -1,6 +1,6 @@
 <nb-layout>
   <nb-layout-header class="header">
-    <app-header></app-header>
+    <shared-header></shared-header>
   </nb-layout-header>
   <nb-layout-column>
     <div class="section">
@@ -9,9 +9,9 @@
 
         <ng-container *ngIf="!!favoriteProducts.length; else noProducts">
           <div class="favorite__products custom__scroll">
-            <price-map-favorite-item *ngFor="let product of favoriteProducts; trackBy: trackByProduct"
+            <favorite-favorite-item *ngFor="let product of favoriteProducts; trackBy: trackByProduct"
               [product]="product"
-            ></price-map-favorite-item>
+            ></favorite-favorite-item>
           </div>
         </ng-container>
           

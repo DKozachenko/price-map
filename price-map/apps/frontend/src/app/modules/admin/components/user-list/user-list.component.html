@@ -1,6 +1,6 @@
 <nb-layout>
   <nb-layout-header class="header">
-    <app-header></app-header>
+    <shared-header></shared-header>
   </nb-layout-header>
   <nb-layout-column>
     <div class="section">
@@ -8,9 +8,9 @@
         <h3 class="section__body-title">Пользователи</h3>
 
           <div class="users custom__scroll">
-            <price-map-user *ngFor="let user of users; trackBy: trackByUser"
+            <admin-user *ngFor="let user of users; trackBy: trackByUser"
               [user]="user"
-            ></price-map-user>
+            ></admin-user>
           </div>
       </div>
     </div>

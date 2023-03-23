@@ -7,7 +7,7 @@ import { NotificationService, SettingsService, WebSocketService } from '../../..
 
 @UntilDestroy()
 @Component({
-  selector: 'price-map-favorite-list',
+  selector: 'favorite-favorite-list',
   templateUrl: './favorite-list.component.html',
   styleUrls: ['./favorite-list.component.scss'],
 })

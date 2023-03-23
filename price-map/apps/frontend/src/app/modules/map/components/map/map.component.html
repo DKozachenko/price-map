@@ -1,18 +1,18 @@
 <nb-layout>
   <nb-layout-header class="header">
-    <app-header></app-header>
+    <shared-header></shared-header>
   </nb-layout-header>
   <nb-layout-column>
     <div class="container" [nbSpinner]="isLoading" [class.with_filter]="isShowFilter" nbSpinnerStatus="primary" >
       <div class="map" [class.loader]="isLoading" #map></div>
   
-      <price-map-filter *ngIf="isShowFilter"></price-map-filter>
-      <price-map-products-sidebar *ngIf="isShowProductsSidebar"></price-map-products-sidebar>
-      <price-map-shops-sidebar *ngIf="isShowShopsSidebar"></price-map-shops-sidebar>
+      <map-filter *ngIf="isShowFilter"></map-filter>
+      <map-products-sidebar *ngIf="isShowProductsSidebar"></map-products-sidebar>
+      <map-shops-sidebar *ngIf="isShowShopsSidebar"></map-shops-sidebar>
   
-      <price-map-route-review 
+      <map-route-review 
         *ngIf="isShowRouteReview"
-      ></price-map-route-review>
+      ></map-route-review>
     </div>
   </nb-layout-column>
 </nb-layout>

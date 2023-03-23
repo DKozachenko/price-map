@@ -15,7 +15,7 @@ import { CategoryEvents } from '@core/enums';
  */
 @UntilDestroy()
 @Component({
-  selector: 'price-map-filter',
+  selector: 'map-filter',
   templateUrl: './filter.component.html',
   styleUrls: ['./filter.component.scss'],
 })

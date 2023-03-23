@@ -4,7 +4,7 @@ import { User } from '@core/entities';
 import { UserEvents } from '@core/enums';
 
 @Component({
-  selector: 'price-map-user',
+  selector: 'admin-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss']
 })

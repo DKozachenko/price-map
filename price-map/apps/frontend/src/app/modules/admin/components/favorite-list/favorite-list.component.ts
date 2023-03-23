@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Product } from '@core/entities';
 
 @Component({
-  selector: 'users-favorite-list',
+  selector: 'admin-favorite-list',
   templateUrl: './favorite-list.component.html',
   styleUrls: ['./favorite-list.component.scss'],
 })

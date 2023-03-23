@@ -24,7 +24,7 @@
       </button>
 
       <ng-container *ngIf="!!user.products.length; else noProducts">
-        <users-favorite-list [favoriteProducts]="user.products"></users-favorite-list>
+        <admin-favorite-list [favoriteProducts]="user.products"></admin-favorite-list>
       </ng-container>
 
       <ng-template #noProducts>

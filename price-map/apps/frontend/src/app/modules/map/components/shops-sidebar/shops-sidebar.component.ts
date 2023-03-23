@@ -9,7 +9,7 @@ import { ShopEvents } from '@core/enums';
 
 @UntilDestroy()
 @Component({
-  selector: 'price-map-shops-sidebar',
+  selector: 'map-shops-sidebar',
   templateUrl: './shops-sidebar.component.html',
   styleUrls: ['./shops-sidebar.component.scss'],
 })

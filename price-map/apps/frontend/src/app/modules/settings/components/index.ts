@@ -1,1 +1,1 @@
-export { SettingsComponent } from './settings/settings.component';
+export { SettingsFormComponent } from './settings-form/settings-form.component';

@@ -6,7 +6,7 @@ import { WebSocketService, ProductService } from '../../../../services';
 
 @UntilDestroy()
 @Component({
-  selector: 'price-map-favorite-item',
+  selector: 'favorite-favorite-item',
   templateUrl: './favorite-item.component.html',
   styleUrls: ['./favorite-item.component.scss']
 })
