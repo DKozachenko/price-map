@@ -52,6 +52,7 @@
   @include font(1.5rem, white);
   margin-top: 0;
   width: 100%;
+  letter-spacing: .1rem;
 }
 
 ::ng-deep.nb-theme-cosmic nb-badge.status-success {

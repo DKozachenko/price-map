@@ -116,11 +116,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((data: Set<string>) => this.isShowRouteReview = data.size > 0);
 
-    this.productService.productIdsToShow$
+    this.productService.itemIdsToShow$
       .pipe(untilDestroyed(this))
       .subscribe((data: string[]) => this.isShowProductsSidebar = !!data.length);
 
-    this.shopService.shopIdsToShow$
+    this.shopService.itemIdsToShow$
       .pipe(untilDestroyed(this))
       .subscribe((data: string[]) => this.isShowShopsSidebar = !!data.length);
 

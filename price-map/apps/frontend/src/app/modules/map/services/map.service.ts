@@ -28,6 +28,7 @@ import { IFeatureProps } from '../models/interfaces';
 import { ClearControl, LayersControl, PriceControl, RadiusControl } from '../controls';
 import { ProductService } from '../../../services';
 import { LayerType } from '../models/types';
+import { BaseSidebar } from '../../../classes';
 
 /**
  * Сервис по работе с картой
@@ -184,18 +185,14 @@ export class MapService {
    * @param {string} sourceName название источника данных
    * @memberof MapService
    */
-  private setUnclusterClick(sourceName: string, service: ProductService | ShopService): void {
+  private setUnclusterClick(sourceName: string, service: BaseSidebar): void {
     const layerId: string = `${sourceName}-uncluster`;
     this.map.on('click', layerId, (e: MapLayerMouseEvent) => {
       const feature: Feature<Point, IFeatureProps> = <Feature<Point, IFeatureProps>>e.features?.[0];
       const geometry: Point = feature?.geometry;
       const coordinates: [number, number] = <[number, number]>geometry?.coordinates?.slice();
       this.centerMap(coordinates);
-      if (service instanceof ProductService) {
-        service.productIdsToShow$.next([feature.properties.id]);
-      } else {
-        service.shopIdsToShow$.next([feature.properties.id]);
-      }
+      service.itemIdsToShow$.next([feature.properties.id]);
     });
   }
 
@@ -205,7 +202,7 @@ export class MapService {
    * @param {string} sourceName название источника данных
    * @memberof MapService
    */
-  private setClusterClick(sourceName: string, service: ProductService | ShopService): void {
+  private setClusterClick(sourceName: string, service: BaseSidebar): void {
     const layerId: string = `${sourceName}-cluster`;
     this.map.on('click', layerId, (e: MapMouseEvent) => {
       const features: MapGeoJSONFeature[] = this.map.queryRenderedFeatures(e.point, {
@@ -229,11 +226,7 @@ export class MapService {
           if (error) return;
           const features: Feature<Point, IFeatureProps>[] = <Feature<Point, IFeatureProps>[]>data;
           const itemIds: string[] = features.map((feature: Feature<Point, IFeatureProps>) => feature.properties.id);
-          if (service instanceof ProductService) {
-            service.productIdsToShow$.next(itemIds);
-          } else {
-            service.shopIdsToShow$.next(itemIds);
-          }
+          service.itemIdsToShow$.next(itemIds);
         })
       }
       

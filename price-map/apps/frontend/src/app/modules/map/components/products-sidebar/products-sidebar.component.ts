@@ -59,13 +59,13 @@ export class ProductsSidebarComponent implements OnInit {
         this.settingService.currentUser = response.data;
       });
 
-    this.productsService.productIdsToShow$
+    this.productsService.itemIdsToShow$
       .pipe(untilDestroyed(this))
       .subscribe((data: string[]) => this.webSocketService.emit<string[]>(ProductEvents.GetProductsByIdsAttempt, data));
   }
 
   public close(): void {
-    this.productsService.productIdsToShow$.next([]);
+    this.productsService.itemIdsToShow$.next([]);
   }
 
   public trackByProduct(index: number, item: Product): string {

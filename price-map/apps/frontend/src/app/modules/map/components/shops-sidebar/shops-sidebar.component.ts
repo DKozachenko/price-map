@@ -29,13 +29,13 @@ export class ShopsSidebarComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Shop[]>) => this.shops = response.data);
 
-    this.shopsService.shopIdsToShow$
+    this.shopsService.itemIdsToShow$
       .pipe(untilDestroyed(this))
       .subscribe((data: string[]) => this.webSocketService.emit<string[]>(ShopEvents.GetShopsByIdsAttempt, data));
   }
 
   public close(): void {
-    this.shopsService.shopIdsToShow$.next([]);
+    this.shopsService.itemIdsToShow$.next([]);
   }
 
   public trackByShop(index: number, item: Shop): string {
