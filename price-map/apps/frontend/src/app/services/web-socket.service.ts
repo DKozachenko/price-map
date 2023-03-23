@@ -138,10 +138,13 @@ export class WebSocketService implements OnDestroy {
    * @template T тип отправляемых данных
    * @param {string} eventName название события
    * @param {T} [data] данные
+   * @param {boolean} [isNeedToken=true] нужно ли добавлять токен (необходимо, чтобы при входе не происходил лишний дисконект)
    * @memberof WebSocketService
    */
-  public emit<T = null>(eventName: string, data?: T): void {
-    this.addToken();
+  public emit<T = null>(eventName: string, data?: T, isNeedToken: boolean = true): void {
+    if (isNeedToken) {
+      this.addToken();
+    }
     this.socket.emit(eventName, data);
   }
 

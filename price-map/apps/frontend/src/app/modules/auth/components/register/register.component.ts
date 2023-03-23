@@ -81,6 +81,6 @@ export class RegisterComponent implements OnInit {
    * @memberof RegisterComponent
    */
   public submit(): void {
-    this.webSocketSevice.emit<IUserRegisterInfo>(AuthEvents.RegisterAttemp, this.form.value);
+    this.webSocketSevice.emit<IUserRegisterInfo>(AuthEvents.RegisterAttemp, this.form.value, false);
   }
 }
