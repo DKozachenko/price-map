@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IPriceQuery, IUserFilter } from '@core/interfaces';
+import { IPriceQuery, IRadiusQuery, IUserFilter } from '@core/interfaces';
 import { Subject, ReplaySubject, BehaviorSubject } from 'rxjs';
 
 /**
@@ -27,6 +27,7 @@ export class FilterService {
    * @memberof FilterService
    */
   public filterValues$: Subject<IUserFilter[]> = new Subject<IUserFilter[]>();
+  public radiusQuery$: Subject<IRadiusQuery | null> = new Subject<IRadiusQuery | null>();
 
   public currentPriceQuery$: Subject<IPriceQuery> = new Subject<IPriceQuery>();
   public loading$: Subject<boolean> = new Subject<boolean>();

@@ -193,6 +193,11 @@ nb-toast {
   transform: translateY(-50%);
 }
 
+//Стили для контейнера контролов рисования от MapBox, обираем отступ, чтобы не двигалась верстка
+.mapboxgl-ctrl-group.mapboxgl-ctrl:empty {
+  margin-top: 0;
+}
+
 //Стили для сайдбаров
 .sidebar {
   left: 0;

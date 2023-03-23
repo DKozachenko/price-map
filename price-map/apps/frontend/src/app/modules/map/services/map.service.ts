@@ -25,7 +25,7 @@ import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import { FilterService, ShopService } from '.';
 import { Product, Shop } from '@core/entities';
 import { IFeatureProps } from '../models/interfaces';
-import { ClearControl, LayersControl, PriceControl } from '../controls';
+import { ClearControl, LayersControl, PriceControl, RadiusControl } from '../controls';
 import { ProductService, WebSocketService } from '../../../services';
 import { LayerType } from '../models/types';
 
@@ -120,6 +120,20 @@ export class MapService {
     console.log('GEOLOCATE', position.coords.latitude, position.coords.longitude);
   }
 
+  private onRadiusUpdate(event: any): void {
+    const center: [number, number] = event?.features?.[0]?.properties?.center;
+    const radiusInKm: number = event?.features?.[0]?.properties?.radiusInKm;
+    if (center && radiusInKm) {
+      this.filterService.radiusQuery$.next({
+        center: {
+          latitude: center[1],
+          longitude: center[0]
+        },
+        radius: radiusInKm * 1000
+      })
+    }
+  }
+
   /**
    * Центрирование карты на определенной точке
    * @private
@@ -152,26 +166,11 @@ export class MapService {
     geoControl.on('geolocate', this.onGeolocate);
     this.map.addControl(geoControl);
 
+    this.addRadiusControl();
+
     const layersControl: LayersControl = new LayersControl(this.resolver, this, this.webSocketService);
     this.map.addControl(layersControl, 'top-left');
     this.addPriceControl();
-
-    const draw = new MapboxDraw({
-      defaultMode: "draw_circle",
-      userProperties: true,
-      modes: {
-        ...MapboxDraw.modes,
-        draw_circle  : maplibreGl.CircleMode,
-        drag_circle  : maplibreGl.DragCircleMode,
-        direct_select: maplibreGl.DirectMode,
-        simple_select: maplibreGl.SimpleSelectMode
-      }
-    });
-    // console.log(draw)
-    // draw.changeMode('draw_circle', { initialRadiusInKm: 1 });
-    
-    // this.map.addControl(<IControl><unknown>draw);
-    
   }
 
   /**
@@ -609,6 +608,57 @@ export class MapService {
       = <ClearControl | undefined>this.map._controls.find((control: IControl) => control instanceof ClearControl);
     if (clearControl) {
       this.map.removeControl(clearControl);
+    }
+  }
+
+  public addRadiusControl(): void {
+    const radiusControl: RadiusControl = new RadiusControl(this.resolver, this);
+    this.map.addControl(radiusControl, 'top-right');
+  }
+
+  public removeRadiusControl(): void {
+    const radiusControl: RadiusControl | undefined
+      = <RadiusControl | undefined>this.map._controls.find((control: IControl) => control instanceof RadiusControl);
+    if (radiusControl) {
+      this.map.removeControl(radiusControl);
+    }
+  }
+
+  public addDrawControl(): void {
+    const drawControl = new MapboxDraw({
+      defaultMode: "draw_circle",
+      userProperties: true,
+      modes: {
+        ...MapboxDraw.modes,
+        draw_circle  : maplibreGl.CircleMode,
+        drag_circle  : maplibreGl.DragCircleMode,
+        direct_select: maplibreGl.DirectMode,
+        simple_select: maplibreGl.SimpleSelectMode
+      },
+      //Убираем все контролы, тк они не нужны
+      controls: {
+        point: false,
+        line_string: false,
+        polygon: false,
+        trash: false,
+        combine_features: false,
+        uncombine_features: false,
+      }
+    });
+
+    this.map.addControl(<IControl><unknown>drawControl, 'top-right');
+    drawControl.changeMode('draw_circle', { initialRadiusInKm: 0.5 });
+
+    //Теряет контекст, поэтому напрямую передаем
+    this.map.on('draw.update', this.onRadiusUpdate.bind(this));
+  }
+
+  public removeDrawControl(): void {
+    const drawControl: IControl | undefined
+      = <IControl | undefined>this.map._controls.find((control: IControl) => control instanceof MapboxDraw);
+    if (drawControl) {
+      this.map.removeControl(drawControl);
+      this.filterService.radiusQuery$.next(null);
     }
   }
 

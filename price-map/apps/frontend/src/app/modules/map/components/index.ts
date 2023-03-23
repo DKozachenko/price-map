@@ -12,3 +12,4 @@ export { ProductCardComponent } from './product-card/product-card.component';
 export { ProductInfoModalComponent } from './product-info-modal/product-info-modal.component';
 export { ShopsSidebarComponent } from './shops-sidebar/shops-sidebar.component';
 export { ShopCardComponent } from './shop-card/shop-card.component';
+export { RadiusControlComponent } from './radius-control/radius-control.component';

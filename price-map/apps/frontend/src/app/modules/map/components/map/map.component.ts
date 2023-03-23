@@ -99,9 +99,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
         if (layer === 'shops') {
           this.webSocketService.emit<null>(ShopEvents.GetShopsAttempt);
           this.mapService.removePriceControl();
+          this.mapService.removeRadiusControl();
           this.isShowProductsSidebar = false;
         } else {
           this.mapService.addPriceControl();
+          this.mapService.addRadiusControl();
           this.isShowShopsSidebar = false;
         }
       });
@@ -126,10 +128,12 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     customCombineLastest([
       this.filterService.chechedCategory3LevelIds$,
-      this.filterService.currentPriceQuery$
+      this.filterService.currentPriceQuery$,
+      this.filterService.radiusQuery$
     ])
       .pipe(untilDestroyed(this))
-      .subscribe(([ids, priceQuery]: any[]) => {
+      .subscribe(([ids, priceQuery, radiusQuery]: any[]) => {
+        console.log(radiusQuery)
         this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
           category3LevelIds: ids ? [...ids] : [],
           filters: [],
