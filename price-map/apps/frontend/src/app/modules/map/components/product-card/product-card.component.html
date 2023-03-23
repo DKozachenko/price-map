@@ -6,7 +6,7 @@
       <img [src]="product.imagePath" alt="Изображение">
     </div>
 
-    <span>Цена: {{ product.price }} р.</span>
+    <span>Цена: {{ product.price | price:'р' }} </span>
   </nb-card-body>
 
   <nb-card-footer>

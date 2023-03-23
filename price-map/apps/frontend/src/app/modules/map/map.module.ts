@@ -36,6 +36,7 @@ import { NbCardModule,
 import { SharedModule } from '../shared/shared.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
+import { PricePipe } from './pipes';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { FormsModule } from '@angular/forms';
     ProductInfoModalComponent,
     ShopsSidebarComponent,
     ShopCardComponent,
-    RadiusControlComponent
+    RadiusControlComponent,
+    PricePipe
   ],
   imports: [
     CommonModule,

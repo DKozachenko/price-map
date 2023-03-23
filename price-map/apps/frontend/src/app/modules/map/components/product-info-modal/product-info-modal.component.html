@@ -12,7 +12,7 @@
 
     <div class="product__body-info">
       <p>{{ product.description ? product.description : 'Нет описания' }}</p>
-      <p>Цена: {{ product.price }} р. из 
+      <p>Цена: {{ product.price | price:'р' }} из 
         <ng-container *ngIf="product.shop.website; else noWebsite">
           <a [href]="product.shop.website" target="_blank">{{ product.shop.name }}</a>
         </ng-container>
