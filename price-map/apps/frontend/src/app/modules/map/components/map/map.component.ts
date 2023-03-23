@@ -54,7 +54,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   public ngOnInit(): void {
     this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductsFailed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+      .subscribe((response: IResponseData<null>) => {
+        this.notificationService.showError(response.message);
+        this.isLoading = false;
+      });
 
     this.webSocketService.on<IResponseData<Product[]>>(ProductEvents.GetProductsSuccessed)
       .pipe(untilDestroyed(this))
