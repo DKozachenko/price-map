@@ -59,8 +59,8 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     this.webSocketService.on<IResponseData<Product[]>>(ProductEvents.GetProductsSuccessed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Product[]>) => {
-        this.mapService.addProducts(response.data)
-        this.filterService.loading$.next(false);
+        this.mapService.addProducts(response.data);
+        this.isLoading = false;
       });
 
     this.webSocketService.on<IResponseData<number[][]>>(ExternalEvents.BuildRouteSuccessed)
@@ -121,18 +121,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((data: string[]) => this.isShowShopsSidebar = !!data.length);
 
-    this.filterService.loading$
-      .pipe(untilDestroyed(this))
-      .subscribe((loading: boolean) => {
-        this.isLoading = loading;
-      })
-
-    customCombineLastest([
-      this.filterService.chechedCategory3LevelIds$,
-      this.filterService.filterValues$.pipe(debounceTime(400)),
-      this.filterService.currentPriceQuery$,
-      this.filterService.radiusQuery$
-    ])
+    this.filterService.allFilters$
       .pipe(untilDestroyed(this))
       .subscribe(([ids, filters, priceQuery, radiusQuery]: any[]) => {
         this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
@@ -141,7 +130,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
           price: priceQuery ?? { max: null, min: null },
           radius: radiusQuery ?? { center: null, distance: null }
         });
-        this.filterService.loading$.next(true);
+        this.isLoading = true;
       });
   }
 

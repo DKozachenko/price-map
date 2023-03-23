@@ -7,7 +7,6 @@ export function customCombineLastest(observables: Observable<any>[]): Observable
   for (let i = 0; i < observables.length; ++i) {
     observables[i].subscribe((data: any) => {
       values[i] = data;
-      // console.log(123, values);
       subject.next(values);
     });
   }

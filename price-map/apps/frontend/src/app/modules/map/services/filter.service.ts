@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IPriceQuery, IRadiusQuery, IUserFilter } from '@core/interfaces';
-import { Subject, ReplaySubject, BehaviorSubject } from 'rxjs';
+import { Subject, ReplaySubject, BehaviorSubject, Observable, debounceTime } from 'rxjs';
+import { customCombineLastest } from '../components/operators';
 
 /**
  * Сервис фильтра
@@ -30,10 +31,16 @@ export class FilterService {
   public radiusQuery$: Subject<IRadiusQuery> = new Subject<IRadiusQuery>();
 
   public currentPriceQuery$: Subject<IPriceQuery> = new Subject<IPriceQuery>();
-  public loading$: Subject<boolean> = new Subject<boolean>();
 
   public addPriceQuery(price: IPriceQuery): void {
     this.priceQuery = price;
     this.currentPriceQuery$.next(this.priceQuery);
   }
+
+  public allFilters$: Observable<any[]> = customCombineLastest([
+    this.chechedCategory3LevelIds$,
+    this.filterValues$.pipe(debounceTime(400)),
+    this.currentPriceQuery$,
+    this.radiusQuery$
+  ])
 }
