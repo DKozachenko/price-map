@@ -4,6 +4,7 @@ import * as $ from 'jquery';
 import 'round-slider';
 import { IPriceQuery } from '@core/interfaces';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { asapScheduler, observeOn } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -39,26 +40,16 @@ export class PriceControlComponent implements OnInit {
       rangeColor: '#a16eff',
       tooltipColor: 'black'
     });
-    console.log(2, this.slider)
 
     //Теряет контекст, поэтому напрямую передаем
     this.slider.on('change', this.changePrice.bind(this));
   }
 
-
   private initSlider(): void {
+    //Всегда запускаем как микрозадачу, так почему-то при некоторых повторых переключениях на слой товаров не инициализируется слайдер
     this.filterService.initialPriceQuery$
-      .pipe(untilDestroyed(this))
-      .subscribe((initialPriceQuery: IPriceQuery) => {
-        this.setSlider(initialPriceQuery);
-        //Очень тупой хак, так почему-то при повторых переключениях на слой товаров не инициализируется слайдер
-        if (!this.slider?.[0]) {
-          console.log(3)
-          setTimeout(() => {
-            this.setSlider(initialPriceQuery);
-          }, 0);
-        }
-      });
+      .pipe(observeOn(asapScheduler), untilDestroyed(this))
+      .subscribe((initialPriceQuery: IPriceQuery) => this.setSlider(initialPriceQuery));
   }
 
   private changePrice(e: any) {

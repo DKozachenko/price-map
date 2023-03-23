@@ -582,7 +582,6 @@ export class MapService {
     const existedPriceControl: PriceControl | undefined
       = <PriceControl | undefined>this.map._controls.find((control: IControl) => control instanceof PriceControl);
     
-    console.log(existedPriceControl)
     if (!existedPriceControl) {
       const priceControl: PriceControl = new PriceControl(this.resolver, this.filterService);
       this.map.addControl(priceControl, 'top-left');
@@ -606,8 +605,13 @@ export class MapService {
    * @memberof MapService
    */
   public addClearControl(): void {
-    const clearControl: ClearControl = new ClearControl(this.resolver, this);
-    this.map.addControl(clearControl, 'top-right');
+    const existedClearControl: ClearControl | undefined
+      = <ClearControl | undefined>this.map._controls.find((control: IControl) => control instanceof ClearControl);
+
+    if (!existedClearControl) {
+      const clearControl: ClearControl = new ClearControl(this.resolver, this);
+      this.map.addControl(clearControl, 'top-right');
+    }
   }
 
   /**

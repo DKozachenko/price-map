@@ -423,7 +423,7 @@ export class ProductsService implements OnModuleInit {
    * @memberof ProductsService
    */
   public getAll(query: IProductQuery): Observable<Product[]> {
-    if (!query.category3LevelIds.length && !query.filters.length && !query.price.max && !query.min && !query.radius.center && !query.radius.distance) {
+    if (!query.category3LevelIds.length && !query.filters.length && !query.price.max && !query.price.min && !query.radius.center && !query.radius.distance) {
       return of([]);
     }
     const sqlQuery: string = query.filters.length
