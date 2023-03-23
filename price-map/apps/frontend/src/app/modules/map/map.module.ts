@@ -34,7 +34,6 @@ import { NbCardModule,
   NbDialogService,
   NbDialogModule} from '@nebular/theme';
 import { SharedModule } from '../shared/shared.module';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { FormsModule } from '@angular/forms';
 import { PricePipe } from './pipes';
 
@@ -68,7 +67,6 @@ import { PricePipe } from './pipes';
     NbRadioModule,
     NbInputModule,
     NbSelectModule,
-    NgSelectModule,
     NbButtonModule,
     NbListModule,
     NbBadgeModule,
