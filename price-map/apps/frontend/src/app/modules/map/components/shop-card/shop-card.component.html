@@ -1,4 +1,4 @@
-<nb-card *ngIf="shop" class="shop">
+<nb-card *ngIf="shop" class="sidebar__item shop">
   <nb-card-header>
     <ng-container *ngIf="shop.website; else noWebsite">
       <a [href]="shop.website" target="_blank">{{ shop.name }}</a>

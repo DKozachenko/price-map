@@ -216,6 +216,57 @@ nb-toast {
     }
   }
 
+  &__item {
+    nb-card-header{
+      @include font(1.3rem, white, 700);
+      text-overflow: ellipsis;
+      word-break: break-word;
+      border-bottom-color: white!important;
+    }
+    
+    nb-card-footer {
+      padding: 1rem .4rem!important;
+      border-top-color: white!important;
+      transition: background-color .2s linear;
+
+      display: block;
+
+      &:hover {
+        background-color: transparent!important;
+        cursor: initial!important;
+      }
+
+      nb-actions {
+        flex-grow: 1;
+      }
+
+      nb-action {
+        padding: 0 .75rem!important;
+        border-left: 1px solid white!important;
+        flex-grow: 1;
+        justify-content: center;
+
+        &.in_route,
+        &.favorite {
+          svg {
+            fill:#a16eff;
+          }
+        }
+
+        &:hover {
+          nb-icon {
+            transform: scale(1.15);
+          }
+        }
+
+        nb-icon {
+          color: white;
+          transition: transform .2s linear;
+        }
+      }
+    }
+  }
+
   nb-card-footer {
     transition: background-color .2s linear;
 
