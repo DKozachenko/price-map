@@ -120,6 +120,12 @@ export class MapService {
     console.log('GEOLOCATE', position.coords.latitude, position.coords.longitude);
   }
 
+  /**
+   * Событие при обновлении кфдиуса
+   * @private
+   * @param {*} event событие
+   * @memberof MapService
+   */
   private onRadiusUpdate(event: any): void {
     const center: [number, number] = event?.features?.[0]?.properties?.center;
     const radiusInKm: number = event?.features?.[0]?.properties?.radiusInKm;
@@ -129,7 +135,7 @@ export class MapService {
           latitude: center[1],
           longitude: center[0]
         },
-        radius: radiusInKm * 1000
+        distance: radiusInKm * 1000
       })
     }
   }
@@ -611,11 +617,19 @@ export class MapService {
     }
   }
 
+  /**
+   * Добавление контрола для радиуса
+   * @memberof MapService
+   */
   public addRadiusControl(): void {
     const radiusControl: RadiusControl = new RadiusControl(this.resolver, this);
     this.map.addControl(radiusControl, 'top-right');
   }
 
+  /**
+   * Удаление контрола для радиуса
+   * @memberof MapService
+   */
   public removeRadiusControl(): void {
     const radiusControl: RadiusControl | undefined
       = <RadiusControl | undefined>this.map._controls.find((control: IControl) => control instanceof RadiusControl);
@@ -624,6 +638,10 @@ export class MapService {
     }
   }
 
+  /**
+   * Добавление контрола для рисования
+   * @memberof MapService
+   */
   public addDrawControl(): void {
     const drawControl = new MapboxDraw({
       defaultMode: "draw_circle",
@@ -653,12 +671,19 @@ export class MapService {
     this.map.on('draw.update', this.onRadiusUpdate.bind(this));
   }
 
+  /**
+   * Удаление контрола для рисования
+   * @memberof MapService
+   */
   public removeDrawControl(): void {
     const drawControl: IControl | undefined
       = <IControl | undefined>this.map._controls.find((control: IControl) => control instanceof MapboxDraw);
     if (drawControl) {
       this.map.removeControl(drawControl);
-      this.filterService.radiusQuery$.next(null);
+      this.filterService.radiusQuery$.next({
+        center: null,
+        distance: null
+      });
     }
   }
 

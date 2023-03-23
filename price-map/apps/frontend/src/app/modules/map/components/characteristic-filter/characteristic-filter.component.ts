@@ -58,18 +58,20 @@ export class CharacteristicFilterComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Category3Level>) => this.category3Level = response.data);
 
-    customCombineLastest([
-      this.filterService.filterValues$.pipe(debounceTime(400)),
-      this.filterService.currentPriceQuery$
-    ])
-      .pipe(untilDestroyed(this))
-      .subscribe(([filters, priceQuery]: any[]) => {
-        this.webSocketSevice.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
-          category3LevelIds: [this.category3Level.id],
-          filters: filters ?? [],
-          price: priceQuery ?? { max: null, min: null }
-        });
-      });
+    // customCombineLastest([
+    //   this.filterService.filterValues$.pipe(debounceTime(400)),
+    //   this.filterService.currentPriceQuery$,
+    //   this.filterService.radiusQuery$
+    // ])
+    //   .pipe(untilDestroyed(this))
+    //   .subscribe(([filters, priceQuery, radiusQuery]: any[]) => {
+    //     this.webSocketSevice.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
+    //       category3LevelIds: [this.category3Level.id],
+    //       filters: filters ?? [],
+    //       price: priceQuery ?? { max: null, min: null },
+    //       radius: radiusQuery ?? { center: null, distance: null }
+    //     });
+    //   });
   }
 
   /**
@@ -84,9 +86,9 @@ export class CharacteristicFilterComponent implements OnInit {
 
     if (filterElem && value) {
       filterElem.value = value;
-    } else if (filterElem && !value) {
+    } else if (filterElem && value === null) {
       this.currentFilter = this.currentFilter.filter((item: IUserFilter) => item.name !== filterElem.name);
-    } else {
+    } else if (value === true || value === false) {
       this.currentFilter.push({
         name: filter.name,
         type: filter.type,
@@ -112,6 +114,9 @@ export class CharacteristicFilterComponent implements OnInit {
     if (filterElem) {
       const filterElemValue: (number | null)[] = <(number | null)[]>filterElem.value;
       filterElemValue[index] = value ? +value : null;
+      if (!filterElemValue[0]?.toString().length && !filterElemValue[1]?.toString().length) {
+        this.currentFilter = this.currentFilter.filter((item: IUserFilter) => item.name !== filterElem.name);
+      }
     } else {
       const filterValue: any = {
         name: filter.name,

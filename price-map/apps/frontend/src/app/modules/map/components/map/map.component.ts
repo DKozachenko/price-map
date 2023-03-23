@@ -7,6 +7,7 @@ import { FilterService, MapService, ShopService } from '../../services';
 import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
 import { LayerType } from '../../models/types';
 import { customCombineLastest } from '../operators';
+import { debounceTime } from 'rxjs';
 
 /**
  * Компонент карты
@@ -128,16 +129,17 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     customCombineLastest([
       this.filterService.chechedCategory3LevelIds$,
+      this.filterService.filterValues$.pipe(debounceTime(400)),
       this.filterService.currentPriceQuery$,
       this.filterService.radiusQuery$
     ])
       .pipe(untilDestroyed(this))
-      .subscribe(([ids, priceQuery, radiusQuery]: any[]) => {
-        console.log(radiusQuery)
+      .subscribe(([ids, filters, priceQuery, radiusQuery]: any[]) => {
         this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
           category3LevelIds: ids ? [...ids] : [],
-          filters: [],
-          price: priceQuery ?? { max: null, min: null }
+          filters: filters ?? [],
+          price: priceQuery ?? { max: null, min: null },
+          radius: radiusQuery ?? { center: null, distance: null }
         });
         this.filterService.loading$.next(true);
       });

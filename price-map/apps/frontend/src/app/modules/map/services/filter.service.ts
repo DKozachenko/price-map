@@ -27,7 +27,7 @@ export class FilterService {
    * @memberof FilterService
    */
   public filterValues$: Subject<IUserFilter[]> = new Subject<IUserFilter[]>();
-  public radiusQuery$: Subject<IRadiusQuery | null> = new Subject<IRadiusQuery | null>();
+  public radiusQuery$: Subject<IRadiusQuery> = new Subject<IRadiusQuery>();
 
   public currentPriceQuery$: Subject<IPriceQuery> = new Subject<IPriceQuery>();
   public loading$: Subject<boolean> = new Subject<boolean>();
