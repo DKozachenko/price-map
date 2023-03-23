@@ -26,7 +26,7 @@ import { FilterService, ShopService } from '.';
 import { Product, Shop } from '@core/entities';
 import { IFeatureProps } from '../models/interfaces';
 import { ClearControl, LayersControl, PriceControl, RadiusControl } from '../controls';
-import { ProductService, WebSocketService } from '../../../services';
+import { ProductService } from '../../../services';
 import { LayerType } from '../models/types';
 
 /**
@@ -91,7 +91,6 @@ export class MapService {
 
   constructor(private readonly productService: ProductService,
     private readonly shopService: ShopService,
-    private readonly webSocketService: WebSocketService,
     private readonly filterService: FilterService,
     private readonly resolver: ComponentFactoryResolver) { }
 
@@ -174,7 +173,7 @@ export class MapService {
 
     this.addRadiusControl();
 
-    const layersControl: LayersControl = new LayersControl(this.resolver, this, this.webSocketService);
+    const layersControl: LayersControl = new LayersControl(this.resolver, this);
     this.map.addControl(layersControl, 'top-left');
     this.addPriceControl();
   }
@@ -580,8 +579,14 @@ export class MapService {
    * @memberof MapService
    */
   public addPriceControl(): void {
-    const priceControl: PriceControl = new PriceControl(this.resolver, this.filterService);
-    this.map.addControl(priceControl, 'top-left');
+    const existedPriceControl: PriceControl | undefined
+      = <PriceControl | undefined>this.map._controls.find((control: IControl) => control instanceof PriceControl);
+    
+    console.log(existedPriceControl)
+    if (!existedPriceControl) {
+      const priceControl: PriceControl = new PriceControl(this.resolver, this.filterService);
+      this.map.addControl(priceControl, 'top-left');
+    }
   }
 
   /**
@@ -622,8 +627,13 @@ export class MapService {
    * @memberof MapService
    */
   public addRadiusControl(): void {
-    const radiusControl: RadiusControl = new RadiusControl(this.resolver, this);
-    this.map.addControl(radiusControl, 'top-right');
+    const existedRadiusControl: RadiusControl | undefined
+      = <RadiusControl | undefined>this.map._controls.find((control: IControl) => control instanceof RadiusControl);
+
+    if (!existedRadiusControl) {
+      const radiusControl: RadiusControl = new RadiusControl(this.resolver, this);
+      this.map.addControl(radiusControl, 'top-right');
+    }
   }
 
   /**

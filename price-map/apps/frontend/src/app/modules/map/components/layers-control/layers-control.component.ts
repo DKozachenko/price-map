@@ -1,7 +1,6 @@
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { MapService } from './../../services';
-import { Component} from '@angular/core';
-import { WebSocketService } from '../../../../services';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { LayerType } from '../../models/types';
 
 @UntilDestroy()
@@ -10,13 +9,18 @@ import { LayerType } from '../../models/types';
   templateUrl: './layers-control.component.html',
   styleUrls: ['./layers-control.component.scss']
 })
-export class LayersControlComponent {
+export class LayersControlComponent implements OnInit {
   public layer: LayerType = 'products';
+  public mapService: MapService;
+  public cdr: ChangeDetectorRef;
 
-  public mapService: MapService; 
-  public webSocketService: WebSocketService; 
+  public ngOnInit(): void {
+    this.layer = 'products';
+  }
 
   public changeLayer(layerName: LayerType): void {
-    this.mapService.currentLayer$.next(layerName);
+    this.layer = layerName;
+    this.cdr.detectChanges();
+    this.mapService.currentLayer$.next(this.layer);
   }
 }

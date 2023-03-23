@@ -4,20 +4,19 @@ import { MapService } from "../services";
 import {
   IControl,
 } from 'maplibre-gl';
-import { WebSocketService } from "../../../services";
 
 export class LayersControl implements IControl {
   private container: HTMLDivElement;
 
   constructor(private readonly resolver: ComponentFactoryResolver,
-    private readonly mapService: MapService,
-    private readonly webSocketService: WebSocketService) {}
+    private readonly mapService: MapService) {}
 
   private createControlDomContent(): HTMLDivElement {
     const componentFactory = this.resolver.resolveComponentFactory(LayersControlComponent);
     const component = componentFactory.create(Injector.create([]));
     component.instance.mapService = this.mapService;
-    component.instance.webSocketService = this.webSocketService;
+    component.instance.layer = 'products';
+    component.instance.cdr = component.changeDetectorRef;
     component.changeDetectorRef.detectChanges();
     return <HTMLDivElement>component.location.nativeElement;
   }

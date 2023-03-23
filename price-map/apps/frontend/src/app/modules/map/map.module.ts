@@ -34,6 +34,8 @@ import { NbCardModule,
   NbDialogService,
   NbDialogModule} from '@nebular/theme';
 import { SharedModule } from '../shared/shared.module';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -55,6 +57,7 @@ import { SharedModule } from '../shared/shared.module';
   ],
   imports: [
     CommonModule,
+    FormsModule,
     MapRoutingModule,
     NbLayoutModule,
     NbIconModule,
@@ -63,6 +66,7 @@ import { SharedModule } from '../shared/shared.module';
     NbRadioModule,
     NbInputModule,
     NbSelectModule,
+    NgSelectModule,
     NbButtonModule,
     NbListModule,
     NbBadgeModule,
