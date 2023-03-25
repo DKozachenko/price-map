@@ -7,6 +7,8 @@ import { SettingsModule } from './modules/settings/settings.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { FavoriteModule } from './modules/favorite/favorite.module';
 import { ProductService } from './services';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { NbTooltipModule} from '@nebular/theme';
 
 @NgModule({
   declarations: [
@@ -22,6 +24,8 @@ import { ProductService } from './services';
     SettingsModule,
     AdminModule,
     FavoriteModule,
+    NbEvaIconsModule,
+    NbTooltipModule
   ],
   providers: [ProductService]
 })

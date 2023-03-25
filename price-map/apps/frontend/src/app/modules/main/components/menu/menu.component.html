@@ -1,1 +1,23 @@
-<h1 style="color: black; position: absolute; top: 2rem; right: 2rem; z-index: 1000;">Layout</h1>
+<div *ngIf="currentUser" class="menu-block">
+  <a class="menu-btn" [ngClass]="{'menu-btn_active': isMenuBtnActive}" (click)="toggleMenu($event)">
+    <span></span>
+  </a>
+  
+  <nav class="menu" [ngClass]="{'menu_active': isMenuActive}">
+    <a *ngIf="currentUser.role === 'user' || currentUser.role === 'admin'" (click)="goTo('settings')">
+      <img src="../../../../../assets/menu-icons/settings.svg" alt="settings">
+    </a>
+    <a *ngIf="currentUser.role === 'user' || currentUser.role === 'admin'" (click)="goTo('favorite')">
+      <img src="../../../../../assets/menu-icons/heart.svg" alt="heart">
+    </a>
+    <a *ngIf="currentUser.role === 'user' || currentUser.role === 'admin'" (click)="goTo('map')">
+      <img src="../../../../../assets/menu-icons/map.svg" alt="map">
+    </a>
+    <a *ngIf="currentUser.role === 'admin'">
+      <img src="../../../../../assets/menu-icons/users.svg" alt="users" (click)="goTo('admin')">
+    </a>
+    <a *ngIf="currentUser.role === 'user' || currentUser.role === 'admin'" (click)="logout($event)">
+      <img src="../../../../../assets/menu-icons/logout.svg" alt="log out">
+    </a>
+  </nav>
+</div>
