@@ -140,12 +140,12 @@ export class ProductService extends BaseSidebar {
   }
   
   /**
-   * Действия с товарами
+   * Текущее действие с товаром
    * @private
-   * @type {IAction[]}
+   * @type {IAction}
    * @memberof ProductService
    */
-  private productActions: IAction[] = [];
+  private productActionValue: IAction;
 
   /**
    * Подписка на действие для товара
@@ -168,7 +168,7 @@ export class ProductService extends BaseSidebar {
    * @memberof ProductService
    */
   public emitAdditionProductAction(action: IAction): void {
-    this.productActions.push(action);
+    this.productActionValue = action;
     this.productAction.next(action);
   }
 }

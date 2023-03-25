@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import {
   ComponentFactoryResolver,
   ElementRef,
@@ -88,7 +88,38 @@ export class MapService {
    */
   private routeLayerId: string = 'route';
 
-  public currentLayer$: Subject<LayerType> = new Subject<LayerType>();
+  /**
+   * Текущий слой
+   * @private
+   * @type {LayerType}
+   * @memberof MapService
+   */
+  private currentLayerValue: LayerType = 'products';
+  
+  /**
+   * Подписка на изменение текущего слоя
+   * @private
+   * @type {Subject<LayerType>}
+   * @memberof MapService
+   */
+  private currentLayer: Subject<LayerType> = new Subject<LayerType>();
+  
+  /**
+   * Подписка на изменение текущего слоя (публичная)
+   * @type {Observable<LayerType>}
+   * @memberof MapService
+   */
+  public currentLayer$: Observable<LayerType> = this.currentLayer.asObservable();
+
+  /**
+   * Событие смены текущего слоя
+   * @param {LayerType} newLayer текущий слоя
+   * @memberof MapService
+   */
+  public emitSettingCurrentLayer(newLayer: LayerType): void {
+    this.currentLayerValue = newLayer;
+    this.currentLayer.next(newLayer);
+  }
 
   constructor(private readonly productService: ProductService,
     private readonly shopService: ShopService,

@@ -21,6 +21,6 @@ export class LayersControlComponent implements OnInit {
   public changeLayer(layerName: LayerType): void {
     this.layer = layerName;
     this.cdr.detectChanges();
-    this.mapService.currentLayer$.next(this.layer);
+    this.mapService.emitSettingCurrentLayer(this.layer);
   }
 }
