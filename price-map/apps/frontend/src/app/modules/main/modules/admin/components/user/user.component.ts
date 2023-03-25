@@ -1,4 +1,4 @@
-import { SettingsService, WebSocketService } from './../../../../../../services';
+import { SettingsService, TokenService, WebSocketService } from './../../../../../../services';
 import { Component, Input, OnInit } from '@angular/core';
 import { User } from '@core/entities';
 import { UserEvents } from '@core/enums';
@@ -13,10 +13,12 @@ export class UserComponent implements OnInit {
   public isCurrentUser: boolean = false;
 
   constructor(private readonly settingsService: SettingsService,
-    private readonly webSocketService: WebSocketService) {}
+    private readonly webSocketService: WebSocketService,
+    private readonly tokenService: TokenService) {}
 
   public ngOnInit(): void {
-    this.isCurrentUser = this.settingsService.getUser().id === this.user?.id;
+    // Если в settingsService еще нет пользователя, сравнение идет по id пользователя из токена
+    this.isCurrentUser = (this.settingsService.getUser()?.id ?? this.tokenService.getPayload().userId) === this.user?.id;
   }
 
   public remove(): void {

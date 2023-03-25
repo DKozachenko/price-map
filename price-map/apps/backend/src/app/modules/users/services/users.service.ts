@@ -90,6 +90,17 @@ export class UsersService {
   }
 
   /**
+   * Получение избранного пользователя
+   * @param {string} userId id пользователя
+   * @return {*}  {Observable<Product[]>} товары
+   * @memberof UsersService
+   */
+  public getFavoriteProducts(userId: string): Observable<Product[]> {
+    return this.getByQuery({ id: userId }, true)
+      .pipe(switchMap((user: User) => of(user.products)))
+  }
+
+  /**
    * Получение всех пользователей
    * @return {*}  {Observable<User[]>} пользователи
    * @memberof UsersService

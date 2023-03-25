@@ -3,7 +3,7 @@ import { Product, User } from '@core/entities';
 import { UserEvents } from '@core/enums';
 import { IResponseData } from '@core/interfaces';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { NotificationService, SettingsService, WebSocketService } from '../../../../../../services';
+import { NotificationService, SettingsService, TokenService, WebSocketService } from '../../../../../../services';
 
 @UntilDestroy()
 @Component({
@@ -16,10 +16,17 @@ export class FavoriteListComponent implements OnInit {
 
   constructor(private readonly settingsService: SettingsService,
     private readonly webSocketService: WebSocketService,
-    private readonly notificationService: NotificationService) {}
+    private readonly notificationService: NotificationService,
+    private readonly tokenService: TokenService) {}
 
   public ngOnInit(): void {
-    this.favoriteProducts = this.settingsService.getUser().products;
+    this.webSocketService.on<IResponseData<null>>(UserEvents.GetFavoriteProductsFailed)
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+
+    this.webSocketService.on<IResponseData<Product[]>>(UserEvents.GetFavoriteProductsSuccessed)
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<Product[]>) => this.favoriteProducts = response.data);
 
     this.webSocketService.on<IResponseData<null>>(UserEvents.UpdateFavoriteProductsFailed)
       .pipe(untilDestroyed(this))
@@ -31,6 +38,8 @@ export class FavoriteListComponent implements OnInit {
         this.settingsService.setUser(response.data);
         this.favoriteProducts = this.settingsService.getUser().products;
       });
+
+    this.webSocketService.emit<string>(UserEvents.GetFavoriteProductsAttempt, this.tokenService.getPayload().userId);
   }
 
   public trackByProduct(index: number, item: Product): string {

@@ -8,7 +8,7 @@ import { Role, UserEvents } from '@core/enums';
 import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 import { IResponseData } from '@core/interfaces';
-import { User } from '@core/entities';
+import { Product, User } from '@core/entities';
 import { AuthErrorCode, DbErrorCode } from '@core/types';
 import { UsersService } from '../services';
 import { HashService } from '../../../services';
@@ -257,6 +257,49 @@ export class UsersGateway {
               isError: false,
               data: null,
               message: 'Ошибка при добавлении товара в избранное'
+            }
+          });
+        })
+      );
+  }
+
+  /**
+   * Получение избранных товаров пользователя
+   * @param {string} userId id пользователя
+   * @return {*}  {(Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>>)} избранные товары
+   * @memberof UsersGateway
+   */
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(JwtAuthGuard(UserEvents.GetFavoriteProductsFailed), 
+    RolesAuthGuard(UserEvents.GetFavoriteProductsFailed))
+  @SubscribeMessage(UserEvents.GetFavoriteProductsAttempt)
+  public getFavoriteProducts(@MessageBody() userId: string): 
+    Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>> {
+
+    return this.usersService.getFavoriteProducts(userId)
+      .pipe(
+        switchMap((products: Product[]) => {
+          return of({
+            event: UserEvents.GetFavoriteProductsSuccessed,
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: products,
+              message: 'Товары успешно получены'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'UsersGateway');
+          return of({
+            event: UserEvents.GetFavoriteProductsFailed,
+            data: {
+              statusCode: 500,
+              errorCode: <DbErrorCode>'DB_ERROR',
+              isError: false,
+              data: null,
+              message: 'Ошибка при получении товаров'
             }
           });
         })
