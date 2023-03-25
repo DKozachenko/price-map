@@ -61,7 +61,7 @@ export class PriceControlComponent implements OnInit {
       min: +(<string>e.options.value).split(',')[0],
       max: +(<string>e.options.value).split(',')[1]
     };
-    this.filterService.addPriceQuery({
+    this.filterService.emitSettingPriceQuery({
       max: currentPriceQuery.max === initialPriceQuery.max ? null : currentPriceQuery.max,
       min: currentPriceQuery.min === initialPriceQuery.min ? null : currentPriceQuery.min
     });

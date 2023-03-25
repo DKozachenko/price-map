@@ -79,7 +79,7 @@ export class CharacteristicFilterComponent implements OnInit {
       });
     }
 
-    this.filterService.filterValues$.next(this.currentFilter);
+    this.filterService.emitSettingFilterValues(this.currentFilter);
   }
 
   /**
@@ -114,7 +114,7 @@ export class CharacteristicFilterComponent implements OnInit {
       this.currentFilter.push(filterValue);
     }
 
-    this.filterService.filterValues$.next(this.currentFilter);
+    this.filterService.emitSettingFilterValues(this.currentFilter);
   }
 
   /**
@@ -149,7 +149,7 @@ export class CharacteristicFilterComponent implements OnInit {
       this.currentFilter.push(filterValue);
     }
 
-    this.filterService.filterValues$.next(this.currentFilter);
+    this.filterService.emitSettingFilterValues(this.currentFilter);
   }
 
   /**

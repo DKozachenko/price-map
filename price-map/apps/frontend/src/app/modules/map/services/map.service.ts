@@ -31,7 +31,7 @@ import { LayerType } from '../models/types';
 import { BaseSidebar } from '../../../classes';
 
 /**
- * Сервис по работе с картой
+ * Сервис-стор по работе с картой
  * @export
  * @class MapService
  */
@@ -161,7 +161,7 @@ export class MapService {
     const center: [number, number] = event?.features?.[0]?.properties?.center;
     const radiusInKm: number = event?.features?.[0]?.properties?.radiusInKm;
     if (center && radiusInKm) {
-      this.filterService.radiusQuery$.next({
+      this.filterService.emitSettingRadiusQuery({
         center: {
           latitude: center[1],
           longitude: center[0]
@@ -718,7 +718,7 @@ export class MapService {
       = <IControl | undefined>this.map._controls.find((control: IControl) => control instanceof MapboxDraw);
     if (drawControl) {
       this.map.removeControl(drawControl);
-      this.filterService.radiusQuery$.next({
+      this.filterService.emitSettingRadiusQuery({
         center: null,
         distance: null
       });

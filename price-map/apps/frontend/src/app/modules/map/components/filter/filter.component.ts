@@ -215,7 +215,7 @@ export class FilterComponent implements OnInit {
 
     if (this.setChechedCategory3LevelIds.size !== setSelected.size) {
       this.setChechedCategory3LevelIds = setSelected;
-      this.filterService.chechedCategory3LevelIds$.next(this.setChechedCategory3LevelIds);
+      this.filterService.emitSettingCheckedCategory3LevelIds(this.setChechedCategory3LevelIds);
     }
   }
 

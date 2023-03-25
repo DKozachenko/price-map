@@ -1,7 +1,7 @@
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Product, Shop } from '@core/entities';
-import { IResponseData, IProductQuery, IPriceQuery } from '@core/interfaces';
+import { IResponseData, IProductQuery, IPriceQuery, IUserFilter, IRadiusQuery } from '@core/interfaces';
 import { NotificationService, ProductService, WebSocketService } from '../../../../services';
 import { FilterService, MapService, ShopService } from '../../services';
 import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
@@ -85,7 +85,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     this.webSocketService.on<IResponseData<IPriceQuery>>(ProductEvents.GetPriceRangeSuccessed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<IPriceQuery>) => {
-        this.filterService.initialPriceQuery$.next(response.data);
+        this.filterService.emitSettingInitialPriceQuery(response.data);
       });
 
     this.webSocketService.on<IResponseData<IPriceQuery>>(ProductEvents.GetPriceRangeFailed)
@@ -126,10 +126,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.filterService.allFilters$
       .pipe(untilDestroyed(this))
-      .subscribe(([ids, filters, priceQuery, radiusQuery]: any[]) => {
+      .subscribe(([categoryIds, filters, priceQuery, radiusQuery]: [Set<string>, IUserFilter[], IPriceQuery, IRadiusQuery]) => {
         this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
-          category3LevelIds: ids ? [...ids] : [],
-          filters: filters ?? [],
+          category3LevelIds: categoryIds ? [...categoryIds] : [],
+          filters: filters && categoryIds.size === 1 ? filters : [],
           price: priceQuery ?? { max: null, min: null },
           radius: radiusQuery ?? { center: null, distance: null }
         });
