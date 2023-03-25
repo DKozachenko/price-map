@@ -35,7 +35,7 @@ export class ShopsSidebarComponent implements OnInit {
   }
 
   public close(): void {
-    this.shopsService.itemIdsToShow$.next([]);
+    this.shopsService.emitSettingItemIdToShow([]);
   }
 
   public trackByShop(index: number, item: Shop): string {

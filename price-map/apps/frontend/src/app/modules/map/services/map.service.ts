@@ -192,7 +192,7 @@ export class MapService {
       const geometry: Point = feature?.geometry;
       const coordinates: [number, number] = <[number, number]>geometry?.coordinates?.slice();
       this.centerMap(coordinates);
-      service.itemIdsToShow$.next([feature.properties.id]);
+      service.emitSettingItemIdToShow([feature.properties.id]);
     });
   }
 
@@ -226,7 +226,7 @@ export class MapService {
           if (error) return;
           const features: Feature<Point, IFeatureProps>[] = <Feature<Point, IFeatureProps>[]>data;
           const itemIds: string[] = features.map((feature: Feature<Point, IFeatureProps>) => feature.properties.id);
-          service.itemIdsToShow$.next(itemIds);
+          service.emitSettingItemIdToShow(itemIds);
         })
       }
       

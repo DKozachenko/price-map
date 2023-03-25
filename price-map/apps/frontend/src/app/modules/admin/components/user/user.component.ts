@@ -16,8 +16,7 @@ export class UserComponent implements OnInit {
     private readonly webSocketService: WebSocketService) {}
 
   public ngOnInit(): void {
-    const currentUser: User = this.settingsService.getUser();
-    this.isCurrentUser = currentUser.id === this.user?.id;
+    this.isCurrentUser = this.settingsService.getUser().id === this.user?.id;
   }
 
   public remove(): void {

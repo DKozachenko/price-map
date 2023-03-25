@@ -21,8 +21,7 @@ export class ProductsSidebarComponent implements OnInit {
     private readonly settingService: SettingsService) {}
 
   public ngOnInit(): void {
-    const currentUser: User = this.settingService.getUser();
-    this.productsService.setFavoriteProductIds(new Set(currentUser.products.map((product: Product) => product.id)));
+    this.productsService.setFavoriteProductIds(new Set(this.settingService.getUser().products.map((product: Product) => product.id)));
 
     this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductsByIdsFailed)
       .pipe(untilDestroyed(this))
@@ -67,7 +66,7 @@ export class ProductsSidebarComponent implements OnInit {
   }
 
   public close(): void {
-    this.productsService.itemIdsToShow$.next([]);
+    this.productsService.emitSettingItemIdToShow([]);
   }
 
   public trackByProduct(index: number, item: Product): string {
