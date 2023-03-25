@@ -35,7 +35,6 @@ import { NbCardModule,
   NbDialogModule} from '@nebular/theme';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
-import { PricePipe } from './pipes';
 
 @NgModule({
   declarations: [
@@ -53,8 +52,7 @@ import { PricePipe } from './pipes';
     ProductInfoModalComponent,
     ShopsSidebarComponent,
     ShopCardComponent,
-    RadiusControlComponent,
-    PricePipe
+    RadiusControlComponent
   ],
   imports: [
     CommonModule,

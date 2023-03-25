@@ -3,7 +3,7 @@ import { User } from '@core/entities';
 import { Subject, Observable } from 'rxjs';
 
 /**
- * Сервис настроек
+ * Сервис-стор настроек
  * @export
  * @class SettingsService
  */
@@ -16,14 +16,6 @@ export class SettingsService {
    * @memberof SettingsService
    */
   private currentUser: User;
-
-  /**
-   * Подписка на обновление пользователя
-   * @private
-   * @type {Subject<void>}
-   * @memberof SettingsService
-   */
-  private updateUser: Subject<void> = new Subject<void>();
 
   /**
    * Получение пользователя
@@ -44,6 +36,14 @@ export class SettingsService {
   }
 
   /**
+   * Подписка на обновление пользователя
+   * @private
+   * @type {Subject<void>}
+   * @memberof SettingsService
+   */
+  private updateUser: Subject<void> = new Subject<void>();
+
+  /**
    * Подписка на обновление пользователя (публичная)
    * @type {Observable<void>}
    * @memberof SettingsService
@@ -51,7 +51,7 @@ export class SettingsService {
   public updateUser$: Observable<void> = this.updateUser.asObservable(); 
 
   /**
-   * Сообщить об изменении пользователя
+   * Событие изменения пользователя
    * @memberof SettingsService
    */
   public emitUpdateUser(): void {

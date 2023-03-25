@@ -6,7 +6,12 @@ import { NbAccordionModule, NbButtonModule, NbIconModule, NbLayoutModule, NbTagM
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
-  declarations: [UserListComponent, UserComponent, FavoriteListComponent, FavoriteItemComponent],
+  declarations: [
+    UserListComponent, 
+    UserComponent, 
+    FavoriteListComponent, 
+    FavoriteItemComponent
+  ],
   imports: [
     CommonModule,
     AdminRoutingModule,

@@ -28,6 +28,6 @@ export class ProductMiniCardComponent {
    * @memberof ProductMiniCardComponent
    */
   public deleteProductFromRoute(): void {
-    this.productService.deleteProductIdFromRoute(this.product?.id ?? '');
+    this.productService.emitRemovingProductIdFromRoute(this.product?.id ?? '');
   }
 }

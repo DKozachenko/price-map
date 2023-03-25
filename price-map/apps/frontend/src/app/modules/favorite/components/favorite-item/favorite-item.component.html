@@ -10,7 +10,7 @@
       <div class="favorite__product-body__info">
         <p>{{ product.description ? product.description : 'Нет описания' }}</p>
 
-        <p>Цена: {{ product.price }} р.</p>
+        <p>Цена: {{ product.price | price:'р' }} р.</p>
 
         <button
           class="button"

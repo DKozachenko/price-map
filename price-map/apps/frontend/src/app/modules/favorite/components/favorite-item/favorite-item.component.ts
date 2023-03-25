@@ -17,7 +17,7 @@ export class FavoriteItemComponent {
     private readonly productService: ProductService) {}
 
   public remove(): void {
-    this.productService.favoriteProductIds.delete(this.product?.id ?? '');
-    this.webSocketService.emit<string[]>(UserEvents.UpdateFavoriteProductsAttempt, [...this.productService.favoriteProductIds]);
+    this.productService.removeFavoriteProductId(this.product?.id ?? '');
+    this.webSocketService.emit<string[]>(UserEvents.UpdateFavoriteProductsAttempt, [...this.productService.getFavoriteProductIds()]);
   }
 }

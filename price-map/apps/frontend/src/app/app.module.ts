@@ -65,6 +65,6 @@ import { FavoriteModule } from './modules/favorite/favorite.module';
     SettingsService,
     ProductService
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

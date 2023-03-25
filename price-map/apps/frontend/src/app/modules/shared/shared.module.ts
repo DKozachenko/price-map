@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './components';
 import { RouterModule } from '@angular/router';
+import { PricePipe } from './pipes';
 
 /**
  * Общий модуль
@@ -10,7 +11,7 @@ import { RouterModule } from '@angular/router';
  * @class SharedModule
  */
 @NgModule({
-  declarations: [HeaderComponent],
+  declarations: [HeaderComponent, PricePipe],
   imports: [
     CommonModule, 
     NbLayoutModule, 
@@ -18,6 +19,6 @@ import { RouterModule } from '@angular/router';
     RouterModule,
     NbUserModule
   ],
-  exports: [HeaderComponent]
+  exports: [HeaderComponent, PricePipe]
 })
 export class SharedModule { }

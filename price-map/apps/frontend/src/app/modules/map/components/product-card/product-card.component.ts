@@ -23,8 +23,8 @@ export class ProductCardComponent implements OnInit {
     private readonly dialogService: NbDialogService) {}
 
   public ngOnInit(): void {
-    this.isInRoute = [...this.productService.productIdsToRoute].includes(this.product?.id ?? '');
-    this.isFavorite = [...this.productService.favoriteProductIds].includes(this.product?.id ?? '');
+    this.isInRoute = [...this.productService.getProductIdsToRoute()].includes(this.product?.id ?? '');
+    this.isFavorite = [...this.productService.getFavoriteProductIds()].includes(this.product?.id ?? '');
 
     this.productService.productAction$
       .pipe(untilDestroyed(this))
@@ -42,20 +42,20 @@ export class ProductCardComponent implements OnInit {
 
   public routeAction(): void {
     if (!this.isInRoute) {
-      this.productService.addProductIdToRoute(this.product?.id ?? '');
+      this.productService.emitAdditionProductIdToRoute(this.product?.id ?? '');
     } else {
-      this.productService.deleteProductIdFromRoute(this.product?.id ?? '');
+      this.productService.emitRemovingProductIdFromRoute(this.product?.id ?? '');
     }
   }
 
   public favoriteAction(): void {
     if (!this.isFavorite) {
-      this.productService.favoriteProductIds.add(this.product?.id ?? '');
+      this.productService.addFavoriteProductId(this.product?.id ?? '');
     } else {
-      this.productService.favoriteProductIds.delete(this.product?.id ?? '');
+      this.productService.removeFavoriteProductId(this.product?.id ?? '');
     }
 
-    this.webSocketService.emit<string[]>(UserEvents.UpdateFavoriteProductsAttempt, [...this.productService.favoriteProductIds]);
+    this.webSocketService.emit<string[]>(UserEvents.UpdateFavoriteProductsAttempt, [...this.productService.getFavoriteProductIds()]);
   }
 
   public openInfoDialog(): void {
