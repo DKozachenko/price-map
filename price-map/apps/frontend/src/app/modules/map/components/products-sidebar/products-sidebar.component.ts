@@ -21,7 +21,8 @@ export class ProductsSidebarComponent implements OnInit {
     private readonly settingService: SettingsService) {}
 
   public ngOnInit(): void {
-    this.productsService.favoriteProductIds = new Set(this.settingService.currentUser.products.map((product: Product) => product.id));
+    const currentUser: User = this.settingService.getUser();
+    this.productsService.favoriteProductIds = new Set(currentUser.products.map((product: Product) => product.id));
 
     this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductsByIdsFailed)
       .pipe(untilDestroyed(this))
@@ -40,15 +41,16 @@ export class ProductsSidebarComponent implements OnInit {
       .subscribe((response: IResponseData<User>) => {
         // Если в ответе больше избранных, соответственно произошло добавление
         // если меньше, соответственно произошло удаление
-        if (response.data.products.length > this.settingService.currentUser.products.length) {
+        const currentUser: User = this.settingService.getUser();
+        if (response.data.products.length > currentUser.products.length) {
           for (const product of response.data.products) {
-            if (!this.settingService.currentUser.products.map((product: Product) => product.id).includes(product.id)) {
+            if (!currentUser.products.map((product: Product) => product.id).includes(product.id)) {
               this.productsService.productAction$.next({ id: product.id ?? '', name: 'favorite', direction: 'add' });
               break;
             }
           }
         } else {
-          for (const product of this.settingService.currentUser.products) {
+          for (const product of currentUser.products) {
             if (!response.data.products.map((product: Product) => product.id).includes(product.id)) {
               this.productsService.productAction$.next({ id: product.id ?? '', name: 'favorite', direction: 'remove' });
               break;
@@ -56,7 +58,7 @@ export class ProductsSidebarComponent implements OnInit {
           }
         }
         
-        this.settingService.currentUser = response.data;
+        this.settingService.setUser(response.data);
       });
 
     this.productsService.itemIdsToShow$

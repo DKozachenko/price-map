@@ -19,7 +19,8 @@ export class FavoriteListComponent implements OnInit {
     private readonly notificationService: NotificationService) {}
 
   public ngOnInit(): void {
-    this.favoriteProducts = this.settingsService.currentUser.products;
+    const currentUser: User = this.settingsService.getUser();
+    this.favoriteProducts = currentUser.products;
 
     this.webSocketService.on<IResponseData<null>>(UserEvents.UpdateFavoriteProductsFailed)
       .pipe(untilDestroyed(this))
@@ -27,9 +28,10 @@ export class FavoriteListComponent implements OnInit {
 
     this.webSocketService.on<IResponseData<User>>(UserEvents.UpdateFavoriteProductsSuccessed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<User>) => {       
-        this.settingsService.currentUser = response.data;
-        this.favoriteProducts = this.settingsService.currentUser.products;
+      .subscribe((response: IResponseData<User>) => {   
+        this.settingsService.setUser(response.data);
+        const currentUser: User = this.settingsService.getUser();
+        this.favoriteProducts = currentUser.products;
       });
   }
 

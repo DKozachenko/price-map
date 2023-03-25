@@ -60,7 +60,7 @@ export class SettingsFormComponent implements OnInit {
         untilDestroyed(this)
       )
       .subscribe((response: IResponseData<Omit<User, 'password'> & { password?: string }>) => {
-        this.settingsService.updateUser$.next();
+        this.settingsService.emitUpdateUser();
         this.notificationService.showSuccess(response.message);
       });
 

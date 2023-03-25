@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '@core/entities';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 
 /**
  * Сервис настроек
@@ -9,12 +9,52 @@ import { Subject } from 'rxjs';
  */
 @Injectable()
 export class SettingsService {
-  public currentUser: User;
+  /**
+   * Текущий пользователь
+   * @private
+   * @type {User}
+   * @memberof SettingsService
+   */
+  private currentUser: User;
 
   /**
-   * Обновление пользователя
+   * Подписка на обновление пользователя
+   * @private
    * @type {Subject<void>}
    * @memberof SettingsService
    */
-  public updateUser$: Subject<void> = new Subject<void>();
+  private updateUser: Subject<void> = new Subject<void>();
+
+  /**
+   * Получение пользователя
+   * @return {*}  {User} пользователь
+   * @memberof SettingsService
+   */
+  public getUser(): User {
+    return this.currentUser;
+  }
+
+  /**
+   * Установка пользователя
+   * @param {User} user
+   * @memberof SettingsService
+   */
+  public setUser(user: User): void {
+    this.currentUser = user;
+  }
+
+  /**
+   * Подписка на обновление пользователя (публичная)
+   * @type {Observable<void>}
+   * @memberof SettingsService
+   */
+  public updateUser$: Observable<void> = this.updateUser.asObservable(); 
+
+  /**
+   * Сообщить об изменении пользователя
+   * @memberof SettingsService
+   */
+  public emitUpdateUser(): void {
+    this.updateUser.next();
+  }
 }
