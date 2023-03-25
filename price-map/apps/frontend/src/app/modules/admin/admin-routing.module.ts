@@ -5,16 +5,11 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'admin',
-    pathMatch: 'full'
-  },
-  {
-    path: 'admin',
     component: UserListComponent
   },
   {
     path: '**',
-    redirectTo: 'admin',
+    redirectTo: '',
     pathMatch: 'full'
   },
 ];

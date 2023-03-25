@@ -1,7 +1,4 @@
 <nb-layout>
-  <nb-layout-header class="header">
-    <shared-header></shared-header>
-  </nb-layout-header>
   <nb-layout-column>
     <div class="container" [nbSpinner]="isLoading" [class.with_filter]="isShowFilter" nbSpinnerStatus="primary" >
       <div class="map" [class.loader]="isLoading" #map></div>

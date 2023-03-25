@@ -17,6 +17,7 @@ import { SharedModule } from './modules/shared/shared.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { FavoriteModule } from './modules/favorite/favorite.module';
+import { MainModule } from './modules/main/main.module';
 
 /**
  * Главный модуль приложения
@@ -46,6 +47,7 @@ import { FavoriteModule } from './modules/favorite/favorite.module';
     SettingsModule,
     AdminModule,
     FavoriteModule,
+    MainModule,
     SharedModule
   ],
   providers: [
