@@ -2,12 +2,11 @@ import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Product, Shop } from '@core/entities';
 import { IResponseData, IProductQuery, IPriceQuery, IUserFilter, IRadiusQuery } from '@core/interfaces';
-import { NotificationService, ProductService, WebSocketService } from '../../../../../../services';
+import { NotificationService, WebSocketService } from '../../../../../../services';
 import { FilterService, MapService, ShopService } from '../../services';
 import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
 import { LayerType } from '../../models/types';
-import { customCombineLastest } from '../operators';
-import { debounceTime } from 'rxjs';
+import { ProductService } from '../../../../services';
 
 /**
  * Компонент карты

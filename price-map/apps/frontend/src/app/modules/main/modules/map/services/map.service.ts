@@ -26,9 +26,9 @@ import { FilterService, ShopService } from '.';
 import { Product, Shop } from '@core/entities';
 import { IFeatureProps } from '../models/interfaces';
 import { ClearControl, LayersControl, PriceControl, RadiusControl } from '../controls';
-import { ProductService } from '../../../../../services';
+import { ProductService } from '../../../services';
 import { LayerType } from '../models/types';
-import { BaseSidebar } from '../../../../../classes';
+import { BaseSidebar } from '../../../classes';
 
 /**
  * Сервис-стор по работе с картой

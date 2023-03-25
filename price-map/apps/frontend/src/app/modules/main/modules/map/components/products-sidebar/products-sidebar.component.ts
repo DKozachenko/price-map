@@ -1,9 +1,10 @@
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Component, OnInit } from '@angular/core';
-import { NotificationService, ProductService, SettingsService, WebSocketService } from '../../../../../../services';
+import { NotificationService, SettingsService, WebSocketService } from '../../../../../../services';
 import { Product, User } from '@core/entities';
 import { IResponseData } from '@core/interfaces';
 import { ProductEvents, UserEvents } from '@core/enums';
+import { ProductService } from '../../../../services';
 
 
 @UntilDestroy()

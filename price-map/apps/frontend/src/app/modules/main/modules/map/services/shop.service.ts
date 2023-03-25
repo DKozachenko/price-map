@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BaseSidebar } from '../../../../../classes';
 import { ReplaySubject} from 'rxjs';
+import { BaseSidebar } from '../../../classes';
 
 /**
  * Сервис-стор для магазинов

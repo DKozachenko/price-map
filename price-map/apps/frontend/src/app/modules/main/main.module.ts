@@ -6,8 +6,7 @@ import { MapModule } from './modules/map/map.module';
 import { SettingsModule } from './modules/settings/settings.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { FavoriteModule } from './modules/favorite/favorite.module';
-import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { NbIconModule, NbLayoutModule } from '@nebular/theme';
+import { ProductService } from './services';
 
 @NgModule({
   declarations: [
@@ -23,6 +22,7 @@ import { NbIconModule, NbLayoutModule } from '@nebular/theme';
     SettingsModule,
     AdminModule,
     FavoriteModule,
-  ]
+  ],
+  providers: [ProductService]
 })
 export class MainModule { }

@@ -2,7 +2,8 @@ import { Component, Input } from '@angular/core';
 import { Product } from '@core/entities';
 import { UserEvents } from '@core/enums';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { WebSocketService, ProductService } from '../../../../../../services';
+import { WebSocketService } from '../../../../../../services';
+import { ProductService } from '../../../../services';
 
 @UntilDestroy()
 @Component({

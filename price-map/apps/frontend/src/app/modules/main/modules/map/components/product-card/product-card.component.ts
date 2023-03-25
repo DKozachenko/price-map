@@ -1,11 +1,12 @@
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Component, Input, OnInit } from '@angular/core';
 import { Product } from '@core/entities';
-import { ProductService, WebSocketService } from './../../../../../../services';
+import { WebSocketService } from './../../../../../../services';
 import { UserEvents } from '@core/enums';
 import { IAction } from '../../models/interfaces';
 import { NbDialogService } from '@nebular/theme';
 import { ProductInfoModalComponent } from '..';
+import { ProductService } from '../../../../services';
 
 @UntilDestroy()
 @Component({
