@@ -1,0 +1,71 @@
+@import "../../../../../../../assets/styles/mixins";
+
+.label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin: 0;
+  min-height: inherit;
+  padding: 0;
+}
+
+.native-input:focus {
+  &:not(:checked) {
+    & + .custom-checkbox:not(:hover) {
+      background-color: #7b51db;
+      border-color: #5a37b8;
+    }
+  }
+
+  & + .custom-checkbox.checked {
+    background-color: #7b51db;
+    border-color: #5a37b8;
+    box-shadow: 0 0 0 0.375rem #6a6a94;
+  }
+}
+
+.custom-checkbox {
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 3px;
+  position: relative;
+  width: 1.35rem;
+  height: 1.35rem;
+  flex-shrink: 0;
+  background-color: rgba(161, 110, 255, 0.08);
+  border-color: #a16eff;
+  transition-duration: .15s;
+  transition-property: background-color,border,box-shadow;
+  transition-timing-function: ease-in;
+
+  &:hover.checked {
+    background-color: #b18aff;
+    border-color: #b18aff;
+  }
+
+  &.checked {
+    background-color: #a16eff;
+    border-color: #a16eff;
+  }
+
+  &-icon {
+    color: #ffffff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+
+    svg {
+      vertical-align: top;
+    }
+  }
+}
+
+.text {
+  padding-left: 0.6875rem;
+  transition-duration: .15s;
+  transition-property: color;
+  transition-timing-function: ease-in;
+  @include font(1.4rem, white);
+}

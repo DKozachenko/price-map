@@ -1,0 +1,45 @@
+@import "../../../../../../../assets/styles/mixins";
+
+.filter {
+  left: 0;
+  border: none;
+  border-right: 1px solid #13132b;
+  width: 20.5vw;
+}
+
+.category {
+  &__level {
+    &:not(:first-child) {
+      margin-bottom: 1rem;
+      margin-top: 1rem;
+    }
+
+    &_nested {
+      padding-left: 2rem;
+    }
+  }
+
+  &__group {
+    display: flex;
+    justify-content: space-between;
+
+    label {
+      @include font(1.4rem, white);
+
+      margin-left: 0.8em;
+    }
+  }
+
+  &__dropdown {
+    transform-origin: center center;
+    transition: transform .2s linear;
+
+    &_up {
+      transform: rotate(-180deg) translateY(2px);
+    }
+
+    nb-icon {
+      font-size: 1.65rem;
+    }
+  }
+}

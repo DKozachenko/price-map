@@ -26,7 +26,7 @@ const routes: Routes = [
             Role.Admin
           ]
         },
-        loadChildren: () => import('../map/map.module').then(m => m.MapModule),
+        loadChildren: () => import('./modules/map/map.module').then(m => m.MapModule),
         title: 'Карта'
       },
       {
@@ -41,7 +41,7 @@ const routes: Routes = [
             Role.Admin
           ]
         },
-        loadChildren: () => import('../settings/settings.module').then(m => m.SettingsModule),
+        loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule),
         title: 'Настройки'
       },
       {
@@ -56,7 +56,7 @@ const routes: Routes = [
             Role.Admin
           ]
         },
-        loadChildren: () => import('../favorite/favorite.module').then(m => m.FavoriteModule),
+        loadChildren: () => import('./modules/favorite/favorite.module').then(m => m.FavoriteModule),
         title: 'Избранное'
       },
       {
@@ -68,7 +68,7 @@ const routes: Routes = [
         data: {
           roles: [Role.Admin]
         },
-        loadChildren: () => import('../admin/admin.module').then(m => m.AdminModule),
+        loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule),
         title: 'Админ-панель'
       },
     ]

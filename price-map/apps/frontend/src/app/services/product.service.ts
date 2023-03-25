@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ReplaySubject, Subject, Observable } from 'rxjs';
 import { BaseSidebar } from '../classes';
-import { IAction } from '../modules/map/models/interfaces';
+import { IAction } from '../modules/main/modules/map/models/interfaces';
 
 /**
  * Сервис-стор товаров
