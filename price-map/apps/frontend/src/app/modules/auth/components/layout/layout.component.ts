@@ -55,7 +55,7 @@ export class LayoutComponent {
     ];
   }
 
-  public setLoading(state: boolean) {
+  public setLoading(state: boolean): void {
     this.isLoading = state;
   }
 }
