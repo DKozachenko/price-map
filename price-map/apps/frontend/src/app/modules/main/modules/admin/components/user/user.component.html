@@ -1,0 +1,35 @@
+<nb-accordion *ngIf="user" class="user">
+  <nb-accordion-item>
+    <nb-accordion-item-header>
+      {{ user.name }} {{ user.lastName }}
+      <nb-tag *ngIf="isCurrentUser" text="Это вы" appearance="outline" status="primary"></nb-tag>
+    </nb-accordion-item-header>
+
+    <nb-accordion-item-body class="user-body">
+      <p>Роль: {{ user.role }}</p>
+      <p>Почта: {{ user.mail }}</p>
+      <p>Никнейм: {{ user.nickname }}</p>
+
+      <button
+        class="button"
+        nbButton
+        hero
+        status="primary"
+        shape="round"
+        type="button"
+        (click)="remove()"
+        [disabled]="isCurrentUser"
+      >
+        Удалить
+      </button>
+
+      <ng-container *ngIf="!!user.products.length; else noProducts">
+        <admin-favorite-list [favoriteProducts]="user.products"></admin-favorite-list>
+      </ng-container>
+
+      <ng-template #noProducts>
+        <h5 class="user-hint">Нет товаров в избранном</h5>
+      </ng-template>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>

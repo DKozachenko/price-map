@@ -1,0 +1,104 @@
+@import "../../../../../../../assets/styles/mixins";
+
+.characteristic__filter {
+  left: 17.5vw;
+  z-index: 4;
+  width: 30rem;
+  border: none;
+
+  padding-left: 5rem;
+  animation: slideIn .3s linear;
+}
+
+.characteristic {
+  &__group {
+    margin-bottom: 1.3rem;
+
+    &_range {
+      input {
+        width: 40%;
+
+        &:last-child {
+          margin-right: 0;
+          margin-left: 1rem;
+        }
+      }
+    }
+
+    p {
+      @include font(1.4rem, white);
+
+      margin-bottom: .7rem;
+    }
+
+    nb-icon {
+      font-size: 1.35rem;
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    left: 3rem;
+  } to {
+    left: 21.5vw;
+  }
+}
+
+::ng-deep {
+  .characteristic__filter {
+    nb-radio {
+      .outer-circle,
+      .inner-circle {
+        width: 1.55rem;
+        height: 1.55rem;
+      }
+
+      .text {
+        @include font(1.4rem, white);
+        padding-left: 1.4rem!important;
+      }
+
+      label {
+        padding: .6rem 0!important;
+      }
+    }
+
+    [nbInput].size-medium {
+      @include font(1.1rem, white);
+
+      &::placeholder {
+        @include font(1.1rem, white);
+        opacity: .6;
+      }
+    }
+
+    nb-select {
+      &.size-medium .select-button {
+        @include font(1.25rem, white);
+        padding-right: 2.5rem;
+      }
+    }
+  }
+}
+
+::ng-deep.nb-theme-cosmic {
+  nb-option-list {
+    border-color: #a16eff;
+
+    &.size-medium nb-option.multiple {
+      @include font(1.25rem, white);
+      padding: 0.6rem 1rem!important;
+      align-items: center;
+    }
+
+    &.position-bottom {
+      border-top-color: #a16eff;
+    }
+  }
+
+  nb-checkbox .custom-checkbox {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+}

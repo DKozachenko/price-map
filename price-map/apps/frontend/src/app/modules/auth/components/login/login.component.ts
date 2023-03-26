@@ -1,10 +1,11 @@
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationService, TokenService, WebSocketService } from '../../../../services';
 import { IResponseData, IUserLoginInfo } from '@core/interfaces';
 import { AuthEvents } from '@core/enums';
 import { Router } from '@angular/router';
+import { delay } from 'rxjs';
 
 /**
  * Компонет формы логина
@@ -25,13 +26,15 @@ export class LoginComponent implements OnInit {
    * @memberof LoginComponent
    */
   public isShowPassword: boolean = false;
-  
+
   /**
    * Экземпляр формы
    * @type {FormGroup}
    * @memberof LoginComponent
    */
   public form!: FormGroup;
+
+  @Output() public loadingState: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private readonly webSocketSevice: WebSocketService,
     private readonly notificationService: NotificationService,
@@ -51,14 +54,18 @@ export class LoginComponent implements OnInit {
         this.notificationService.showSuccess(response.message);
         this.tokenService.setToken(response.data ?? '');
         this.router.navigate(['map'], { queryParamsHandling: 'merge' });
+        this.loadingState.emit(false);
       });
-    
+
     this.webSocketSevice.on<IResponseData<null>>(AuthEvents.LoginFailed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+      .subscribe((response: IResponseData<null>) => {
+        this.notificationService.showError(response.message);
+        this.loadingState.emit(false);
+      });
   }
 
-  /** 
+  /**
    * Смена флага, отвечающего за отображения пароля
    * @memberof LoginComponent
    */
@@ -71,6 +78,7 @@ export class LoginComponent implements OnInit {
    * @memberof LoginComponent
    */
   public submit(): void {
-    this.webSocketSevice.emit<IUserLoginInfo>(AuthEvents.LoginAttemp, this.form.value);
+    this.webSocketSevice.emit<IUserLoginInfo>(AuthEvents.LoginAttemp, this.form.value, false);
+    this.loadingState.emit(true);
   }
 }

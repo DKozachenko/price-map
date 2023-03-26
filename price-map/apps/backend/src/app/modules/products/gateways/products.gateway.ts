@@ -4,7 +4,7 @@ import { MessageBody,
   WsResponse } from '@nestjs/websockets';
 import { Roles } from '../../../decorators';
 import { ProductEvents, Role } from '@core/enums';
-import { IProductQuery, IResponseData } from '@core/interfaces';
+import { IPriceQuery, IProductQuery, IResponseData } from '@core/interfaces';
 import { Product } from '@core/entities';
 import { ProductsService } from '../services';
 import { DbErrorCode } from '@core/types';
@@ -100,6 +100,86 @@ export class ProductsGateway {
               isError: false,
               data: null,
               message: 'Ошибка при получении товара'
+            }
+          });
+        })
+      );
+  }
+
+  /**
+   * Получение диапазона цен
+   * @return {*}  {(Observable<WsResponse<IResponseData<IPriceQuery | null, DbErrorCode | null>>>)} диапазон цен
+   * @memberof ProductsGateway
+   */
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(JwtAuthGuard(ProductEvents.GetPriceRangeFailed), RolesAuthGuard(ProductEvents.GetPriceRangeFailed))
+  @SubscribeMessage(ProductEvents.GetPriceRangeAttempt)
+  public getPriceRange(): Observable<WsResponse<IResponseData<IPriceQuery | null, DbErrorCode | null>>> {
+    return this.productsService.getPriceRange()
+      .pipe(
+        switchMap((priceQuery: IPriceQuery) => {
+          return of({
+            event: ProductEvents.GetPriceRangeSuccessed,
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: priceQuery,
+              message: 'Диапазон цен успешно получен'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'ProductsGateway');
+          return of({
+            event: ProductEvents.GetPriceRangeFailed,
+            data: {
+              statusCode: 500,
+              errorCode: <DbErrorCode>'DB_ERROR',
+              isError: false,
+              data: null,
+              message: 'Ошибка при получении диапазона цен'
+            }
+          });
+        })
+      );
+  }
+
+  /**
+   * Получение товаров по id
+   * @param {string[]} ids массив id
+   * @return {*}  {(Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>>)} массив товаров
+   * @memberof ProductsGateway
+   */
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(JwtAuthGuard(ProductEvents.GetProductsByIdsFailed), RolesAuthGuard(ProductEvents.GetProductsByIdsFailed))
+  @SubscribeMessage(ProductEvents.GetProductsByIdsAttempt)
+  public getByIds(@MessageBody() ids: string[]): 
+    Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>> {
+    return this.productsService.getByIds(ids)
+      .pipe(
+        switchMap((product: Product[] | null) => {
+          return of({
+            event: ProductEvents.GetProductsByIdsSuccessed,
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: product,
+              message: 'Товары по id успешно получены'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'ProductsGateway');
+          return of({
+            event: ProductEvents.GetProductsByIdsFailed,
+            data: {
+              statusCode: 500,
+              errorCode: <DbErrorCode>'DB_ERROR',
+              isError: false,
+              data: null,
+              message: 'Ошибка при получении товаров по id'
             }
           });
         })

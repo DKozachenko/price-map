@@ -1,0 +1,34 @@
+@import "../../../../../../../assets/styles/mixins";
+
+::ng-deep.nb-theme-cosmic nb-select.appearance-outline.size-large .select-button {
+  background-color: #fff;
+  border: 0;
+  outline: none;
+  box-shadow: 0 0 0 2px rgb(0 0 0 / 10%);
+  @include font(1.3rem, #333);
+
+  &:hover {
+    background-color: darken(#fff, 5%);
+  }
+
+  &:focus {
+    border: 0!important;
+    background-color: darken(#fff, 5%)!important;
+  }
+}
+
+::ng-deep.nb-theme-cosmic nb-option {
+  &:not(.multiple) {
+    background-color: #fff;  
+    @include font(1.3rem, #333);
+
+    &:hover {
+      background-color: darken(#fff, 5%);
+    }
+  }
+}
+
+::ng-deep.nb-theme-cosmic nb-option-list.size-large {
+  border: 0;
+  box-shadow: 0 0 0 2px rgb(0 0 0 / 10%);
+}

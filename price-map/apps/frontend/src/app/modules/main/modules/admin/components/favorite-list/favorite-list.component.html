@@ -1,0 +1,8 @@
+<div class="favorite__products custom__scroll">
+  <h3>Избранное</h3>
+
+  <admin-favorite-item *ngFor="let product of favoriteProducts; trackBy: trackByProduct"
+    [product]="product"
+  ></admin-favorite-item>
+</div>
+  

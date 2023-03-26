@@ -1,0 +1,14 @@
+<nb-card *ngIf="product" class="product__mini">
+  <nb-card-header>{{ product.name }}</nb-card-header>
+
+  <nb-card-body class="product__mini-body">
+    <span>Из {{ product.shop.name }} </span>
+    <span>за {{ product.price | price:'р' }}</span>
+  </nb-card-body>
+
+  <nb-card-footer (click)="deleteProductFromRoute()">
+    <nb-icon icon="close-outline"></nb-icon>
+  </nb-card-footer>
+</nb-card>
+
+

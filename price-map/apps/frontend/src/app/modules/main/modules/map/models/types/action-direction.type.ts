@@ -1,0 +1,1 @@
+export type ActionDirection = 'add' | 'remove';

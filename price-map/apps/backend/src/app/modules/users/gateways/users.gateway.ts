@@ -1,4 +1,4 @@
-import { MessageBody,
+import { ConnectedSocket, MessageBody,
   SubscribeMessage,
   WebSocketGateway,
   WsResponse } from '@nestjs/websockets';
@@ -8,12 +8,15 @@ import { Role, UserEvents } from '@core/enums';
 import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
 import { IResponseData } from '@core/interfaces';
-import { User } from '@core/entities';
+import { Product, User } from '@core/entities';
 import { AuthErrorCode, DbErrorCode } from '@core/types';
 import { UsersService } from '../services';
 import { HashService } from '../../../services';
 import { IPartialData } from '../../../models/interfaces';
 import { Not } from 'typeorm';
+import { Socket } from 'net';
+import { JwtService } from '@nestjs/jwt';
+import { secretKey } from '../../../models/constants';
 
 /**
  * Шлюз пользователей
@@ -27,10 +30,11 @@ import { Not } from 'typeorm';
 })
 export class UsersGateway {
   constructor (private readonly usersService: UsersService,
-    private readonly hashService: HashService) {}
+    private readonly hashService: HashService,
+    private readonly jwtService: JwtService) {}
 
   /**
-   * Получение ползователя по id
+   * Получение пользователя по id
    * @param {string} id id
    * @return {*}  {(Observable<WsResponse<IResponseData<User | null, DbErrorCode | null>>>)} пользователь
    * @memberof UsersGateway
@@ -41,7 +45,7 @@ export class UsersGateway {
   @SubscribeMessage(UserEvents.GetUserAttempt)
   public getUserById(@MessageBody() id: string): 
     Observable<WsResponse<IResponseData<User | null, DbErrorCode | null>>> {
-    return this.usersService.getByQuery({ id })
+    return this.usersService.getByQuery({ id }, true)
       .pipe(
         switchMap((user: User) => {
           return of({
@@ -64,7 +68,7 @@ export class UsersGateway {
               errorCode: <DbErrorCode>'DB_ERROR',
               isError: false,
               data: null,
-              message: 'Ошибка при получения пользователя'
+              message: 'Ошибка при получении пользователя'
             }
           });
         })
@@ -178,7 +182,7 @@ export class UsersGateway {
             );
         }),
         switchMap((affectedRows: number) => {
-          Logger.log(`Updating user: ${affectedRows} rows`, 'UsersGateway');
+          Logger.warn(`Updating user: ${affectedRows} rows`, 'UsersGateway');
           return of({
             event: UserEvents.UpdateUserSuccessed,
             data: {
@@ -204,6 +208,179 @@ export class UsersGateway {
               isError: true,
               data: null,
               message: partialData?.message ?? 'Неизвестная ошибка'
+            }
+          });
+        })
+      );
+  }
+
+  /**
+   * Обновление связанных товаров
+   * @param {string[]} productIds id товаров
+   * @param {Socket} client подсоединенный клиент
+   * @return {*}  {(Observable<WsResponse<IResponseData<User | null, DbErrorCode | null>>>)} пользователь с обновленными товарами
+   * @memberof UsersGateway
+   */
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(JwtAuthGuard(UserEvents.UpdateFavoriteProductsFailed), 
+    RolesAuthGuard(UserEvents.UpdateFavoriteProductsFailed))
+  @SubscribeMessage(UserEvents.UpdateFavoriteProductsAttempt)
+  public updateFavoriteProducts(@MessageBody() productIds: string[], @ConnectedSocket() client: Socket): 
+    Observable<WsResponse<IResponseData<User | null, DbErrorCode | null>>> {
+    const token: string = client['handshake']?.auth?.token;
+    const tokenWithoutBearer: string = token.split(' ')?.[1];
+    const userId: string = this.jwtService.verify(tokenWithoutBearer, {
+      secret: secretKey
+    })?.userId;
+
+    return this.usersService.updateFavoriteProducts(userId, productIds)
+      .pipe(
+        switchMap((user: User) => {
+          return of({
+            event: UserEvents.UpdateFavoriteProductsSuccessed,
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: user,
+              message: 'Товар успешно добавлен в избранное'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'UsersGateway');
+          return of({
+            event: UserEvents.UpdateFavoriteProductsFailed,
+            data: {
+              statusCode: 500,
+              errorCode: <DbErrorCode>'DB_ERROR',
+              isError: false,
+              data: null,
+              message: 'Ошибка при добавлении товара в избранное'
+            }
+          });
+        })
+      );
+  }
+
+  /**
+   * Получение избранных товаров пользователя
+   * @param {string} userId id пользователя
+   * @return {*}  {(Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>>)} избранные товары
+   * @memberof UsersGateway
+   */
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(JwtAuthGuard(UserEvents.GetFavoriteProductsFailed), 
+    RolesAuthGuard(UserEvents.GetFavoriteProductsFailed))
+  @SubscribeMessage(UserEvents.GetFavoriteProductsAttempt)
+  public getFavoriteProducts(@MessageBody() userId: string): 
+    Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>> {
+
+    return this.usersService.getFavoriteProducts(userId)
+      .pipe(
+        switchMap((products: Product[]) => {
+          return of({
+            event: UserEvents.GetFavoriteProductsSuccessed,
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: products,
+              message: 'Товары успешно получены'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'UsersGateway');
+          return of({
+            event: UserEvents.GetFavoriteProductsFailed,
+            data: {
+              statusCode: 500,
+              errorCode: <DbErrorCode>'DB_ERROR',
+              isError: false,
+              data: null,
+              message: 'Ошибка при получении товаров'
+            }
+          });
+        })
+      );
+  }
+
+  /**
+   * Получение всех пользователей
+   * @return {*}  {(Observable<WsResponse<IResponseData<User[] | null, DbErrorCode | null>>>)} пользователи
+   * @memberof UsersGateway
+   */
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard(UserEvents.GetUsersFailed), RolesAuthGuard(UserEvents.GetUsersFailed))
+  @SubscribeMessage(UserEvents.GetUsersAttempt)
+  public getUsers(): Observable<WsResponse<IResponseData<User[] | null, DbErrorCode | null>>> {
+    return this.usersService.getAll()
+      .pipe(
+        switchMap((users: User[]) => {
+          return of({
+            event: UserEvents.GetUsersSuccessed,
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: users,
+              message: 'Пользователи успешно получены'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'UsersGateway');
+          return of({
+            event: UserEvents.GetUsersFailed,
+            data: {
+              statusCode: 500,
+              errorCode: <DbErrorCode>'DB_ERROR',
+              isError: false,
+              data: null,
+              message: 'Ошибка при получении пользователей'
+            }
+          });
+        })
+      );
+  }
+
+  /**
+   * Удаление пользователя по id
+   * @param {string} id id
+   * @return {*}  {(Observable<WsResponse<IResponseData<number | null, DbErrorCode | null>>>)} кол-во затронутых записей
+   * @memberof UsersGateway
+   */
+  @Roles(Role.Admin)
+  @UseGuards(JwtAuthGuard(UserEvents.DeleteUserFailed), RolesAuthGuard(UserEvents.DeleteUserFailed))
+  @SubscribeMessage(UserEvents.DeleteUserAttempt)
+  public deleteUser(@MessageBody() id: string): Observable<WsResponse<IResponseData<number | null, DbErrorCode | null>>> {
+    return this.usersService.deleteById(id)
+      .pipe(
+        switchMap((affectedRows: number) => {
+          Logger.warn(`Deleting user: ${affectedRows} rows`, 'UsersGateway');
+
+          return of({
+            event: UserEvents.DeleteUserSuccessed,
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: affectedRows,
+              message: 'Пользователь успешно удален'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'UsersGateway');
+          return of({
+            event: UserEvents.DeleteUserFailed,
+            data: {
+              statusCode: 500,
+              errorCode: <DbErrorCode>'DB_ERROR',
+              isError: false,
+              data: null,
+              message: 'Ошибка при удалении пользователя'
             }
           });
         })

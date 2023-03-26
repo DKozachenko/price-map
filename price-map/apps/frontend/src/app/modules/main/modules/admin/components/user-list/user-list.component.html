@@ -1,0 +1,15 @@
+<nb-layout [nbSpinner]="isLoading" [nbSpinnerSize]="'medium'" nbSpinnerStatus="primary">
+  <nb-layout-column>
+    <div class="section">
+      <div class="section__body">
+        <h3 class="section__body-title">Пользователи</h3>
+
+          <div class="users custom__scroll">
+            <admin-user *ngFor="let user of users; trackBy: trackByUser"
+              [user]="user"
+            ></admin-user>
+          </div>
+      </div>
+    </div>
+  </nb-layout-column>
+</nb-layout>

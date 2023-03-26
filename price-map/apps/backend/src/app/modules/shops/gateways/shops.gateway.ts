@@ -104,4 +104,45 @@ export class ShopsGateway {
         })
       );
   }
+
+  /**
+   * Получение магазинов по id
+   * @param {string[]} ids массив id
+   * @return {*}  {(Observable<WsResponse<IResponseData<Shop[] | null, DbErrorCode | null>>>)} товары
+   * @memberof ShopsGateway
+   */
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(JwtAuthGuard(ShopEvents.GetShopsByIdsFailed), RolesAuthGuard(ShopEvents.GetShopsByIdsFailed))
+  @SubscribeMessage(ShopEvents.GetShopsByIdsAttempt)
+  public getByIds(@MessageBody() ids: string[]): 
+    Observable<WsResponse<IResponseData<Shop[] | null, DbErrorCode | null>>> {
+    return this.shopsService.getByIds(ids)
+      .pipe(
+        switchMap((product: Shop[] | null) => {
+          return of({
+            event: ShopEvents.GetShopsByIdsSuccessed, 
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: product,
+              message: 'Магазины по id успешно получены'
+            }
+          });
+        }),
+        catchError((e: Error) => {
+          Logger.error(e, 'ProductsGateway');
+          return of({
+            event: ShopEvents.GetShopsByIdsFailed,
+            data: {
+              statusCode: 500,
+              errorCode: <DbErrorCode>'DB_ERROR',
+              isError: false,
+              data: null,
+              message: 'Ошибка при получении магазинов по id'
+            }
+          });
+        })
+      );
+  }
 }

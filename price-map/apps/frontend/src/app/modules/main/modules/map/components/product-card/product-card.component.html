@@ -1,0 +1,32 @@
+<nb-card *ngIf="product" class="sidebar__item product">
+  <nb-card-header>{{ product.name }}</nb-card-header>
+
+  <nb-card-body class="product__body">
+    <div class="product__body-img">
+      <img [src]="product.imagePath" alt="Изображение">
+    </div>
+
+    <span>Цена: {{ product.price | price:'р' }} </span>
+  </nb-card-body>
+
+  <nb-card-footer>
+    <nb-actions>
+      <nb-action 
+        icon="heart-outline" 
+        [class.favorite]="isFavorite"
+        [nbTooltip]="isFavorite ? 'Убрать из избранного' : 'Добавить в избранное'" 
+        (click)="favoriteAction()"
+      ></nb-action>
+      <nb-action 
+        icon="car-outline"
+        [class.in_route]="isInRoute"
+        [nbTooltip]="isInRoute ? 'Убрать из маршрута' : 'Добавить в маршрут'" 
+        (click)="routeAction()"
+      ></nb-action>
+      <nb-action icon="info-outline" nbTooltip="Подробнее" (click)="openInfoDialog()"></nb-action>
+    </nb-actions>
+  </nb-card-footer>
+</nb-card>
+
+
+

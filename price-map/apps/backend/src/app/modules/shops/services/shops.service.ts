@@ -3,7 +3,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Shop } from '@core/entities';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, In, Repository } from 'typeorm';
 import { from, Observable, of, switchMap} from 'rxjs';
 
 /**
@@ -72,5 +72,22 @@ export class ShopsService {
       .pipe(
         switchMap((result: DeleteResult) => of(result.affected))
       );
+  }
+
+  /**
+   * Получение магазинов по id
+   * @param {string[]} ids массив id
+   * @return {*}  {Observable<Shop[]>} товары
+   * @memberof ShopsService
+   */
+  public getByIds(ids: string[]): Observable<Shop[]> {
+    return from(this.shopRepository.find({
+      where: {
+        id: In(ids)
+      },
+      relations: {
+        products: true
+      }
+    }));
   }
 }
