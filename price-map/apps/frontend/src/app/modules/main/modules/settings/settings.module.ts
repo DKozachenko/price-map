@@ -2,14 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SettingsFormComponent } from './components';
 import { SettingsRoutingModule } from './settings-routing.module';
-import { NbCardModule, 
-  NbCheckboxModule, 
-  NbIconModule, 
-  NbInputModule, 
-  NbLayoutModule, 
-  NbRadioModule, 
-  NbSelectModule, 
-  NbButtonModule } from '@nebular/theme';
+import { NbCardModule,
+  NbCheckboxModule,
+  NbIconModule,
+  NbInputModule,
+  NbLayoutModule,
+  NbRadioModule,
+  NbSelectModule,
+  NbButtonModule,
+  NbSpinnerModule} from '@nebular/theme';
 import { SharedModule } from '../../../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -28,6 +29,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NbInputModule,
     NbSelectModule,
     NbButtonModule,
+    NbSpinnerModule,
     SharedModule
   ]
 })

@@ -1,4 +1,4 @@
-<nb-layout>
+<nb-layout [nbSpinner]="isLoading" [nbSpinnerSize]="'medium'" nbSpinnerStatus="primary">
   <nb-layout-column>
     <div class="section">
       <div class="section__body">
@@ -7,7 +7,7 @@
         <form class="form" [formGroup]="form" (ngSubmit)="submit()">
           <div class="form__group">
             <label>Имя</label>
-          
+
             <input type="text" nbInput fullWidth shape="round" fieldSize="giant" placeholder="Имя"
               formControlName="name">
 

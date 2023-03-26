@@ -17,7 +17,7 @@ export class SettingsFormComponent implements OnInit {
    * Текущий пользователь
    * @private
    * @type {User}
-   * @memberof SettingsComponent 
+   * @memberof SettingsComponent
    */
   private user: User;
   /**
@@ -26,6 +26,8 @@ export class SettingsFormComponent implements OnInit {
    * @memberof SettingsComponent
    */
   public form!: FormGroup;
+
+  public isLoading: boolean = false;
 
   constructor(private readonly webSocketService: WebSocketService,
     private readonly tokenService: TokenService,
@@ -45,6 +47,7 @@ export class SettingsFormComponent implements OnInit {
           ...response.data,
           password: undefined
         });
+        this.isLoading = false;
       });
 
     this.webSocketService.on<IResponseData<null>>(UserEvents.GetUserFailed)
@@ -53,6 +56,7 @@ export class SettingsFormComponent implements OnInit {
       )
       .subscribe((response: IResponseData<null>) => {
         this.notificationService.showError(response.message);
+        this.isLoading = false;
       });
 
     this.webSocketService.on<IResponseData<Omit<User, 'password'> & { password?: string }>>(UserEvents.UpdateUserSuccessed)
@@ -62,6 +66,7 @@ export class SettingsFormComponent implements OnInit {
       .subscribe((response: IResponseData<Omit<User, 'password'> & { password?: string }>) => {
         this.settingsService.emitUpdateUser();
         this.notificationService.showSuccess(response.message);
+        this.isLoading = false;
       });
 
     this.webSocketService.on<IResponseData<null>>(UserEvents.UpdateUserFailed)
@@ -70,10 +75,12 @@ export class SettingsFormComponent implements OnInit {
       )
       .subscribe((response: IResponseData<null>) => {
         this.notificationService.showError(response.message);
+        this.isLoading = false;
       });
 
     const payload: IPayload = this.tokenService.getPayload();
     const userId: string = payload.userId;
+    this.isLoading = true;
     this.webSocketService.emit<string>(UserEvents.GetUserAttempt, userId);
   }
 
@@ -113,6 +120,7 @@ export class SettingsFormComponent implements OnInit {
    * @memberof SettingsComponent
    */
   public submit(): void {
+    this.isLoading = true;
     this.webSocketService.emit<User>(UserEvents.UpdateUserAttempt, {
       ...this.user,
       ...this.form.value
