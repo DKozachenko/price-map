@@ -13,6 +13,7 @@ import { NotificationService, WebSocketService } from '../../../../../../service
 })
 export class UserListComponent implements OnInit {
   public users: User[] = [];
+  public isLoading: boolean = false;
 
   constructor(private readonly webSocketService: WebSocketService,
     private readonly notificationService: NotificationService) {}
@@ -20,24 +21,37 @@ export class UserListComponent implements OnInit {
   public ngOnInit(): void {
     this.webSocketService.on<IResponseData<null>>(UserEvents.GetUsersFailed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+      .subscribe((response: IResponseData<null>) => {
+        this.notificationService.showError(response.message);
+        this.isLoading = false;
+      });
 
     this.webSocketService.on<IResponseData<User[]>>(UserEvents.GetUsersSuccessed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<User[]>) => this.users = response.data);
+      .subscribe((response: IResponseData<User[]>) => {
+        this.users = response.data;
+        this.isLoading = false;
+      });
 
     this.webSocketService.on<IResponseData<null>>(UserEvents.DeleteUserFailed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+      .subscribe((response: IResponseData<null>) => {
+        this.notificationService.showError(response.message);
+        this.isLoading = false;
+      });
 
     this.webSocketService.on<IResponseData<string>>(UserEvents.DeleteUserSuccessed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<string>) => this.webSocketService.emit<null>(UserEvents.GetUsersAttempt, null));
+      .subscribe((response: IResponseData<string>) => {
+        this.webSocketService.emit<null>(UserEvents.GetUsersAttempt, null);
+        this.isLoading = true;
+      });
 
     this.webSocketService.emit<null>(UserEvents.GetUsersAttempt, null);
+    this.isLoading = true;
   }
 
   public trackByUser(index: number, item: User): string {
     return item.id ?? index;
   }
-} 
+}
