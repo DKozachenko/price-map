@@ -53,7 +53,7 @@
         width: 1.55rem;
         height: 1.55rem;
       }
-      
+
       .text {
         @include font(1.4rem, white);
         padding-left: 1.4rem!important;
@@ -66,7 +66,7 @@
 
     [nbInput].size-medium {
       @include font(1.1rem, white);
-    
+
       &::placeholder {
         @include font(1.1rem, white);
         opacity: .6;
@@ -77,7 +77,7 @@
       &.size-medium .select-button {
         @include font(1.25rem, white);
         padding-right: 2.5rem;
-      } 
+      }
     }
   }
 }
@@ -85,13 +85,13 @@
 ::ng-deep.nb-theme-cosmic {
   nb-option-list {
     border-color: #a16eff;
-  
+
     &.size-medium nb-option.multiple {
       @include font(1.25rem, white);
       padding: 0.6rem 1rem!important;
       align-items: center;
     }
-  
+
     &.position-bottom {
       border-top-color: #a16eff;
     }

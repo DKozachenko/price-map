@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Product } from '@core/entities';
 import { NotificationService, WebSocketService } from '../../../../../../services';
 import { ICoordinates, IResponseData } from '@core/interfaces';
@@ -33,6 +33,8 @@ export class RouteReviewComponent implements OnInit {
    * @memberof RouteReviewComponent
    */
   public isCollapsed: boolean = true;
+
+  @Output() public loadingState: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
    * Получение массива координат
@@ -80,6 +82,7 @@ export class RouteReviewComponent implements OnInit {
    */
   public buildRoute(): void {
     const coordinates: ICoordinates[] = this.getCoordinates();
+    this.loadingState.emit(true);
     this.webSocketService.emit<ICoordinates[]>(ExternalEvents.BuildRouteAttempt, coordinates);
   }
 

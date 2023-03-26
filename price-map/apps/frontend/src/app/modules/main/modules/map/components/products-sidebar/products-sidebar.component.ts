@@ -57,7 +57,7 @@ export class ProductsSidebarComponent implements OnInit {
             }
           }
         }
-        
+
         this.settingService.setUser(response.data);
       });
 

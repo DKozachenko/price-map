@@ -67,30 +67,47 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.webSocketService.on<IResponseData<number[][]>>(ExternalEvents.BuildRouteSuccessed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<number[][]>) => this.mapService.addRoute(response.data));
+      .subscribe((response: IResponseData<number[][]>) => {
+        this.mapService.addRoute(response.data);
+        this.isLoading = false;
+      });
 
     this.webSocketService.on<IResponseData<null>>(ExternalEvents.BuildRouteFailed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+      .subscribe((response: IResponseData<null>) => {
+        this.notificationService.showError(response.message);
+        this.isLoading = false;
+      });
 
     this.webSocketService.on<IResponseData<null>>(ShopEvents.GetShopsFailed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+      .subscribe((response: IResponseData<null>) => {
+        this.notificationService.showError(response.message);
+        this.isLoading = false;
+      });
 
     this.webSocketService.on<IResponseData<Shop[]>>(ShopEvents.GetShopsSuccessed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<Shop[]>) => this.mapService.addShops(response.data));
+      .subscribe((response: IResponseData<Shop[]>) => {
+        this.mapService.addShops(response.data);
+        this.isLoading = false;
+      });
 
     this.webSocketService.on<IResponseData<IPriceQuery>>(ProductEvents.GetPriceRangeSuccessed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<IPriceQuery>) => {
         this.filterService.emitSettingInitialPriceQuery(response.data);
+        this.isLoading = false;
       });
 
     this.webSocketService.on<IResponseData<IPriceQuery>>(ProductEvents.GetPriceRangeFailed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<IPriceQuery>) => this.notificationService.showError(response.message));
+      .subscribe((response: IResponseData<IPriceQuery>) => {
+        this.notificationService.showError(response.message);
+        this.isLoading = false;
+      });
 
+    this.isLoading = true;
     this.webSocketService.emit<null>(ProductEvents.GetPriceRangeAttempt, null);
 
     this.mapService.currentLayer$
@@ -100,6 +117,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
         this.isShowRouteReview = layer === 'products';
         this.mapService.removeAllLayers();
         if (layer === 'shops') {
+          this.isLoading = true;
           this.webSocketService.emit<null>(ShopEvents.GetShopsAttempt);
           this.mapService.removePriceControl();
           this.mapService.removeRadiusControl();
@@ -134,6 +152,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
         });
         this.isLoading = true;
       });
+  }
+
+  public setLoading(state: boolean): void {
+    this.isLoading = state;
   }
 
   public ngAfterViewInit() {

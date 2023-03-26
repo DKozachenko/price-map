@@ -1,6 +1,6 @@
 <nb-layout>
   <nb-layout-column>
-    <div class="container" [nbSpinner]="isLoading" [nbSpinnerSize]="'medium'" nbSpinnerStatus="primary" [class.with_filter]="isShowFilter" >
+    <div class="container" [class.with_filter]="isShowFilter" >
       <div class="map" [class.loader]="isLoading" #map></div>
 
       <map-filter *ngIf="isShowFilter"></map-filter>
@@ -9,6 +9,7 @@
 
       <map-route-review
         *ngIf="isShowRouteReview"
+        (loadingState)="setLoading($event)"
       ></map-route-review>
     </div>
   </nb-layout-column>
