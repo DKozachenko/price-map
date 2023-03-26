@@ -17,10 +17,6 @@
 }
 
 ::ng-deep.container {
-  nb-spinner.size-medium  {
-    font-size: 9.5rem;
-  }
-
   &.with_filter {
     nb-spinner.size-medium {
       left: 20.5vw;

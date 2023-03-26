@@ -56,18 +56,18 @@ body {
 //Кастомные скролл
 .custom__scroll {
   &::-webkit-scrollbar {
-    width: 4px;            
+    width: 4px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: #323259;
     border-radius: 20px;
   }
-  
+
   &::-webkit-scrollbar-thumb {
-    background-color: white; 
-    border-radius: 20px; 
-    border: 3px solid white;  
+    background-color: white;
+    border-radius: 20px;
+    border: 3px solid white;
 
     &:hover {
       border-color: darken(white, 10%);
@@ -157,7 +157,7 @@ body {
 
 .auth,
 .setting {
-  [nbButton].size-medium, 
+  [nbButton].size-medium,
   .nb-theme-cosmic .size-medium[nbButtonToggle] {
     @include font(1.6rem, white);
     padding: .7rem 1.5rem;
@@ -177,7 +177,7 @@ nb-toast {
 }
 
 //Cтили для контролы для слоев, цены, радиуса
-.mapboxgl-ctrl-top-left, 
+.mapboxgl-ctrl-top-left,
 .maplibregl-ctrl-top-left {
   left: initial;
   right: 25rem;
@@ -187,7 +187,7 @@ nb-toast {
 }
 
 //Cтили для контролы для масштабирования, геолокации и очистки маршрута
-.mapboxgl-ctrl-top-right, 
+.mapboxgl-ctrl-top-right,
 .maplibregl-ctrl-top-right {
   top: 50%;
   transform: translateY(-50%);
@@ -223,7 +223,7 @@ nb-toast {
       word-break: break-word;
       border-bottom-color: white!important;
     }
-    
+
     nb-card-footer {
       padding: 1rem .4rem!important;
       border-top-color: white!important;
@@ -297,8 +297,12 @@ nb-tooltip .content {
     &-title {
       @include font(3.5rem, #a16eff);
       text-align: center;
-  
+
       margin-bottom: 2.5rem;
     }
   }
+}
+
+nb-spinner.size-medium  {
+  font-size: 9.5rem!important;
 }
