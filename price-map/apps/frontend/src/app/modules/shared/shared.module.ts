@@ -1,7 +1,6 @@
 import { NbLayoutModule, NbIconModule, NbUserModule } from '@nebular/theme';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './components';
 import { RouterModule } from '@angular/router';
 import { PricePipe } from './pipes';
 
@@ -11,14 +10,14 @@ import { PricePipe } from './pipes';
  * @class SharedModule
  */
 @NgModule({
-  declarations: [HeaderComponent, PricePipe],
+  declarations: [PricePipe],
   imports: [
-    CommonModule, 
-    NbLayoutModule, 
-    NbIconModule, 
+    CommonModule,
+    NbLayoutModule,
+    NbIconModule,
     RouterModule,
     NbUserModule
   ],
-  exports: [HeaderComponent, PricePipe]
+  exports: [PricePipe]
 })
 export class SharedModule { }

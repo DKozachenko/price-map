@@ -19,7 +19,7 @@ import { NbTooltipModule} from '@nebular/theme';
     CommonModule,
     MainRoutingModule,
     //Этот модули должны были быть по факту lazy loading, но если их таковыми сделать, то почему-то
-    //не отправляется токен на бэк, баг из разряда "мэджик" 
+    //не отправляется токен на бэк, баг из разряда "мэджик"
     MapModule,
     SettingsModule,
     AdminModule,
