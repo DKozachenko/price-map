@@ -7,7 +7,7 @@ import { Roles } from '../../../decorators';
 import { ExternalEvents, Role } from '@core/enums';
 import { ExternalService } from '../services';
 import { catchError, Observable, of, switchMap } from 'rxjs';
-import { ICoordinates, IResponseData } from '@core/interfaces';
+import { ICoordinates, IResponseData, IRouteData } from '@core/interfaces';
 import { ExternalErrorCode } from '@core/types';
 import * as polyline  from '@mapbox/polyline';
 import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
@@ -35,20 +35,28 @@ export class ExternalGateway {
   @UseGuards(JwtAuthGuard(ExternalEvents.BuildRouteFailed), RolesAuthGuard(ExternalEvents.BuildRouteFailed))
   @SubscribeMessage(ExternalEvents.BuildRouteAttempt)
   public buildRoute(@MessageBody() coordinates: ICoordinates[]):
-    Observable<WsResponse<IResponseData<number[][] | null, ExternalErrorCode | null>>> {
+    Observable<WsResponse<IResponseData<IRouteData | null, ExternalErrorCode | null>>> {
     return this.externalService.buildRoute(coordinates)
       .pipe(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         switchMap((osrmData: any) => {
           const encodedPolyline: string = osrmData.data.routes[0].geometry;
           const decodedCoordinates: number[][] = polyline.decode(encodedPolyline);
+          const coordinates: number[][] = decodedCoordinates.map((value: number[]) =>
+            this.externalService.swapCoordinates(value));
+
+          const waypoints: number[][] = osrmData.data.waypoints.map((waypoint: { location: number[] }) =>
+            [waypoint.location[0], waypoint.location[1]]);
           return of({
             event: ExternalEvents.BuildRouteSuccessed,
             data: {
               statusCode: 200,
               errorCode: null,
               isError: false,
-              data: decodedCoordinates.map((value: number[]) => this.externalService.swapCoordinates(value)),
+              data: {
+                coordinates,
+                waypoints
+              },
               message: 'Маршрут успешно построен'
             }
           });

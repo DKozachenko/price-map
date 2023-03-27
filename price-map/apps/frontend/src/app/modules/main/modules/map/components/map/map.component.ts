@@ -1,12 +1,13 @@
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit, NgZone } from '@angular/core';
 import { Product, Shop } from '@core/entities';
-import { IResponseData, IProductQuery, IPriceQuery, IUserFilter, IRadiusQuery } from '@core/interfaces';
+import { IResponseData, IProductQuery, IPriceQuery, IUserFilter, IRadiusQuery, IRouteData } from '@core/interfaces';
 import { NotificationService, WebSocketService } from '../../../../../../services';
 import { FilterService, MapService, ShopService } from '../../services';
 import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
 import { LayerType } from '../../models/types';
 import { ProductService } from '../../../../services';
+import { delay } from 'rxjs';
 
 /**
  * Компонент карты
@@ -43,12 +44,19 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   public isShowShopsSidebar: boolean = false;
   public isLoading: boolean = false;
 
+  public temp(): void {
+    this.zone.runOutsideAngular(() => {
+      this.mapService.startAnimateRoute();
+    });
+  }
+
   constructor(private readonly webSocketService: WebSocketService,
     private readonly notificationService: NotificationService,
     private readonly mapService: MapService,
     private readonly filterService: FilterService,
     private readonly productService: ProductService,
-    private readonly shopService: ShopService) {}
+    private readonly shopService: ShopService,
+    private zone: NgZone) {}
 
   public ngOnInit(): void {
     this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductsFailed)
@@ -59,16 +67,17 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       });
 
     this.webSocketService.on<IResponseData<Product[]>>(ProductEvents.GetProductsSuccessed)
-      .pipe(untilDestroyed(this))
+      .pipe(untilDestroyed(this), delay(200000))
       .subscribe((response: IResponseData<Product[]>) => {
         this.mapService.addProducts(response.data);
         this.isLoading = false;
       });
 
-    this.webSocketService.on<IResponseData<number[][]>>(ExternalEvents.BuildRouteSuccessed)
+    this.webSocketService.on<IResponseData<IRouteData>>(ExternalEvents.BuildRouteSuccessed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<number[][]>) => {
-        this.mapService.addRoute(response.data);
+      .subscribe((response: IResponseData<{ coordinates: number[][], waypoints: number[][] }>) => {
+        this.mapService.addRoute(response.data.coordinates);
+        this.mapService.currentWaypoints = response.data.waypoints;
         this.isLoading = false;
       });
 
@@ -143,7 +152,17 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.filterService.allFilters$
       .pipe(untilDestroyed(this))
-      .subscribe(([categoryIds, filters, priceQuery, radiusQuery]: [Set<string>, IUserFilter[], IPriceQuery, IRadiusQuery]) => {
+      .subscribe(([
+        categoryIds,
+        filters,
+        priceQuery,
+        radiusQuery
+      ]: [
+        Set<string>,
+        IUserFilter[],
+        IPriceQuery,
+        IRadiusQuery
+      ]) => {
         this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
           category3LevelIds: categoryIds ? [...categoryIds] : [],
           filters: filters && categoryIds.size === 1 ? filters : [],

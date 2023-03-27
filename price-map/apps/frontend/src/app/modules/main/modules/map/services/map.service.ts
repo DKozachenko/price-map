@@ -1,9 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-import {
-  ComponentFactoryResolver,
-  ElementRef,
-  Injectable
-} from '@angular/core';
+import { ComponentFactoryResolver, ElementRef, Injectable, NgZone } from '@angular/core';
 import { Point, Feature, Geometry, GeoJsonProperties } from 'geojson';
 import {
   CircleStyleLayer,
@@ -17,8 +13,9 @@ import {
   MapGeoJSONFeature,
   MapLayerMouseEvent,
   MapMouseEvent,
+  Marker,
   NavigationControl,
-  SymbolStyleLayer
+  SymbolStyleLayer,
 } from 'maplibre-gl';
 import * as maplibreGl from 'maplibre-gl-draw-circle';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
@@ -51,10 +48,7 @@ export class MapService {
    * @type {LngLatLike}
    * @memberof MapService
    */
-  private initialPoint: LngLatLike = [
-    82.936,
-    55.008
-  ];
+  private initialPoint: LngLatLike = [82.936, 55.008];
 
   /**
    * Название источника данных для товаров
@@ -95,7 +89,7 @@ export class MapService {
    * @memberof MapService
    */
   private currentLayerValue: LayerType = 'products';
-  
+
   /**
    * Подписка на изменение текущего слоя
    * @private
@@ -103,7 +97,7 @@ export class MapService {
    * @memberof MapService
    */
   private currentLayer: Subject<LayerType> = new Subject<LayerType>();
-  
+
   /**
    * Подписка на изменение текущего слоя (публичная)
    * @type {Observable<LayerType>}
@@ -121,10 +115,16 @@ export class MapService {
     this.currentLayer.next(newLayer);
   }
 
-  constructor(private readonly productService: ProductService,
+  private currentWaypointIndex: number = 0;
+  public currentWaypoints: number[][] = [];
+
+  constructor(
+    private readonly productService: ProductService,
     private readonly shopService: ShopService,
     private readonly filterService: FilterService,
-    private readonly resolver: ComponentFactoryResolver) { }
+    private zone: NgZone,
+    private readonly resolver: ComponentFactoryResolver,
+  ) {}
 
   /**
    * Создание экземпляра карты и привязка к контейнеру
@@ -164,11 +164,21 @@ export class MapService {
       this.filterService.emitSettingRadiusQuery({
         center: {
           latitude: center[1],
-          longitude: center[0]
+          longitude: center[0],
         },
-        distance: radiusInKm * 1000
-      })
+        distance: radiusInKm * 1000,
+      });
     }
+  }
+
+  private flyTo(coordinates: number[]): void {
+    this.map.flyTo({
+      center: [coordinates[0], coordinates[1]],
+      zoom: 15,
+      animate: true,
+      curve: 1,
+      speed: 1,
+    });
   }
 
   /**
@@ -251,16 +261,19 @@ export class MapService {
           const coordinates: LngLatLike = <LngLatLike>geometry?.coordinates?.slice();
           this.centerMap(coordinates);
         });
-  
-        
-        source.getClusterLeaves(clusterId, pointCount, 0, (error?: Error | null, data?: Feature<Geometry, GeoJsonProperties>[] | null) => {
-          if (error) return;
-          const features: Feature<Point, IFeatureProps>[] = <Feature<Point, IFeatureProps>[]>data;
-          const itemIds: string[] = features.map((feature: Feature<Point, IFeatureProps>) => feature.properties.id);
-          service.emitSettingItemIdToShow(itemIds);
-        })
+
+        source.getClusterLeaves(
+          clusterId,
+          pointCount,
+          0,
+          (error?: Error | null, data?: Feature<Geometry, GeoJsonProperties>[] | null) => {
+            if (error) return;
+            const features: Feature<Point, IFeatureProps>[] = <Feature<Point, IFeatureProps>[]>data;
+            const itemIds: string[] = features.map((feature: Feature<Point, IFeatureProps>) => feature.properties.id);
+            service.emitSettingItemIdToShow(itemIds);
+          },
+        );
       }
-      
     });
   }
 
@@ -275,14 +288,11 @@ export class MapService {
     return {
       type: 'Feature',
       properties: {
-        id: product.id
+        id: product.id,
       },
       geometry: {
         type: 'Point',
-        coordinates: [
-          product.shop.coordinates.longitude,
-          product.shop.coordinates.latitude
-        ],
+        coordinates: [product.shop.coordinates.longitude, product.shop.coordinates.latitude],
       },
     };
   }
@@ -302,10 +312,7 @@ export class MapService {
       },
       geometry: {
         type: 'Point',
-        coordinates: [
-          shop.coordinates.longitude,
-          shop.coordinates.latitude
-        ],
+        coordinates: [shop.coordinates.longitude, shop.coordinates.latitude],
       },
     };
   }
@@ -403,33 +410,10 @@ export class MapService {
         id: layerId,
         type: 'circle',
         source: sourceName,
-        filter: [
-          'has',
-          'point_count'
-        ],
+        filter: ['has', 'point_count'],
         paint: {
-          'circle-color': [
-            'step',
-            [
-              'get',
-              'point_count'
-            ],
-            '#a16eff',
-            100,
-            '#323259'
-          ],
-          'circle-radius': [
-            'step',
-            [
-              'get',
-              'point_count'
-            ],
-            20,
-            100,
-            30,
-            750,
-            40
-          ],
+          'circle-color': ['step', ['get', 'point_count'], '#a16eff', 100, '#323259'],
+          'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
         },
       });
     }
@@ -452,10 +436,7 @@ export class MapService {
         id: layerId,
         type: 'symbol',
         source: sourceName,
-        filter: [
-          'has',
-          'point_count'
-        ],
+        filter: ['has', 'point_count'],
         layout: {
           'text-field': '{point_count_abbreviated}',
           'text-font': ['Consolas'],
@@ -482,16 +463,10 @@ export class MapService {
         id: layerId,
         type: 'circle',
         source: sourceName,
-        filter: [
-          '!',
-          [
-            'has',
-            'point_count'
-          ]
-        ],
+        filter: ['!', ['has', 'point_count']],
         paint: {
           'circle-color': '#a16eff',
-          'circle-radius': 20
+          'circle-radius': 20,
         },
       });
     }
@@ -514,19 +489,10 @@ export class MapService {
         id: layerId,
         type: 'symbol',
         source: sourceName,
-        filter: [
-          '!',
-          [
-            'has',
-            'point_count'
-          ]
-        ],
+        filter: ['!', ['has', 'point_count']],
         layout: {
           'text-field': '1',
-          'text-font': [
-            'DIN Offc Pro Medium',
-            'Arial Unicode MS Bold'
-          ],
+          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
           'text-size': 12,
         },
       });
@@ -546,9 +512,7 @@ export class MapService {
     const features: Feature<Point, IFeatureProps>[] = data.map((item: T) => mapCallback(item));
     const actualSource: GeoJSONSourceSpecification = this.setFeaturesToJsonSource(features);
 
-    const existedSource: GeoJSONSource | undefined = <GeoJSONSource | undefined>(
-      this.map.getSource(sourceName)
-    );
+    const existedSource: GeoJSONSource | undefined = <GeoJSONSource | undefined>this.map.getSource(sourceName);
 
     if (existedSource) {
       existedSource.setData(<GeoJSON.GeoJSON>actualSource.data);
@@ -569,7 +533,7 @@ export class MapService {
     this.addUnclusterLayer(sourceName);
     this.addUnclusterCountLayer(sourceName);
   }
-  
+
   /**
    * Установка кликов на слои для кластеризации
    * @private
@@ -603,9 +567,10 @@ export class MapService {
    * @memberof MapService
    */
   public addPriceControl(): void {
-    const existedPriceControl: PriceControl | undefined
-      = <PriceControl | undefined>this.map._controls.find((control: IControl) => control instanceof PriceControl);
-    
+    const existedPriceControl: PriceControl | undefined = <PriceControl | undefined>(
+      this.map._controls.find((control: IControl) => control instanceof PriceControl)
+    );
+
     if (!existedPriceControl) {
       const priceControl: PriceControl = new PriceControl(this.resolver, this.filterService);
       this.map.addControl(priceControl, 'top-left');
@@ -617,8 +582,9 @@ export class MapService {
    * @memberof MapService
    */
   public removePriceControl(): void {
-    const priceControl: PriceControl | undefined
-      = <PriceControl | undefined>this.map._controls.find((control: IControl) => control instanceof PriceControl);
+    const priceControl: PriceControl | undefined = <PriceControl | undefined>(
+      this.map._controls.find((control: IControl) => control instanceof PriceControl)
+    );
     if (priceControl) {
       this.map.removeControl(priceControl);
     }
@@ -629,8 +595,9 @@ export class MapService {
    * @memberof MapService
    */
   public addClearControl(): void {
-    const existedClearControl: ClearControl | undefined
-      = <ClearControl | undefined>this.map._controls.find((control: IControl) => control instanceof ClearControl);
+    const existedClearControl: ClearControl | undefined = <ClearControl | undefined>(
+      this.map._controls.find((control: IControl) => control instanceof ClearControl)
+    );
 
     if (!existedClearControl) {
       const clearControl: ClearControl = new ClearControl(this.resolver, this);
@@ -643,8 +610,9 @@ export class MapService {
    * @memberof MapService
    */
   public removeClearControl(): void {
-    const clearControl: ClearControl | undefined
-      = <ClearControl | undefined>this.map._controls.find((control: IControl) => control instanceof ClearControl);
+    const clearControl: ClearControl | undefined = <ClearControl | undefined>(
+      this.map._controls.find((control: IControl) => control instanceof ClearControl)
+    );
     if (clearControl) {
       this.map.removeControl(clearControl);
     }
@@ -655,8 +623,9 @@ export class MapService {
    * @memberof MapService
    */
   public addRadiusControl(): void {
-    const existedRadiusControl: RadiusControl | undefined
-      = <RadiusControl | undefined>this.map._controls.find((control: IControl) => control instanceof RadiusControl);
+    const existedRadiusControl: RadiusControl | undefined = <RadiusControl | undefined>(
+      this.map._controls.find((control: IControl) => control instanceof RadiusControl)
+    );
 
     if (!existedRadiusControl) {
       const radiusControl: RadiusControl = new RadiusControl(this.resolver, this);
@@ -669,8 +638,9 @@ export class MapService {
    * @memberof MapService
    */
   public removeRadiusControl(): void {
-    const radiusControl: RadiusControl | undefined
-      = <RadiusControl | undefined>this.map._controls.find((control: IControl) => control instanceof RadiusControl);
+    const radiusControl: RadiusControl | undefined = <RadiusControl | undefined>(
+      this.map._controls.find((control: IControl) => control instanceof RadiusControl)
+    );
     if (radiusControl) {
       this.map.removeControl(radiusControl);
     }
@@ -682,14 +652,14 @@ export class MapService {
    */
   public addDrawControl(): void {
     const drawControl = new MapboxDraw({
-      defaultMode: "draw_circle",
+      defaultMode: 'draw_circle',
       userProperties: true,
       modes: {
         ...MapboxDraw.modes,
-        draw_circle  : maplibreGl.CircleMode,
-        drag_circle  : maplibreGl.DragCircleMode,
+        draw_circle: maplibreGl.CircleMode,
+        drag_circle: maplibreGl.DragCircleMode,
         direct_select: maplibreGl.DirectMode,
-        simple_select: maplibreGl.SimpleSelectMode
+        simple_select: maplibreGl.SimpleSelectMode,
       },
       //Убираем все контролы, тк они не нужны
       controls: {
@@ -699,10 +669,10 @@ export class MapService {
         trash: false,
         combine_features: false,
         uncombine_features: false,
-      }
+      },
     });
 
-    this.map.addControl(<IControl><unknown>drawControl, 'top-right');
+    this.map.addControl(<IControl>(<unknown>drawControl), 'top-right');
     drawControl.changeMode('draw_circle', { initialRadiusInKm: 0.5 });
 
     //Теряет контекст, поэтому напрямую передаем
@@ -714,13 +684,14 @@ export class MapService {
    * @memberof MapService
    */
   public removeDrawControl(): void {
-    const drawControl: IControl | undefined
-      = <IControl | undefined>this.map._controls.find((control: IControl) => control instanceof MapboxDraw);
+    const drawControl: IControl | undefined = <IControl | undefined>(
+      this.map._controls.find((control: IControl) => control instanceof MapboxDraw)
+    );
     if (drawControl) {
       this.map.removeControl(drawControl);
       this.filterService.emitSettingRadiusQuery({
         center: null,
-        distance: null
+        distance: null,
       });
     }
   }
@@ -733,8 +704,9 @@ export class MapService {
     const clusterPostfixes: string[] = ['cluster', 'cluster-count', 'uncluster', 'uncluster-count'];
     for (const clusterPostfix of clusterPostfixes) {
       const layerId: string = `${this.shopsSourceName}-${clusterPostfix}`;
-      const existedLayer: CircleStyleLayer | SymbolStyleLayer 
-        = <CircleStyleLayer | SymbolStyleLayer>this.map.getLayer(layerId);
+      const existedLayer: CircleStyleLayer | SymbolStyleLayer = <CircleStyleLayer | SymbolStyleLayer>(
+        this.map.getLayer(layerId)
+      );
       if (existedLayer) {
         this.map.removeLayer(layerId);
       }
@@ -742,8 +714,9 @@ export class MapService {
 
     for (const clusterPostfix of clusterPostfixes) {
       const layerId: string = `${this.productsSourceName}-${clusterPostfix}`;
-      const existedLayer: CircleStyleLayer | SymbolStyleLayer 
-        = <CircleStyleLayer | SymbolStyleLayer>this.map.getLayer(layerId);
+      const existedLayer: CircleStyleLayer | SymbolStyleLayer = <CircleStyleLayer | SymbolStyleLayer>(
+        this.map.getLayer(layerId)
+      );
       if (existedLayer) {
         this.map.removeLayer(layerId);
       }
@@ -807,6 +780,75 @@ export class MapService {
     // Установка кликов только 1 раз
     this.setClusterLayersClicks(this.productsSourceName, this.productService);
     this.setClusterLayersClicks(this.shopsSourceName, this.shopService);
+  }
+
+  public tempSetData(data: any, coord: [number, number]): void {
+    data.features[0].geometry.coordinates.push(
+      coord
+    );
+    (<any>this.map.getSource('trace')).setData(data);
+    this.map.panTo(coord, {
+      duration: .1,
+      animate: true
+    });
+  }
+
+  public startAnimateRoute(): void {
+    const routeSource: GeoJSONSource | undefined = <GeoJSONSource | undefined>this.map.getSource(this.routeSourceName);
+    if (routeSource) {
+      const data: any = {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'LineString',
+              coordinates: (<any>routeSource._data).geometry.coordinates
+            }
+          }
+        ]
+      }
+      const coordinates = data.features[0].geometry.coordinates;
+
+      // start by showing just the first coordinate
+      data.features[0].geometry.coordinates = [coordinates[0]];
+
+      // // add it to the map
+      this.map.addSource('trace', { type: 'geojson', data });
+
+      this.map.addLayer({
+        id: 'trace',
+        type: 'line',
+        source: 'trace',
+        paint: {
+          'line-color': 'yellow',
+          'line-opacity': 0.75,
+          'line-width': 5,
+        },
+      });
+      this.zone.runOutsideAngular(() => {
+      // // setup the viewport
+        this.map.jumpTo({ center: [coordinates[0][0], coordinates[0][1]], zoom: 14 });
+        this.map.setPitch(30);
+
+        // // on a regular basis, add more coordinates from the saved list and update the map
+        let i = 0;
+
+        const timer = setInterval(() => {
+          if (i < coordinates.length) {
+
+            requestAnimationFrame(() => this.tempSetData.call(this, data, coordinates[i]));
+
+
+            i++;
+          } else {
+            clearInterval(timer);
+          }
+        }, 100);
+      });
+
+
+    }
   }
 
   /**

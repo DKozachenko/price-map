@@ -1,8 +1,9 @@
-<nb-layout>
+<nb-layout [nbSpinner]="isLoading" [nbSpinnerSize]="'medium'" nbSpinnerStatus="primary" [class.with_filter]="isShowFilter">
   <nb-layout-column>
-    <div class="container" [class.with_filter]="isShowFilter" >
+    <div class="container" >
       <div class="map" [class.loader]="isLoading" #map></div>
 
+      <button style="position: absolute; left: 50%; bottom: 0;" (click)="temp()">Click</button>
       <map-filter *ngIf="isShowFilter"></map-filter>
       <map-products-sidebar *ngIf="isShowProductsSidebar"></map-products-sidebar>
       <map-shops-sidebar *ngIf="isShowShopsSidebar"></map-shops-sidebar>
