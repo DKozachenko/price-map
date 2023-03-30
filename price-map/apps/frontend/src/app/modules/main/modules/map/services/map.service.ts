@@ -223,6 +223,7 @@ export class MapService {
       const geometry: Point = feature?.geometry;
       const coordinates: [number, number] = <[number, number]>geometry?.coordinates?.slice();
       this.centerMap(coordinates);
+      this.removeDrawControl();
       service.emitSettingItemIdToShow([feature.properties.id]);
     });
   }

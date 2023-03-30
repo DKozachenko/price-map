@@ -1,6 +1,6 @@
-<nb-layout>
+<nb-layout [class.with_filter]="isShowFilter" [nbSpinner]="isLoading" [nbSpinnerSize]="'medium'" nbSpinnerStatus="primary">
   <nb-layout-column>
-    <div class="container" [class.with_filter]="isShowFilter" >
+    <div class="container" >
       <div class="map" [class.loader]="isLoading" #map></div>
 
       <map-filter *ngIf="isShowFilter"></map-filter>

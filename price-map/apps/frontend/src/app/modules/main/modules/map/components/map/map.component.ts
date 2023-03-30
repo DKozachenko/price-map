@@ -135,7 +135,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.productService.itemIdsToShow$
       .pipe(untilDestroyed(this))
-      .subscribe((data: string[]) => this.isShowProductsSidebar = !!data.length);
+      .subscribe((data: string[]) => {
+        this.isShowProductsSidebar = !!data.length;
+        this.isShowFilter = !!!data.length;
+      });
 
     this.shopService.itemIdsToShow$
       .pipe(untilDestroyed(this))
