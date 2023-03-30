@@ -12,7 +12,9 @@
         "allowedCommonJsDependencies": [
           "maplibre-gl",
           "jquery",
-          "eva-icons"
+          "eva-icons",
+          "@mapbox/mapbox-gl-draw",
+          "maplibre-gl-draw-circle"
        ],
         "outputPath": "dist/apps/frontend",
         "index": "apps/frontend/src/index.html",
