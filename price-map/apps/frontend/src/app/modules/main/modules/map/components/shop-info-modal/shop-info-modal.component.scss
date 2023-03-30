@@ -1,2 +1,37 @@
 @import "../../../../../../../assets/styles/mixins";
 
+.building {
+  min-height: 70vh;
+  min-width: 80vw;
+  border-color: white;
+  margin-bottom: 0;
+
+}
+
+::ng-deep {
+  .building {
+    nb-card-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom-color: white;
+
+      p {
+        @include font(1.5rem, white);
+        text-overflow: ellipsis;
+        word-break: break-word;
+      }
+      
+      nb-icon {
+        font-size: 1.55rem;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+
+    nb-card-body {
+      border-top-color: white;
+    }
+  }
+}

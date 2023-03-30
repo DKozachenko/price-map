@@ -1,8 +1,7 @@
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Shop } from '@core/entities';
-import { NbDialogService } from '@nebular/theme';
-import { ShopInfoModalComponent } from '..';
+import { WebSocketService } from './../../../../../../services';
 
 @UntilDestroy()
 @Component({
@@ -10,19 +9,12 @@ import { ShopInfoModalComponent } from '..';
   templateUrl: './shop-card.component.html',
   styleUrls: ['./shop-card.component.scss']
 })
-export class ShopCardComponent implements OnInit {
+export class ShopCardComponent {
   @Input() public shop: Shop | null = null;
-  constructor (private readonly dialogService: NbDialogService) {}
+  constructor (private readonly webSocketService: WebSocketService) {}
 
-  public ngOnInit(): void {
 
-  }
-
-  public openFloorInfo(): void  {
-    this.dialogService.open<ShopInfoModalComponent>(ShopInfoModalComponent, {
-      context: {
-        levels: 4
-      },
-    });
+  public getBuildingInfo(): void {
+    this.webSocketService.emit<string>('', this.shop?.id ?? '');
   }
 }

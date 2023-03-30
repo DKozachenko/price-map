@@ -5,6 +5,8 @@ import { ShopService } from '../../services';
 import { Shop } from '@core/entities';
 import { IResponseData } from '@core/interfaces';
 import { ShopEvents } from '@core/enums';
+import { ShopInfoModalComponent } from '../shop-info-modal/shop-info-modal.component';
+import { NbDialogService } from '@nebular/theme';
 
 
 @UntilDestroy()
@@ -18,9 +20,18 @@ export class ShopsSidebarComponent implements OnInit {
 
   constructor(private readonly shopsService: ShopService,
     private readonly webSocketService: WebSocketService,
-    private readonly notificationService: NotificationService) {}
+    private readonly notificationService: NotificationService, 
+    private readonly dialogService: NbDialogService) {}
 
   public ngOnInit(): void {
+    this.webSocketService.on<IResponseData<null>>('')
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+
+    this.webSocketService.on<IResponseData<number>>('')
+      .pipe(untilDestroyed(this))
+      .subscribe((response: IResponseData<number>) => this.openBuildfingInfo(response.data));
+
     this.webSocketService.on<IResponseData<null>>(ShopEvents.GetShopsByIdsFailed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
@@ -36,6 +47,14 @@ export class ShopsSidebarComponent implements OnInit {
 
   public close(): void {
     this.shopsService.emitSettingItemIdToShow([]);
+  }
+
+  public openBuildfingInfo(levels: number): void  {
+    this.dialogService.open<ShopInfoModalComponent>(ShopInfoModalComponent, {
+      context: {
+        levels
+      },
+    });
   }
 
   public trackByShop(index: number, item: Shop): string {
