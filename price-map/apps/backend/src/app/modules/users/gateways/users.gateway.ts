@@ -354,7 +354,8 @@ export class UsersGateway {
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard(UserEvents.DeleteUserFailed), RolesAuthGuard(UserEvents.DeleteUserFailed))
   @SubscribeMessage(UserEvents.DeleteUserAttempt)
-  public deleteUser(@MessageBody() id: string): Observable<WsResponse<IResponseData<number | null, DbErrorCode | null>>> {
+  public deleteUser(@MessageBody() id: string): 
+    Observable<WsResponse<IResponseData<number | null, DbErrorCode | null>>> {
     return this.usersService.deleteById(id)
       .pipe(
         switchMap((affectedRows: number) => {

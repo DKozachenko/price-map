@@ -97,7 +97,7 @@ export class UsersService {
    */
   public getFavoriteProducts(userId: string): Observable<Product[]> {
     return this.getByQuery({ id: userId }, true)
-      .pipe(switchMap((user: User) => of(user.products)))
+      .pipe(switchMap((user: User) => of(user.products)));
   }
 
   /**
@@ -123,6 +123,6 @@ export class UsersService {
     return from(this.userRepository.delete({ id }))
       .pipe(
         switchMap((result: DeleteResult) => of(result.affected))
-      )
+      );
   }
 }
