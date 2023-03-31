@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Injectable } from '@angular/core';
 import { ReplaySubject, Subject, Observable } from 'rxjs';
 import { BaseSidebar } from '../classes';

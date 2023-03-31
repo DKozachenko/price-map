@@ -160,7 +160,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((data: string[]) => {
         this.isShowProductsSidebar = !!data.length;
-        this.isShowFilter = !!!data.length;
+        this.isShowFilter = !data.length;
       });
 
     this.shopService.itemIdsToShow$
@@ -169,7 +169,17 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.filterService.allFilters$
       .pipe(untilDestroyed(this))
-      .subscribe(([categoryIds, filters, priceQuery, radiusQuery]: [Set<string>, IUserFilter[], IPriceQuery, IRadiusQuery]) => {
+      .subscribe(([
+        categoryIds, 
+        filters, 
+        priceQuery, 
+        radiusQuery
+      ]: [
+        Set<string>, 
+        IUserFilter[], 
+        IPriceQuery, 
+        IRadiusQuery
+      ]) => {
         this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
           category3LevelIds: categoryIds ? [...categoryIds] : [],
           filters: filters && categoryIds.size === 1 ? filters : [],

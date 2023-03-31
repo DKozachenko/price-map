@@ -1,10 +1,8 @@
-import { ComponentFactoryResolver, Injector } from "@angular/core";
-import { ClearControlComponent } from "../components";
-import { MapService } from "../services";
-import {
-  IControl,
-} from 'maplibre-gl';
-import { IMapControl } from "../models/interfaces";
+import { ComponentFactoryResolver, Injector } from '@angular/core';
+import { ClearControlComponent } from '../components';
+import { MapService } from '../services';
+import { IControl } from 'maplibre-gl';
+import { IMapControl } from '../models/interfaces';
 
 /**
  * Контрол очистки маршрута

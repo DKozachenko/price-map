@@ -70,7 +70,9 @@ export class SettingsFormComponent implements OnInit {
         this.isLoading = false;
       });
 
-    this.webSocketService.on<IResponseData<Omit<User, 'password'> & { password?: string }>>(UserEvents.UpdateUserSuccessed)
+    this.webSocketService.on<IResponseData<Omit<User, 'password'> & { password?: string }>>(
+      UserEvents.UpdateUserSuccessed
+    )
       .pipe(
         untilDestroyed(this)
       )

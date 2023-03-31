@@ -15,8 +15,7 @@ import { CharacteristicFilterComponent,
   ShopsSidebarComponent,
   ShopCardComponent,
   RadiusControlComponent,
-  ShopInfoModalComponent
-} from './components';
+  ShopInfoModalComponent } from './components';
 import { MapRoutingModule } from './map-routing.module';
 import { FilterService, MapService, ShopService, ThreeJsService } from './services';
 import { NbCardModule,

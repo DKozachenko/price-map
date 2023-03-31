@@ -1,8 +1,8 @@
-import { ComponentFactoryResolver, ComponentRef, Injector } from "@angular/core";
-import { PriceControlComponent } from "../components";
-import { FilterService } from "../services";
+import { ComponentFactoryResolver, ComponentRef, Injector } from '@angular/core';
+import { PriceControlComponent } from '../components';
+import { FilterService } from '../services';
 import { IControl } from 'maplibre-gl';
-import { IMapControl } from "../models/interfaces";
+import { IMapControl } from '../models/interfaces';
 
 export class PriceControl implements IControl, IMapControl {
   /**

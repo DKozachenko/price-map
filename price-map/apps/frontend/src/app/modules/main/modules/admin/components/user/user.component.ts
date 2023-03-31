@@ -35,7 +35,8 @@ export class UserComponent implements OnInit {
 
   public ngOnInit(): void {
     // Если в settingsService еще нет пользователя, сравнение идет по id пользователя из токена
-    this.isCurrentUser = (this.settingsService.getUser()?.id ?? this.tokenService.getPayload().userId) === this.user?.id;
+    this.isCurrentUser = (this.settingsService.getUser()?.id ?? this.tokenService.getPayload().userId) 
+      === this.user?.id;
   }
 
   /**

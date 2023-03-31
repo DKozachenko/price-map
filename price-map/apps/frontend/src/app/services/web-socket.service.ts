@@ -102,7 +102,7 @@ export class WebSocketService implements OnDestroy {
    */
   private addToken(): void {
     // В данной библиотеке дополнительные данные можно слать в поле auth, но все доп. данные передаются
-    // в объекте handshake при начальной установке соединения, для того, чтобы обновить поле auth необходимо
+    // в объекте handshake при начальной установке соединения, для того, чтобы обновить поле auth, необходимо
     // вручную переподключиться (https://socket.io/docs/v4/client-options/#auth)
     const tokenObj: { token: string } = <{ token: string }>this.socket.auth;
     if (!tokenObj.token) {

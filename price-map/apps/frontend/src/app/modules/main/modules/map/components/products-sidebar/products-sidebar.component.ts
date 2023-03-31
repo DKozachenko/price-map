@@ -32,7 +32,9 @@ export class ProductsSidebarComponent implements OnInit {
     private readonly settingService: SettingsService) {}
 
   public ngOnInit(): void {
-    this.productsService.setFavoriteProductIds(new Set(this.settingService.getUser().products.map((product: Product) => product.id)));
+    this.productsService.setFavoriteProductIds(new Set(
+      this.settingService.getUser().products.map((product: Product) => product.id)
+    ));
 
     this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductsByIdsFailed)
       .pipe(untilDestroyed(this))
@@ -55,14 +57,22 @@ export class ProductsSidebarComponent implements OnInit {
         if (response.data.products.length > currentUser.products.length) {
           for (const product of response.data.products) {
             if (!currentUser.products.map((product: Product) => product.id).includes(product.id)) {
-              this.productsService.emitAdditionProductAction({ id: product.id ?? '', name: 'favorite', direction: 'add' });
+              this.productsService.emitAdditionProductAction({ 
+                id: product.id ?? '', 
+                name: 'favorite', 
+                direction: 'add' 
+              });
               break;
             }
           }
         } else {
           for (const product of currentUser.products) {
             if (!response.data.products.map((product: Product) => product.id).includes(product.id)) {
-              this.productsService.emitAdditionProductAction({ id: product.id ?? '', name: 'favorite', direction: 'remove' });
+              this.productsService.emitAdditionProductAction({ 
+                id: product.id ?? '', 
+                name: 'favorite', 
+                direction: 'remove' 
+              });
               break;
             }
           }

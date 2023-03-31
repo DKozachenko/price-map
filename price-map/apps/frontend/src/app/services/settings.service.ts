@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Injectable } from '@angular/core';
 import { User } from '@core/entities';
 import { Subject, Observable } from 'rxjs';

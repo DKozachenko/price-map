@@ -5,7 +5,6 @@ import { NotificationService, TokenService, WebSocketService } from '../../../..
 import { IResponseData, IUserLoginInfo } from '@core/interfaces';
 import { AuthEvents } from '@core/enums';
 import { Router } from '@angular/router';
-import { delay } from 'rxjs';
 
 /**
  * Компонет формы логина

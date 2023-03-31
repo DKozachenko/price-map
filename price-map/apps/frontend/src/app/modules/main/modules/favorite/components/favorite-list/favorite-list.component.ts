@@ -50,7 +50,9 @@ export class FavoriteListComponent implements OnInit {
     this.webSocketService.on<IResponseData<Product[]>>(UserEvents.GetFavoriteProductsSuccessed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Product[]>) => {
-        this.productsService.setFavoriteProductIds(new Set(this.settingsService.getUser().products.map((product: Product) => product.id)));
+        this.productsService.setFavoriteProductIds(new Set(
+          this.settingsService.getUser().products.map((product: Product) => product.id)
+        ));
         this.favoriteProducts = response.data;
         this.isLoading = false;
       });

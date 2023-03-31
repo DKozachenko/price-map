@@ -1,12 +1,9 @@
 import { Observable, Subject } from 'rxjs';
-import {
-  ComponentFactoryResolver,
+import { ComponentFactoryResolver,
   ElementRef,
-  Injectable
-} from '@angular/core';
+  Injectable } from '@angular/core';
 import { Point, Feature, Geometry, GeoJsonProperties } from 'geojson';
-import {
-  CircleStyleLayer,
+import { CircleStyleLayer,
   GeoJSONSource,
   GeoJSONSourceSpecification,
   GeolocateControl,
@@ -18,8 +15,7 @@ import {
   MapLayerMouseEvent,
   MapMouseEvent,
   NavigationControl,
-  SymbolStyleLayer
-} from 'maplibre-gl';
+  SymbolStyleLayer } from 'maplibre-gl';
 import * as maplibreGl from 'maplibre-gl-draw-circle';
 import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import { FilterService, ShopService } from '.';
@@ -167,7 +163,7 @@ export class MapService {
           longitude: center[0]
         },
         distance: radiusInKm * 1000
-      })
+      });
     }
   }
 
@@ -254,12 +250,13 @@ export class MapService {
         });
   
         
-        source.getClusterLeaves(clusterId, pointCount, 0, (error?: Error | null, data?: Feature<Geometry, GeoJsonProperties>[] | null) => {
-          if (error) return;
-          const features: Feature<Point, IFeatureProps>[] = <Feature<Point, IFeatureProps>[]>data;
-          const itemIds: string[] = features.map((feature: Feature<Point, IFeatureProps>) => feature.properties.id);
-          service.emitSettingItemIdToShow(itemIds);
-        })
+        source.getClusterLeaves(clusterId, pointCount, 0, 
+          (error?: Error | null, data?: Feature<Geometry, GeoJsonProperties>[] | null) => {
+            if (error) return;
+            const features: Feature<Point, IFeatureProps>[] = <Feature<Point, IFeatureProps>[]>data;
+            const itemIds: string[] = features.map((feature: Feature<Point, IFeatureProps>) => feature.properties.id);
+            service.emitSettingItemIdToShow(itemIds);
+          });
       }
       
     });
@@ -543,6 +540,7 @@ export class MapService {
    * @param {Function} mapCallback колбэк для преобразования в GeoJson
    * @memberof MapService
    */
+  //eslint-disable-next-line @typescript-eslint/ban-types
   private addClusterSource<T = any>(sourceName: string, data: T[], mapCallback: Function): void {
     const features: Feature<Point, IFeatureProps>[] = data.map((item: T) => mapCallback(item));
     const actualSource: GeoJSONSourceSpecification = this.setFeaturesToJsonSource(features);
@@ -683,8 +681,9 @@ export class MapService {
    */
   public addDrawControl(): void {
     const drawControl = new MapboxDraw({
-      defaultMode: "draw_circle",
+      defaultMode: 'draw_circle',
       userProperties: true,
+      /* eslint-disable */
       modes: {
         ...MapboxDraw.modes,
         draw_circle  : maplibreGl.CircleMode,
@@ -701,6 +700,7 @@ export class MapService {
         combine_features: false,
         uncombine_features: false,
       }
+      /* eslint-enable */
     });
 
     this.map.addControl(<IControl><unknown>drawControl, 'top-right');
@@ -731,7 +731,12 @@ export class MapService {
    * @memberof MapService
    */
   public removeAllLayers(): void {
-    const clusterPostfixes: string[] = ['cluster', 'cluster-count', 'uncluster', 'uncluster-count'];
+    const clusterPostfixes: string[] = [
+      'cluster', 
+      'cluster-count', 
+      'uncluster', 
+      'uncluster-count'
+    ];
     for (const clusterPostfix of clusterPostfixes) {
       const layerId: string = `${this.shopsSourceName}-${clusterPostfix}`;
       const existedLayer: CircleStyleLayer | SymbolStyleLayer 

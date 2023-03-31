@@ -1,6 +1,6 @@
-import { ElementRef, Injectable } from "@angular/core";
+import { ElementRef, Injectable } from '@angular/core';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 /**
  * Сервис для создания 3D графики, использующий ThreeJs
@@ -31,7 +31,7 @@ export class ThreeJsService {
    * @type {THREE.Scene}
    * @memberof ThreeJsService
    */
-    private scene: THREE.Scene;
+  private scene: THREE.Scene;
 
   /**
    * Рендерер
@@ -110,11 +110,10 @@ export class ThreeJsService {
   private createCamera(levels: number): void {
     const aspectRadio: number = this.getAspectRatio();
     this.fov = levels / 2;
-    this.camera = new THREE.PerspectiveCamera(this.fov, aspectRadio, 2, 1000)
+    this.camera = new THREE.PerspectiveCamera(this.fov, aspectRadio, 2, 1000);
     this.camera.position.x = 50;
     this.camera.position.y = 50;
-    this.camera.position.z = 400;   
-    console.log(this.camera.getFocalLength())
+    this.camera.position.z = 400;
   }
 
   /**
@@ -134,7 +133,8 @@ export class ThreeJsService {
    * @memberof ThreeJsService
    */
   private render(): void {
-    let service: ThreeJsService = this;
+    //eslint-disable-next-line @typescript-eslint/no-this-alias
+    const service: ThreeJsService = this;
 
     (function render() {
       requestAnimationFrame(render);

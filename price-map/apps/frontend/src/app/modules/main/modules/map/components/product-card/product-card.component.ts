@@ -61,7 +61,7 @@ export class ProductCardComponent implements OnInit {
             this.isFavorite = action.direction === 'add';
           }
         }
-      })
+      });
   }
 
   /**
@@ -87,7 +87,10 @@ export class ProductCardComponent implements OnInit {
       this.productService.removeFavoriteProductId(this.product?.id ?? '');
     }
 
-    this.webSocketService.emit<string[]>(UserEvents.UpdateFavoriteProductsAttempt, [...this.productService.getFavoriteProductIds()]);
+    this.webSocketService.emit<string[]>(
+      UserEvents.UpdateFavoriteProductsAttempt, 
+      [...this.productService.getFavoriteProductIds()]
+    );
   }
 
   /**

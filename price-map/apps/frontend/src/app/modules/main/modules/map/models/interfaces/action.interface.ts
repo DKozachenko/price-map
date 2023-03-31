@@ -1,4 +1,4 @@
-import { ActionName, ActionDirection } from "../types";
+import { ActionName, ActionDirection } from '../types';
 
 /**
  * Интерфейс действие

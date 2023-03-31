@@ -1,8 +1,8 @@
-import { ComponentFactoryResolver, Injector } from "@angular/core";
-import { RadiusControlComponent } from "../components";
-import { MapService } from "../services";
+import { ComponentFactoryResolver, Injector } from '@angular/core';
+import { RadiusControlComponent } from '../components';
+import { MapService } from '../services';
 import { IControl } from 'maplibre-gl';
-import { IMapControl } from "../models/interfaces";
+import { IMapControl } from '../models/interfaces';
 
 /**
  * Контрол радиуса
