@@ -21,6 +21,14 @@ import { delay } from 'rxjs';
 })
 export class LoginComponent implements OnInit {
   /**
+   * Эмиттер состояния загрузки
+   * @private
+   * @type {EventEmitter<boolean>}
+   * @memberof LoginComponent
+   */
+  @Output() private loadingState: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /**
    * Показывать пароль
    * @type {boolean}
    * @memberof LoginComponent
@@ -34,11 +42,9 @@ export class LoginComponent implements OnInit {
    */
   public form!: FormGroup;
 
-  @Output() public loadingState: EventEmitter<boolean> = new EventEmitter();
-
   constructor(private readonly webSocketSevice: WebSocketService,
     private readonly notificationService: NotificationService,
-    private router: Router,
+    private readonly router: Router,
     private readonly tokenService: TokenService) {}
 
   public ngOnInit(): void {
