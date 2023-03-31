@@ -28,7 +28,7 @@ export class Shop {
     type: 'bigint',
     nullable: false
   })
-  public osmNodeId: string;
+  public osmNodeId: number;
 
   /**
    * Название

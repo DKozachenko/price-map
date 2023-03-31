@@ -24,11 +24,11 @@ export class ShopsSidebarComponent implements OnInit {
     private readonly dialogService: NbDialogService) {}
 
   public ngOnInit(): void {
-    this.webSocketService.on<IResponseData<null>>('')
+    this.webSocketService.on<IResponseData<null>>(ShopEvents.GetBuildgingInfoFailed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
 
-    this.webSocketService.on<IResponseData<number>>('')
+    this.webSocketService.on<IResponseData<number>>(ShopEvents.GetBuildgingInfoSuccessed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<number>) => this.openBuildfingInfo(response.data));
 

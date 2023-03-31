@@ -2,6 +2,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Component, Input } from '@angular/core';
 import { Shop } from '@core/entities';
 import { WebSocketService } from './../../../../../../services';
+import { ShopEvents } from '@core/enums';
 
 @UntilDestroy()
 @Component({
@@ -13,8 +14,7 @@ export class ShopCardComponent {
   @Input() public shop: Shop | null = null;
   constructor (private readonly webSocketService: WebSocketService) {}
 
-
   public getBuildingInfo(): void {
-    this.webSocketService.emit<string>('', this.shop?.id ?? '');
+    this.webSocketService.emit<string>(ShopEvents.GetBuildgingInfoAttempt, this.shop?.id ?? '');
   }
 }

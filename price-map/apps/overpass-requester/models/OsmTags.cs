@@ -10,5 +10,10 @@ class OsmTags {
   /// </summary>
   [JsonProperty("contact:website")]
   public string? ContactWebsite { get; set; }
+  /// <summary>
+  /// Количество этажей
+  /// </summary>
+  [JsonProperty("building:levels")]
+  public string? BuildingLevels { get; set; }
   public OsmTags() {}
 }

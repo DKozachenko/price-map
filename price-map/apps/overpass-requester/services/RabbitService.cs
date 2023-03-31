@@ -45,11 +45,10 @@ class RabbitService {
   /// <param name="data">Данные</param>
   /// <typeparam name="T">Тип посылаемых данных</typeparam>
   public void SendMessage<T>(string exchange, string routingKey, T data) {
-      string dataStr = this.JsonService.SerializeToString<T>(data);
-      File.WriteAllText("sended shops.json", dataStr, Encoding.UTF8);
-      byte[] body = Encoding.UTF8.GetBytes(dataStr);
-      this.Channel.BasicPublish(exchange: exchange, routingKey: routingKey, basicProperties: null, body: body);
-      this.LoggerService.Log($"Send message to {exchange} with {routingKey} routing key, content length {body.Length} bytes", "RabbitService");
+    string dataStr = this.JsonService.SerializeToString<T>(data);
+    byte[] body = Encoding.UTF8.GetBytes(dataStr);
+    this.Channel.BasicPublish(exchange: exchange, routingKey: routingKey, basicProperties: null, body: body);
+    this.LoggerService.Log($"Send message to {exchange} with {routingKey} routing key, content length {body.Length} bytes", "RabbitService");
   }
 
   /// <summary>
