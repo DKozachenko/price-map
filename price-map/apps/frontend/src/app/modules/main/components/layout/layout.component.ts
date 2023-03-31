@@ -5,6 +5,12 @@ import { UserEvents } from '@core/enums';
 import { IPayload, IResponseData } from '@core/interfaces';
 import { NotificationService, SettingsService, TokenService, WebSocketService } from '../../../../services';
 
+/**
+ * Компонент разметки
+ * @export
+ * @class LayoutComponent
+ * @implements {OnInit}
+ */
 @UntilDestroy()
 @Component({
   selector: 'main-layout',
@@ -12,6 +18,11 @@ import { NotificationService, SettingsService, TokenService, WebSocketService } 
   styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent implements OnInit {
+  /**
+   * Текущий пользователь
+   * @type {User}
+   * @memberof LayoutComponent
+   */
   public currentUser: User;
 
   constructor(private readonly webSocketService: WebSocketService,

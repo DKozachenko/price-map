@@ -1,12 +1,12 @@
-import { Logger, OnModuleInit, mixin } from '@nestjs/common';
+import { Logger, OnModuleInit } from '@nestjs/common';
 /* eslint-disable no-case-declarations */
 /* eslint-disable indent */
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category3Level, Product, Shop } from '@core/entities';
-import { Between, DeleteResult, FindOperator, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { DeleteResult, In, Repository } from 'typeorm';
 import { catchError, concat, forkJoin, from, Observable, of, switchMap, throwError } from 'rxjs';
-import { ICoordinates, IPriceQuery, IProductQuery, IUserFilter } from '@core/interfaces';
+import { IPriceQuery, IProductQuery, IUserFilter } from '@core/interfaces';
 import { RabbitService } from '../../../services';
 import { DbErrorCode, RabbitErrorCode } from '@core/types';
 import { CategoriesService } from '../../categories/services';
@@ -352,6 +352,7 @@ export class ProductsService implements OnModuleInit {
       whereQuery = `WHERE p."price" >= ${query.price.min}`;
     }
 
+    /* eslint-disable */
     //Условия для радиуса
     if (query.radius.center && query.radius.distance) {
       whereQuery += `${whereQuery ? ' AND ' : 'WHERE '}round((6367 * 
@@ -364,7 +365,8 @@ export class ProductsService implements OnModuleInit {
               cos(((s."coordinates"::jsonb->'latitude')::float) * pi() / 180) * cos(${query.radius.center.latitude}::float * pi() / 180) *
               power(((${query.radius.center.longitude} - (s."coordinates"::jsonb->'longitude')::float) * pi() / 180) / 2, 2)
              ))) * 1000)::int <= ${query.radius.distance}
-      `
+      `;
+    /* eslint-enable */
     }
 
     //Условия для категорий 3 уровня
@@ -423,7 +425,12 @@ export class ProductsService implements OnModuleInit {
    * @memberof ProductsService
    */
   public getAll(query: IProductQuery): Observable<Product[]> {
-    if (!query.category3LevelIds.length && !query.filters.length && !query.price.max && !query.price.min && !query.radius.center && !query.radius.distance) {
+    if (!query.category3LevelIds.length 
+        && !query.filters.length 
+        && !query.price.max 
+        && !query.price.min 
+        && !query.radius.center 
+        && !query.radius.distance) {
       return of([]);
     }
     const sqlQuery: string = query.filters.length

@@ -12,6 +12,11 @@ import { ITabSetting } from '../../models/interfaces';
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent {
+  /**
+   * Происходит ли загрузка
+   * @type {boolean}
+   * @memberof LayoutComponent
+   */
   public isLoading: boolean = false;
 
   /**
@@ -55,6 +60,11 @@ export class LayoutComponent {
     ];
   }
 
+  /**
+   * Установка загрузки
+   * @param {boolean} state состояние
+   * @memberof LayoutComponent
+   */
   public setLoading(state: boolean): void {
     this.isLoading = state;
   }

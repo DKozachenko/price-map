@@ -6,7 +6,12 @@ import { IResponseData } from '@core/interfaces';
 import { ProductEvents, UserEvents } from '@core/enums';
 import { ProductService } from '../../../../services';
 
-
+/**
+ * Компонент боковой панели с товарами
+ * @export
+ * @class ProductsSidebarComponent
+ * @implements {OnInit}
+ */
 @UntilDestroy()
 @Component({
   selector: 'map-products-sidebar',
@@ -14,6 +19,11 @@ import { ProductService } from '../../../../services';
   styleUrls: ['./products-sidebar.component.scss'],
 })
 export class ProductsSidebarComponent implements OnInit {
+  /**
+   * Товары
+   * @type {Product[]}
+   * @memberof ProductsSidebarComponent
+   */
   public products: Product[] = [];
 
   constructor(private readonly productsService: ProductService,
@@ -22,7 +32,9 @@ export class ProductsSidebarComponent implements OnInit {
     private readonly settingService: SettingsService) {}
 
   public ngOnInit(): void {
-    this.productsService.setFavoriteProductIds(new Set(this.settingService.getUser().products.map((product: Product) => product.id)));
+    this.productsService.setFavoriteProductIds(new Set(
+      this.settingService.getUser().products.map((product: Product) => product.id)
+    ));
 
     this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductsByIdsFailed)
       .pipe(untilDestroyed(this))
@@ -45,14 +57,22 @@ export class ProductsSidebarComponent implements OnInit {
         if (response.data.products.length > currentUser.products.length) {
           for (const product of response.data.products) {
             if (!currentUser.products.map((product: Product) => product.id).includes(product.id)) {
-              this.productsService.emitAdditionProductAction({ id: product.id ?? '', name: 'favorite', direction: 'add' });
+              this.productsService.emitAdditionProductAction({ 
+                id: product.id ?? '', 
+                name: 'favorite', 
+                direction: 'add' 
+              });
               break;
             }
           }
         } else {
           for (const product of currentUser.products) {
             if (!response.data.products.map((product: Product) => product.id).includes(product.id)) {
-              this.productsService.emitAdditionProductAction({ id: product.id ?? '', name: 'favorite', direction: 'remove' });
+              this.productsService.emitAdditionProductAction({ 
+                id: product.id ?? '', 
+                name: 'favorite', 
+                direction: 'remove' 
+              });
               break;
             }
           }
@@ -66,10 +86,21 @@ export class ProductsSidebarComponent implements OnInit {
       .subscribe((data: string[]) => this.webSocketService.emit<string[]>(ProductEvents.GetProductsByIdsAttempt, data));
   }
 
+  /**
+   * Закрытие боковой панели
+   * @memberof ProductsSidebarComponent
+   */
   public close(): void {
     this.productsService.emitSettingItemIdToShow([]);
   }
 
+  /**
+   * Функция trackBy для товаров
+   * @param {number} index индекс
+   * @param {Product} item значение
+   * @return {*}  {string} id товара
+   * @memberof ProductsSidebarComponent
+   */
   public trackByProduct(index: number, item: Product): string {
     return item.id ?? index;
   }

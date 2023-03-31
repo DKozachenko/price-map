@@ -37,10 +37,33 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
    * @memberof MapComponent
    */
   public isShowRouteReview: boolean = false;
-
+ 
+  /**
+   * Показывать ли фильтр
+   * @type {boolean}
+   * @memberof MapComponent
+   */
   public isShowFilter: boolean = true;
+
+  /**
+   * Показывать ли боковую панель с товарами
+   * @type {boolean}
+   * @memberof MapComponent
+   */
   public isShowProductsSidebar: boolean = false;
+
+  /**
+   * Показывать ли боковую панель с магазинами
+   * @type {boolean}
+   * @memberof MapComponent
+   */
   public isShowShopsSidebar: boolean = false;
+
+  /**
+   * Происходит ли загрузка
+   * @type {boolean}
+   * @memberof MapComponent
+   */
   public isLoading: boolean = false;
 
   constructor(private readonly webSocketService: WebSocketService,
@@ -137,7 +160,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((data: string[]) => {
         this.isShowProductsSidebar = !!data.length;
-        this.isShowFilter = !!!data.length;
+        this.isShowFilter = !data.length;
       });
 
     this.shopService.itemIdsToShow$
@@ -146,7 +169,17 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.filterService.allFilters$
       .pipe(untilDestroyed(this))
-      .subscribe(([categoryIds, filters, priceQuery, radiusQuery]: [Set<string>, IUserFilter[], IPriceQuery, IRadiusQuery]) => {
+      .subscribe(([
+        categoryIds, 
+        filters, 
+        priceQuery, 
+        radiusQuery
+      ]: [
+        Set<string>, 
+        IUserFilter[], 
+        IPriceQuery, 
+        IRadiusQuery
+      ]) => {
         this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
           category3LevelIds: categoryIds ? [...categoryIds] : [],
           filters: filters && categoryIds.size === 1 ? filters : [],
@@ -157,6 +190,11 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       });
   }
 
+  /**
+   * Установка загрузки
+   * @param {boolean} state состояние загрузки
+   * @memberof MapComponent
+   */
   public setLoading(state: boolean): void {
     this.isLoading = state;
   }

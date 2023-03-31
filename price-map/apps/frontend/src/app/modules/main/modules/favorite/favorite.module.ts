@@ -10,6 +10,11 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FavoriteRoutingModule } from './favorite-routing.module';
 import { FavoriteItemComponent, FavoriteListComponent } from './components';
 
+/**
+ * Модуль избранного
+ * @export
+ * @class FavoriteModule
+ */
 @NgModule({
   declarations: [
     FavoriteListComponent,

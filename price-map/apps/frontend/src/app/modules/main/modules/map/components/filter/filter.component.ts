@@ -92,7 +92,7 @@ export class FilterComponent implements OnInit {
   }
 
   /**
-   * Показать категории 2 уровня
+   * Показ категорий 2 уровня
    * @param {ICategory1LevelForView} category1Level категория 1 уровня
    * @memberof FilterComponent
    */
@@ -101,7 +101,7 @@ export class FilterComponent implements OnInit {
   }
 
   /**
-   * Показать категории 3 уровня
+   * Показ категорий 3 уровня
    * @param {ICategory2LevelForView} category2Level категория 2 уровня
    * @memberof FilterComponent
    */
@@ -110,7 +110,7 @@ export class FilterComponent implements OnInit {
   }
 
   /**
-   * Выбрать категорию 1 уровня
+   * Выбор категории 1 уровня
    * @param {ICategory1LevelForView} category1Level категория 1 уровня
    * @memberof FilterComponent
    */
@@ -135,7 +135,7 @@ export class FilterComponent implements OnInit {
   }
 
   /**
-   * Выбрать категорию 2 уровня
+   * Выбор категории 2 уровня
    * @param {ICategory2LevelForView} category2Level категория 2 уровня
    * @memberof FilterComponent
    */
@@ -166,7 +166,7 @@ export class FilterComponent implements OnInit {
   }
 
   /**
-   * Выбрать категорию 3 уровня
+   * Выбор категории 3 уровня
    * @param {ICategory3LevelForView} category3Level категория 3 уровня
    * @memberof FilterComponent
    */
@@ -196,7 +196,7 @@ export class FilterComponent implements OnInit {
   }
 
   /**
-   * Проверить выбранные категории 3 уровня (если сет из id категори1 3 уровня изменился, кидает событие в сервис)
+   * Проверка выбранных категорий 3 уровня (если множество id категорий 3 уровня изменилось, кидает событие в сервис)
    * @memberof FilterComponent
    */
   public checkSelectedCategories3Level(): void {
@@ -222,7 +222,7 @@ export class FilterComponent implements OnInit {
   /**
    * Функция trackBy для категорий 1 уровня
    * @param {number} index индекс
-   * @param {ICategory1LevelForView} item категория 1 уровня для отображения
+   * @param {ICategory1LevelForView} item значение
    * @return {*}  {string} id категории
    * @memberof FilterComponent
    */
@@ -233,7 +233,7 @@ export class FilterComponent implements OnInit {
   /**
    * Функция trackBy для категорий 2 уровня
    * @param {number} index индекс
-   * @param {ICategory2LevelForView} item категория 2 уровня для отображения
+   * @param {ICategory2LevelForView} item значение
    * @return {*}  {string} id категории
    * @memberof FilterComponent
    */
@@ -244,7 +244,7 @@ export class FilterComponent implements OnInit {
   /**
    * Функция trackBy для категорий 3 уровня
    * @param {number} index индекс
-   * @param {ICategory3LevelForView} item категория 3 уровня для отображения
+   * @param {ICategory3LevelForView} item значение
    * @return {*}  {string} id категории
    * @memberof FilterComponent
    */

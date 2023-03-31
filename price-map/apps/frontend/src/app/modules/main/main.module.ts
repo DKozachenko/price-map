@@ -10,6 +10,11 @@ import { ProductService } from './services';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { NbTooltipModule} from '@nebular/theme';
 
+/**
+ * Главный модуль приложения
+ * @export
+ * @class MainModule
+ */
 @NgModule({
   declarations: [
     LayoutComponent,

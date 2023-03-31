@@ -6,6 +6,12 @@ import { IPayload, IResponseData } from '@core/interfaces';
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { NotificationService, SettingsService, TokenService, WebSocketService } from '../../../../../../services';
 
+/**
+ * Компонент формы настроек пользователя
+ * @export
+ * @class SettingsFormComponent
+ * @implements {OnInit}
+ */
 @UntilDestroy()
 @Component({
   selector: 'settings-settings-form',
@@ -27,6 +33,11 @@ export class SettingsFormComponent implements OnInit {
    */
   public form!: FormGroup;
 
+  /**
+   * Происходит ли загрузка
+   * @type {boolean}
+   * @memberof SettingsFormComponent
+   */
   public isLoading: boolean = false;
 
   constructor(private readonly webSocketService: WebSocketService,
@@ -59,7 +70,9 @@ export class SettingsFormComponent implements OnInit {
         this.isLoading = false;
       });
 
-    this.webSocketService.on<IResponseData<Omit<User, 'password'> & { password?: string }>>(UserEvents.UpdateUserSuccessed)
+    this.webSocketService.on<IResponseData<Omit<User, 'password'> & { password?: string }>>(
+      UserEvents.UpdateUserSuccessed
+    )
       .pipe(
         untilDestroyed(this)
       )

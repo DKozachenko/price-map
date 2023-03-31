@@ -11,7 +11,6 @@ import { ProductService } from '../../../../services';
  * @export
  * @class RouteReviewComponent
  * @implements {OnInit}
- * @implements {OnDestroy}
  */
 @UntilDestroy()
 @Component({
@@ -20,6 +19,14 @@ import { ProductService } from '../../../../services';
   styleUrls: ['./route-review.component.scss'],
 })
 export class RouteReviewComponent implements OnInit {
+  /**
+   * Эмиттер состояния загрузки
+   * @private
+   * @type {EventEmitter<boolean>}
+   * @memberof RouteReviewComponent
+   */
+  @Output() private loadingState: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   /**
    * Товары, по которым нужно построить маршрут
    * @type {Product[]}
@@ -33,21 +40,6 @@ export class RouteReviewComponent implements OnInit {
    * @memberof RouteReviewComponent
    */
   public isCollapsed: boolean = true;
-
-  @Output() public loadingState: EventEmitter<boolean> = new EventEmitter<boolean>();
-
-  /**
-   * Получение массива координат
-   * @private
-   * @return {*}  {ICoordinates[]} массив координат
-   * @memberof RouteReviewComponent
-   */
-  private getCoordinates(): ICoordinates[] {
-    return this.products.map((product: Product) => ({
-      latitude: product.shop.coordinates.latitude,
-      longitude: product.shop.coordinates.longitude
-    }));
-  }
 
   constructor(private readonly productsService: ProductService,
     private readonly webSocketService: WebSocketService,
@@ -76,6 +68,20 @@ export class RouteReviewComponent implements OnInit {
         this.productsService.emitAdditionProductAction({ id, name: 'route', direction: 'remove' });
       });
   }
+
+  /**
+   * Получение массива координат
+   * @private
+   * @return {*}  {ICoordinates[]} массив координат
+   * @memberof RouteReviewComponent
+   */
+  private getCoordinates(): ICoordinates[] {
+    return this.products.map((product: Product) => ({
+      latitude: product.shop.coordinates.latitude,
+      longitude: product.shop.coordinates.longitude
+    }));
+  }
+
   /**
    * Построение маршрута
    * @memberof RouteReviewComponent
@@ -87,7 +93,7 @@ export class RouteReviewComponent implements OnInit {
   }
 
   /**
-   * Свернуть развернуть компонент
+   * Смена состояния комопнента (свернут /  развернут)
    * @memberof RouteReviewComponent
    */
   public toggleCollapse(): void {

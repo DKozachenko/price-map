@@ -6,6 +6,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NotificationService, SettingsService, TokenService, WebSocketService } from '../../../../../../services';
 import { ProductService } from '../../../../services';
 
+/**
+ * Компонент списка избранных товаров
+ * @export
+ * @class FavoriteListComponent
+ * @implements {OnInit}
+ */
 @UntilDestroy()
 @Component({
   selector: 'favorite-favorite-list',
@@ -13,7 +19,18 @@ import { ProductService } from '../../../../services';
   styleUrls: ['./favorite-list.component.scss'],
 })
 export class FavoriteListComponent implements OnInit {
+  /**
+   * Избранные товары
+   * @type {Product[]}
+   * @memberof FavoriteListComponent
+   */
   public favoriteProducts: Product[] = [];
+
+  /**
+   * Происходит ли загрузка
+   * @type {boolean}
+   * @memberof FavoriteListComponent
+   */
   public isLoading: boolean = false;
 
   constructor(private readonly settingsService: SettingsService,
@@ -33,7 +50,9 @@ export class FavoriteListComponent implements OnInit {
     this.webSocketService.on<IResponseData<Product[]>>(UserEvents.GetFavoriteProductsSuccessed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Product[]>) => {
-        this.productsService.setFavoriteProductIds(new Set(this.settingsService.getUser().products.map((product: Product) => product.id)));
+        this.productsService.setFavoriteProductIds(new Set(
+          this.settingsService.getUser().products.map((product: Product) => product.id)
+        ));
         this.favoriteProducts = response.data;
         this.isLoading = false;
       });
@@ -57,10 +76,22 @@ export class FavoriteListComponent implements OnInit {
     this.webSocketService.emit<string>(UserEvents.GetFavoriteProductsAttempt, this.tokenService.getPayload().userId);
   }
 
+  /**
+   * Установка загрузки
+   * @param {boolean} state состояние
+   * @memberof FavoriteListComponent
+   */
   public setLoading(state: boolean): void {
     this.isLoading = state;
   }
 
+  /**
+   * Функция trackBy для избранных товаров
+   * @param {number} index индекс
+   * @param {Product} item значение
+   * @return {*}  {string} id товара
+   * @memberof FavoriteListComponent
+   */
   public trackByProduct(index: number, item: Product): string {
     return item.id ?? index;
   }

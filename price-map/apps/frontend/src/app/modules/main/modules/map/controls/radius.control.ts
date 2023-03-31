@@ -1,23 +1,36 @@
-import { ComponentFactoryResolver, ComponentRef, Injector } from "@angular/core";
-import { RadiusControlComponent } from "../components";
-import { MapService } from "../services";
+import { ComponentFactoryResolver, Injector } from '@angular/core';
+import { RadiusControlComponent } from '../components';
+import { MapService } from '../services';
 import { IControl } from 'maplibre-gl';
+import { IMapControl } from '../models/interfaces';
 
-export class RadiusControl implements IControl {
+/**
+ * Контрол радиуса
+ * @export
+ * @class RadiusControl
+ * @implements {IControl}
+ * @implements {IMapControl}
+ */
+export class RadiusControl implements IControl, IMapControl {
+  /**
+   * Контейнер
+   * @private
+   * @type {HTMLDivElement}
+   * @memberof RadiusControl
+   */
   private container: HTMLDivElement;
-  private component: ComponentRef<RadiusControlComponent>;
 
   constructor(private readonly resolver: ComponentFactoryResolver,
     private readonly mapService: MapService) {}
 
-  private createControlDomContent(): HTMLDivElement {
+  public createControlDomContent(): HTMLDivElement {
     const componentFactory = this.resolver.resolveComponentFactory(RadiusControlComponent);
-    this.component = componentFactory.create(Injector.create([]));
-    this.component.instance.mapService = this.mapService;
-    this.component.instance.state = false;
-    this.component.instance.cdr = this.component.changeDetectorRef;
-    this.component.changeDetectorRef.detectChanges();
-    return <HTMLDivElement>this.component.location.nativeElement;
+    const component = componentFactory.create(Injector.create([]));
+    component.instance.mapService = this.mapService;
+    component.instance.state = false;
+    component.instance.cdr = component.changeDetectorRef;
+    component.changeDetectorRef.detectChanges();
+    return <HTMLDivElement>component.location.nativeElement;
   }
 
   public onAdd() {

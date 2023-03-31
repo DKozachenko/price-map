@@ -15,8 +15,7 @@ import { CharacteristicFilterComponent,
   ShopsSidebarComponent,
   ShopCardComponent,
   RadiusControlComponent,
-  ShopInfoModalComponent
-} from './components';
+  ShopInfoModalComponent } from './components';
 import { MapRoutingModule } from './map-routing.module';
 import { FilterService, MapService, ShopService, ThreeJsService } from './services';
 import { NbCardModule,
@@ -37,6 +36,11 @@ import { NbCardModule,
 import { SharedModule } from '../../../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 
+/**
+ * Модуль карты
+ * @export
+ * @class MapModule
+ */
 @NgModule({
   declarations: [
     MapComponent,

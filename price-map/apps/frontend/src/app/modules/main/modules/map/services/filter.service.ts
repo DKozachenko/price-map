@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-ordering */
 import { Injectable } from '@angular/core';
 import { IPriceQuery, IRadiusQuery, IUserFilter } from '@core/interfaces';
 import { Subject, ReplaySubject, Observable, debounceTime } from 'rxjs';
@@ -191,9 +192,9 @@ export class FilterService {
    */
   public allFilters$: Observable<[Set<string>, IUserFilter[], IPriceQuery, IRadiusQuery]> 
     = <Observable<[Set<string>, IUserFilter[], IPriceQuery, IRadiusQuery]>>customCombineLastest([
-    this.chechedCategory3LevelIds$,
-    this.filterValues$.pipe(debounceTime(400)),
-    this.currentPriceQuery$,
-    this.radiusQuery$
-  ])
+      this.chechedCategory3LevelIds$,
+      this.filterValues$.pipe(debounceTime(400)),
+      this.currentPriceQuery$,
+      this.radiusQuery$
+    ]);
 }

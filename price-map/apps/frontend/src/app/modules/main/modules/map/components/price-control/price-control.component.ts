@@ -1,11 +1,17 @@
 import { FilterService } from './../../services';
 import { Component, OnInit } from '@angular/core';
-import * as $ from 'jquery';
-import 'round-slider';
 import { IPriceQuery } from '@core/interfaces';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { asapScheduler, observeOn } from 'rxjs';
+import * as $ from 'jquery';
+import 'round-slider';
 
+/**
+ * Компонент для контрола цены
+ * @export
+ * @class PriceControlComponent
+ * @implements {OnInit}
+ */
 @UntilDestroy()
 @Component({
   selector: 'map-price-control',
@@ -13,13 +19,31 @@ import { asapScheduler, observeOn } from 'rxjs';
   styleUrls: ['./price-control.component.scss']
 })
 export class PriceControlComponent implements OnInit {
+  /**
+   * Слайдер
+   * @private
+   * @type {JQuery<HTMLDivElement>}
+   * @memberof PriceControlComponent
+   */
   private slider: JQuery<HTMLDivElement>;
+
+  /**
+   * Сервис фильтра
+   * @type {FilterService}
+   * @memberof PriceControlComponent
+   */
   public filterService: FilterService;
 
   public ngOnInit(): void {
     this.initSlider();
   }
 
+  /**
+   * Установка слайдера
+   * @private
+   * @param {IPriceQuery} initialPriceQuery начальное значение мин / макс цен
+   * @memberof PriceControlComponent
+   */
   private setSlider(initialPriceQuery: IPriceQuery): void {
     this.slider = $('#slider');
     (<any>this.slider).roundSlider({
@@ -45,6 +69,11 @@ export class PriceControlComponent implements OnInit {
     this.slider.on('change', this.changePrice.bind(this));
   }
 
+  /**
+   * Инициализация слайдера
+   * @private
+   * @memberof PriceControlComponent
+   */
   private initSlider(): void {
     //Всегда запускаем как микрозадачу, так почему-то при некоторых повторых переключениях на слой товаров не инициализируется слайдер
     this.filterService.initialPriceQuery$
@@ -52,6 +81,12 @@ export class PriceControlComponent implements OnInit {
       .subscribe((initialPriceQuery: IPriceQuery) => this.setSlider(initialPriceQuery));
   }
 
+  /**
+   * Изменение фильтра
+   * @private
+   * @param {*} e событие слайдера
+   * @memberof PriceControlComponent
+   */
   private changePrice(e: any) {
     const initialPriceQuery: IPriceQuery = {
       min: e.options.min,
@@ -67,6 +102,10 @@ export class PriceControlComponent implements OnInit {
     });
   }
 
+  /**
+   * Удалить слайдер
+   * @memberof PriceControlComponent
+   */
   public destroySlider(): void {
     (<any>this.slider).roundSlider('destroy');
   }

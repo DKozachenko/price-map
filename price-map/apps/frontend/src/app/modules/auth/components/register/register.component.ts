@@ -21,20 +21,27 @@ import { User } from '@core/entities';
 })
 export class RegisterComponent implements OnInit {
   /**
+   * Эмиттер состояния загрузки
+   * @private
+   * @type {EventEmitter<boolean>}
+   * @memberof RegisterComponent
+   */
+  @Output() private loadingState: EventEmitter<boolean> = new EventEmitter();
+  
+  /**
+   * Эмитер успешной регистрации
+   * @private
+   * @type {EventEmitter<void>}
+   * @memberof RegisterComponent
+   */
+  @Output() private registerSuccessed: EventEmitter<void> = new EventEmitter<void>();
+
+  /**
    * Экземпляр формы
    * @type {FormGroup}
    * @memberof RegisterComponent
    */
   public form!: FormGroup;
-
-  /**
-   * Емитер успешной регистрации
-   * @type {EventEmitter<void>}
-   * @memberof RegisterComponent
-   */
-  @Output() public registerSuccessed: EventEmitter<void> = new EventEmitter<void>();
-
-  @Output() public loadingState: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private readonly webSocketSevice: WebSocketService,
     private readonly notificationService: NotificationService) {}

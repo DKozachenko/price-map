@@ -14,6 +14,11 @@ import { NbCardModule,
 import { SharedModule } from '../../../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+/**
+ * Модуль настроек
+ * @export
+ * @class SettingsModule
+ */
 @NgModule({
   declarations: [SettingsFormComponent],
   imports: [
