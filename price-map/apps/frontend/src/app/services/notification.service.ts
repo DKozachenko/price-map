@@ -29,14 +29,12 @@ export class NotificationService {
     duration: number
   ): void {
     const iconConfig: NbIconConfig = { icon: iconName, pack: 'eva' };
-    this.toastrService.show(message, title,
-      {
-        status,
-        duration,
-        destroyByClick: true,
-        icon: iconConfig
-      }
-    );
+    this.toastrService.show(message, title, {
+      status,
+      duration,
+      destroyByClick: true,
+      icon: iconConfig
+    });
   }
 
   /**

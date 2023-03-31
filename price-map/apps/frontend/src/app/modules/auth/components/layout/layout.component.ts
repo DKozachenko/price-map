@@ -13,6 +13,13 @@ import { ITabSetting } from '../../models/interfaces';
 })
 export class LayoutComponent {
   /**
+   * Происходит ли загрузка
+   * @type {boolean}
+   * @memberof LayoutComponent
+   */
+  public isLoading: boolean = false;
+
+  /**
    * Изначальные настройки табов
    * @type {ITabSetting[]}
    * @memberof LayoutComponent
@@ -38,7 +45,7 @@ export class LayoutComponent {
     //Костыль, чтобы после регистрации переводить на вкладку "Входа";
     //Тк в UI библиотеке не предусмотрена програмная смена вкладки;
     //Замена на отдельную переменную ломает
-    //Не дышать и не трогать 
+    //Не дышать и не трогать
     this.tabsSettings = [
       {
         tabId: 'login',
@@ -51,5 +58,14 @@ export class LayoutComponent {
         active: false
       }
     ];
+  }
+
+  /**
+   * Установка загрузки
+   * @param {boolean} state состояние
+   * @memberof LayoutComponent
+   */
+  public setLoading(state: boolean): void {
+    this.isLoading = state;
   }
 }

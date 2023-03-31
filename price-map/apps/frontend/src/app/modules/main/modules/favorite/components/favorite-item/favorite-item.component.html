@@ -1,0 +1,29 @@
+<nb-accordion *ngIf="product" class="favorite__product">
+  <nb-accordion-item>
+    <nb-accordion-item-header>{{ product.name }}</nb-accordion-item-header>
+
+    <nb-accordion-item-body class="favorite__product-body">
+      <div class="favorite__product-body__img">
+        <img [src]="product.imagePath" alt="Изображение товара">
+      </div>
+
+      <div class="favorite__product-body__info">
+        <p>{{ product.description ? product.description : 'Нет описания' }}</p>
+
+        <p>Цена: {{ product.price | price:'р' }} р.</p>
+
+        <button
+          class="button"
+          nbButton
+          hero
+          status="primary"
+          shape="round"
+          type="button"
+          (click)="remove()"
+        >
+          Убрать
+        </button>
+      </div>    
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>

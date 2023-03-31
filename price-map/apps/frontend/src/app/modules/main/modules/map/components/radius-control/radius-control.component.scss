@@ -1,0 +1,7 @@
+.radius-control span {
+  background: no-repeat center / 70% url('../../../../../../../assets/radius.svg');
+
+  &.active {
+    background-color: #d7d7d7;
+  }
+}

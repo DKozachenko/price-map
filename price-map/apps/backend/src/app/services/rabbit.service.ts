@@ -103,4 +103,16 @@ export class RabbitService {
   public getMessage<T = any>(queueName: string): Observable<T> {
     return from(this.getMessagePromise<T>(queueName));
   }
+
+  /**
+   * Отправка сообщения
+   * @template T тип отправляемых данных
+   * @param {string} queueName название очереди
+   * @param {T} data данные
+   * @memberof RabbitService
+   */
+  public sendMessage<T = any>(queueName: string, data: T): void {
+    const dataStr: string = JSON.stringify(data);
+    this.channel.sendToQueue(queueName, Buffer.from(dataStr));
+  }
 }

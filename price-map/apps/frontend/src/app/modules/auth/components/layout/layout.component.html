@@ -1,11 +1,11 @@
-<nb-layout>
+<nb-layout [nbSpinner]="isLoading" [nbSpinnerSize]="'medium'" nbSpinnerStatus="primary">
   <nb-layout-column>
     <div class="root">
       <div class="wrapper">
         <nb-tabset>
           <nb-tab *ngFor="let tab of tabsSettings" [tabTitle]="tab.title" [active]="tab.active">
-            <auth-login *ngIf="tab.tabId === 'login'"></auth-login>
-            <auth-register *ngIf="tab.tabId === 'register'" (registerSuccessed)="setLoginTabActive()"></auth-register>
+            <auth-login *ngIf="tab.tabId === 'login'" (loadingState)="setLoading($event)"></auth-login>
+            <auth-register *ngIf="tab.tabId === 'register'" (loadingState)="setLoading($event)" (registerSuccessed)="setLoginTabActive()"></auth-register>
           </nb-tab>
         </nb-tabset>
       </div>

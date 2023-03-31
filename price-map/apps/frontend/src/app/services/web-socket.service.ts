@@ -7,7 +7,7 @@ import { TokenService } from '.';
 /**
  * Сервис общения с сервером по webSocket'у
  * @export
- * @class WebSocketService 
+ * @class WebSocketService
  */
 @Injectable()
 export class WebSocketService implements OnDestroy {
@@ -86,12 +86,12 @@ export class WebSocketService implements OnDestroy {
   private subcribeOnDisconnect(): void {
     this.disconnectSub = this.on<[string, DisconnectDescription | undefined]>('disconnect')
       .subscribe(([
-        reason, 
+        reason,
         description
       ]: [
-        string, 
+        string,
         DisconnectDescription | undefined
-      ]) => 
+      ]) =>
         console.warn('Socket disconnected', 'reason ', reason, 'description', description)
       );
   }
@@ -101,9 +101,16 @@ export class WebSocketService implements OnDestroy {
    * @memberof WebSocketService
    */
   private addToken(): void {
-    this.socket.auth = {
-      token: this.tokenService.getToken()
-    };
+    // В данной библиотеке дополнительные данные можно слать в поле auth, но все доп. данные передаются
+    // в объекте handshake при начальной установке соединения, для того, чтобы обновить поле auth, необходимо
+    // вручную переподключиться (https://socket.io/docs/v4/client-options/#auth)
+    const tokenObj: { token: string } = <{ token: string }>this.socket.auth;
+    if (!tokenObj.token) {
+      this.socket.auth = {
+        token: this.tokenService.getToken()
+      };
+      this.socket.disconnect().connect();
+    }
   }
 
   /**
@@ -113,9 +120,12 @@ export class WebSocketService implements OnDestroy {
   public initSocket(): void {
     this.socket = io('http://localhost:3333', {
       transports: [
-        'websocket', 
+        'websocket',
         'polling'
-      ]
+      ],
+      auth: {
+        token: this.tokenService.getToken()
+      }
     });
 
     this.subscribeOnConnect();
@@ -123,15 +133,18 @@ export class WebSocketService implements OnDestroy {
     this.subcribeOnDisconnect();
   }
 
-  /** 
+  /**
    * Отправка данных
    * @template T тип отправляемых данных
    * @param {string} eventName название события
    * @param {T} [data] данные
+   * @param {boolean} [isNeedToken=true] нужно ли добавлять токен (необходимо, чтобы при входе не происходил лишний дисконект)
    * @memberof WebSocketService
    */
-  public emit<T = null>(eventName: string, data?: T): void {
-    this.addToken();
+  public emit<T = null>(eventName: string, data?: T, isNeedToken: boolean = true): void {
+    if (isNeedToken) {
+      this.addToken();
+    }
     this.socket.emit(eventName, data);
   }
 

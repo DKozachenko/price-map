@@ -9,6 +9,13 @@
       "executor": "@angular-devkit/build-angular:browser",
       "outputs": ["{options.outputPath}"],
       "options": {
+        "allowedCommonJsDependencies": [
+          "maplibre-gl",
+          "jquery",
+          "eva-icons",
+          "@mapbox/mapbox-gl-draw",
+          "maplibre-gl-draw-circle"
+       ],
         "outputPath": "dist/apps/frontend",
         "index": "apps/frontend/src/index.html",
         "main": "apps/frontend/src/main.ts",
@@ -32,13 +39,13 @@
           "budgets": [
             {
               "type": "initial",
-              "maximumWarning": "1mb",
-              "maximumError": "2mb"
+              "maximumWarning": "4mb",
+              "maximumError": "5mb"
             },
             {
               "type": "anyComponentStyle",
-              "maximumWarning": "2kb",
-              "maximumError": "4kb"
+              "maximumWarning": "1mb",
+              "maximumError": "2mb"
             }
           ],
           "fileReplacements": [

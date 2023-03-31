@@ -1,0 +1,19 @@
+<nb-card *ngIf="shop" class="sidebar__item shop">
+  <nb-card-header>
+    <ng-container *ngIf="shop.website; else noWebsite">
+      <a [href]="shop.website" target="_blank">{{ shop.name }}</a>
+    </ng-container>
+    <ng-template #noWebsite>
+      <span>{{ shop.name }}</span>
+    </ng-template>
+  </nb-card-header>
+
+  <nb-card-footer>
+    <nb-actions>
+      <nb-action icon="layers-outline" nbTooltip="Подробнее" (click)="getBuildingInfo()"></nb-action>
+    </nb-actions>
+  </nb-card-footer>
+</nb-card>
+
+
+

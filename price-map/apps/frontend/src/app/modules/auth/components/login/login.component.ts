@@ -1,5 +1,5 @@
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationService, TokenService, WebSocketService } from '../../../../services';
 import { IResponseData, IUserLoginInfo } from '@core/interfaces';
@@ -20,12 +20,20 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   /**
+   * Эмиттер состояния загрузки
+   * @private
+   * @type {EventEmitter<boolean>}
+   * @memberof LoginComponent
+   */
+  @Output() private loadingState: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  /**
    * Показывать пароль
    * @type {boolean}
    * @memberof LoginComponent
    */
   public isShowPassword: boolean = false;
-  
+
   /**
    * Экземпляр формы
    * @type {FormGroup}
@@ -35,7 +43,7 @@ export class LoginComponent implements OnInit {
 
   constructor(private readonly webSocketSevice: WebSocketService,
     private readonly notificationService: NotificationService,
-    private router: Router,
+    private readonly router: Router,
     private readonly tokenService: TokenService) {}
 
   public ngOnInit(): void {
@@ -51,14 +59,18 @@ export class LoginComponent implements OnInit {
         this.notificationService.showSuccess(response.message);
         this.tokenService.setToken(response.data ?? '');
         this.router.navigate(['map'], { queryParamsHandling: 'merge' });
+        this.loadingState.emit(false);
       });
-    
+
     this.webSocketSevice.on<IResponseData<null>>(AuthEvents.LoginFailed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+      .subscribe((response: IResponseData<null>) => {
+        this.notificationService.showError(response.message);
+        this.loadingState.emit(false);
+      });
   }
 
-  /** 
+  /**
    * Смена флага, отвечающего за отображения пароля
    * @memberof LoginComponent
    */
@@ -71,6 +83,7 @@ export class LoginComponent implements OnInit {
    * @memberof LoginComponent
    */
   public submit(): void {
-    this.webSocketSevice.emit<IUserLoginInfo>(AuthEvents.LoginAttemp, this.form.value);
+    this.webSocketSevice.emit<IUserLoginInfo>(AuthEvents.LoginAttemp, this.form.value, false);
+    this.loadingState.emit(true);
   }
 }

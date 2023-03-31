@@ -14,14 +14,11 @@ import { IPayload } from '@core/interfaces';
  */
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(
-    private router: Router,
-    private tokenService: TokenService
-  ) {}
+  constructor(private readonly router: Router,
+    private readonly tokenService: TokenService) {}
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot
-  ): boolean {
+  public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const roles: string[] = route.data['roles'];    
     const payload: IPayload = this.tokenService.getPayload();
     const currentRole: string = payload.role;

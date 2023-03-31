@@ -4,7 +4,7 @@ import { Logger, OnModuleInit } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category3Level, Product, Shop } from '@core/entities';
-import { Between, DeleteResult, FindOperator, In, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { DeleteResult, In, Repository } from 'typeorm';
 import { catchError, concat, forkJoin, from, Observable, of, switchMap, throwError } from 'rxjs';
 import { IPriceQuery, IProductQuery, IUserFilter } from '@core/interfaces';
 import { RabbitService } from '../../../services';
@@ -56,7 +56,7 @@ export class ProductsService implements OnModuleInit {
       .pipe(
         switchMap((products: IProductWithNames[]) => {
           return forkJoin([
-            of(products), 
+            of(products),
             this.deleteAll()
           ])
             .pipe(
@@ -75,7 +75,7 @@ export class ProductsService implements OnModuleInit {
         ]) => {
           Logger.warn(`Deleting products: ${affectedRows} rows`, 'ProductsService');
           return forkJoin([
-            of(products), 
+            of(products),
             this.categoriesService.getAllCategories3Level()
           ])
             .pipe(
@@ -95,9 +95,9 @@ export class ProductsService implements OnModuleInit {
 
           const productsForSave: (Omit<Product, | 'shop'>)[] = [];
           for (const product of products) {
-            const existedCategory3Level: Category3Level | undefined 
+            const existedCategory3Level: Category3Level | undefined
               = categories3Level.find((item: Category3Level) => item.name === product.category3LevelName);
-            
+
             if (existedCategory3Level) {
               productsForSave.push({
                 id: product.id,
@@ -149,7 +149,7 @@ export class ProductsService implements OnModuleInit {
       .pipe(
         switchMap((matches: IProductIdShopMatch[]) => {
           return forkJoin([
-            of(matches), 
+            of(matches),
             this.shopsService.deleteAll()
           ])
             .pipe(
@@ -193,7 +193,7 @@ export class ProductsService implements OnModuleInit {
           const matchesForUpdate: IProductIdShopMatch[] = [];
           for (const match of matches) {
             const existedId: string | undefined = ids.find((id: string) => id === match.productId);
-            
+
             if (existedId) {
               matchesForUpdate.push(match);
             }
@@ -236,6 +236,25 @@ export class ProductsService implements OnModuleInit {
     }
 
     return result;
+  }
+
+  /**
+   * Генерация для условия IN
+   * @private
+   * @param {string[]} category3LevelIds id категорий 3 уровня
+   * @return {*}  {string} выражение для условия
+   * @memberof ProductsService
+   */
+  private generateInQuery(category3LevelIds: string[]): string {
+    let result = 'p."category3LevelId" IN(';
+    for (let i = 0; i < category3LevelIds.length; ++i) {
+      if (i === category3LevelIds.length - 1) {
+        result += `'${category3LevelIds[i]}'`;
+      } else {
+        result += `'${category3LevelIds[i]}', `;
+      }
+    }
+    return result + ')';
   }
 
   /**
@@ -292,13 +311,13 @@ export class ProductsService implements OnModuleInit {
       if (i === query.filters.length - 1) {
         fromQuery += `SELECT p."id"
         FROM "Products" p, jsonb_to_recordset(p."characteristics") AS characteristics(name text, value text)
-        WHERE p."category3LevelId" = '${query.category3LevelIds}'
+        WHERE p."category3LevelId" = '${query.category3LevelIds[0]}'
         AND characteristics.name = '${filter.name}' and ${valueQuery}`;
       } else {
         fromQuery += `
         SELECT p."id"
         FROM "Products" p, jsonb_to_recordset(p."characteristics") AS characteristics(name text, value text)
-        WHERE p."category3LevelId" = '${query.category3LevelIds}'
+        WHERE p."category3LevelId" = '${query.category3LevelIds[0]}'
         AND characteristics.name = '${filter.name}' and ${valueQuery}
         INTERSECT
         `;
@@ -309,34 +328,69 @@ export class ProductsService implements OnModuleInit {
   )`;
   }
 
-  private generateWhereSql(priceQuery: IPriceQuery): string {
-    if (!priceQuery.max && !priceQuery.min) {
-      return '';
-    }
-    if (priceQuery.max && priceQuery.min) {
-      return `WHERE p."price" <= ${priceQuery.max} AND p."price" >= ${priceQuery.min}`;
-    }
-    if (priceQuery.max && !priceQuery.min) {
-      return `WHERE p."price" <= ${priceQuery.max}`;
-    }
-
-    return `WHERE p."price" >= ${priceQuery.min}`;
-  }
-
   /**
-   * Генерация SQL запроса для товаров
+   * Генерация условия для отбора записей
    * @private
-   * @param {IProductQuery} query запрос
-   * @return {*}  {string} SQL-Запрос
+   * @param {IProductQuery} query
+   * @return {*}  {string}
    * @memberof ProductsService
    */
-  private generateSql(query: IProductQuery): string {
+  private generateWhereSql(query: IProductQuery): string {
+    let whereQuery: string = '';
+
+    //Условия для цены
+    if (!query.price.max && !query.price.min) {
+      whereQuery = '';
+    }
+    if (query.price.max && query.price.min) {
+      whereQuery = `WHERE p."price" <= ${query.price.max} AND p."price" >= ${query.price.min}`;
+    }
+    if (query.price.max && !query.price.min) {
+      whereQuery = `WHERE p."price" <= ${query.price.max}`;
+    }
+    if (!query.price.max && query.price.min) {
+      whereQuery = `WHERE p."price" >= ${query.price.min}`;
+    }
+
+    /* eslint-disable */
+    //Условия для радиуса
+    if (query.radius.center && query.radius.distance) {
+      whereQuery += `${whereQuery ? ' AND ' : 'WHERE '}round((6367 * 
+        2 * atan2(sqrt(
+          power(sin(((${query.radius.center.latitude} - (s."coordinates"->'latitude')::float) * pi() / 180) / 2), 2) +
+          cos(((s."coordinates"::jsonb->'latitude')::float) * pi() / 180) * cos(${query.radius.center.latitude}::float * pi() / 180) *
+          power(((${query.radius.center.longitude} - (s."coordinates"::jsonb->'longitude')::float) * pi() / 180) / 2, 2)
+        ), sqrt(1 - 
+              power(sin(((${query.radius.center.latitude} - (s."coordinates"::jsonb->'latitude')::float) * pi() / 180) / 2), 2) +
+              cos(((s."coordinates"::jsonb->'latitude')::float) * pi() / 180) * cos(${query.radius.center.latitude}::float * pi() / 180) *
+              power(((${query.radius.center.longitude} - (s."coordinates"::jsonb->'longitude')::float) * pi() / 180) / 2, 2)
+             ))) * 1000)::int <= ${query.radius.distance}
+      `;
+    /* eslint-enable */
+    }
+
+    //Условия для категорий 3 уровня
+    if (query.category3LevelIds.length) {
+      whereQuery += `${whereQuery ? ' AND ' : 'WHERE '}${this.generateInQuery(query.category3LevelIds)}`;
+    }
+    return whereQuery;
+  }
+
+
+  /**
+   * Генерация SQL скрипта для отбора товаров с наличием фильтров по категории
+   * @private
+   * @param {IProductQuery} query запрос
+   * @return {*}  {string} SQL скрипт
+   * @memberof ProductsService
+   */
+  private generateSqlWithFilters(query: IProductQuery): string {
     const withSql: string = this.generateWithSql(query);
-    const whereSql: string = this.generateWhereSql(query.price);
+    const whereSql: string = this.generateWhereSql(query);
     return `${withSql}
     SELECT p."id", p."name", p."description", p."price", p."characteristics", p."imagePath",
-    json_build_object('id', s."id", 'name', s."name", 'schedule', s."schedule", 'imagePath',
-    s."imagePath", 'coordinates', s."coordinates") AS shop,
+    json_build_object('id', s."id", 'name', s."name", 'osmNodeId', s."osmNodeId", 'website',
+    s."website", 'coordinates', s."coordinates") AS shop,
     json_build_object('id', cl."id", 'name', cl."name", 'filters', cl."filters") AS category3Level
     FROM approachIds
     INNER JOIN "Products" p ON approachIds."id" = p."id"
@@ -346,52 +400,44 @@ export class ProductsService implements OnModuleInit {
   }
 
   /**
-   * Получение оператора сравнения для цены
+   * Генерация SQL скрипта для отбора товаров без фильтров по категории
    * @private
-   * @param {IPriceQuery} priceQuery запрос для цены
-   * @return {*}  {FindOperator<number>} оператор сравнения для ORM
+   * @param {IProductQuery} query запрос
+   * @return {*}  {string} SQL скрипт
    * @memberof ProductsService
    */
-  private getPriceFindOperator(priceQuery: IPriceQuery): FindOperator<number> {
-    if (!priceQuery.max && !priceQuery.min) {
-      return undefined;
-    }
-    if (priceQuery.max && priceQuery.min) {
-      return Between(priceQuery.min, priceQuery.max);
-    }
-    if (priceQuery.max && !priceQuery.min) {
-      return LessThanOrEqual(priceQuery.max);
-    }
-
-    return MoreThanOrEqual(priceQuery.min);
+  private generateSqlWithoutFilters(query: IProductQuery): string {
+    const whereSql: string = this.generateWhereSql(query);
+    return `SELECT p."id", p."name", p."description", p."price", p."characteristics", p."imagePath",
+    json_build_object('id', s."id", 'name', s."name", 'osmNodeId', s."osmNodeId", 'website',
+    s."website", 'coordinates', s."coordinates") AS shop,
+    json_build_object('id', cl."id", 'name', cl."name", 'filters', cl."filters") AS category3Level
+    FROM "Products" p 
+    INNER JOIN "Shops" s ON p."shopId" = s."id"
+    INNER JOIN "Categories3Level" cl ON p."category3LevelId" = cl."id"
+    ${whereSql ? whereSql : ''};`;
   }
 
   /**
-   * Получение всех товаров в определенных категориях 3 уровня
+   * Получение всех товаров
    * @param {IProductQuery} query запрос для товаров
-   * @return {*}  {Observable<Product[]>}
+   * @return {*}  {Observable<Product[]>} товары
    * @memberof ProductsService
    */
   public getAll(query: IProductQuery): Observable<Product[]> {
-    const sqlQuery: string = this.generateSql(query);
-
-    if (query.filters.length) {
-      return from(this.productRepository.query(sqlQuery));
+    if (!query.category3LevelIds.length 
+        && !query.filters.length 
+        && !query.price.max 
+        && !query.price.min 
+        && !query.radius.center 
+        && !query.radius.distance) {
+      return of([]);
     }
-
-    const priceFindOperator: FindOperator<number> = this.getPriceFindOperator(query.price);
-    return from(this.productRepository.find({
-      where: {
-        category3Level: {
-          id: In(query.category3LevelIds)
-        },
-        price: priceFindOperator
-      },
-      relations: {
-        shop: true,
-        category3Level: true
-      }
-    }));
+    const sqlQuery: string = query.filters.length
+      ? this.generateSqlWithFilters(query)
+      : this.generateSqlWithoutFilters(query);
+    
+    return from(this.productRepository.query(sqlQuery));
   }
 
 
@@ -454,13 +500,56 @@ export class ProductsService implements OnModuleInit {
    * @memberof ProductsService
    */
   public updateAll(matches: IProductIdShopMatch[]): Observable<number> {
-    const queries: Observable<Product>[] = matches.map((match: IProductIdShopMatch) => 
+    const queries: Observable<Product>[] = matches.map((match: IProductIdShopMatch) =>
       from(this.productRepository.save({
         id: match.productId,
         shop: match.shop
       })));
 
     return concat(queries)
+    //TODO: эм, поч просто пайп
       .pipe(() => of(matches.length));
+  }
+
+  /**
+   * Получение диапазона цен товаров (минимальная и максимальные цены)
+   * @return {*}  {Observable<IPriceQuery>} диапазон цен
+   * @memberof ProductsService
+   */
+  public getPriceRange(): Observable<IPriceQuery> {
+    return forkJoin([
+      from(this.productRepository.query('SELECT MIN(price) AS price FROM "Products" p;')),
+      from(this.productRepository.query('SELECT MAX(price) AS price FROM "Products" p;')),
+    ])
+      .pipe(
+        switchMap(([
+          minArr,
+          maxArr
+        ]:[
+          { price: number }[],
+          { price: number }[]
+        ]) => of({
+          min: minArr[0]?.price,
+          max: maxArr[0]?.price
+        }))
+      );
+  }
+
+  /**
+   * Получение нескольких товаров по id
+   * @param {string[]} ids массив id
+   * @return {*}  {Observable<Product[]>} товары
+   * @memberof ProductsService
+   */
+  public getByIds(ids: string[]): Observable<Product[]> {
+    return from(this.productRepository.find({
+      where: {
+        id: In(ids)
+      },
+      relations: {
+        shop: true,
+        category3Level: true
+      }
+    }));
   }
 }

@@ -1,0 +1,11 @@
+<nb-card class="building">
+  <nb-card-header>
+    <p>Количество этажей: {{ levels }}</p>
+    <nb-icon icon="close-outline" (click)="close()"></nb-icon>
+  </nb-card-header>
+  <nb-card-body class="product__body custom__scroll">
+    <canvas #canvas id="canvas" style="width: 100%; height: 100%;"></canvas>
+  </nb-card-body>
+</nb-card>
+
+

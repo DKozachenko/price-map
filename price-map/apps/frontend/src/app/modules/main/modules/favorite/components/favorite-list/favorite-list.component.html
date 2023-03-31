@@ -1,0 +1,22 @@
+<nb-layout [nbSpinner]="isLoading" [nbSpinnerSize]="'medium'" nbSpinnerStatus="primary">
+  <nb-layout-column>
+    <div class="section">
+      <div class="section__body">
+        <h3 class="section__body-title">Избранное</h3>
+
+        <ng-container *ngIf="!!favoriteProducts.length; else noProducts">
+          <div class="favorite__products custom__scroll">
+            <favorite-favorite-item *ngFor="let product of favoriteProducts; trackBy: trackByProduct"
+              [product]="product"
+              (loadingState)="setLoading($event)"
+            ></favorite-favorite-item>
+          </div>
+        </ng-container>
+
+        <ng-template #noProducts>
+          <p class="favorite__products-hint">Нет товаров в избранном</p>
+        </ng-template>
+      </div>
+    </div>
+  </nb-layout-column>
+</nb-layout>

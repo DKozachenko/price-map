@@ -1,0 +1,17 @@
+<nb-card class="sidebar custom__map-card">
+  <nb-card-header>Магазины</nb-card-header>
+
+  <nb-card-body class="sidebar__body custom__scroll custom__map-card__body">
+    <div class="sidebar__body-items">
+      <map-shop-card *ngFor="let shop of shops; trackBy: trackByShop"
+        [shop]="shop"
+      ></map-shop-card>
+    </div>
+  </nb-card-body>
+
+  <nb-card-footer (click)="close()">
+    <nb-icon icon="close-outline"></nb-icon>
+  </nb-card-footer>
+</nb-card>
+
+

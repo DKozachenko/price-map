@@ -1,0 +1,68 @@
+@import "../../../../../../../assets/styles/mixins";
+
+.route {
+  &__arrow {
+    transform-origin: center center;
+    transition: transform .2s linear;
+    cursor: pointer;
+
+    &_up {
+      transform: rotate(-180deg) translateY(2px);
+    }
+
+    nb-icon {
+      font-size: 1.65rem;
+    }
+  }
+}
+
+.route__review {
+  right: 2rem;
+  max-height: 35%;
+  bottom: 0;
+  top: initial;
+  border: none;
+  
+  &.collapsed {
+    bottom: initial;
+    top: calc(100% - 3.9rem);
+  }
+
+  nb-card-header {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+
+    p {
+      @include font(1.8rem, white);
+    }
+  }
+
+  &-body {
+    width: 15vw;
+
+    nb-list-item {
+      padding: 0;
+      border-bottom: 0;
+    }
+  }
+}
+
+.button {
+  @include font(1.5rem, white);
+  margin-top: 0;
+  width: 100%;
+  letter-spacing: .1rem;
+}
+
+::ng-deep.nb-theme-cosmic nb-badge.status-success {
+  top: -1.1rem;
+  right: -1.1rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  @include font(1.2rem, white);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

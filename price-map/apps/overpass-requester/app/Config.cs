@@ -28,4 +28,12 @@ static class Config {
   /// Таймаут для запросов в Overpass API
   /// </summary>
   public const int OverpassTimeout = 60;
+  /// <summary>
+  /// Название очереди для запроса инцормации о здании
+  /// </summary>
+  public const string BuildingInfoRequestQueue = "building_info_request_queue";
+  /// <summary>
+  /// Название ключа маршрутизации для отправки информации о здании
+  /// </summary>
+  public const string BuildingInfoResponseRoutingKey = "building_info_response";
 } 

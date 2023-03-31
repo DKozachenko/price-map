@@ -21,18 +21,27 @@ import { User } from '@core/entities';
 })
 export class RegisterComponent implements OnInit {
   /**
+   * Эмиттер состояния загрузки
+   * @private
+   * @type {EventEmitter<boolean>}
+   * @memberof RegisterComponent
+   */
+  @Output() private loadingState: EventEmitter<boolean> = new EventEmitter();
+  
+  /**
+   * Эмитер успешной регистрации
+   * @private
+   * @type {EventEmitter<void>}
+   * @memberof RegisterComponent
+   */
+  @Output() private registerSuccessed: EventEmitter<void> = new EventEmitter<void>();
+
+  /**
    * Экземпляр формы
    * @type {FormGroup}
    * @memberof RegisterComponent
    */
   public form!: FormGroup;
-
-  /**
-   * Емитер успешной регистрации
-   * @type {EventEmitter<void>}
-   * @memberof RegisterComponent
-   */
-  @Output() public registerSuccessed: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private readonly webSocketSevice: WebSocketService,
     private readonly notificationService: NotificationService) {}
@@ -44,16 +53,16 @@ export class RegisterComponent implements OnInit {
         Validators.maxLength(100)
       ]),
       lastName: new FormControl(undefined, [
-        Validators.required, 
+        Validators.required,
         Validators.maxLength(100)
       ]),
       mail: new FormControl(undefined, [
-        Validators.required, 
-        Validators.maxLength(150), 
+        Validators.required,
+        Validators.maxLength(150),
         Validators.email
       ]),
       nickname: new FormControl(undefined, [
-        Validators.required, 
+        Validators.required,
         Validators.maxLength(150)
       ]),
       password: new FormControl(undefined, [
@@ -65,7 +74,10 @@ export class RegisterComponent implements OnInit {
 
     this.webSocketSevice.on<IResponseData<null>>(AuthEvents.RegisterFailed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
+      .subscribe((response: IResponseData<null>) => {
+        this.notificationService.showError(response.message);
+        this.loadingState.emit(false);
+      });
 
     this.webSocketSevice.on<IResponseData<User>>(AuthEvents.RegisterSuccessed)
       .pipe(untilDestroyed(this))
@@ -73,6 +85,7 @@ export class RegisterComponent implements OnInit {
         this.form.reset();
         this.notificationService.showSuccess(response.message);
         this.registerSuccessed.emit();
+        this.loadingState.emit(false);
       });
   }
 
@@ -81,6 +94,7 @@ export class RegisterComponent implements OnInit {
    * @memberof RegisterComponent
    */
   public submit(): void {
-    this.webSocketSevice.emit<IUserRegisterInfo>(AuthEvents.RegisterAttemp, this.form.value);
+    this.webSocketSevice.emit<IUserRegisterInfo>(AuthEvents.RegisterAttemp, this.form.value, false);
+    this.loadingState.emit(true);
   }
 }

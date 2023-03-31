@@ -3,8 +3,13 @@ import { CommonModule } from '@angular/common';
 import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent, RegisterComponent, LayoutComponent } from './components';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NbButtonModule,
-  NbFormFieldModule, NbIconModule, NbInputModule, NbLayoutModule, NbTabsetModule } from '@nebular/theme';
+import { NbButtonModule, 
+  NbFormFieldModule, 
+  NbIconModule, 
+  NbInputModule, 
+  NbLayoutModule, 
+  NbTabsetModule, 
+  NbSpinnerModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 
 /**
@@ -29,7 +34,8 @@ import { NbEvaIconsModule } from '@nebular/eva-icons';
     NbInputModule,
     NbIconModule,
     NbEvaIconsModule,
-    NbFormFieldModule
+    NbFormFieldModule,
+    NbSpinnerModule
   ]
 })
 export class AuthModule { }
