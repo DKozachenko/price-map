@@ -1,3 +1,4 @@
+import { CategoriesModule } from './../categories/categories.module';
 import { Module } from '@nestjs/common';
 import { ShopsService } from './services';
 import { ShopsGateway } from './gateways';
@@ -11,7 +12,10 @@ import { JwtService } from '@nestjs/jwt';
  * @class ShopsModule
  */
 @Module({
-  imports: [TypeOrmModule.forFeature([Shop], 'postgresConnect')],
+  imports: [
+    TypeOrmModule.forFeature([Shop], 'postgresConnect'), 
+    CategoriesModule
+  ],
   providers: [
     JwtService,
     ShopsGateway,

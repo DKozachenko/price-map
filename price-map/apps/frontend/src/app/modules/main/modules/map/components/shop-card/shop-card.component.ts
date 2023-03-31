@@ -1,6 +1,8 @@
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Shop } from '@core/entities';
+import { WebSocketService } from './../../../../../../services';
+import { ShopEvents } from '@core/enums';
 
 @UntilDestroy()
 @Component({
@@ -8,11 +10,11 @@ import { Shop } from '@core/entities';
   templateUrl: './shop-card.component.html',
   styleUrls: ['./shop-card.component.scss']
 })
-export class ShopCardComponent implements OnInit {
+export class ShopCardComponent {
   @Input() public shop: Shop | null = null;
-  constructor () {}
+  constructor (private readonly webSocketService: WebSocketService) {}
 
-  public ngOnInit(): void {
-
+  public getBuildingInfo(): void {
+    this.webSocketService.emit<string>(ShopEvents.GetBuildgingInfoAttempt, this.shop?.id ?? '');
   }
 }

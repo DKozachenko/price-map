@@ -13,3 +13,4 @@ export { ProductInfoModalComponent } from './product-info-modal/product-info-mod
 export { ShopsSidebarComponent } from './shops-sidebar/shops-sidebar.component';
 export { ShopCardComponent } from './shop-card/shop-card.component';
 export { RadiusControlComponent } from './radius-control/radius-control.component';
+export { ShopInfoModalComponent } from './shop-info-modal/shop-info-modal.component';

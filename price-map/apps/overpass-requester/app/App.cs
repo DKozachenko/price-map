@@ -1,6 +1,7 @@
 using RabbitMQ.Client.Events;
 using Services;
 using Models;
+using System.Text;
 
 namespace AppNS;
 /// <summary>
@@ -204,11 +205,11 @@ class App {
   }
 
   /// <summary>
-  /// Получение обработчика для очереди
+  /// Получение обработчика для очереди с товарами
   /// </summary>
   /// <param name="queueName">Название очереди</param>
   /// <returns>Обработчик</returns>
-  private EventHandler<BasicDeliverEventArgs> getHandler(string queueName) {
+  private EventHandler<BasicDeliverEventArgs> getHandlerProductsQueue(string queueName) {
     return async (consumer, args) => {
       try {
         byte[] bodyByteArray = args.Body.ToArray();
@@ -230,6 +231,52 @@ class App {
   }
 
   /// <summary>
+  /// Получение количества этажей
+  /// </summary>
+  /// <param name="osmNodeId">Идентификатор точки в OSM</param>
+  /// <returns></returns>
+  private async Task<int?> getFloorNumberAsync(long osmNodeId) {
+    string url = $"https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json][timeout:{Config.OverpassTimeout}];area[place=city][name=\"Новосибирск\"]"
+      + $" -> .nsk;node({osmNodeId})(area.nsk) -> .data;.data out geom;";
+
+    System.Console.WriteLine(url);
+    OsmResponse? osmResponse = null;
+    try {
+      osmResponse = await this.HttpService.Get<OsmResponse>(url);
+    }
+    catch (Exception err) {
+      this.LoggerService.Error($"Error while sending request to {url}, error: {err.Message}", "App");
+    }
+    
+    // Если пришел ответ, есть элементы и в тэгах есть кол-во этажей
+    if (osmResponse is not null && osmResponse?.Elements?.Count > 0 && osmResponse?.Elements[0].Tags?.BuildingLevels is not null) {
+      return Convert.ToInt32(osmResponse.Elements[0].Tags.BuildingLevels);
+    }
+    return null;
+  }
+
+  /// <summary>
+  /// Получение обработчика для очереди с запросом информации о здании
+  /// </summary>
+  /// <param name="queueName">Название очереди</param>
+  /// <returns></returns>
+  private EventHandler<BasicDeliverEventArgs> getHandlerBuildingInfoQueue(string queueName) {
+    return async (consumer, args) => {
+      try {
+        byte[] bodyByteArray = args.Body.ToArray();
+        this.LoggerService.Log($"Message from {queueName}, content length {bodyByteArray.Length} bytes", "App");
+        long osmNodeId = this.JsonService.DeserializeIntFromByteArray(bodyByteArray);
+        int? floorNumber = await this.getFloorNumberAsync(osmNodeId);
+        this.LoggerService.Log($"Floor number: {floorNumber} for node with id: {osmNodeId}", "App");
+        this.RabbitService.SendMessage<int?>(Config.OsmRequesterExchange, Config.BuildingInfoResponseRoutingKey, floorNumber);
+      } catch (Exception err) {
+        this.Close(err.Message);
+      }
+      
+    };
+  }
+
+  /// <summary>
   /// Старт приложеня
   /// </summary>
   public async Task Start() {
@@ -238,7 +285,8 @@ class App {
     try {
       await this.LoadNskNodesAsync();
       this.RabbitService.InitConnection();
-      this.RabbitService.GetMessage(Config.ProductsOutQueue, this.getHandler(Config.ProductsOutQueue));
+      this.RabbitService.GetMessage(Config.ProductsOutQueue, this.getHandlerProductsQueue(Config.ProductsOutQueue));
+      this.RabbitService.GetMessage(Config.BuildingInfoRequestQueue, this.getHandlerBuildingInfoQueue(Config.BuildingInfoRequestQueue));
       Console.ReadLine();
     }
     catch (Exception err) {

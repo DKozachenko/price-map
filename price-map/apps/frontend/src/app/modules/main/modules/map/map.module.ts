@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CharacteristicFilterComponent, 
-  CheckboxComponent, 
-  FilterComponent, 
-  MapComponent, 
-  RouteReviewComponent, 
+import { CharacteristicFilterComponent,
+  CheckboxComponent,
+  FilterComponent,
+  MapComponent,
+  RouteReviewComponent,
   ProductMiniCardComponent,
   ClearControlComponent,
   LayersControlComponent,
@@ -14,20 +14,21 @@ import { CharacteristicFilterComponent,
   ProductInfoModalComponent,
   ShopsSidebarComponent,
   ShopCardComponent,
-  RadiusControlComponent
+  RadiusControlComponent,
+  ShopInfoModalComponent
 } from './components';
 import { MapRoutingModule } from './map-routing.module';
-import { FilterService, MapService, ShopService } from './services';
-import { NbCardModule, 
-  NbCheckboxModule, 
-  NbIconModule, 
-  NbInputModule, 
-  NbLayoutModule, 
-  NbRadioModule, 
-  NbSelectModule, 
-  NbButtonModule, 
+import { FilterService, MapService, ShopService, ThreeJsService } from './services';
+import { NbCardModule,
+  NbCheckboxModule,
+  NbIconModule,
+  NbInputModule,
+  NbLayoutModule,
+  NbRadioModule,
+  NbSelectModule,
+  NbButtonModule,
   NbListModule,
-  NbBadgeModule, 
+  NbBadgeModule,
   NbSpinnerModule,
   NbActionsModule,
   NbTooltipModule,
@@ -52,7 +53,8 @@ import { FormsModule } from '@angular/forms';
     ProductInfoModalComponent,
     ShopsSidebarComponent,
     ShopCardComponent,
-    RadiusControlComponent
+    RadiusControlComponent,
+    ShopInfoModalComponent
   ],
   imports: [
     CommonModule,
@@ -82,7 +84,8 @@ import { FormsModule } from '@angular/forms';
     NbDialogService,
     MapService,
     FilterService,
-    ShopService
+    ShopService,
+    ThreeJsService
   ]
 })
 export class MapModule { }
