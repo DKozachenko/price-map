@@ -18,6 +18,7 @@ export class CheckboxComponent {
    * @memberof CheckboxComponent
    */
   @Input() public text: string = '';
+  
   /**
    * Выбран ли чекбокс
    * @type {boolean}

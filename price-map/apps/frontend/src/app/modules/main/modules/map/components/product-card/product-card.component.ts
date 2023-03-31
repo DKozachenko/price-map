@@ -8,6 +8,12 @@ import { NbDialogService } from '@nebular/theme';
 import { ProductInfoModalComponent } from '..';
 import { ProductService } from '../../../../services';
 
+/**
+ * Компонент карточки товара
+ * @export
+ * @class ProductCardComponent
+ * @implements {OnInit}
+ */
 @UntilDestroy()
 @Component({
   selector: 'map-product-card',
@@ -15,8 +21,25 @@ import { ProductService } from '../../../../services';
   styleUrls: ['./product-card.component.scss']
 })
 export class ProductCardComponent implements OnInit {
+  /**
+   * Товар
+   * @type {(Product | null)}
+   * @memberof ProductCardComponent
+   */
   @Input() public product: Product | null = null;
+
+  /**
+   * Добавлен ли товар в маршруте
+   * @type {boolean}
+   * @memberof ProductCardComponent
+   */
   public isInRoute: boolean = false;
+
+  /**
+   * Добавлен ли товар в избранное
+   * @type {boolean}
+   * @memberof ProductCardComponent
+   */
   public isFavorite: boolean = false;
 
   constructor (private readonly productService: ProductService,
@@ -41,6 +64,10 @@ export class ProductCardComponent implements OnInit {
       })
   }
 
+  /**
+   * Добавить / убрать из маршрута
+   * @memberof ProductCardComponent
+   */
   public routeAction(): void {
     if (!this.isInRoute) {
       this.productService.emitAdditionProductIdToRoute(this.product?.id ?? '');
@@ -49,6 +76,10 @@ export class ProductCardComponent implements OnInit {
     }
   }
 
+  /**
+   * Добавить / удалить из избранного
+   * @memberof ProductCardComponent
+   */
   public favoriteAction(): void {
     if (!this.isFavorite) {
       this.productService.addFavoriteProductId(this.product?.id ?? '');
@@ -59,6 +90,10 @@ export class ProductCardComponent implements OnInit {
     this.webSocketService.emit<string[]>(UserEvents.UpdateFavoriteProductsAttempt, [...this.productService.getFavoriteProductIds()]);
   }
 
+  /**
+   * Открытие модального окна с подробной информацией
+   * @memberof ProductCardComponent
+   */
   public openInfoDialog(): void {
     this.dialogService.open<ProductInfoModalComponent>(ProductInfoModalComponent, {
       context: {

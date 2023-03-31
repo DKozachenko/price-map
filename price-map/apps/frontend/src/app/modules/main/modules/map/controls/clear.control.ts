@@ -4,14 +4,27 @@ import { MapService } from "../services";
 import {
   IControl,
 } from 'maplibre-gl';
+import { IMapControl } from "../models/interfaces";
 
-export class ClearControl implements IControl {
+/**
+ * Контрол очистки маршрута
+ * @export
+ * @class ClearControl
+ * @implements {IControl}
+ */
+export class ClearControl implements IControl, IMapControl {
+  /**
+   * Контейнер
+   * @private
+   * @type {HTMLDivElement}
+   * @memberof ClearControl
+   */
   private container: HTMLDivElement;
 
   constructor(private readonly resolver: ComponentFactoryResolver,
     private readonly mapService: MapService) {}
 
-  private createControlDomContent(): HTMLDivElement {
+  public createControlDomContent(): HTMLDivElement {
     const componentFactory = this.resolver.resolveComponentFactory(ClearControlComponent);
     const component = componentFactory.create(Injector.create([]));
     component.instance.mapService = this.mapService;

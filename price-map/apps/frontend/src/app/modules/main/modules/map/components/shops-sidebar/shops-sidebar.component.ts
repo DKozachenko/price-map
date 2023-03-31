@@ -5,10 +5,15 @@ import { ShopService } from '../../services';
 import { Shop } from '@core/entities';
 import { IResponseData } from '@core/interfaces';
 import { ShopEvents } from '@core/enums';
-import { ShopInfoModalComponent } from '../shop-info-modal/shop-info-modal.component';
 import { NbDialogService } from '@nebular/theme';
+import { ShopInfoModalComponent } from '../shop-info-modal/shop-info-modal.component';
 
-
+/**
+ * Компонент боковой панели с магазинами
+ * @export
+ * @class ShopsSidebarComponent
+ * @implements {OnInit}
+ */
 @UntilDestroy()
 @Component({
   selector: 'map-shops-sidebar',
@@ -16,6 +21,11 @@ import { NbDialogService } from '@nebular/theme';
   styleUrls: ['./shops-sidebar.component.scss'],
 })
 export class ShopsSidebarComponent implements OnInit {
+  /**
+   * Магазины
+   * @type {Shop[]}
+   * @memberof ShopsSidebarComponent
+   */
   public shops: Shop[] = [];
 
   constructor(private readonly shopsService: ShopService,
@@ -45,10 +55,11 @@ export class ShopsSidebarComponent implements OnInit {
       .subscribe((data: string[]) => this.webSocketService.emit<string[]>(ShopEvents.GetShopsByIdsAttempt, data));
   }
 
-  public close(): void {
-    this.shopsService.emitSettingItemIdToShow([]);
-  }
-
+  /** 
+   * Открытие модального окна с информацией о здании
+   * @param {number} levels кол-во этажей
+   * @memberof ShopsSidebarComponent
+   */
   public openBuildfingInfo(levels: number): void  {
     this.dialogService.open<ShopInfoModalComponent>(ShopInfoModalComponent, {
       context: {
@@ -57,6 +68,21 @@ export class ShopsSidebarComponent implements OnInit {
     });
   }
 
+  /**
+   * Закрытие боковой панели
+   * @memberof ShopsSidebarComponent
+   */
+  public close(): void {
+    this.shopsService.emitSettingItemIdToShow([]);
+  }
+
+  /**
+   * Функция trackBy для магазинов
+   * @param {number} index индекс
+   * @param {Shop} item значение
+   * @return {*}  {string} id магазина
+   * @memberof ShopsSidebarComponent
+   */
   public trackByShop(index: number, item: Shop): string {
     return item.id ?? index;
   }

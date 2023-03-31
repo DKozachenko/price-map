@@ -6,7 +6,6 @@ import { NotificationService, WebSocketService } from '../../../../../../service
 import { FilterService } from '../../services';
 import { Category3Level } from '@core/entities';
 import { CategoryEvents } from '@core/enums';
-import { delay } from 'rxjs';
 
 /**
  * Компонент фильтра для определенной категории 3 уровня
@@ -84,7 +83,7 @@ export class CharacteristicFilterComponent implements OnInit {
   }
 
   /**
-   * Измерение фильтра с типом "range"
+   * Изменение фильтра с типом "range"
    * @param {IFilter} filter фильтр
    * @param {RangeFilterIndex} index индекс
    * @param {Event} event событие

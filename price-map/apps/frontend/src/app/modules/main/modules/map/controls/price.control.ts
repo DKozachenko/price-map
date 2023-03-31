@@ -2,15 +2,29 @@ import { ComponentFactoryResolver, ComponentRef, Injector } from "@angular/core"
 import { PriceControlComponent } from "../components";
 import { FilterService } from "../services";
 import { IControl } from 'maplibre-gl';
+import { IMapControl } from "../models/interfaces";
 
-export class PriceControl implements IControl {
+export class PriceControl implements IControl, IMapControl {
+  /**
+   * Контейнер
+   * @private
+   * @type {HTMLDivElement}
+   * @memberof PriceControl
+   */
   private container: HTMLDivElement;
+
+  /**
+   * Ссылка на компонент
+   * @private
+   * @type {ComponentRef<PriceControlComponent>}
+   * @memberof PriceControl
+   */
   private component: ComponentRef<PriceControlComponent>;
 
   constructor(private readonly resolver: ComponentFactoryResolver,
     private readonly filterService: FilterService) {}
 
-  private createControlDomContent(): HTMLDivElement {
+  public createControlDomContent(): HTMLDivElement {
     const componentFactory = this.resolver.resolveComponentFactory(PriceControlComponent);
     this.component = componentFactory.create(Injector.create([]));
     this.component.instance.filterService = this.filterService;

@@ -6,7 +6,12 @@ import { IResponseData } from '@core/interfaces';
 import { ProductEvents, UserEvents } from '@core/enums';
 import { ProductService } from '../../../../services';
 
-
+/**
+ * Компонент боковой панели с товарами
+ * @export
+ * @class ProductsSidebarComponent
+ * @implements {OnInit}
+ */
 @UntilDestroy()
 @Component({
   selector: 'map-products-sidebar',
@@ -14,6 +19,11 @@ import { ProductService } from '../../../../services';
   styleUrls: ['./products-sidebar.component.scss'],
 })
 export class ProductsSidebarComponent implements OnInit {
+  /**
+   * Товары
+   * @type {Product[]}
+   * @memberof ProductsSidebarComponent
+   */
   public products: Product[] = [];
 
   constructor(private readonly productsService: ProductService,
@@ -66,10 +76,21 @@ export class ProductsSidebarComponent implements OnInit {
       .subscribe((data: string[]) => this.webSocketService.emit<string[]>(ProductEvents.GetProductsByIdsAttempt, data));
   }
 
+  /**
+   * Закрытие боковой панели
+   * @memberof ProductsSidebarComponent
+   */
   public close(): void {
     this.productsService.emitSettingItemIdToShow([]);
   }
 
+  /**
+   * Функция trackBy для товаров
+   * @param {number} index индекс
+   * @param {Product} item значение
+   * @return {*}  {string} id товара
+   * @memberof ProductsSidebarComponent
+   */
   public trackByProduct(index: number, item: Product): string {
     return item.id ?? index;
   }

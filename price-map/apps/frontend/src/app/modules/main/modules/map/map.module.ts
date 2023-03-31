@@ -37,6 +37,11 @@ import { NbCardModule,
 import { SharedModule } from '../../../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 
+/**
+ * Модуль карты
+ * @export
+ * @class MapModule
+ */
 @NgModule({
   declarations: [
     MapComponent,
