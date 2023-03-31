@@ -5,6 +5,12 @@ import { IResponseData } from '@core/interfaces';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NotificationService, WebSocketService } from '../../../../../../services';
 
+/**
+ * Компонент списка пользователей
+ * @export
+ * @class UserListComponent
+ * @implements {OnInit}
+ */
 @UntilDestroy()
 @Component({
   selector: 'admin-user-list',
@@ -12,7 +18,18 @@ import { NotificationService, WebSocketService } from '../../../../../../service
   styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent implements OnInit {
+  /**
+   * Пользователи
+   * @type {User[]}
+   * @memberof UserListComponent
+   */
   public users: User[] = [];
+
+  /**
+   * Происходит ли загрузка
+   * @type {boolean}
+   * @memberof UserListComponent
+   */
   public isLoading: boolean = false;
 
   constructor(private readonly webSocketService: WebSocketService,
@@ -51,6 +68,13 @@ export class UserListComponent implements OnInit {
     this.isLoading = true;
   }
 
+  /**
+   * Функция trackBy для пользователей
+   * @param {number} index индекс
+   * @param {User} item значение
+   * @return {*}  {string} id пользователя
+   * @memberof UserListComponent
+   */
   public trackByUser(index: number, item: User): string {
     return item.id ?? index;
   }
