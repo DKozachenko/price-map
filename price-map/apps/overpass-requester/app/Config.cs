@@ -29,7 +29,7 @@ static class Config {
   /// </summary>
   public const int OverpassTimeout = 60;
   /// <summary>
-  /// Название очереди для запроса инцормации о здании 
+  /// Название очереди для запроса инцормации о здании
   /// </summary>
   public const string BuildingInfoRequestQueue = "building_info_request_queue";
   /// <summary>
