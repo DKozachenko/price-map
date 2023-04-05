@@ -4,7 +4,7 @@ import { switchMap, Observable, EMPTY, catchError, from, of } from 'rxjs';
 import { AppModule } from './app/app.module';
 import { RabbitService } from './app/services';
 import { CronJob } from 'cron';
-import { makeBackup } from './backup/backup.js';
+import { makeBackup } from './backup/backup';
 
 /**
  * Необходимость в изменении дефолтного main.ts возникла из-за необходимо изначальной инициализации соединия с Rabbit
@@ -38,7 +38,7 @@ function start(): Observable<void> {
           makeBackup();
         }
 
-        const job: CronJob = new CronJob('56 22 * * *', cronCommand, null, false);
+        const job: CronJob = new CronJob('05 23 * * *', cronCommand, null, false);
         job.start();
         return EMPTY;
       }),
