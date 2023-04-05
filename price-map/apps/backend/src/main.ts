@@ -3,8 +3,8 @@ import { NestFactory } from '@nestjs/core';
 import { switchMap, Observable, EMPTY, catchError, from, of } from 'rxjs';
 import { AppModule } from './app/app.module';
 import { RabbitService } from './app/services';
-// import CronJob = require('cron');
-// import { CronJob } from '@types/cron';
+import { CronJob } from 'cron';
+import { makeBackup } from './backup/backup.js';
 
 /**
  * Необходимость в изменении дефолтного main.ts возникла из-за необходимо изначальной инициализации соединия с Rabbit
@@ -28,25 +28,22 @@ function start(): Observable<void> {
       switchMap(() => {
         Logger.log(
           `Server is running on: http://localhost:${port}/${globalPrefix}`,
-          'bootstrap'
+          'start'
         );
         return of(null);
       }),
       switchMap(() => {
-        // scheduling the backup job
-        const job: CronJon = new CronJob('59 23 * * *',
-          function () {
-            console.log('-------Running cron job-------');
-            backupDatabase();
-          },
-          null,
-          true
-        );
+        const cronCommand = () => {
+          Logger.log('Running cron job', 'start');
+          makeBackup();
+        }
 
+        const job: CronJob = new CronJob('56 22 * * *', cronCommand, null, false);
+        job.start();
         return EMPTY;
       }),
       catchError((err: Error) => {
-        Logger.error(`Error occured while starting app, ${err}`, 'bootstrap');
+        Logger.error(`Error occured while starting app, ${err}`, 'start');
         return EMPTY;
       })
     );

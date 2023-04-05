@@ -1,5 +1,4 @@
 const { exec } = require('child_process');
-const command = 'bash ./backup.sh';
 
 const makeBackup = () => {
   const dbPassword = 'vkdima03';
@@ -7,11 +6,12 @@ const makeBackup = () => {
   const dbUser = 'postgres';
   const dbPort = 5432;
   const dbName = 'test_pm';
+  const command = 'bash ./apps/backend/src/backup/backup.sh';
 
   const format = 'dump';
   const now = new Date();
   const currentDate = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`;
-  const backupFilePath = `../../backups/backup-${currentDate}.${format}`;
+  const backupFilePath = `./apps/backend/backups/backup-${currentDate}.${format}`;
 
   exec(`${command} ${dbPassword} ${dbHost} ${dbUser} ${dbPort} ${dbName} ${backupFilePath}`,
     (error, stdout, stderr) => {
@@ -20,7 +20,8 @@ const makeBackup = () => {
         return ;
       };
       if (stderr) {
-        return console.error(`Stderr while execute ${command}: ${stderr}`);
+        console.error(`Stderr while execute ${command}: ${stderr}`);
+        return;
       };
       console.log(`Backup of ${dbName} at ${now.toLocaleString()} was successfully created: ${stdout}`);
     });
