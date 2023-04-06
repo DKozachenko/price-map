@@ -186,15 +186,49 @@ export class FilterService {
   }
 
   /**
+   * Текущее значение поиска только среди избранного 
+   * @private
+   * @type {boolean}
+   * @memberof FilterService
+   */
+  private isOnlyFavoriteQueryValue: boolean = false;
+
+  /**
+   * Подписка на поиск только среди избранного
+   * @private
+   * @type {Subject<boolean>}
+   * @memberof FilterService
+   */
+  private isOnlyFavoriteQuery: Subject<boolean> = new Subject<boolean>();
+
+  /**
+   * Подписка на поиск только среди избранного (публичная)
+   * @type {Observable<boolean>}
+   * @memberof FilterService
+   */
+  public isOnlyFavoriteQuery$: Observable<boolean> = this.isOnlyFavoriteQuery.asObservable();
+
+  /**
+   * Событие установки значения поиска только среди избранного
+   * @param {boolean} query значение
+   * @memberof FilterService
+   */
+  public emitIsOnlyFavoriteQuery(query: boolean): void {
+    this.isOnlyFavoriteQueryValue = query;
+    this.isOnlyFavoriteQuery.next(query);
+  }
+
+  /**
    * Аккумулирующая подписка на все фильтры
    * @type {Observable<[Set<string>, IUserFilter[], IPriceQuery, IRadiusQuery]>}
    * @memberof FilterService
    */
-  public allFilters$: Observable<[Set<string>, IUserFilter[], IPriceQuery, IRadiusQuery]> 
-    = <Observable<[Set<string>, IUserFilter[], IPriceQuery, IRadiusQuery]>>customCombineLastest([
+  public allFilters$: Observable<[Set<string>, IUserFilter[], IPriceQuery, IRadiusQuery, boolean]> 
+    = <Observable<[Set<string>, IUserFilter[], IPriceQuery, IRadiusQuery, boolean]>>customCombineLastest([
       this.chechedCategory3LevelIds$,
       this.filterValues$.pipe(debounceTime(400)),
       this.currentPriceQuery$,
-      this.radiusQuery$
+      this.radiusQuery$,
+      this.isOnlyFavoriteQuery$
     ]);
 }

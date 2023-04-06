@@ -15,7 +15,8 @@ import { CharacteristicFilterComponent,
   ShopsSidebarComponent,
   ShopCardComponent,
   RadiusControlComponent,
-  ShopInfoModalComponent } from './components';
+  ShopInfoModalComponent,
+  OnlyFavoriteControlComponent } from './components';
 import { MapRoutingModule } from './map-routing.module';
 import { FilterService, MapService, ShopService, ThreeJsService } from './services';
 import { NbCardModule,
@@ -58,7 +59,8 @@ import { FormsModule } from '@angular/forms';
     ShopsSidebarComponent,
     ShopCardComponent,
     RadiusControlComponent,
-    ShopInfoModalComponent
+    ShopInfoModalComponent,
+    OnlyFavoriteControlComponent
   ],
   imports: [
     CommonModule,

@@ -144,10 +144,12 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
           this.webSocketService.emit<null>(ShopEvents.GetShopsAttempt);
           this.mapService.removePriceControl();
           this.mapService.removeRadiusControl();
+          this.mapService.removeOnlyFavoriteControl();
           this.isShowProductsSidebar = false;
         } else {
           this.mapService.addPriceControl();
           this.mapService.addRadiusControl();
+          this.mapService.addOnlyFavoriteControl();
           this.isShowShopsSidebar = false;
         }
       });
@@ -173,18 +175,28 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
         categoryIds, 
         filters, 
         priceQuery, 
-        radiusQuery
+        radiusQuery,
+        isOnlyFavorite
       ]: [
         Set<string>, 
         IUserFilter[], 
         IPriceQuery, 
-        IRadiusQuery
+        IRadiusQuery,
+        boolean
       ]) => {
+        console.log({
+          category3LevelIds: categoryIds ? [...categoryIds] : [],
+          filters: filters && categoryIds.size === 1 ? filters : [],
+          price: priceQuery ?? { max: null, min: null },
+          radius: radiusQuery ?? { center: null, distance: null },
+          isOnlyFavorite
+        })
         this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
           category3LevelIds: categoryIds ? [...categoryIds] : [],
           filters: filters && categoryIds.size === 1 ? filters : [],
           price: priceQuery ?? { max: null, min: null },
-          radius: radiusQuery ?? { center: null, distance: null }
+          radius: radiusQuery ?? { center: null, distance: null },
+          isOnlyFavorite
         });
         this.isLoading = true;
       });

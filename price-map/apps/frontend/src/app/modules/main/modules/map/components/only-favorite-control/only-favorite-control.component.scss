@@ -1,0 +1,7 @@
+.only-favorite-control span {
+  background: no-repeat center / 70% url('../../../../../../../assets/icons/heart-outline.svg');
+
+  &.active {
+    background-color: #d7d7d7;
+  }
+}
