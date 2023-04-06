@@ -25,7 +25,6 @@ import { BackupService, HashService, RabbitService } from './services';
     CategoriesModule,
     ExternalModule,
     ShopsModule,
-    //TODO: Добавить свой логгер
     //TODO: Миграции
     TypeOrmModule.forRoot({
       name: 'postgresConnect',

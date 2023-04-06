@@ -1,9 +1,17 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { exec } from 'child_process';
 
-
+/**
+ * Сервис для бэкапов БД
+ * @export
+ * @class BackupService
+ */
 @Injectable()
 export class BackupService {
+  /**
+   * Создание бэкап
+   * @memberof BackupService
+   */
   public makeBackup(): void {
     const dbPassword: string = 'vkdima03';
     const dbHost: string = 'localhost';
@@ -14,7 +22,8 @@ export class BackupService {
   
     const format: string = 'dump';
     const now: Date = new Date();
-    const currentDate: string = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`;
+    const currentDate: string = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}` 
+      + `-${now.getHours()}-${now.getMinutes()}-${now.getSeconds()}`;
     const backupFilePath: string = `./apps/backend/backups/backup-${currentDate}.${format}`;
   
     exec(`${command} ${dbPassword} ${dbHost} ${dbUser} ${dbPort} ${dbName} ${backupFilePath}`,
@@ -27,7 +36,8 @@ export class BackupService {
           Logger.error(`Stderr while execute ${command}: ${stderr}`, 'makeBackup');
           return;
         };
-        Logger.debug(`Backup of ${dbName} at ${now.toLocaleString()} was successfully created: ${stdout}`, 'makeBackup');
+        Logger.debug(`Backup of ${dbName} at ${now.toLocaleString()}` 
+          + `was successfully created: ${stdout}`, 'makeBackup');
       });
   };
 }

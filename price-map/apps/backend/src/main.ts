@@ -36,7 +36,7 @@ function start(): Observable<void> {
         const cronCommand = () => {
           Logger.log('Running cron job', 'start');
           backupService.makeBackup();
-        }
+        };
 
         const job: CronJob = new CronJob('59 23 * * *', cronCommand, null, false);
         job.start();
