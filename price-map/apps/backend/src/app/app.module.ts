@@ -30,7 +30,7 @@ import { BackupService, HashService, RabbitService } from './services';
       port: 5432,
       username: 'postgres',
       password: 'vkdima03',
-      database: 'real_data_pm',
+      database: 'script_test',
       entities: [
         Shop,
         Product,

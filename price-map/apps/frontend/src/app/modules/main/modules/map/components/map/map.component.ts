@@ -2,7 +2,7 @@ import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Product, Shop } from '@core/entities';
 import { IResponseData, IProductQuery, IPriceQuery, IUserFilter, IRadiusQuery } from '@core/interfaces';
-import { NotificationService, WebSocketService } from '../../../../../../services';
+import { NotificationService, SettingsService, WebSocketService } from '../../../../../../services';
 import { FilterService, MapService, ShopService } from '../../services';
 import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
 import { LayerType } from '../../models/types';
@@ -71,7 +71,8 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     private readonly mapService: MapService,
     private readonly filterService: FilterService,
     private readonly productService: ProductService,
-    private readonly shopService: ShopService) {}
+    private readonly shopService: ShopService,
+    private readonly settingsService: SettingsService) {}
 
   public ngOnInit(): void {
     this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductsFailed)
@@ -184,19 +185,12 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
         IRadiusQuery,
         boolean
       ]) => {
-        console.log({
-          category3LevelIds: categoryIds ? [...categoryIds] : [],
-          filters: filters && categoryIds.size === 1 ? filters : [],
-          price: priceQuery ?? { max: null, min: null },
-          radius: radiusQuery ?? { center: null, distance: null },
-          isOnlyFavorite
-        })
         this.webSocketService.emit<IProductQuery>(ProductEvents.GetProductsAttempt, {
           category3LevelIds: categoryIds ? [...categoryIds] : [],
           filters: filters && categoryIds.size === 1 ? filters : [],
           price: priceQuery ?? { max: null, min: null },
           radius: radiusQuery ?? { center: null, distance: null },
-          isOnlyFavorite
+          userId: isOnlyFavorite ? this.settingsService.getUser().id : null
         });
         this.isLoading = true;
       });

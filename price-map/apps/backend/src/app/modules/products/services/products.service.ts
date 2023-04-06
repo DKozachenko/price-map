@@ -373,6 +373,15 @@ export class ProductsService implements OnModuleInit {
     if (query.category3LevelIds.length) {
       whereQuery += `${whereQuery ? ' AND ' : 'WHERE '}${this.generateInQuery(query.category3LevelIds)}`;
     }
+
+    // Условия для поиска только среди избранного пользователя
+    if (query.userId) {
+      whereQuery += `${whereQuery ? ' AND ' : 'WHERE '}p."id" in (
+        select "productsId" 
+        from "UserProducts" up 
+        where up."usersId" = '${query.userId}'
+      )`;
+    }
     return whereQuery;
   }
 
@@ -430,13 +439,15 @@ export class ProductsService implements OnModuleInit {
         && !query.price.max 
         && !query.price.min 
         && !query.radius.center 
-        && !query.radius.distance) {
+        && !query.radius.distance
+        && !query.userId) {
       return of([]);
     }
     const sqlQuery: string = query.filters.length
       ? this.generateSqlWithFilters(query)
       : this.generateSqlWithoutFilters(query);
     
+    console.log(sqlQuery)
     return from(this.productRepository.query(sqlQuery));
   }
 
