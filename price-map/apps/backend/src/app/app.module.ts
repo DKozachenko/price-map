@@ -10,7 +10,7 @@ import { Shop,
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AppGateway } from './gateways';
 import { secretKey } from './models/constants';
-import { HashService, RabbitService } from './services';
+import { BackupService, HashService, RabbitService } from './services';
 
 /**
  * Главный модуль приложения
@@ -25,7 +25,6 @@ import { HashService, RabbitService } from './services';
     CategoriesModule,
     ExternalModule,
     ShopsModule,
-    //TODO: Добавить свой логгер
     //TODO: Миграции
     TypeOrmModule.forRoot({
       name: 'postgresConnect',
@@ -54,6 +53,7 @@ import { HashService, RabbitService } from './services';
     JwtService,
     HashService,
     RabbitService,
+    BackupService,
     AppGateway
   ],
 })
