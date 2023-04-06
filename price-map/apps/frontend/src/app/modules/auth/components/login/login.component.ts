@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
    */
   public form!: FormGroup;
 
-  constructor(private readonly webSocketSevice: WebSocketService,
+  constructor(private readonly webSocketService: WebSocketService,
     private readonly notificationService: NotificationService,
     private readonly router: Router,
     private readonly tokenService: TokenService) {}
@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
       password: new FormControl(undefined, [Validators.required]),
     });
 
-    this.webSocketSevice.on<IResponseData<string>>(AuthEvents.LoginSuccessed)
+    this.webSocketService.on<IResponseData<string>>(AuthEvents.LoginSuccessed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<string>) => {
         this.form.reset();
@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
         this.loadingState.emit(false);
       });
 
-    this.webSocketSevice.on<IResponseData<null>>(AuthEvents.LoginFailed)
+    this.webSocketService.on<IResponseData<null>>(AuthEvents.LoginFailed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<null>) => {
         this.notificationService.showError(response.message);
@@ -83,7 +83,7 @@ export class LoginComponent implements OnInit {
    * @memberof LoginComponent
    */
   public submit(): void {
-    this.webSocketSevice.emit<IUserLoginInfo>(AuthEvents.LoginAttemp, this.form.value, false);
+    this.webSocketService.emit<IUserLoginInfo>(AuthEvents.LoginAttemp, this.form.value, false);
     this.loadingState.emit(true);
   }
 }

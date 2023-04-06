@@ -36,7 +36,7 @@ export class CharacteristicFilterComponent implements OnInit {
   public category3Level: Category3Level;
 
   constructor(private readonly filterService: FilterService,
-    private readonly webSocketSevice: WebSocketService,
+    private readonly webSocketService: WebSocketService,
     private readonly notificationService: NotificationService) {}
 
   public ngOnInit(): void {
@@ -44,15 +44,15 @@ export class CharacteristicFilterComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((set: Set<string>) => {
         const id: string = [...set][0];
-        this.webSocketSevice.emit<string>(CategoryEvents.GetCategory3LevelAttempt, id);
+        this.webSocketService.emit<string>(CategoryEvents.GetCategory3LevelAttempt, id);
       });
 
-    this.webSocketSevice.on<IResponseData<null>>(CategoryEvents.GetCategory3LevelFailed)
+    this.webSocketService.on<IResponseData<null>>(CategoryEvents.GetCategory3LevelFailed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
 
 
-    this.webSocketSevice.on<IResponseData<Category3Level>>(CategoryEvents.GetCategory3LevelSuccessed)
+    this.webSocketService.on<IResponseData<Category3Level>>(CategoryEvents.GetCategory3LevelSuccessed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Category3Level>) => this.category3Level = response.data);
   }

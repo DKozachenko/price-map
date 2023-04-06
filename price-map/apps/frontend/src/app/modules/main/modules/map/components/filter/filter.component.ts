@@ -43,20 +43,20 @@ export class FilterComponent implements OnInit {
   public isShowCharacteristics: boolean = false;
 
   constructor(private readonly filterService: FilterService,
-    private readonly webSocketSevice: WebSocketService,
+    private readonly webSocketService: WebSocketService,
     private readonly notificationService: NotificationService) {}
 
   public ngOnInit(): void {
-    this.webSocketSevice.on<IResponseData<null>>(CategoryEvents.GetCategories1LevelFailed)
+    this.webSocketService.on<IResponseData<null>>(CategoryEvents.GetCategories1LevelFailed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<null>) => this.notificationService.showError(response.message));
 
-    this.webSocketSevice.on<IResponseData<Category1Level[]>>(CategoryEvents.GetCategories1LevelSuccessed)
+    this.webSocketService.on<IResponseData<Category1Level[]>>(CategoryEvents.GetCategories1LevelSuccessed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<Category1Level[]>) => 
         this.categories1Level = response.data.map(this.mapData));
 
-    this.webSocketSevice.emit(CategoryEvents.GetCategories1LevelAttempt);
+    this.webSocketService.emit(CategoryEvents.GetCategories1LevelAttempt);
 
     this.filterService.chechedCategory3LevelIds$
       .pipe(untilDestroyed(this))

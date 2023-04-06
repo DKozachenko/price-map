@@ -29,6 +29,8 @@ function start(): Observable<void> {
           `Server is running on: http://localhost:${port}/${globalPrefix}`,
           'start'
         );
+        // Чтобы убрать предупреждение в логах
+        require('events').EventEmitter.defaultMaxListeners = 15;
         return of(null);
       }),
       switchMap(() => {
