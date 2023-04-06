@@ -447,7 +447,6 @@ export class ProductsService implements OnModuleInit {
       ? this.generateSqlWithFilters(query)
       : this.generateSqlWithoutFilters(query);
     
-    console.log(sqlQuery)
     return from(this.productRepository.query(sqlQuery));
   }
 

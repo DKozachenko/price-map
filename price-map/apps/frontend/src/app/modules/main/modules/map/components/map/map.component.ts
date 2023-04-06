@@ -7,6 +7,7 @@ import { FilterService, MapService, ShopService } from '../../services';
 import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
 import { LayerType } from '../../models/types';
 import { ProductService } from '../../../../services';
+import { jsPDF } from "jspdf";
 
 /**
  * Компонент карты
@@ -74,7 +75,16 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     private readonly shopService: ShopService,
     private readonly settingsService: SettingsService) {}
 
+  public test(): void {
+    let doc = new jsPDF();
+    doc = doc.addPage();
+
+    doc.text("Hello world!", 10, 10);
+    doc.save("a4.pdf");
+  }
+
   public ngOnInit(): void {
+    // this.test();
     this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductsFailed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<null>) => {
