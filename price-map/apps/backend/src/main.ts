@@ -2,9 +2,8 @@ import { INestApplication, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { switchMap, Observable, EMPTY, catchError, from, of } from 'rxjs';
 import { AppModule } from './app/app.module';
-import { RabbitService } from './app/services';
+import { BackupService, RabbitService } from './app/services';
 import { CronJob } from 'cron';
-import { makeBackup } from './backup/backup';
 
 /**
  * Необходимость в изменении дефолтного main.ts возникла из-за необходимо изначальной инициализации соединия с Rabbit
@@ -33,12 +32,13 @@ function start(): Observable<void> {
         return of(null);
       }),
       switchMap(() => {
+        const backupService = app.get(BackupService);
         const cronCommand = () => {
           Logger.log('Running cron job', 'start');
-          makeBackup();
+          backupService.makeBackup();
         }
 
-        const job: CronJob = new CronJob('05 23 * * *', cronCommand, null, false);
+        const job: CronJob = new CronJob('59 23 * * *', cronCommand, null, false);
         job.start();
         return EMPTY;
       }),
