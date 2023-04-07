@@ -2,7 +2,7 @@
 import { Injectable } from '@angular/core';
 import { IPriceQuery, IRadiusQuery, IUserFilter } from '@core/interfaces';
 import { Subject, ReplaySubject, Observable, debounceTime } from 'rxjs';
-import { customCombineLastest } from '../components/operators';
+import { customCombineLastest } from '../operators';
 
 /**
  * Сервис-стор фильтра
@@ -28,7 +28,7 @@ export class FilterService {
    * @type {ReplaySubject<IPriceQuery>}
    * @memberof FilterService
    */
-  private initialPriceQuery: ReplaySubject<IPriceQuery> = new ReplaySubject(1);
+  private initialPriceQuery: ReplaySubject<IPriceQuery> = new ReplaySubject<IPriceQuery>(1);
 
   /**
    * Подписка на получение мин / макс цены (публичная)

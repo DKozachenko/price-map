@@ -3,13 +3,11 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } fr
 import { Product, Shop } from '@core/entities';
 import { IResponseData, IProductQuery, IPriceQuery, IUserFilter, IRadiusQuery, IOsrmData } from '@core/interfaces';
 import { NotificationService, SettingsService, WebSocketService } from '../../../../../../services';
-import { FilterService, MapService, PdfService, ShopService } from '../../services';
+import { FilterService, MapService, RouteService, ShopService } from '../../services';
 import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
 import { LayerType } from '../../models/types';
 import { ProductService } from '../../../../services';
-import { jsPDF } from "jspdf";
-import { RouteLeg } from 'osrm';
-import { font } from '../../models/constans';
+import { delay, map } from 'rxjs';
 
 /**
  * Компонент карты
@@ -63,6 +61,13 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
   public isShowShopsSidebar: boolean = false;
 
   /**
+   * Показывать ли уведомление о возиможности скачать подробный маршрут
+   * @type {boolean}
+   * @memberof MapComponent
+   */
+  public isShowRouteDownloadNotification: boolean = false;
+
+  /**
    * Происходит ли загрузка
    * @type {boolean}
    * @memberof MapComponent
@@ -76,7 +81,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     private readonly productService: ProductService,
     private readonly shopService: ShopService,
     private readonly settingsService: SettingsService,
-    private readonly pdfService: PdfService) {}
+    private readonly routeService: RouteService) {}
 
   public ngOnInit(): void {
     this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductsFailed)
@@ -94,12 +99,19 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
       });
 
     this.webSocketService.on<IResponseData<IOsrmData>>(ExternalEvents.BuildRouteSuccessed)
-      .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<IOsrmData>) => {
-        this.mapService.addRoute(response.data.coordinates);
-        this.isLoading = false;
-        this.pdfService.dowloadFile(response.data.legs);
-      });
+      .pipe(
+        map((response: IResponseData<IOsrmData>) => {
+          this.mapService.addRoute(response.data.coordinates);
+          this.isLoading = false;
+
+          this.routeService.emitLegs(response.data.legs);
+          this.isShowRouteDownloadNotification = true;
+          return;
+        }),
+        delay(5000),
+        untilDestroyed(this)
+      )
+      .subscribe(() => this.isShowRouteDownloadNotification = false);
 
     this.webSocketService.on<IResponseData<null>>(ExternalEvents.BuildRouteFailed)
       .pipe(untilDestroyed(this))
@@ -152,6 +164,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
           this.mapService.removeRadiusControl();
           this.mapService.removeOnlyFavoriteControl();
           this.isShowProductsSidebar = false;
+          this.isShowRouteDownloadNotification = false;
         } else {
           this.mapService.addPriceControl();
           this.mapService.addRadiusControl();

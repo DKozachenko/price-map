@@ -314,3 +314,16 @@ nb-layout {
 nb-spinner.size-medium  {
   font-size: 9.5rem!important;
 }
+
+// Анимация для уведомления
+@keyframes twinkle {
+  0% {
+    box-shadow: 0 0 0 #a16eff;
+  } 
+  50% {
+    box-shadow: 0 0 3rem #a16eff;  
+  } 
+  100% {
+    box-shadow: 0 0 0 #a16eff;  
+  }
+}

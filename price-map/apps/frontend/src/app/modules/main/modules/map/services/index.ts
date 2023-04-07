@@ -3,3 +3,4 @@ export { FilterService } from './filter.service';
 export { ShopService } from './shop.service';
 export { ThreeJsService } from './three-js.service';
 export { PdfService } from './pdf.service';
+export { RouteService } from './route.service';

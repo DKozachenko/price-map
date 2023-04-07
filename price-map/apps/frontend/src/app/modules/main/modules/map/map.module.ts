@@ -16,9 +16,10 @@ import { CharacteristicFilterComponent,
   ShopCardComponent,
   RadiusControlComponent,
   ShopInfoModalComponent,
-  OnlyFavoriteControlComponent } from './components';
+  OnlyFavoriteControlComponent,
+  RouteDownloadNotificationComponent } from './components';
 import { MapRoutingModule } from './map-routing.module';
-import { FilterService, MapService, PdfService, ShopService, ThreeJsService } from './services';
+import { FilterService, MapService, PdfService, ShopService, ThreeJsService, RouteService } from './services';
 import { NbCardModule,
   NbCheckboxModule,
   NbIconModule,
@@ -33,7 +34,7 @@ import { NbCardModule,
   NbActionsModule,
   NbTooltipModule,
   NbDialogService,
-  NbDialogModule} from '@nebular/theme';
+  NbDialogModule } from '@nebular/theme';
 import { SharedModule } from '../../../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 
@@ -60,7 +61,8 @@ import { FormsModule } from '@angular/forms';
     ShopCardComponent,
     RadiusControlComponent,
     ShopInfoModalComponent,
-    OnlyFavoriteControlComponent
+    OnlyFavoriteControlComponent,
+    RouteDownloadNotificationComponent
   ],
   imports: [
     CommonModule,
@@ -92,7 +94,8 @@ import { FormsModule } from '@angular/forms';
     FilterService,
     ShopService,
     ThreeJsService,
-    PdfService
+    PdfService,
+    RouteService
   ]
 })
 export class MapModule { }

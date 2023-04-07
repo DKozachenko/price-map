@@ -19,7 +19,7 @@ export class ProductMiniCardComponent {
    * @type {(Product | null)}
    * @memberof ProductMiniCardComponent
    */
-  @Input() public product: Product | null = null;;
+  @Input() public product: Product | null = null;
 
   constructor(private readonly productService: ProductService) {}
 
