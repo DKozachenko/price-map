@@ -7,10 +7,11 @@ import { Roles } from '../../../decorators';
 import { ExternalEvents, Role } from '@core/enums';
 import { ExternalService } from '../services';
 import { catchError, Observable, of, switchMap } from 'rxjs';
-import { ICoordinates, IResponseData } from '@core/interfaces';
+import { ICoordinates, IOsrmData, IResponseData } from '@core/interfaces';
 import { ExternalErrorCode } from '@core/types';
 import * as polyline  from '@mapbox/polyline';
 import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
+import { RouteLeg, RouteResults } from 'osrm';
 
 /**
  * Шлюз пользователей
@@ -35,12 +36,13 @@ export class ExternalGateway {
   @UseGuards(JwtAuthGuard(ExternalEvents.BuildRouteFailed), RolesAuthGuard(ExternalEvents.BuildRouteFailed))
   @SubscribeMessage(ExternalEvents.BuildRouteAttempt)
   public buildRoute(@MessageBody() coordinates: ICoordinates[]):
-    Observable<WsResponse<IResponseData<number[][] | null, ExternalErrorCode | null>>> {
+    Observable<WsResponse<IResponseData<IOsrmData  | null, ExternalErrorCode | null>>> {
     return this.externalService.buildRoute(coordinates)
       .pipe(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        switchMap((osrmData: any) => {
-          const encodedPolyline: string = osrmData.data.routes[0].geometry;
+        switchMap((response: any) => {
+          const result: RouteResults = response.data;
+          const encodedPolyline: string = result.routes[0].geometry;
           const decodedCoordinates: number[][] = polyline.decode(encodedPolyline);
           return of({
             event: ExternalEvents.BuildRouteSuccessed,
@@ -48,7 +50,10 @@ export class ExternalGateway {
               statusCode: 200,
               errorCode: null,
               isError: false,
-              data: decodedCoordinates.map((value: number[]) => this.externalService.swapCoordinates(value)),
+              data: {
+                coordinates: decodedCoordinates.map((value: number[]) => this.externalService.swapCoordinates(value)),
+                legs: result.routes[0].legs
+              },
               message: 'Маршрут успешно построен'
             }
           });

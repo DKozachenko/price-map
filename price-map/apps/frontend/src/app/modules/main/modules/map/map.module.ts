@@ -18,7 +18,7 @@ import { CharacteristicFilterComponent,
   ShopInfoModalComponent,
   OnlyFavoriteControlComponent } from './components';
 import { MapRoutingModule } from './map-routing.module';
-import { FilterService, MapService, ShopService, ThreeJsService } from './services';
+import { FilterService, MapService, PdfService, ShopService, ThreeJsService } from './services';
 import { NbCardModule,
   NbCheckboxModule,
   NbIconModule,
@@ -91,7 +91,8 @@ import { FormsModule } from '@angular/forms';
     MapService,
     FilterService,
     ShopService,
-    ThreeJsService
+    ThreeJsService,
+    PdfService
   ]
 })
 export class MapModule { }

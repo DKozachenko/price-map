@@ -1,13 +1,15 @@
 import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild, OnInit } from '@angular/core';
 import { Product, Shop } from '@core/entities';
-import { IResponseData, IProductQuery, IPriceQuery, IUserFilter, IRadiusQuery } from '@core/interfaces';
+import { IResponseData, IProductQuery, IPriceQuery, IUserFilter, IRadiusQuery, IOsrmData } from '@core/interfaces';
 import { NotificationService, SettingsService, WebSocketService } from '../../../../../../services';
-import { FilterService, MapService, ShopService } from '../../services';
+import { FilterService, MapService, PdfService, ShopService } from '../../services';
 import { ExternalEvents, ProductEvents, ShopEvents } from '@core/enums';
 import { LayerType } from '../../models/types';
 import { ProductService } from '../../../../services';
 import { jsPDF } from "jspdf";
+import { RouteLeg } from 'osrm';
+import { font } from '../../models/constans';
 
 /**
  * Компонент карты
@@ -73,18 +75,10 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     private readonly filterService: FilterService,
     private readonly productService: ProductService,
     private readonly shopService: ShopService,
-    private readonly settingsService: SettingsService) {}
-
-  public test(): void {
-    let doc = new jsPDF();
-    doc = doc.addPage();
-
-    doc.text("Hello world!", 10, 10);
-    doc.save("a4.pdf");
-  }
+    private readonly settingsService: SettingsService,
+    private readonly pdfService: PdfService) {}
 
   public ngOnInit(): void {
-    // this.test();
     this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductsFailed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<null>) => {
@@ -99,11 +93,12 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
         this.isLoading = false;
       });
 
-    this.webSocketService.on<IResponseData<number[][]>>(ExternalEvents.BuildRouteSuccessed)
+    this.webSocketService.on<IResponseData<IOsrmData>>(ExternalEvents.BuildRouteSuccessed)
       .pipe(untilDestroyed(this))
-      .subscribe((response: IResponseData<number[][]>) => {
-        this.mapService.addRoute(response.data);
+      .subscribe((response: IResponseData<IOsrmData>) => {
+        this.mapService.addRoute(response.data.coordinates);
         this.isLoading = false;
+        this.pdfService.dowloadFile(response.data.legs);
       });
 
     this.webSocketService.on<IResponseData<null>>(ExternalEvents.BuildRouteFailed)
