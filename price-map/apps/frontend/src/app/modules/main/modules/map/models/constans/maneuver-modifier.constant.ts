@@ -1,3 +1,4 @@
+/* eslint-disable array-bracket-newline */
 /**
  * Словарь соответствия модификатора маневра и его перевода
  * @export

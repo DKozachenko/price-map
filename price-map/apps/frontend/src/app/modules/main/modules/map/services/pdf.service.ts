@@ -1,6 +1,6 @@
 import { maneuverModifier } from './../models/constans/maneuver-modifier.constant';
-import { Injectable } from "@angular/core";
-import { jsPDF } from "jspdf";
+import { Injectable } from '@angular/core';
+import { jsPDF } from 'jspdf';
 import { RouteLeg, RouteStep, StepManeuver } from 'osrm';
 import { font, maneuverType } from '../models/constans';
 
@@ -62,9 +62,9 @@ export class PdfService {
    * @memberof PdfService
    */
   private addFont(): void {
-    this.document.addFileToVFS("Tektur.ttf", font);
-    this.document.addFont("Tektur.ttf", "Tektur", "normal");
-    this.document.setFont("Tektur");
+    this.document.addFileToVFS('Tektur.ttf', font);
+    this.document.addFont('Tektur.ttf', 'Tektur', 'normal');
+    this.document.setFont('Tektur');
   }
 
   /**
@@ -87,7 +87,7 @@ export class PdfService {
    */
   private addTitle(text: string, x: number, y: number): void {
     this.document.setFontSize(20);
-    this.document.text(text, x, y)
+    this.document.text(text, x, y);
   }
 
   /**
@@ -100,7 +100,7 @@ export class PdfService {
    */
   private addSubtitle(text: string, x: number, y: number): void {
     this.document.setFontSize(14);
-    this.document.text(text, x, y)
+    this.document.text(text, x, y);
   }
 
   /**
@@ -115,7 +115,7 @@ export class PdfService {
     this.document.setFontSize(14);
     this.document.text(text, x, y, {
       maxWidth: this.stepWidth - 15 * 2
-    })
+    });
   }
 
   /**
@@ -127,7 +127,8 @@ export class PdfService {
   private addStep(step: RouteStep): void {
     const maneuver: StepManeuver = step.maneuver;
 
-    const label: string = `${maneuverType.get(maneuver.type) ?? 'Неизвестный тип маневра'} ${maneuverModifier.get(maneuver.modifier) ?? ''}`
+    const label: string = `${maneuverType.get(maneuver.type) ?? 'Неизвестный тип маневра'}` + 
+      ` ${maneuverModifier.get(maneuver.modifier) ?? ''}`
     + ` в точке ${maneuver.location[1]}, ${maneuver.location[0]} на`
     + ` угол ${Math.abs(maneuver.bearing_after - maneuver.bearing_before)}°`;
 
@@ -136,7 +137,8 @@ export class PdfService {
     const labelHeight: number = Math.ceil(labelRows * this.document.getTextDimensions(label).h);
     
     // При выходе за пределы текущей страницы, добавление новой страницы
-    if (this.currentYOffset + 6 >= this.pageHeight || this.currentYOffset + this.gap + labelHeight + 5 >= this.pageHeight) {
+    if (this.currentYOffset + 6 >= this.pageHeight 
+        || this.currentYOffset + this.gap + labelHeight + 5 >= this.pageHeight) {
       this.document.addPage();
       this.currentYOffset = 10;
     } 

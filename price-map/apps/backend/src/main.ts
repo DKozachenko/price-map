@@ -30,6 +30,7 @@ function start(): Observable<void> {
           'start'
         );
         // Чтобы убрать предупреждение в логах
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         require('events').EventEmitter.defaultMaxListeners = 15;
         return of(null);
       }),

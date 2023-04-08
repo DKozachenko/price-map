@@ -670,7 +670,8 @@ export class MapService {
    */
   public addOnlyFavoriteControl(): void {
     const existedOnlyFavoriteControl: OnlyFavoriteControl | undefined
-      = <OnlyFavoriteControl | undefined>this.map._controls.find((control: IControl) => control instanceof OnlyFavoriteControl);
+      = <OnlyFavoriteControl | undefined>this.map._controls.find((control: IControl) =>
+        control instanceof OnlyFavoriteControl);
 
     if (!existedOnlyFavoriteControl) {
       const onlyFavoriteControl: OnlyFavoriteControl = new OnlyFavoriteControl(this.resolver, this.filterService);
@@ -696,7 +697,8 @@ export class MapService {
    */
   public removeOnlyFavoriteControl(): void {
     const onlyFavoriteControl: OnlyFavoriteControl | undefined
-      = <OnlyFavoriteControl | undefined>this.map._controls.find((control: IControl) => control instanceof OnlyFavoriteControl);
+      = <OnlyFavoriteControl | undefined>this.map._controls.find((control: IControl) => 
+        control instanceof OnlyFavoriteControl);
     if (onlyFavoriteControl) {
       this.map.removeControl(onlyFavoriteControl);
     }

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /**
  * Шрифт Tektur-Regular в виде строки в кодировке base64
  * https://github.com/parallax/jsPDF#use-of-unicode-characters--utf-8
