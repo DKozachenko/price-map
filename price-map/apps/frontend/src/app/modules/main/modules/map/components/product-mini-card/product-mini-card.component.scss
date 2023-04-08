@@ -1,5 +1,9 @@
 @import "../../../../../../../assets/styles/mixins";
 
+:host {
+  width: 100%;
+}
+
 .product__mini {
   border: 1px solid white;
 

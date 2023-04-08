@@ -50,5 +50,4 @@ export class LayoutComponent implements OnInit {
 
     this.webSocketService.emit<string>(UserEvents.GetUserAttempt, payload.userId);
   }
-
 }

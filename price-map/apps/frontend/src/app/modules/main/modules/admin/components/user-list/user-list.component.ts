@@ -77,5 +77,5 @@ export class UserListComponent implements OnInit {
    */
   public trackByUser(index: number, item: User): string {
     return item.id ?? index;
-  }
+  }  
 }

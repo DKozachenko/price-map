@@ -5,6 +5,7 @@ import { ICoordinates, IResponseData } from '@core/interfaces';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ExternalEvents, ProductEvents } from '@core/enums';
 import { ProductService } from '../../../../services';
+import { MapService } from '../../services';
 
 /**
  * Компонент отображения товаров, по которым нужно построить маршрут
@@ -43,7 +44,8 @@ export class RouteReviewComponent implements OnInit {
 
   constructor(private readonly productsService: ProductService,
     private readonly webSocketService: WebSocketService,
-    private readonly notificationService: NotificationService) {}
+    private readonly notificationService: NotificationService,
+    private readonly mapService: MapService) {}
 
   public ngOnInit(): void {
     this.webSocketService.on<IResponseData<null>>(ProductEvents.GetProductFailed)
@@ -89,6 +91,7 @@ export class RouteReviewComponent implements OnInit {
   public buildRoute(): void {
     const coordinates: ICoordinates[] = this.getCoordinates();
     this.loadingState.emit(true);
+    this.mapService.removeRouteLayer();
     this.webSocketService.emit<ICoordinates[]>(ExternalEvents.BuildRouteAttempt, coordinates);
   }
 

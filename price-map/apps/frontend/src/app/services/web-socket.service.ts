@@ -159,6 +159,10 @@ export class WebSocketService implements OnDestroy {
     return fromEvent<T>(this.socket, eventName);
   }
 
+  public off(eventName: string): void {
+    this.socket.off(eventName);
+  }
+
   public ngOnDestroy(): void {
     this.connectSub.unsubscribe();
     this.connectErrorSub.unsubscribe();

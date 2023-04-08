@@ -43,7 +43,7 @@ export class RegisterComponent implements OnInit {
    */
   public form!: FormGroup;
 
-  constructor(private readonly webSocketSevice: WebSocketService,
+  constructor(private readonly webSocketService: WebSocketService,
     private readonly notificationService: NotificationService) {}
 
   ngOnInit(): void {
@@ -72,14 +72,14 @@ export class RegisterComponent implements OnInit {
       ]),
     });
 
-    this.webSocketSevice.on<IResponseData<null>>(AuthEvents.RegisterFailed)
+    this.webSocketService.on<IResponseData<null>>(AuthEvents.RegisterFailed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<null>) => {
         this.notificationService.showError(response.message);
         this.loadingState.emit(false);
       });
 
-    this.webSocketSevice.on<IResponseData<User>>(AuthEvents.RegisterSuccessed)
+    this.webSocketService.on<IResponseData<User>>(AuthEvents.RegisterSuccessed)
       .pipe(untilDestroyed(this))
       .subscribe((response: IResponseData<User>) => {
         this.form.reset();
@@ -94,7 +94,7 @@ export class RegisterComponent implements OnInit {
    * @memberof RegisterComponent
    */
   public submit(): void {
-    this.webSocketSevice.emit<IUserRegisterInfo>(AuthEvents.RegisterAttemp, this.form.value, false);
+    this.webSocketService.emit<IUserRegisterInfo>(AuthEvents.RegisterAttemp, this.form.value, false);
     this.loadingState.emit(true);
   }
 }

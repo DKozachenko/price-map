@@ -21,7 +21,7 @@ import MapboxDraw from '@mapbox/mapbox-gl-draw';
 import { FilterService, ShopService } from '.';
 import { Product, Shop } from '@core/entities';
 import { IFeatureProps } from '../models/interfaces';
-import { ClearControl, LayersControl, PriceControl, RadiusControl } from '../controls';
+import { ClearControl, LayersControl, OnlyFavoriteControl, PriceControl, RadiusControl } from '../controls';
 import { ProductService } from '../../../services';
 import { LayerType } from '../models/types';
 import { BaseSidebar } from '../../../classes';
@@ -200,6 +200,7 @@ export class MapService {
     this.map.addControl(geoControl);
 
     this.addRadiusControl();
+    this.addOnlyFavoriteControl();
 
     const layersControl: LayersControl = new LayersControl(this.resolver, this);
     this.map.addControl(layersControl, 'top-left');
@@ -664,6 +665,21 @@ export class MapService {
   }
 
   /**
+   * Добавление контрола для избранных товаров
+   * @memberof MapService
+   */
+  public addOnlyFavoriteControl(): void {
+    const existedOnlyFavoriteControl: OnlyFavoriteControl | undefined
+      = <OnlyFavoriteControl | undefined>this.map._controls.find((control: IControl) =>
+        control instanceof OnlyFavoriteControl);
+
+    if (!existedOnlyFavoriteControl) {
+      const onlyFavoriteControl: OnlyFavoriteControl = new OnlyFavoriteControl(this.resolver, this.filterService);
+      this.map.addControl(onlyFavoriteControl, 'top-right');
+    }
+  }
+
+  /**
    * Удаление контрола для радиуса
    * @memberof MapService
    */
@@ -672,6 +688,19 @@ export class MapService {
       = <RadiusControl | undefined>this.map._controls.find((control: IControl) => control instanceof RadiusControl);
     if (radiusControl) {
       this.map.removeControl(radiusControl);
+    }
+  }
+
+  /**
+   * Удаление контрола для избранных товаров
+   * @memberof MapService
+   */
+  public removeOnlyFavoriteControl(): void {
+    const onlyFavoriteControl: OnlyFavoriteControl | undefined
+      = <OnlyFavoriteControl | undefined>this.map._controls.find((control: IControl) => 
+        control instanceof OnlyFavoriteControl);
+    if (onlyFavoriteControl) {
+      this.map.removeControl(onlyFavoriteControl);
     }
   }
 

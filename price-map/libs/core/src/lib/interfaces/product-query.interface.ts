@@ -6,7 +6,7 @@ import { IPriceQuery, IUserFilter, IRadiusQuery } from '.';
  * @interface IProductQuery
  */
 export interface IProductQuery {
-  [key: string]: string[] | IUserFilter[] | IPriceQuery | IRadiusQuery,
+  [key: string]: string[] | IUserFilter[] | IPriceQuery | IRadiusQuery | string | null,
   /**
    * Id категорий 3 уровня
    * @type {(string[])}
@@ -30,5 +30,11 @@ export interface IProductQuery {
    * @type {IRadiusQuery}
    * @memberof IProductQuery
    */
-  radius: IRadiusQuery
+  radius: IRadiusQuery,
+  /**
+   * Id пользователя
+   * @type {string}
+   * @memberof IProductQuery
+   */
+  userId: string | null
 }

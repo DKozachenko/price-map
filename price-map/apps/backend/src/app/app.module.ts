@@ -7,9 +7,7 @@ import { Shop,
   Category1Level,
   Category2Level,
   Category3Level } from '@core/entities';
-import { JwtModule, JwtService } from '@nestjs/jwt';
 import { AppGateway } from './gateways';
-import { secretKey } from './models/constants';
 import { BackupService, HashService, RabbitService } from './services';
 
 /**
@@ -25,7 +23,6 @@ import { BackupService, HashService, RabbitService } from './services';
     CategoriesModule,
     ExternalModule,
     ShopsModule,
-    //TODO: Миграции
     TypeOrmModule.forRoot({
       name: 'postgresConnect',
       type: 'postgres',
@@ -33,7 +30,7 @@ import { BackupService, HashService, RabbitService } from './services';
       port: 5432,
       username: 'postgres',
       password: 'vkdima03',
-      database: 'real_data_pm',
+      database: 'script_test',
       entities: [
         Shop,
         Product,
@@ -43,14 +40,9 @@ import { BackupService, HashService, RabbitService } from './services';
         Category3Level
       ],
       synchronize: true,
-    }),
-    JwtModule.register({
-      secret: secretKey,
-      signOptions: { expiresIn: '10h' },
-    }),
+    })
   ],
   providers: [
-    JwtService,
     HashService,
     RabbitService,
     BackupService,
