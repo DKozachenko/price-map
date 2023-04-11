@@ -9,7 +9,7 @@ namespace AppNS;
 /// </summary>
 class App {
   /// <summary>
-  /// Сервис взаимодействия с Rabbit 
+  /// Сервис взаимодействия с Rabbit
   /// </summary>
   public RabbitService RabbitService { get; set; }
   /// <summary>
@@ -156,10 +156,11 @@ class App {
   /// </summary>
   /// <param name="shopName">Название магазина</param>
   private async Task AddShopNameNodeMatchAsync(string shopName) {
+    string escapedShopName = shopName.Replace("\"", "\\\"");
     string url = $"https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json][timeout:{Config.OverpassTimeout}];area[place=city][name=\"Новосибирск\"]"
-      + $" -> .nsk;node[name~\"{shopName}\",i](area.nsk) -> .data;.data out geom;";
+      + $" -> .nsk;node[name~\"{escapedShopName}\",i](area.nsk) -> .data;.data out geom;";
 
-    
+
     OsmResponse? osmResponse = null;
     try {
       osmResponse = await this.HttpService.Get<OsmResponse>(url);
@@ -167,7 +168,7 @@ class App {
     catch (Exception err) {
       this.LoggerService.Error($"Error while sending request to {url}, error: {err.Message}", "App");
     }
-    
+
     List<OsmNode> nodes = new List<OsmNode>();
     // Если не случилось ошибки при получении данных или в OSM что-то нашлось, добавляем точки оттуда,
     // если нет, то получаем рандомные из файла
@@ -226,7 +227,7 @@ class App {
       } catch (Exception err) {
         this.Close(err.Message);
       }
-      
+
     };
   }
 
@@ -247,7 +248,7 @@ class App {
     catch (Exception err) {
       this.LoggerService.Error($"Error while sending request to {url}, error: {err.Message}", "App");
     }
-    
+
     // Если пришел ответ, есть элементы и в тэгах есть кол-во этажей
     if (osmResponse is not null && osmResponse?.Elements?.Count > 0 && osmResponse?.Elements[0].Tags?.BuildingLevels is not null) {
       return Convert.ToInt32(osmResponse.Elements[0].Tags.BuildingLevels);
@@ -272,7 +273,7 @@ class App {
       } catch (Exception err) {
         this.Close(err.Message);
       }
-      
+
     };
   }
 
