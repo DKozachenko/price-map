@@ -2,6 +2,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { from, Observable, switchMap, catchError, of } from 'rxjs';
 import {Channel, connect, Connection, ConsumeMessage}from 'amqplib';
+import { IMessage } from '../models/interfaces';
 
 /**
  * Сервис взаимодействия с Rabbit
@@ -30,10 +31,10 @@ export class RabbitService {
    * @private
    * @template T тип данных
    * @param {string} queueName название очереди
-   * @return {*}  {Promise<T>} данные из сообщения
+   * @return {*}  {Promise<IMessage<T>>} данные из сообщения
    * @memberof RabbitService
    */
-  private getMessagePromise<T = any>(queueName: string): Promise<T> {
+  private getMessagePromise<T = any>(queueName: string): Promise<IMessage<T>> {
     return new Promise((resolve, reject) => {
       this.channel.consume(queueName, (message: ConsumeMessage) => {
         if (message === null) {
@@ -44,7 +45,8 @@ export class RabbitService {
         const bytes: number = message.content.length;
         Logger.debug(`Message from ${queueName}, content length: ${bytes} bytes`, 'RabbitService');
         try {
-          const obj: T = <T>JSON.parse(message.content.toString());
+          const obj: IMessage<T> = <IMessage<T>>JSON.parse(message.content.toString());
+          Logger.debug(`Описание: ${obj.description} было отправлено в ${obj.sendTime.toString()}`);
           this.channel.ack(message);
           resolve(obj);
         } catch (err: any) {
@@ -97,10 +99,10 @@ export class RabbitService {
    * Получение сообщения (возвращает Observable)
    * @template T тип данных
    * @param {string} queueName название очереди
-   * @return {*}  {Observable<T>} данные из сообщения
+   * @return {*}  {Observable<IMessage<T>>} данные из сообщения
    * @memberof RabbitService
    */
-  public getMessage<T = any>(queueName: string): Observable<T> {
+  public getMessage<T = any>(queueName: string): Observable<IMessage<T>> {
     return from(this.getMessagePromise<T>(queueName));
   }
 
@@ -108,10 +110,10 @@ export class RabbitService {
    * Отправка сообщения
    * @template T тип отправляемых данных
    * @param {string} queueName название очереди
-   * @param {T} data данные
+   * @param {IMessage<T>} data данные
    * @memberof RabbitService
    */
-  public sendMessage<T = any>(queueName: string, data: T): void {
+  public sendMessage<T = any>(queueName: string, data: IMessage<T>): void {
     const dataStr: string = JSON.stringify(data);
     this.channel.sendToQueue(queueName, Buffer.from(dataStr));
   }

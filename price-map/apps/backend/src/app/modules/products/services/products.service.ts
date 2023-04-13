@@ -13,6 +13,7 @@ import { CategoriesService } from '../../categories/services';
 import { IProductIdShopMatch, IProductWithNames } from '../models/interfaces';
 import { ShopsService } from '../../shops/services';
 import { PRODUCTS_QUEUE, SHOPS_IN_QUEUE } from '../../../models/constants';
+import { IMessage } from '../../../models/interfaces';
 
 /**
  * Сервис товаров
@@ -54,9 +55,9 @@ export class ProductsService implements OnModuleInit {
 
     this.rabbitService.getMessage<IProductWithNames[]>(PRODUCTS_QUEUE)
       .pipe(
-        switchMap((products: IProductWithNames[]) => {
+        switchMap((message: IMessage<IProductWithNames[]>) => {
           return forkJoin([
-            of(products),
+            of(message.data),
             this.deleteAll()
           ])
             .pipe(
@@ -147,9 +148,9 @@ export class ProductsService implements OnModuleInit {
 
     this.rabbitService.getMessage<IProductIdShopMatch[]>(SHOPS_IN_QUEUE)
       .pipe(
-        switchMap((matches: IProductIdShopMatch[]) => {
+        switchMap((message: IMessage<IProductIdShopMatch[]>) => {
           return forkJoin([
-            of(matches),
+            of(message.data),
             this.shopsService.deleteAll()
           ])
             .pipe(

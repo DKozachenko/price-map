@@ -6,6 +6,7 @@ import { from, Observable, of, switchMap, catchError } from 'rxjs';
 import { DbErrorCode, RabbitErrorCode } from '@core/types';
 import { RabbitService } from '../../../services';
 import { CATEGORIES_QUEUE } from '../../../models/constants';
+import { IMessage } from '../../../models/interfaces';
 
 /**
  * Сервис категорий (всех уровней)
@@ -61,8 +62,8 @@ export class CategoriesService implements OnModuleInit {
 
     this.rabbitService.getMessage<Omit<Category1Level, 'id'>[]>(CATEGORIES_QUEUE)
       .pipe(
-        switchMap((categories: Omit<Category1Level, 'id'>[]) => {
-          return this.refreshAllCategoriesData(categories)
+        switchMap((message: IMessage<Omit<Category1Level, 'id'>[]>) => {
+          return this.refreshAllCategoriesData(message.data)
             .pipe(
               catchError((err: Error) => {
                 Logger.error(`Error code: ${errorCodes[0]}, ${err}`, 'CategoriesService');

@@ -1,7 +1,6 @@
 using RabbitMQ.Client.Events;
 using Services;
 using Models;
-using System.Text;
 
 namespace AppNS;
 /// <summary>
@@ -215,13 +214,15 @@ class App {
       try {
         byte[] bodyByteArray = args.Body.ToArray();
         this.LoggerService.Log($"Message from {queueName}, content length {bodyByteArray.Length} bytes", "App");
-        List<ProductIdShopNameMatch>? productIdShopNameMatches = this.JsonService.DeserializeFromByteArray<List<ProductIdShopNameMatch>>(bodyByteArray);
-        HashSet<string> uniqueShopNames = this.GetUniqueShopNames(productIdShopNameMatches);
+        Message<List<ProductIdShopNameMatch>>? messageMatches = this.JsonService.DeserializeFromByteArray<Message<List<ProductIdShopNameMatch>>>(bodyByteArray);
+        HashSet<string> uniqueShopNames = this.GetUniqueShopNames(messageMatches.Data);
         await this.FillShopNameNodeMatchesAsync(uniqueShopNames);
         this.LoggerService.Log($"ShopNameNodeMatches length: {this.ShopNameNodeMatches.Count}", "App");
-        List<ProductIdShopMatch> productIdShopMatches = this.GetProductIdShopMatches(productIdShopNameMatches);
+        List<ProductIdShopMatch> productIdShopMatches = this.GetProductIdShopMatches(messageMatches.Data);
         this.LoggerService.Log($"Shops length: {this.Shops.Count}", "App");
-        this.RabbitService.SendMessage<List<ProductIdShopMatch>>(Config.OsmRequesterExchange, Config.ShopsInRoutingKey, productIdShopMatches);
+
+        Message<List<ProductIdShopMatch>> message = new Message<List<ProductIdShopMatch>>(productIdShopMatches, "Получение сопоставления id товаров и магазинов", DateTime.Now);
+        this.RabbitService.SendMessage<List<ProductIdShopMatch>>(Config.OsmRequesterExchange, Config.ShopsInRoutingKey, message);
         this.Shops.Clear();
         this.ShopNameNodeMatches.Clear();
       } catch (Exception err) {
@@ -266,10 +267,12 @@ class App {
       try {
         byte[] bodyByteArray = args.Body.ToArray();
         this.LoggerService.Log($"Message from {queueName}, content length {bodyByteArray.Length} bytes", "App");
-        long osmNodeId = this.JsonService.DeserializeIntFromByteArray(bodyByteArray);
-        int? floorNumber = await this.getFloorNumberAsync(osmNodeId);
-        this.LoggerService.Log($"Floor number: {floorNumber} for node with id: {osmNodeId}", "App");
-        this.RabbitService.SendMessage<int?>(Config.OsmRequesterExchange, Config.BuildingInfoResponseRoutingKey, floorNumber);
+        Message<int>? messageNodeId = this.JsonService.DeserializeFromByteArray<Message<int>>(bodyByteArray);
+        int? floorNumber = await this.getFloorNumberAsync(messageNodeId.Data);
+        this.LoggerService.Log($"Floor number: {floorNumber} for node with id: {messageNodeId.Data}", "App");
+
+        Message<int?> message = new Message<int?>(floorNumber, $"Отправка количества этажей для точки {messageNodeId.Data}", DateTime.Now);
+        this.RabbitService.SendMessage<int?>(Config.OsmRequesterExchange, Config.BuildingInfoResponseRoutingKey, message);
       } catch (Exception err) {
         this.Close(err.Message);
       }
