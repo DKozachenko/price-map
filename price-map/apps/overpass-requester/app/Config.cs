@@ -7,7 +7,7 @@ static class Config {
   /// <summary>
   /// Путь до файла с точками
   /// </summary>
-  public const string DataPath = "./data/nodes_nsk.json";
+  public const string DataPath = "./data/nodes_nsk_not_water.json";
   /// <summary>
   /// Максимальное количество точек для выбора при генерации рандомных точек
   /// </summary>

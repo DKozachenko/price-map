@@ -211,14 +211,21 @@ class CategoryScrapingService(BaseScrapingService):
     self.__add_product_links(category_3_level)
     return category_3_level
 
-  def __generate_category_3_level_name(self, breadcrumbs: list[WebElement],) -> str:
-    # category_3_level_name: str = ''
-    # for breadcrumb in breadcrumbs:
-    #   category_3_level_name += self._get_text_from_prop(breadcrumb) + ', '
+  def __generate_category_3_level_name(self, breadcrumbs: list[WebElement], category_2_level_name: str) -> str:
+    """ Получение названия категории 3 уровня
 
-    # return category_3_level_name
-    return ','.join(list(map(lambda breadcrumb: self._get_text_from_prop(breadcrumb), breadcrumbs)))
+    Args:
+      breadcrumbs (list[WebElement]): breadcrumb элементы, кроме первых трех
+      category_2_level_name (str): _description_
 
+    Returns:
+      str: название категории 3 уровня
+    """
+
+    if len(breadcrumbs) > 0:
+      return ', '.join(list(map(lambda breadcrumb: self._get_text_from_prop(breadcrumb), breadcrumbs)))
+
+    return category_2_level_name
 
   def __get_categories_1_level(self) -> list[Category1Level]:
     """ Получение категорий 1 уровня
@@ -233,20 +240,15 @@ class CategoryScrapingService(BaseScrapingService):
       self._wait(2)
 
       breadcrumb: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.breadcrumbs-item')
+      #breadcrumb каждый раз состоит из разного кол-ва элементов, но всегда первый элемент - "Главная", остальное - уровни категории;
+      #для добаления категории нужно хотя бы 2 уровня, поэтому условие - больше или равно 3 
 
       if len(breadcrumb) >= 3:
-        category_1_level_name: str = ''
-        category_2_level_name: str = ''
-        category_3_level_name: str = ''
-
-        if len(breadcrumb) == 3:
-          category_1_level_name = self._execute(self._get_text_from_prop, '', breadcrumb[1]).strip()
-          category_2_level_name = self._execute(self._get_text_from_prop, '', breadcrumb[2]).strip()
-          category_3_level_name = category_2_level_name
-        else:
-          category_1_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[1]).strip()
-          category_2_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[2]).strip()
-          category_3_level_name: str = self._execute(self.__generate_category_3_level_name, '', breadcrumb[3:]).strip()
+        category_1_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[1]).strip()
+        category_2_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[2]).strip()
+        #Если только 2 уровня категорий, то название категории 3 уровня будет такое же, как у категории 2 уровня, если уровней 3 и больше,
+        #то название сложится из всех уровней, не включая 1 и 2
+        category_3_level_name: str = self._execute(self.__generate_category_3_level_name, '', breadcrumb[3:], category_2_level_name).strip()
 
         found_categories_1_level: list[Category1Level] = self._execute(self._filter_elements, [], lambda item: item.name == category_1_level_name, categories_1_level)
         #Если такая категория 1 уровня нашлась
