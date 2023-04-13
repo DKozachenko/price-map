@@ -156,7 +156,7 @@ class App {
   /// </summary>
   /// <param name="shopName">Название магазина</param>
   private async Task AddShopNameNodeMatchAsync(string shopName) {
-    string escapedShopName = shopName.Replace("\"", "\\\"");
+    string escapedShopName = shopName.Replace("\"", "'");
     string url = $"https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json][timeout:{Config.OverpassTimeout}];area[place=city][name=\"Новосибирск\"]"
       + $" -> .nsk;node[name~\"{escapedShopName}\",i](area.nsk) -> .data;.data out geom;";
 
