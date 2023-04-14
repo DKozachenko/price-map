@@ -41,61 +41,29 @@ export class ProductsService implements OnModuleInit {
   }
 
   /**
-   * Подписка на очередь с товарами
+   * Обновление данных по товарам (удаление и создание по новой (с категорией, без магазина))
    * @private
+   * @param {IProductWithNames[]} productsWithNames товары с названиями категории и магазина
+   * @return {*}  {Observable<Product[]>} сохраненные товары
    * @memberof ProductsService
    */
-  private subscribeOnProductsQueue(): void {
-    const errorCodes: (RabbitErrorCode | DbErrorCode)[] = [
-      'DB_ERROR',
-      'GET_MESSAGE_ERROR'
-    ];
-
-    let errorCode: RabbitErrorCode | DbErrorCode = 'GET_MESSAGE_ERROR';
-
-    this.rabbitService.getMessage<IProductWithNames[]>(PRODUCTS_QUEUE)
+  private refreshProductsData(productsWithNames: IProductWithNames[]): Observable<Product[]> {
+    return forkJoin([
+      this.deleteAll(),
+      this.categoriesService.getAllCategories3Level()
+    ])
       .pipe(
-        switchMap((message: IMessage<IProductWithNames[]>) => {
-          return forkJoin([
-            of(message.data),
-            this.deleteAll()
-          ])
-            .pipe(
-              catchError((err: Error) => {
-                errorCode = errorCodes[0];
-                return throwError(() => err);
-              })
-            );
-        }),
-        switchMap(([
-          products,
-          affectedRows
-        ]: [
-          IProductWithNames[],
-          number
-        ]) => {
-          Logger.warn(`Deleting products: ${affectedRows} rows`, 'ProductsService');
-          return forkJoin([
-            of(products),
-            this.categoriesService.getAllCategories3Level()
-          ])
-            .pipe(
-              catchError((err: Error) => {
-                errorCode = errorCodes[0];
-                return throwError(() => err);
-              })
-            );
-        }),
-        switchMap(([
-          products,
-          categories3Level
-        ]: [
-          IProductWithNames[],
+        switchMap(([ 
+          affectedRows, 
+          categories3Level 
+        ] : [
+          number,
           Category3Level[]
         ]) => {
-
+          Logger.warn(`Deleting products: ${affectedRows} rows`, 'ProductsService');
+          
           const productsForSave: (Omit<Product, | 'shop'>)[] = [];
-          for (const product of products) {
+          for (const product of productsWithNames) {
             const existedCategory3Level: Category3Level | undefined
               = categories3Level.find((item: Category3Level) => item.name === product.category3LevelName);
 
@@ -113,7 +81,28 @@ export class ProductsService implements OnModuleInit {
             }
           }
 
-          return this.save(productsForSave)
+          return this.save(productsForSave);
+        })
+      )
+  }
+
+  /**
+   * Подписка на очередь с товарами
+   * @private
+   * @memberof ProductsService
+   */
+  private subscribeOnProductsQueue(): void {
+    const errorCodes: (RabbitErrorCode | DbErrorCode)[] = [
+      'DB_ERROR',
+      'GET_MESSAGE_ERROR'
+    ];
+
+    let errorCode: RabbitErrorCode | DbErrorCode = 'GET_MESSAGE_ERROR';
+
+    this.rabbitService.getMessage<IProductWithNames[]>(PRODUCTS_QUEUE)
+      .pipe(
+        switchMap((message: IMessage<IProductWithNames[]>) => {
+          return this.refreshProductsData(message.data)
             .pipe(
               catchError((err: Error) => {
                 errorCode = errorCodes[0];
@@ -134,6 +123,47 @@ export class ProductsService implements OnModuleInit {
   }
 
   /**
+   * Обновление данных по магазинам (удаление, создание по новой, связь с товарами)
+   * @private
+   * @param {IProductIdShopMatch[]} matches сопоставления
+   * @return {*}  {Observable<number>} количество обновленных записей
+   * @memberof ProductsService
+   */
+  private refreshShopsData(matches: IProductIdShopMatch[]): Observable<number> {
+    return this.shopsService.deleteAll()
+      .pipe(
+        switchMap((affectedRows: number) => {
+          Logger.warn(`Deleting shops: ${affectedRows} rows`, 'ProductsService');
+
+          const shopsToSave: Shop[] = this.getUniqueShops(matches);
+          return forkJoin([
+            this.getAllIds(),
+            this.shopsService.saveAll(shopsToSave)
+          ])
+        }),
+        switchMap(([
+          ids,
+          savedShops
+        ]: [
+          string[],
+          Shop[]
+        ]) => {
+          Logger.warn(`Successfully saving ${savedShops.length} shops`, 'ProductsService');
+          const matchesForUpdate: IProductIdShopMatch[] = [];
+          for (const match of matches) {
+            const existedId: string | undefined = ids.find((id: string) => id === match.productId);
+
+            if (existedId) {
+              matchesForUpdate.push(match);
+            }
+          }
+
+          return this.updateAll(matchesForUpdate);
+        })
+      )
+  }
+
+  /**
    * Подписка на очередь для обновления магазинов у товаров
    * @private
    * @memberof ProductsService
@@ -149,58 +179,7 @@ export class ProductsService implements OnModuleInit {
     this.rabbitService.getMessage<IProductIdShopMatch[]>(SHOPS_IN_QUEUE)
       .pipe(
         switchMap((message: IMessage<IProductIdShopMatch[]>) => {
-          return forkJoin([
-            of(message.data),
-            this.shopsService.deleteAll()
-          ])
-            .pipe(
-              catchError((err: Error) => {
-                errorCode = errorCodes[0];
-                return throwError(() => err);
-              })
-            );
-        }),
-        switchMap(([
-          matches,
-          affectedRows
-        ]: [
-          IProductIdShopMatch[],
-          number
-        ]) => {
-          Logger.warn(`Deleting shops: ${affectedRows} rows`, 'ProductsService');
-          const shopsToSave: Shop[] = this.getUniqueShops(matches);
-          return forkJoin([
-            of(matches),
-            this.getAllIds(),
-            this.shopsService.saveAll(shopsToSave)
-          ])
-            .pipe(
-              catchError((err: Error) => {
-                errorCode = errorCodes[0];
-                return throwError(() => err);
-              })
-            );
-        }),
-        switchMap(([
-          matches,
-          ids,
-          savedShops
-        ]: [
-          IProductIdShopMatch[],
-          string[],
-          Shop[]
-        ]) => {
-          Logger.log(`Successfully saving ${savedShops.length} shops`, 'ProductsService');
-          const matchesForUpdate: IProductIdShopMatch[] = [];
-          for (const match of matches) {
-            const existedId: string | undefined = ids.find((id: string) => id === match.productId);
-
-            if (existedId) {
-              matchesForUpdate.push(match);
-            }
-          }
-
-          return this.updateAll(matchesForUpdate)
+          return this.refreshShopsData(message.data)
             .pipe(
               catchError((err: Error) => {
                 errorCode = errorCodes[0];
@@ -333,7 +312,7 @@ export class ProductsService implements OnModuleInit {
    * Генерация условия для отбора записей
    * @private
    * @param {IProductQuery} query
-   * @return {*}  {string}
+   * @return {*}  {string} SQL с условием
    * @memberof ProductsService
    */
   private generateWhereSql(query: IProductQuery): string {
@@ -517,7 +496,7 @@ export class ProductsService implements OnModuleInit {
         shop: match.shop
       })));
 
-    return concat(queries)
+    return concat(...queries)
     //TODO: эм, поч просто пайп
       .pipe(() => of(matches.length));
   }
