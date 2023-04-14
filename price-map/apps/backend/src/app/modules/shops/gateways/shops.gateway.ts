@@ -171,8 +171,8 @@ export class ShopsGateway {
           });
           return this.rabbitService.getMessage<number | null>(BUILDING_INFO_RESPONSE_QUEUE);
         }),
-        switchMap((message: IMessage<number> | null) => {
-          if (message) {
+        switchMap((message: IMessage<number | null>) => {
+          if (message.data) {
             return of({
               event: ShopEvents.GetBuildgingInfoSuccessed, 
               data: {

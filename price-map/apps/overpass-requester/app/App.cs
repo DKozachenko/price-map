@@ -241,7 +241,6 @@ class App {
     string url = $"https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json][timeout:{Config.OverpassTimeout}];area[place=city][name=\"Новосибирск\"]"
       + $" -> .nsk;node({osmNodeId})(area.nsk) -> .data;.data out geom;";
 
-    System.Console.WriteLine(url);
     OsmResponse? osmResponse = null;
     try {
       osmResponse = await this.HttpService.Get<OsmResponse>(url);
@@ -267,7 +266,7 @@ class App {
       try {
         byte[] bodyByteArray = args.Body.ToArray();
         this.LoggerService.Log($"Message from {queueName}, content length {bodyByteArray.Length} bytes", "App");
-        Message<int>? messageNodeId = this.JsonService.DeserializeFromByteArray<Message<int>>(bodyByteArray);
+        Message<long>? messageNodeId = this.JsonService.DeserializeFromByteArray<Message<long>>(bodyByteArray);
         int? floorNumber = await this.getFloorNumberAsync(messageNodeId.Data);
         this.LoggerService.Log($"Floor number: {floorNumber} for node with id: {messageNodeId.Data}", "App");
 

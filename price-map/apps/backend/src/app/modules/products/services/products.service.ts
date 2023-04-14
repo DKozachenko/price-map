@@ -87,17 +87,21 @@ export class ProductsService implements OnModuleInit {
    * @memberof ProductsService
    */
   private refreshProductsAndShopsData(productsWithNames: IProductWithNames[], matches: IProductIdShopMatch[]): Observable<Product[]> {
+    // Удаление всех товаров
     return this.deleteAll()
       .pipe(
         switchMap((affectedRows: number) => {
           Logger.warn(`Deleting products: ${affectedRows} rows`, 'ProductsService');
 
+          // Удаление всех магазинов
           return this.shopsService.deleteAll();
         }),
         switchMap((affectedRows: number) => {
           Logger.warn(`Deleting shops: ${affectedRows} rows`, 'ProductsService');
 
           const shopsToSave: Shop[] = this.getUniqueShops(matches);
+
+          // Сохранеие магазинов и получение всех категорий 3 уровня
           return forkJoin([
             this.shopsService.saveAll(shopsToSave),
             this.categoriesService.getAllCategories3Level()
@@ -134,6 +138,7 @@ export class ProductsService implements OnModuleInit {
             }
           }
 
+          // Сохранение товаров
           return this.save(productsForSave);
         })
       )
