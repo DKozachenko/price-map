@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category3Level, Product, Shop } from '@core/entities';
 import { DeleteResult, In, Repository } from 'typeorm';
-import { catchError, concat, forkJoin, from, Observable, of, switchMap, throwError } from 'rxjs';
+import { catchError, concat, forkJoin, from, Observable, of, switchMap, throwError, zip } from 'rxjs';
 import { IPriceQuery, IProductQuery, IUserFilter } from '@core/interfaces';
 import { RabbitService } from '../../../services';
 import { DbErrorCode, RabbitErrorCode } from '@core/types';
@@ -36,62 +36,15 @@ export class ProductsService implements OnModuleInit {
     private readonly shopsService: ShopsService) {}
 
   public onModuleInit(): void {
-    this.subscribeOnProductsQueue();
-    this.subscribeOnShopsQueue();
+    this.subscribeOnProductsAndShopsQueues();
   }
 
   /**
-   * Обновление данных по товарам (удаление и создание по новой (с категорией, без магазина))
-   * @private
-   * @param {IProductWithNames[]} productsWithNames товары с названиями категории и магазина
-   * @return {*}  {Observable<Product[]>} сохраненные товары
-   * @memberof ProductsService
-   */
-  private refreshProductsData(productsWithNames: IProductWithNames[]): Observable<Product[]> {
-    return forkJoin([
-      this.deleteAll(),
-      this.categoriesService.getAllCategories3Level()
-    ])
-      .pipe(
-        switchMap(([ 
-          affectedRows, 
-          categories3Level 
-        ] : [
-          number,
-          Category3Level[]
-        ]) => {
-          Logger.warn(`Deleting products: ${affectedRows} rows`, 'ProductsService');
-          
-          const productsForSave: (Omit<Product, | 'shop'>)[] = [];
-          for (const product of productsWithNames) {
-            const existedCategory3Level: Category3Level | undefined
-              = categories3Level.find((item: Category3Level) => item.name === product.category3LevelName);
-
-            if (existedCategory3Level) {
-              productsForSave.push({
-                id: product.id,
-                name: product.name,
-                description: product.description,
-                imagePath: product.imagePath,
-                price: product.price,
-                characteristics: product.characteristics,
-                category3Level: existedCategory3Level,
-                users: []
-              });
-            }
-          }
-
-          return this.save(productsForSave);
-        })
-      )
-  }
-
-  /**
-   * Подписка на очередь с товарами
+   * Подписка на очереди для товаров и магазинов
    * @private
    * @memberof ProductsService
    */
-  private subscribeOnProductsQueue(): void {
+  private subscribeOnProductsAndShopsQueues(): void {
     const errorCodes: (RabbitErrorCode | DbErrorCode)[] = [
       'DB_ERROR',
       'GET_MESSAGE_ERROR'
@@ -99,10 +52,13 @@ export class ProductsService implements OnModuleInit {
 
     let errorCode: RabbitErrorCode | DbErrorCode = 'GET_MESSAGE_ERROR';
 
-    this.rabbitService.getMessage<IProductWithNames[]>(PRODUCTS_QUEUE)
+    zip(
+      this.rabbitService.getMessage<IProductWithNames[]>(PRODUCTS_QUEUE),
+      this.rabbitService.getMessage<IProductIdShopMatch[]>(SHOPS_IN_QUEUE)
+    )
       .pipe(
-        switchMap((message: IMessage<IProductWithNames[]>) => {
-          return this.refreshProductsData(message.data)
+        switchMap(([productsMessage, shopsMessage ] : [IMessage<IProductWithNames[]>, IMessage<IProductIdShopMatch[]>]) => {
+          return this.refreshProductsAndShopsData(productsMessage.data, shopsMessage.data)
             .pipe(
               catchError((err: Error) => {
                 errorCode = errorCodes[0];
@@ -115,89 +71,74 @@ export class ProductsService implements OnModuleInit {
           return of(null);
         })
       )
-      .subscribe((data: Product[] | null) => {
-        if (data) {
-          Logger.log(`Successfully saving ${data.length} products`, 'ProductsService');
+      .subscribe((products: Product[] | null) => {
+        if (products) {
+          Logger.log(`Successfully saving ${products.length} products`, 'ProductsService');
         }
-      });
+      })
   }
 
   /**
-   * Обновление данных по магазинам (удаление, создание по новой, связь с товарами)
+   * Сохранение данных для товаров и магазинов (удаление, сохранение по новой и связь между товаром и магазином)
    * @private
+   * @param {IProductWithNames[]} productsWithNames товары с названиями категории и товара
    * @param {IProductIdShopMatch[]} matches сопоставления
-   * @return {*}  {Observable<number>} количество обновленных записей
+   * @return {*}  {Observable<Product[]>} сохраненные товары
    * @memberof ProductsService
    */
-  private refreshShopsData(matches: IProductIdShopMatch[]): Observable<number> {
-    return this.shopsService.deleteAll()
+  private refreshProductsAndShopsData(productsWithNames: IProductWithNames[], matches: IProductIdShopMatch[]): Observable<Product[]> {
+    return this.deleteAll()
       .pipe(
+        switchMap((affectedRows: number) => {
+          Logger.warn(`Deleting products: ${affectedRows} rows`, 'ProductsService');
+
+          return this.shopsService.deleteAll();
+        }),
         switchMap((affectedRows: number) => {
           Logger.warn(`Deleting shops: ${affectedRows} rows`, 'ProductsService');
 
           const shopsToSave: Shop[] = this.getUniqueShops(matches);
           return forkJoin([
-            this.getAllIds(),
-            this.shopsService.saveAll(shopsToSave)
+            this.shopsService.saveAll(shopsToSave),
+            this.categoriesService.getAllCategories3Level()
           ])
         }),
         switchMap(([
-          ids,
-          savedShops
+          shops, 
+          categories3Level
         ]: [
-          string[],
-          Shop[]
+          Shop[],
+          Category3Level[]
         ]) => {
-          Logger.warn(`Successfully saving ${savedShops.length} shops`, 'ProductsService');
-          const matchesForUpdate: IProductIdShopMatch[] = [];
-          for (const match of matches) {
-            const existedId: string | undefined = ids.find((id: string) => id === match.productId);
+          const productsForSave: Product[] = [];
+          for (const product of productsWithNames) {
+            const existedCategory3Level: Category3Level | undefined
+              = categories3Level.find((item: Category3Level) => item.name === product.category3LevelName);
 
-            if (existedId) {
-              matchesForUpdate.push(match);
+            const match: IProductIdShopMatch | undefined 
+              = matches.find((item: IProductIdShopMatch) => item.productId === product.id);
+            const existedShop: Shop | undefined = shops.find((item: Shop) => item.id === match?.shop?.id);
+
+            if (existedCategory3Level && existedShop) {
+              productsForSave.push({
+                id: product.id,
+                name: product.name,
+                description: product.description,
+                imagePath: product.imagePath,
+                price: product.price,
+                characteristics: product.characteristics,
+                category3Level: existedCategory3Level,
+                shop: existedShop,
+                users: []
+              });
             }
           }
 
-          return this.updateAll(matchesForUpdate);
+          return this.save(productsForSave);
         })
       )
   }
 
-  /**
-   * Подписка на очередь для обновления магазинов у товаров
-   * @private
-   * @memberof ProductsService
-   */
-  private subscribeOnShopsQueue(): void {
-    const errorCodes: (RabbitErrorCode | DbErrorCode)[] = [
-      'DB_ERROR',
-      'GET_MESSAGE_ERROR'
-    ];
-
-    let errorCode: RabbitErrorCode | DbErrorCode = 'GET_MESSAGE_ERROR';
-
-    this.rabbitService.getMessage<IProductIdShopMatch[]>(SHOPS_IN_QUEUE)
-      .pipe(
-        switchMap((message: IMessage<IProductIdShopMatch[]>) => {
-          return this.refreshShopsData(message.data)
-            .pipe(
-              catchError((err: Error) => {
-                errorCode = errorCodes[0];
-                return throwError(() => err);
-              })
-            );
-        }),
-        catchError((err: Error) => {
-          Logger.error(`Error code: ${errorCode}, queue: ${SHOPS_IN_QUEUE}, ${err}`, 'ProductsService');
-          return of(null);
-        })
-      )
-      .subscribe((data: number | null) => {
-        if (data) {
-          Logger.log(`Successfully updated ${data} products`, 'ProductsService');
-        }
-      });
-  }
 
   /**
    * Получение уникальных магазинов
@@ -455,7 +396,7 @@ export class ProductsService implements OnModuleInit {
    * @return {*}  {Observable<Product[]>} сохраненные товары
    * @memberof ProductsService
    */
-  public save(products: (Omit<Product, 'id' | 'shop'>)[]): Observable<Product[]> {
+  public save(products: Product[]): Observable<Product[]> {
     return from(this.productRepository.save(products));
   }
 
@@ -469,36 +410,6 @@ export class ProductsService implements OnModuleInit {
       .pipe(
         switchMap((result: DeleteResult) => of(result.affected))
       );
-  }
-
-  /**
-   * Получение id всех товаров
-   * @return {*}  {Observable<string[]>} id всех товаров
-   * @memberof ProductsService
-   */
-  public getAllIds(): Observable<string[]> {
-    return from(this.productRepository.find({}))
-      .pipe(
-        switchMap((products: Product[]) => of(products.map((product: Product) => product.id)))
-      );
-  }
-
-  /**
-   * Обновление всех товаров
-   * @param {IProductIdShopMatch[]} matches сопоставление id товаров и магазина
-   * @return {*}  {Observable<number>} кол-во затронутых строк
-   * @memberof ProductsService
-   */
-  public updateAll(matches: IProductIdShopMatch[]): Observable<number> {
-    const queries: Observable<Product>[] = matches.map((match: IProductIdShopMatch) =>
-      from(this.productRepository.save({
-        id: match.productId,
-        shop: match.shop
-      })));
-
-    return concat(...queries)
-    //TODO: эм, поч просто пайп
-      .pipe(() => of(matches.length));
   }
 
   /**

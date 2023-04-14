@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable, Logger } from '@nestjs/common';
-import { from, Observable, switchMap, catchError, of } from 'rxjs';
-import {Channel, connect, Connection, ConsumeMessage}from 'amqplib';
+import { from, Observable, switchMap, catchError, of, Subscriber } from 'rxjs';
+import { Channel, connect, Connection, ConsumeMessage }from 'amqplib';
 import { IMessage } from '../models/interfaces';
 
 /**
@@ -25,37 +25,6 @@ export class RabbitService {
    * @memberof RabbitService
    */
   private channel: Channel;
-
-  /**
-   * Получение сообщения (возвращает Promise)
-   * @private
-   * @template T тип данных
-   * @param {string} queueName название очереди
-   * @return {*}  {Promise<IMessage<T>>} данные из сообщения
-   * @memberof RabbitService
-   */
-  private getMessagePromise<T = any>(queueName: string): Promise<IMessage<T>> {
-    return new Promise((resolve, reject) => {
-      this.channel.consume(queueName, (message: ConsumeMessage) => {
-        if (message === null) {
-          reject(new Error('Consumer cancelled by server'));
-          return;
-        }
-        
-        const bytes: number = message.content.length;
-        Logger.debug(`Message from ${queueName}, content length: ${bytes} bytes`, 'RabbitService');
-        try {
-          const obj: IMessage<T> = <IMessage<T>>JSON.parse(message.content.toString());
-          Logger.debug(`Описание: ${obj.description} было отправлено в ${obj.sendTime.toString()}`);
-          this.channel.ack(message);
-          resolve(obj);
-        } catch (err: any) {
-          reject(new Error(`Error while parsing JSON from ${queueName}, content length: ${bytes} bytes`));
-        }
-        return;
-      });
-    });
-  }
 
   /**
    * Инициализация соединия
@@ -96,14 +65,32 @@ export class RabbitService {
   }
 
   /**
-   * Получение сообщения (возвращает Observable)
+   * Получение сообщения
    * @template T тип данных
    * @param {string} queueName название очереди
    * @return {*}  {Observable<IMessage<T>>} данные из сообщения
    * @memberof RabbitService
    */
   public getMessage<T = any>(queueName: string): Observable<IMessage<T>> {
-    return from(this.getMessagePromise<T>(queueName));
+    return new Observable<IMessage<T>>((subscribe: Subscriber<IMessage<T>>) => {
+      this.channel.consume(queueName, (message: ConsumeMessage) => {
+        if (message === null) {
+          subscribe.error(new Error('Consumer cancelled by server'));
+        }
+        
+        const bytes: number = message.content.length;
+        Logger.debug(`Message from ${queueName}, content length: ${bytes} bytes`, 'RabbitService');
+        try {
+          const obj: IMessage<T> = <IMessage<T>>JSON.parse(message.content.toString());
+          Logger.debug(`Описание: ${obj.description} было отправлено в ${obj.sendTime.toString()}`);
+          this.channel.ack(message);
+          subscribe.next(obj);
+        } catch (err: any) {
+          Logger.error(err, 'RabbitService');
+          subscribe.error(new Error(`Error while parsing JSON from ${queueName}, content length: ${bytes} bytes`));
+        }
+      });
+    });
   }
 
   /**
