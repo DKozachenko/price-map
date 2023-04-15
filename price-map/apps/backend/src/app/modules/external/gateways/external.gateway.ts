@@ -11,7 +11,7 @@ import { ICoordinates, IOsrmData, IResponseData } from '@core/interfaces';
 import { ExternalErrorCode } from '@core/types';
 import * as polyline  from '@mapbox/polyline';
 import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
-import { RouteLeg, RouteResults } from 'osrm';
+import { RouteResults } from 'osrm';
 
 /**
  * Шлюз пользователей

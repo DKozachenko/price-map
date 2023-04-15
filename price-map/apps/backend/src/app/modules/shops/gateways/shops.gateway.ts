@@ -166,7 +166,8 @@ export class ShopsGateway {
         switchMap((shop: Shop | null) => {
           this.rabbitService.sendMessage<number>(BUILDING_INFO_REQUEST_QUEUE, {
             data: +shop.osmNodeId,
-            description: `Получение количества этажей в точке (lat, lng) ${shop.coordinates.latitude}, ${shop.coordinates.longitude}`,
+            description: 'Получение количества этажей в точке (lat, lng) ' 
+              + `${shop.coordinates.latitude}, ${shop.coordinates.longitude}`,
             sendTime: new Date()
           });
           return this.rabbitService.getMessage<number | null>(BUILDING_INFO_RESPONSE_QUEUE);

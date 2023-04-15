@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category3Level, Product, Shop } from '@core/entities';
 import { DeleteResult, In, Repository } from 'typeorm';
-import { catchError, concat, forkJoin, from, Observable, of, switchMap, throwError, zip } from 'rxjs';
+import { catchError, forkJoin, from, Observable, of, switchMap, throwError, zip } from 'rxjs';
 import { IPriceQuery, IProductQuery, IUserFilter } from '@core/interfaces';
 import { RabbitService } from '../../../services';
 import { DbErrorCode, RabbitErrorCode } from '@core/types';
@@ -57,7 +57,13 @@ export class ProductsService implements OnModuleInit {
       this.rabbitService.getMessage<IProductIdShopMatch[]>(SHOPS_IN_QUEUE)
     )
       .pipe(
-        switchMap(([productsMessage, shopsMessage ] : [IMessage<IProductWithNames[]>, IMessage<IProductIdShopMatch[]>]) => {
+        switchMap(([
+          productsMessage, 
+          shopsMessage 
+        ] : [
+          IMessage<IProductWithNames[]>, 
+          IMessage<IProductIdShopMatch[]>
+        ]) => {
           return this.refreshProductsAndShopsData(productsMessage.data, shopsMessage.data)
             .pipe(
               catchError((err: Error) => {
@@ -75,7 +81,7 @@ export class ProductsService implements OnModuleInit {
         if (products) {
           Logger.log(`Successfully saving ${products.length} products`, 'ProductsService');
         }
-      })
+      });
   }
 
   /**
@@ -86,7 +92,8 @@ export class ProductsService implements OnModuleInit {
    * @return {*}  {Observable<Product[]>} сохраненные товары
    * @memberof ProductsService
    */
-  private refreshProductsAndShopsData(productsWithNames: IProductWithNames[], matches: IProductIdShopMatch[]): Observable<Product[]> {
+  private refreshProductsAndShopsData(productsWithNames: IProductWithNames[], matches: IProductIdShopMatch[]): 
+    Observable<Product[]> {
     // Удаление всех товаров
     return this.deleteAll()
       .pipe(
@@ -105,7 +112,7 @@ export class ProductsService implements OnModuleInit {
           return forkJoin([
             this.shopsService.saveAll(shopsToSave),
             this.categoriesService.getAllCategories3Level()
-          ])
+          ]);
         }),
         switchMap(([
           shops, 
@@ -141,7 +148,7 @@ export class ProductsService implements OnModuleInit {
           // Сохранение товаров
           return this.save(productsForSave);
         })
-      )
+      );
   }
 
 
