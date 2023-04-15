@@ -154,6 +154,24 @@ class App {
     }
     return result;
   }
+  
+  /// <summary>
+  /// Добавление сопоставления названия магазина и точек из ответа 
+  /// </summary>
+  /// <param name="shopName">Название магазина</param>
+  /// <param name="response">Ответ от OSM</param>
+  private void AddShopNameNodeMatchFromResponse(string shopName, OsmResponse? response) {
+    List<OsmNode> nodes = new List<OsmNode>();
+    // Если не случилось ошибки при получении данных или в OSM что-то нашлось, добавляем точки оттуда,
+    // если нет, то получаем рандомные из файла
+    if (response is not null && response?.Elements?.Count > 0) {
+      nodes = response.Elements;
+    } else {
+      nodes = this.GetRandomNodes();
+    }
+    ShopNameNodeMatch shopNameNodeMatch = new ShopNameNodeMatch(shopName, nodes);
+    this.ShopNameNodeMatches.Add(shopNameNodeMatch);
+  }
 
   /// <summary>
   /// Добавление сопоставления названия магазина и точек
@@ -165,24 +183,23 @@ class App {
       + $" -> .nsk;node[name~\"{escapedShopName}\",i](area.nsk) -> .data;.data out geom;";
 
 
-    OsmResponse? osmResponse = null;
-    try {
-      osmResponse = await this.HttpService.Get<OsmResponse>(url);
-    }
-    catch (Exception err) {
-      this.LoggerService.Error($"Error while sending request to {url}, error: {err.Message}", "App");
-    }
+    OsmResponse? osmCachedResponse = this.RedisService.get<OsmResponse?>(escapedShopName);
 
-    List<OsmNode> nodes = new List<OsmNode>();
-    // Если не случилось ошибки при получении данных или в OSM что-то нашлось, добавляем точки оттуда,
-    // если нет, то получаем рандомные из файла
-    if (osmResponse is not null && osmResponse?.Elements?.Count > 0) {
-      nodes = osmResponse.Elements;
+    // Если есть в кэше - извлекаем оттуда, если нет - делаем запрос
+    if (osmCachedResponse != null) {
+      this.AddShopNameNodeMatchFromResponse(shopName, osmCachedResponse);
     } else {
-      nodes = this.GetRandomNodes();
+      OsmResponse? osmResponse = null;
+      try {
+        osmResponse = await this.HttpService.Get<OsmResponse>(url);
+      }
+      catch (Exception err) {
+        this.LoggerService.Error($"Error while sending request to {url}, error: {err.Message}", "App");
+      }
+
+      this.RedisService.set<OsmResponse?>(escapedShopName, osmResponse);
+      this.AddShopNameNodeMatchFromResponse(shopName, osmResponse);
     }
-    ShopNameNodeMatch shopNameNodeMatch = new ShopNameNodeMatch(shopName, nodes);
-    this.ShopNameNodeMatches.Add(shopNameNodeMatch);
   }
 
   /// <summary>
@@ -246,13 +263,12 @@ class App {
     string url = $"https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json][timeout:{Config.OverpassTimeout}];area[place=city][name=\"Новосибирск\"]"
       + $" -> .nsk;node({osmNodeId})(area.nsk) -> .data;.data out geom;";
 
-    int? result = 0;
     OsmResponse? osmCachedResponse = this.RedisService.get<OsmResponse?>(osmNodeId.ToString());
 
     // Если есть в кэше - извлекаем оттуда, если нет - делаем запрос
     if (osmCachedResponse != null) {
       // Если в ответе есть элементы и в тэгах есть кол-во этажей
-      if (osmCachedResponse is not null && osmCachedResponse?.Elements?.Count > 0 && osmCachedResponse?.Elements[0]?.Tags?.BuildingLevels is not null) {
+      if (osmCachedResponse?.Elements?.Count > 0 && osmCachedResponse?.Elements[0]?.Tags?.BuildingLevels is not null) {
         return Convert.ToInt32(osmCachedResponse.Elements[0].Tags.BuildingLevels);
       } 
 
@@ -260,6 +276,8 @@ class App {
     }
 
     OsmResponse? osmResponse = null;
+    int? result = 0;
+
     try {
       osmResponse = await this.HttpService.Get<OsmResponse?>(url);
     }
