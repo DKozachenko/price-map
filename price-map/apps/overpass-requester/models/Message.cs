@@ -9,19 +9,16 @@ class Message<T> {
   /// <summary>
   /// Данные
   /// </summary>
-  /// <value></value>
   [JsonProperty("data")]
   public T Data { get; set; }
   /// <summary>
   /// Описание
   /// </summary>
-  /// <value></value>
   [JsonProperty("description")]
   public string Description { get; set; }
   /// <summary>
   /// Время отправки
   /// </summary>
-  /// <value></value>
   [JsonProperty("sendTime")]
   public DateTime SendTime { get; set; }
   public Message(T data, string description, DateTime sendTime) {

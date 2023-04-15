@@ -12,6 +12,10 @@ class App {
   /// </summary>
   public RabbitService RabbitService { get; set; }
   /// <summary>
+  /// Сервис взаимодействия с Redis
+  /// </summary>
+  public RedisService RedisService { get; set; }
+  /// <summary>
   /// Сервис отправки HTTP-запросов
   /// </summary>
   public HttpService HttpService { get; set; }
@@ -42,6 +46,7 @@ class App {
 
   public App() {
     this.RabbitService = new RabbitService();
+    this.RedisService = new RedisService();
     this.HttpService = new HttpService();
     this.JsonService = new JsonService();
     this.LoggerService = new LoggerService();
@@ -241,19 +246,36 @@ class App {
     string url = $"https://maps.mail.ru/osm/tools/overpass/api/interpreter?data=[out:json][timeout:{Config.OverpassTimeout}];area[place=city][name=\"Новосибирск\"]"
       + $" -> .nsk;node({osmNodeId})(area.nsk) -> .data;.data out geom;";
 
+    int? result = 0;
+    OsmResponse? osmCachedResponse = this.RedisService.get<OsmResponse?>(osmNodeId.ToString());
+
+    // Если есть в кэше - извлекаем оттуда, если нет - делаем запрос
+    if (osmCachedResponse != null) {
+      // Если в ответе есть элементы и в тэгах есть кол-во этажей
+      if (osmCachedResponse is not null && osmCachedResponse?.Elements?.Count > 0 && osmCachedResponse?.Elements[0]?.Tags?.BuildingLevels is not null) {
+        return Convert.ToInt32(osmCachedResponse.Elements[0].Tags.BuildingLevels);
+      } 
+
+      return null;
+    }
+
     OsmResponse? osmResponse = null;
     try {
-      osmResponse = await this.HttpService.Get<OsmResponse>(url);
+      osmResponse = await this.HttpService.Get<OsmResponse?>(url);
     }
     catch (Exception err) {
       this.LoggerService.Error($"Error while sending request to {url}, error: {err.Message}", "App");
     }
 
-    // Если пришел ответ, есть элементы и в тэгах есть кол-во этажей
-    if (osmResponse is not null && osmResponse?.Elements?.Count > 0 && osmResponse?.Elements[0].Tags?.BuildingLevels is not null) {
-      return Convert.ToInt32(osmResponse.Elements[0].Tags.BuildingLevels);
+    // Если в ответе есть элементы и в тэгах есть кол-во этажей
+    if (osmResponse is not null && osmResponse?.Elements?.Count > 0 && osmResponse?.Elements[0]?.Tags?.BuildingLevels is not null) {
+      result = Convert.ToInt32(osmResponse.Elements[0].Tags.BuildingLevels);
+    } else {
+      result = null;
     }
-    return null;
+
+    this.RedisService.set<OsmResponse?>(osmNodeId.ToString(), osmResponse);
+    return result;
   }
 
   /// <summary>
@@ -287,6 +309,7 @@ class App {
 
     try {
       await this.LoadNskNodesAsync();
+      this.RedisService.InitConnection();
       this.RabbitService.InitConnection();
       this.RabbitService.GetMessage(Config.ProductsOutQueue, this.getHandlerProductsQueue(Config.ProductsOutQueue));
       this.RabbitService.GetMessage(Config.BuildingInfoRequestQueue, this.getHandlerBuildingInfoQueue(Config.BuildingInfoRequestQueue));
