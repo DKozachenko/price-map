@@ -73,7 +73,7 @@ class RedisService {
     string? dataStr = this.db.StringGet(key);
 
     if (dataStr == null) {
-      this.LoggerService.Error($"No cached value by key: {key}", "RedisService");
+      this.LoggerService.Log($"No cached value by key: {key}", "RedisService");
       return default(T);
     }
     
