@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category3Level, Product, Shop } from '@core/entities';
 import { DeleteResult, In, Repository } from 'typeorm';
-import { catchError, concat, forkJoin, from, Observable, of, switchMap, throwError } from 'rxjs';
+import { catchError, forkJoin, from, Observable, of, switchMap, throwError, zip } from 'rxjs';
 import { IPriceQuery, IProductQuery, IUserFilter } from '@core/interfaces';
 import { RabbitService } from '../../../services';
 import { DbErrorCode, RabbitErrorCode } from '@core/types';
@@ -13,6 +13,7 @@ import { CategoriesService } from '../../categories/services';
 import { IProductIdShopMatch, IProductWithNames } from '../models/interfaces';
 import { ShopsService } from '../../shops/services';
 import { PRODUCTS_QUEUE, SHOPS_IN_QUEUE } from '../../../models/constants';
+import { IMessage } from '../../../models/interfaces';
 
 /**
  * Сервис товаров
@@ -35,16 +36,15 @@ export class ProductsService implements OnModuleInit {
     private readonly shopsService: ShopsService) {}
 
   public onModuleInit(): void {
-    this.subscribeOnProductsQueue();
-    this.subscribeOnShopsQueue();
+    this.subscribeOnProductsAndShopsQueues();
   }
 
   /**
-   * Подписка на очередь с товарами
+   * Подписка на очереди для товаров и магазинов
    * @private
    * @memberof ProductsService
    */
-  private subscribeOnProductsQueue(): void {
+  private subscribeOnProductsAndShopsQueues(): void {
     const errorCodes: (RabbitErrorCode | DbErrorCode)[] = [
       'DB_ERROR',
       'GET_MESSAGE_ERROR'
@@ -52,67 +52,19 @@ export class ProductsService implements OnModuleInit {
 
     let errorCode: RabbitErrorCode | DbErrorCode = 'GET_MESSAGE_ERROR';
 
-    this.rabbitService.getMessage<IProductWithNames[]>(PRODUCTS_QUEUE)
+    zip(
+      this.rabbitService.getMessage<IProductWithNames[]>(PRODUCTS_QUEUE),
+      this.rabbitService.getMessage<IProductIdShopMatch[]>(SHOPS_IN_QUEUE)
+    )
       .pipe(
-        switchMap((products: IProductWithNames[]) => {
-          return forkJoin([
-            of(products),
-            this.deleteAll()
-          ])
-            .pipe(
-              catchError((err: Error) => {
-                errorCode = errorCodes[0];
-                return throwError(() => err);
-              })
-            );
-        }),
         switchMap(([
-          products,
-          affectedRows
-        ]: [
-          IProductWithNames[],
-          number
+          productsMessage, 
+          shopsMessage 
+        ] : [
+          IMessage<IProductWithNames[]>, 
+          IMessage<IProductIdShopMatch[]>
         ]) => {
-          Logger.warn(`Deleting products: ${affectedRows} rows`, 'ProductsService');
-          return forkJoin([
-            of(products),
-            this.categoriesService.getAllCategories3Level()
-          ])
-            .pipe(
-              catchError((err: Error) => {
-                errorCode = errorCodes[0];
-                return throwError(() => err);
-              })
-            );
-        }),
-        switchMap(([
-          products,
-          categories3Level
-        ]: [
-          IProductWithNames[],
-          Category3Level[]
-        ]) => {
-
-          const productsForSave: (Omit<Product, | 'shop'>)[] = [];
-          for (const product of products) {
-            const existedCategory3Level: Category3Level | undefined
-              = categories3Level.find((item: Category3Level) => item.name === product.category3LevelName);
-
-            if (existedCategory3Level) {
-              productsForSave.push({
-                id: product.id,
-                name: product.name,
-                description: product.description,
-                imagePath: product.imagePath,
-                price: product.price,
-                characteristics: product.characteristics,
-                category3Level: existedCategory3Level,
-                users: []
-              });
-            }
-          }
-
-          return this.save(productsForSave)
+          return this.refreshProductsAndShopsData(productsMessage.data, shopsMessage.data)
             .pipe(
               catchError((err: Error) => {
                 errorCode = errorCodes[0];
@@ -125,99 +77,80 @@ export class ProductsService implements OnModuleInit {
           return of(null);
         })
       )
-      .subscribe((data: Product[] | null) => {
-        if (data) {
-          Logger.log(`Successfully saving ${data.length} products`, 'ProductsService');
+      .subscribe((products: Product[] | null) => {
+        if (products) {
+          Logger.log(`Successfully saving ${products.length} products`, 'ProductsService');
         }
       });
   }
 
   /**
-   * Подписка на очередь для обновления магазинов у товаров
+   * Сохранение данных для товаров и магазинов (удаление, сохранение по новой и связь между товаром и магазином)
    * @private
+   * @param {IProductWithNames[]} productsWithNames товары с названиями категории и товара
+   * @param {IProductIdShopMatch[]} matches сопоставления
+   * @return {*}  {Observable<Product[]>} сохраненные товары
    * @memberof ProductsService
    */
-  private subscribeOnShopsQueue(): void {
-    const errorCodes: (RabbitErrorCode | DbErrorCode)[] = [
-      'DB_ERROR',
-      'GET_MESSAGE_ERROR'
-    ];
-
-    let errorCode: RabbitErrorCode | DbErrorCode = 'GET_MESSAGE_ERROR';
-
-    this.rabbitService.getMessage<IProductIdShopMatch[]>(SHOPS_IN_QUEUE)
+  private refreshProductsAndShopsData(productsWithNames: IProductWithNames[], matches: IProductIdShopMatch[]): 
+    Observable<Product[]> {
+    // Удаление всех товаров
+    return this.deleteAll()
       .pipe(
-        switchMap((matches: IProductIdShopMatch[]) => {
-          return forkJoin([
-            of(matches),
-            this.shopsService.deleteAll()
-          ])
-            .pipe(
-              catchError((err: Error) => {
-                errorCode = errorCodes[0];
-                return throwError(() => err);
-              })
-            );
-        }),
-        switchMap(([
-          matches,
-          affectedRows
-        ]: [
-          IProductIdShopMatch[],
-          number
-        ]) => {
-          Logger.warn(`Deleting shops: ${affectedRows} rows`, 'ProductsService');
-          const shopsToSave: Shop[] = this.getUniqueShops(matches);
-          return forkJoin([
-            of(matches),
-            this.getAllIds(),
-            this.shopsService.saveAll(shopsToSave)
-          ])
-            .pipe(
-              catchError((err: Error) => {
-                errorCode = errorCodes[0];
-                return throwError(() => err);
-              })
-            );
-        }),
-        switchMap(([
-          matches,
-          ids,
-          savedShops
-        ]: [
-          IProductIdShopMatch[],
-          string[],
-          Shop[]
-        ]) => {
-          Logger.log(`Successfully saving ${savedShops.length} shops`, 'ProductsService');
-          const matchesForUpdate: IProductIdShopMatch[] = [];
-          for (const match of matches) {
-            const existedId: string | undefined = ids.find((id: string) => id === match.productId);
+        switchMap((affectedRows: number) => {
+          Logger.warn(`Deleting products: ${affectedRows} rows`, 'ProductsService');
 
-            if (existedId) {
-              matchesForUpdate.push(match);
+          // Удаление всех магазинов
+          return this.shopsService.deleteAll();
+        }),
+        switchMap((affectedRows: number) => {
+          Logger.warn(`Deleting shops: ${affectedRows} rows`, 'ProductsService');
+
+          const shopsToSave: Shop[] = this.getUniqueShops(matches);
+
+          // Сохранеие магазинов и получение всех категорий 3 уровня
+          return forkJoin([
+            this.shopsService.saveAll(shopsToSave),
+            this.categoriesService.getAllCategories3Level()
+          ]);
+        }),
+        switchMap(([
+          shops, 
+          categories3Level
+        ]: [
+          Shop[],
+          Category3Level[]
+        ]) => {
+          const productsForSave: Product[] = [];
+          for (const product of productsWithNames) {
+            const existedCategory3Level: Category3Level | undefined
+              = categories3Level.find((item: Category3Level) => item.name === product.category3LevelName);
+
+            const match: IProductIdShopMatch | undefined 
+              = matches.find((item: IProductIdShopMatch) => item.productId === product.id);
+            const existedShop: Shop | undefined = shops.find((item: Shop) => item.id === match?.shop?.id);
+
+            if (existedCategory3Level && existedShop) {
+              productsForSave.push({
+                id: product.id,
+                name: product.name,
+                description: product.description,
+                imagePath: product.imagePath,
+                price: product.price,
+                characteristics: product.characteristics,
+                category3Level: existedCategory3Level,
+                shop: existedShop,
+                users: []
+              });
             }
           }
 
-          return this.updateAll(matchesForUpdate)
-            .pipe(
-              catchError((err: Error) => {
-                errorCode = errorCodes[0];
-                return throwError(() => err);
-              })
-            );
-        }),
-        catchError((err: Error) => {
-          Logger.error(`Error code: ${errorCode}, queue: ${SHOPS_IN_QUEUE}, ${err}`, 'ProductsService');
-          return of(null);
+          // Сохранение товаров
+          return this.save(productsForSave);
         })
-      )
-      .subscribe((data: number | null) => {
-        if (data) {
-          Logger.log(`Successfully updated ${data} products`, 'ProductsService');
-        }
-      });
+      );
   }
+
 
   /**
    * Получение уникальных магазинов
@@ -332,7 +265,7 @@ export class ProductsService implements OnModuleInit {
    * Генерация условия для отбора записей
    * @private
    * @param {IProductQuery} query
-   * @return {*}  {string}
+   * @return {*}  {string} SQL с условием
    * @memberof ProductsService
    */
   private generateWhereSql(query: IProductQuery): string {
@@ -475,7 +408,7 @@ export class ProductsService implements OnModuleInit {
    * @return {*}  {Observable<Product[]>} сохраненные товары
    * @memberof ProductsService
    */
-  public save(products: (Omit<Product, 'id' | 'shop'>)[]): Observable<Product[]> {
+  public save(products: Product[]): Observable<Product[]> {
     return from(this.productRepository.save(products));
   }
 
@@ -489,36 +422,6 @@ export class ProductsService implements OnModuleInit {
       .pipe(
         switchMap((result: DeleteResult) => of(result.affected))
       );
-  }
-
-  /**
-   * Получение id всех товаров
-   * @return {*}  {Observable<string[]>} id всех товаров
-   * @memberof ProductsService
-   */
-  public getAllIds(): Observable<string[]> {
-    return from(this.productRepository.find({}))
-      .pipe(
-        switchMap((products: Product[]) => of(products.map((product: Product) => product.id)))
-      );
-  }
-
-  /**
-   * Обновление всех товаров
-   * @param {IProductIdShopMatch[]} matches сопоставление id товаров и магазина
-   * @return {*}  {Observable<number>} кол-во затронутых строк
-   * @memberof ProductsService
-   */
-  public updateAll(matches: IProductIdShopMatch[]): Observable<number> {
-    const queries: Observable<Product>[] = matches.map((match: IProductIdShopMatch) =>
-      from(this.productRepository.save({
-        id: match.productId,
-        shop: match.shop
-      })));
-
-    return concat(queries)
-    //TODO: эм, поч просто пайп
-      .pipe(() => of(matches.length));
   }
 
   /**

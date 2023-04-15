@@ -94,14 +94,14 @@ class ProductScrapingService(BaseScrapingService):
 
     if shop_image_exists:
       shop_image: WebElement = self._execute(self._get_element_by_selector, None, 'img', shop_a)
-      shop_name: str = self._execute(self._get_attribute_from_prop, '', shop_image, 'title').strip()
+      shop_name: str = self._execute(self._get_attribute_from_prop, '', shop_image, 'title').strip().replace('"', '\'')
       price_str: str = self._execute(self._get_text_from_element, '', '.main-price', offer_div)
       price: float = self._execute(self.extract_number, 0.0, price_str)
       product: Product = Product(category_3_level_name, name, description, image_path, shop_name, price, characteristics)
       return product
     elif shop_span_exists:
       shop_span: WebElement = self._execute(self._get_element_by_selector, None, 'span', shop_a)
-      shop_name: str = self._execute(self._get_text_from_prop, '', shop_span).strip()
+      shop_name: str = self._execute(self._get_text_from_prop, '', shop_span).strip().replace('"', '\'')
       price_str: str = self._execute(self._get_text_from_element, '', '.main-price', offer_div)
       price: float = self._execute(self.extract_number, 0.0, price_str)
       product: Product = Product(category_3_level_name, name, description, image_path, shop_name, price, characteristics)

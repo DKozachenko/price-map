@@ -85,7 +85,7 @@ class CategoryScrapingService(BaseScrapingService):
       filters.append(filter)
 
     return filters
-  
+
   def __get_range_filters(self) -> list[Filter]:
     """ Получение фильтров типа диапазон
 
@@ -102,15 +102,15 @@ class CategoryScrapingService(BaseScrapingService):
 
       filter_name: str = self._execute(self._get_text_from_element, '', '.filter-title', filter_div).strip()
       inputs: list[WebElement] = self._execute(self._get_elements_by_selector, [], 'input', filter_div)
-      min_str: str = self._execute(self._get_attribute_from_prop, '',  inputs[0], 'placeholder') 
-      max_str: str = self._execute(self._get_attribute_from_prop, '', inputs[1], 'placeholder') 
+      min_str: str = self._execute(self._get_attribute_from_prop, '',  inputs[0], 'placeholder')
+      max_str: str = self._execute(self._get_attribute_from_prop, '', inputs[1], 'placeholder')
 
       if len(min_str) > 0 and len(max_str) > 0:
         filter: Filter = Filter(filter_name, 'range', [float(min_str), float(max_str)])
         filters.append(filter)
 
     return filters
-  
+
   def __get_enum_filters(self) -> list[Filter]:
     """ Получение фильтров с перечислением
 
@@ -167,7 +167,7 @@ class CategoryScrapingService(BaseScrapingService):
 
 
     return filters
-                
+
   def __add_product_links(self, category_3_level: Category3Level) -> None:
     """ Добавление ссылок на товары
 
@@ -195,7 +195,7 @@ class CategoryScrapingService(BaseScrapingService):
         links.append(product_link)
 
       self.products_map[category_3_level.name] = links
-                
+
   def __get_category_3_level(self, name: str) -> Category3Level:
     """ Получение категории 3 уровня и добавление к ней ссылок на товары
 
@@ -208,9 +208,25 @@ class CategoryScrapingService(BaseScrapingService):
 
     filters: list[Filter] = self._execute(self.__get_filters, [])
     category_3_level: Category3Level = Category3Level(name, filters)
-    self.__add_product_links(category_3_level)   
+    self.__add_product_links(category_3_level)
     return category_3_level
-                
+
+  def __generate_category_3_level_name(self, breadcrumbs: list[WebElement], category_2_level_name: str) -> str:
+    """ Получение названия категории 3 уровня
+
+    Args:
+      breadcrumbs (list[WebElement]): breadcrumb элементы, кроме первых трех
+      category_2_level_name (str): _description_
+
+    Returns:
+      str: название категории 3 уровня
+    """
+
+    if len(breadcrumbs) > 0:
+      return ', '.join(list(map(lambda breadcrumb: self._get_text_from_prop(breadcrumb), breadcrumbs)))
+
+    return category_2_level_name
+
   def __get_categories_1_level(self) -> list[Category1Level]:
     """ Получение категорий 1 уровня
 
@@ -224,12 +240,15 @@ class CategoryScrapingService(BaseScrapingService):
       self._wait(2)
 
       breadcrumb: list[WebElement] = self._execute(self._get_elements_by_selector, [], '.breadcrumbs-item')
-      #breadcrumb состоит из пунтка "Главная"+уровни категорий, тк расчет шел на 3-уровневую систему, то
-      #учитываем, только страницы, где длина breadcrumb ("Главная"+3 уровня категорий)
-      if len(breadcrumb) == 4:
+      #breadcrumb каждый раз состоит из разного кол-ва элементов, но всегда первый элемент - "Главная", остальное - уровни категории;
+      #для добаления категории нужно хотя бы 2 уровня, поэтому условие - больше или равно 3 
+
+      if len(breadcrumb) >= 3:
         category_1_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[1]).strip()
         category_2_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[2]).strip()
-        category_3_level_name: str = self._execute(self._get_text_from_prop, '', breadcrumb[3]).strip()
+        #Если только 2 уровня категорий, то название категории 3 уровня будет такое же, как у категории 2 уровня, если уровней 3 и больше,
+        #то название сложится из всех уровней, не включая 1 и 2
+        category_3_level_name: str = self._execute(self.__generate_category_3_level_name, '', breadcrumb[3:], category_2_level_name).strip()
 
         found_categories_1_level: list[Category1Level] = self._execute(self._filter_elements, [], lambda item: item.name == category_1_level_name, categories_1_level)
         #Если такая категория 1 уровня нашлась
@@ -267,7 +286,7 @@ class CategoryScrapingService(BaseScrapingService):
           category_2_level.categories3Level.append(category_3_level)
 
     return categories_1_level
-  
+
   def __get_category_3_level_links(self) -> set[str]:
     """ Получение ссылок на категории 3 уровня
 
@@ -299,19 +318,19 @@ class CategoryScrapingService(BaseScrapingService):
             for categories_3_level_div in categories_3_level_divs:
               category_3_level_name: str = self._execute(self._get_text_from_prop, '', categories_3_level_div).strip()
 
-              if len(category_3_level_name) > 0:      
+              if len(category_3_level_name) > 0:
                 category_3_level_link: str = self._execute(self._get_attribute_from_prop, '', categories_3_level_div, 'href')
                 category_3_level_links.add(category_3_level_link)
 
     return category_3_level_links
-  
+
   def __scrape(self) -> list[Category1Level]:
     """ Скрепинг категорий 1 уровня (вместе со вложенными категориями 2 и 3 уровней)
 
     Returns:
       list[Category1Level]: список категорий 1 уровня
     """
-    
+
     self._init_driver()
     self._driver.get(self._config.url)
     self.__open_catalog_popup()

@@ -2,6 +2,7 @@ import pika
 from typing import Any
 import jsonpickle
 from services.logger import LoggerService
+from entities.message import Message
 
 class RabbitService:
   """ Сервис взаимодействия с Rabbit
@@ -22,11 +23,11 @@ class RabbitService:
     self.__connection = pika.BlockingConnection(pika.ConnectionParameters('localhost', 5672))
     self.__channel = self.__connection.channel()
 
-  def json_stringify(self, data: Any) -> str:
+  def json_stringify(self, data: Message) -> str:
     """ Преобразование данных в строку
 
     Args:
-      data (Any): произвольные данные
+      data (Message): сообщение с произвольными данными
 
     Returns:
       str: строка
@@ -37,16 +38,16 @@ class RabbitService:
     str_json_data = str(jsonpickle.encode(data, unpicklable=False))
     return str_json_data
 
-  def send_message(self, exchange: str, routing_key: str, data: Any) -> None:
+  def send_message(self, exchange: str, routing_key: str, message: Message) -> None:
     """ Отправка сообщения
 
     Args:
       exchange (str): название обменника
       routing_key (str): ключ маршрутизации
-      data (Any): произвольные данные
+      message (Message): сообщение с произвольными данными
     """
 
-    str_json_data = self.json_stringify(data)
+    str_json_data = self.json_stringify(message)
     self.__init_connection()
     self.__channel.basic_publish(exchange=exchange, routing_key=routing_key, body=str_json_data)
     self.logger_service.log(f'Send message to {exchange} with {routing_key} routing key', 'RabbitService')

@@ -13,6 +13,7 @@ import { Logger, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
 import { RabbitService } from '../../../services';
 import { BUILDING_INFO_REQUEST_QUEUE, BUILDING_INFO_RESPONSE_QUEUE } from '../../../models/constants';
+import { IMessage } from '../../../models/interfaces';
 
 /**
  * Шлюз магазинов
@@ -163,18 +164,23 @@ export class ShopsGateway {
     return this.shopsService.getById(id)
       .pipe(
         switchMap((shop: Shop | null) => {
-          this.rabbitService.sendMessage<number>(BUILDING_INFO_REQUEST_QUEUE, +shop.osmNodeId);
+          this.rabbitService.sendMessage<number>(BUILDING_INFO_REQUEST_QUEUE, {
+            data: +shop.osmNodeId,
+            description: 'Получение количества этажей в точке (lat, lng) ' 
+              + `${shop.coordinates.latitude}, ${shop.coordinates.longitude}`,
+            sendTime: new Date()
+          });
           return this.rabbitService.getMessage<number | null>(BUILDING_INFO_RESPONSE_QUEUE);
         }),
-        switchMap((floorNumber: number | null) => {
-          if (floorNumber) {
+        switchMap((message: IMessage<number | null>) => {
+          if (message.data) {
             return of({
               event: ShopEvents.GetBuildgingInfoSuccessed, 
               data: {
                 statusCode: 200,
                 errorCode: null,
                 isError: false,
-                data: floorNumber,
+                data: message.data,
                 message: 'Данные о здании успешно получены'
               }
             });

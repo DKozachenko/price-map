@@ -45,16 +45,6 @@ class JsonService {
   }
 
   /// <summary>
-  /// Десериализация в целое число
-  /// </summary>
-  /// <param name="arr">Массив байт</param>
-  /// <returns>Целое число</returns>
-  public long DeserializeIntFromByteArray(byte[] arr) {
-    string str = Encoding.UTF8.GetString(arr);
-    return Convert.ToInt64(str);
-  }
-
-  /// <summary>
   /// Сериализация данных в JSON строку
   /// </summary>
   /// <param name="data">Данные</param>

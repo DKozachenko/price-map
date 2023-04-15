@@ -6,6 +6,8 @@ from services.logger import LoggerService
 from entities.category_1_level import Category1Level
 from entities.product import Product
 from entities.product_shop_match import ProductShopMatch
+from entities.message import Message
+from datetime import datetime
 
 class App:
   """ Класс приложения
@@ -53,16 +55,19 @@ class App:
         categories = self.filter_service.filter_categories_1_level(categories)
 
         if len(categories) > 0:
-          self.rabbit_service.send_message(self.config.scraper_exchange, self.config.categories_routing_key, categories)
+          message: Message = Message(categories, 'Получение категорий', datetime.now())
+          self.rabbit_service.send_message(self.config.scraper_exchange, self.config.categories_routing_key, message)
 
         products: list[Product] = self.scraping_service.scrape_products()
         self.logger_service.log(f'Products were gotten, number: {len(products)}', 'App')
         products = self.filter_service.filter_products(products)
 
         if len(products) > 0:
-          self.rabbit_service.send_message(self.config.scraper_exchange, self.config.products_routing_key, products)
+          messageProducts: Message = Message(products, 'Получение товаров', datetime.now())
+          self.rabbit_service.send_message(self.config.scraper_exchange, self.config.products_routing_key, messageProducts)
           matches: list[ProductShopMatch] = self.__get_product_shop_matches(products)
-          self.rabbit_service.send_message(self.config.scraper_exchange, self.config.products_out_routing_key, matches)
+          messageMatches: Message = Message(matches, 'Отправка сопоставлений id товаров и названий магазинов', datetime.now())
+          self.rabbit_service.send_message(self.config.scraper_exchange, self.config.products_out_routing_key, messageMatches)
        
       except Exception as err:
         self.logger_service.error(f'Error occured: {str(err)}', 'App')

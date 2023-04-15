@@ -1,4 +1,5 @@
 using System.Text;
+using Models;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -44,11 +45,11 @@ class RabbitService {
   /// <param name="routingKey">Ключ маршрутизации</param>
   /// <param name="data">Данные</param>
   /// <typeparam name="T">Тип посылаемых данных</typeparam>
-  public void SendMessage<T>(string exchange, string routingKey, T data) {
-    string dataStr = this.JsonService.SerializeToString<T>(data);
+  public void SendMessage<T>(string exchange, string routingKey, Message<T> data) {
+    string dataStr = this.JsonService.SerializeToString<Message<T>>(data);
     byte[] body = Encoding.UTF8.GetBytes(dataStr);
     this.Channel.BasicPublish(exchange: exchange, routingKey: routingKey, basicProperties: null, body: body);
-    this.LoggerService.Log($"Send message to {exchange} with {routingKey} routing key, content length {body.Length} bytes", "RabbitService");
+    this.LoggerService.Log($"Send message to '{exchange}' with '{routingKey}' routing key, content length {body.Length} bytes", "RabbitService");
   }
 
   /// <summary>

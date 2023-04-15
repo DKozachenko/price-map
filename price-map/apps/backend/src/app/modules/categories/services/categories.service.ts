@@ -6,6 +6,7 @@ import { from, Observable, of, switchMap, catchError } from 'rxjs';
 import { DbErrorCode, RabbitErrorCode } from '@core/types';
 import { RabbitService } from '../../../services';
 import { CATEGORIES_QUEUE } from '../../../models/constants';
+import { IMessage } from '../../../models/interfaces';
 
 /**
  * Сервис категорий (всех уровней)
@@ -48,6 +49,23 @@ export class CategoriesService implements OnModuleInit {
     this.subscribeOnCategoriesQueue();
   }
 
+  
+  /**
+   * Обновление данных по всем категориям (удаление и сохранение по новой)
+   * @param {Omit<Category1Level, 'id'>[]} categories1Level категории 1 уровня
+   * @return {*}  {Observable<Category1Level[]>} сохраненные категории 1 уровня из БД
+   * @memberof CategoriesService
+   */
+  private refreshAllCategoriesData(categories1Level: Omit<Category1Level, 'id'>[]): Observable<Category1Level[]> {
+    return this.deleteAllCategories1Level()
+      .pipe(
+        switchMap((affectedRows: number) => {
+          Logger.warn(`Deleting categories: ${affectedRows} rows`, 'CategoriesService');
+          return this.saveCategories1Level(categories1Level);
+        })
+      );
+  }
+
   /**
    * Подписка на очередь с категориями
    * @private
@@ -61,8 +79,8 @@ export class CategoriesService implements OnModuleInit {
 
     this.rabbitService.getMessage<Omit<Category1Level, 'id'>[]>(CATEGORIES_QUEUE)
       .pipe(
-        switchMap((categories: Omit<Category1Level, 'id'>[]) => {
-          return this.refreshAllCategoriesData(categories)
+        switchMap((message: IMessage<Omit<Category1Level, 'id'>[]>) => {
+          return this.refreshAllCategoriesData(message.data)
             .pipe(
               catchError((err: Error) => {
                 Logger.error(`Error code: ${errorCodes[0]}, ${err}`, 'CategoriesService');
@@ -138,21 +156,5 @@ export class CategoriesService implements OnModuleInit {
    */
   public saveCategories1Level(categories1Level: Omit<Category1Level, 'id'>[]): Observable<Category1Level[]> {
     return from(this.category1LevelRepository.save(categories1Level));
-  }
-
-  /**
-   * Обновление данных по всем категориям (удаление и сохранение по новой)
-   * @param {Omit<Category1Level, 'id'>[]} categories1Level категории 1 уровня
-   * @return {*}  {Observable<Category1Level[]>} сохраненные категории 1 уровня из БД
-   * @memberof CategoriesService
-   */
-  public refreshAllCategoriesData(categories1Level: Omit<Category1Level, 'id'>[]): Observable<Category1Level[]> {
-    return this.deleteAllCategories1Level()
-      .pipe(
-        switchMap((affectedRows: number) => {
-          Logger.warn(`Deleting categories: ${affectedRows} rows`, 'CategoriesService');
-          return this.saveCategories1Level(categories1Level);
-        })
-      );
   }
 }
