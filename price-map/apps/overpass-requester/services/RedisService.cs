@@ -57,9 +57,9 @@ class RedisService {
     bool wasSet = db.StringSet(key, dataStr);
 
     if (wasSet) {
-      this.LoggerService.Log($"Установлено значение по ключу '{key}'", "RedisService");
+      this.LoggerService.Log($"Set up value by key: '{key}'", "RedisService");
     } else {
-      this.LoggerService.Log($"Значение по ключу '{key}' не было установлено", "RedisService");
+      this.LoggerService.Log($"Value by key: '{key}' was not set", "RedisService");
     }
   }
 
@@ -73,13 +73,13 @@ class RedisService {
     string? dataStr = this.db.StringGet(key);
 
     if (dataStr == null) {
-      this.LoggerService.Error($"Нет кэшированного значения по ключу {key}", "RedisService");
+      this.LoggerService.Error($"No cached value by key: {key}", "RedisService");
       return default(T);
     }
     
     T? data = this.JsonService.DeserializeFromString<T>(dataStr);
 
-    this.LoggerService.Log($"Получено значено по ключу {key}", "RedisService");
+    this.LoggerService.Log($"Gotten cached value by key: {key}", "RedisService");
     return data;
   }
 }

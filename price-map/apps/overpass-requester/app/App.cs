@@ -218,7 +218,7 @@ class App {
     return async (consumer, args) => {
       try {
         byte[] bodyByteArray = args.Body.ToArray();
-        this.LoggerService.Log($"Message from {queueName}, content length {bodyByteArray.Length} bytes", "App");
+        this.LoggerService.Log($"Message from '{queueName}', content length {bodyByteArray.Length} bytes", "App");
         Message<List<ProductIdShopNameMatch>>? messageMatches = this.JsonService.DeserializeFromByteArray<Message<List<ProductIdShopNameMatch>>>(bodyByteArray);
         HashSet<string> uniqueShopNames = this.GetUniqueShopNames(messageMatches.Data);
         await this.FillShopNameNodeMatchesAsync(uniqueShopNames);
@@ -287,10 +287,10 @@ class App {
     return async (consumer, args) => {
       try {
         byte[] bodyByteArray = args.Body.ToArray();
-        this.LoggerService.Log($"Message from {queueName}, content length {bodyByteArray.Length} bytes", "App");
+        this.LoggerService.Log($"Message from '{queueName}', content length {bodyByteArray.Length} bytes", "App");
         Message<long>? messageNodeId = this.JsonService.DeserializeFromByteArray<Message<long>>(bodyByteArray);
         int? floorNumber = await this.getFloorNumberAsync(messageNodeId.Data);
-        this.LoggerService.Log($"Floor number: {floorNumber} for node with id: {messageNodeId.Data}", "App");
+        this.LoggerService.Log($"Floor number: {(floorNumber == null ? "null" : floorNumber)} for node with id: {messageNodeId.Data}", "App");
 
         Message<int?> message = new Message<int?>(floorNumber, $"Отправка количества этажей для точки {messageNodeId.Data}", DateTime.Now);
         this.RabbitService.SendMessage<int?>(Config.OsmRequesterExchange, Config.BuildingInfoResponseRoutingKey, message);
