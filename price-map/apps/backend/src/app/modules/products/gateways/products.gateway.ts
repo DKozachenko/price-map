@@ -3,14 +3,17 @@ import { MessageBody,
   WebSocketGateway,
   WsResponse } from '@nestjs/websockets';
 import { Roles } from '../../../decorators';
-import { ProductEvents, Role } from '@core/enums';
-import { IPriceQuery, IProductQuery, IResponseData } from '@core/interfaces';
+import { ExternalEvents, ProductEvents, Role } from '@core/enums';
+import { ICoordinates, IOsrmData, IPriceQuery, IProductQuery, IResponseData } from '@core/interfaces';
 import { Product } from '@core/entities';
 import { ProductsService } from '../services';
-import { DbErrorCode } from '@core/types';
+import { DbErrorCode, ExternalErrorCode } from '@core/types';
 import { catchError, Observable, of, switchMap } from 'rxjs';
 import { Logger, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
+import { RabbitService } from '../../../services';
+import { IMessage } from '../../../models/interfaces';
+import { OSRM_REQUESTER_REQUEST_QUEUE, OSRM_REQUESTER_RESPONSE_QUEUE } from '../../../models/constants';
 
 /**
  * Шлюз товаров
@@ -23,7 +26,8 @@ import { JwtAuthGuard, RolesAuthGuard } from '../../../guards';
   }
 })
 export class ProductsGateway {
-  constructor (private readonly productsService: ProductsService) {}
+  constructor (private readonly productsService: ProductsService,
+    private readonly rabbitService: RabbitService) {}
 
   /**
    * Полуение товаров по запросу
@@ -154,7 +158,7 @@ export class ProductsGateway {
   @Roles(Role.User, Role.Admin)
   @UseGuards(JwtAuthGuard(ProductEvents.GetProductsByIdsFailed), RolesAuthGuard(ProductEvents.GetProductsByIdsFailed))
   @SubscribeMessage(ProductEvents.GetProductsByIdsAttempt)
-  public getByIds(@MessageBody() ids: string[]): 
+  public getByIds(@MessageBody() ids: string[]):
     Observable<WsResponse<IResponseData<Product[] | null, DbErrorCode | null>>> {
     return this.productsService.getByIds(ids)
       .pipe(
@@ -180,6 +184,53 @@ export class ProductsGateway {
               isError: false,
               data: null,
               message: 'Ошибка при получении товаров по id'
+            }
+          });
+        })
+      );
+  }
+
+  /**
+   * Событие построения маршрута
+   * @param {ICoordinates[]} coordinates коодинаты
+   * @return {*}  {(Observable<WsResponse<IResponseData<IOsrmData | null, ExternalErrorCode | null>>>)} ответ
+   * @memberof ProductsGateway
+   */
+  @Roles(Role.User, Role.Admin)
+  @UseGuards(JwtAuthGuard(ExternalEvents.BuildRouteFailed), RolesAuthGuard(ExternalEvents.BuildRouteFailed))
+  @SubscribeMessage(ExternalEvents.BuildRouteAttempt)
+  public buildRoute(@MessageBody() coordinates: ICoordinates[]):
+    Observable<WsResponse<IResponseData<IOsrmData | null, ExternalErrorCode | null>>> {
+    const coordinatesStr: string = this.productsService.createCoordinatesQuery(coordinates);
+    this.rabbitService.sendMessage<string>(OSRM_REQUESTER_REQUEST_QUEUE, {
+      data: coordinatesStr,
+      description: `Построение маршрута для ${coordinates.length} точек`,
+      sendTime: new Date()
+    });
+    return this.rabbitService.getMessage<IOsrmData>(OSRM_REQUESTER_RESPONSE_QUEUE)
+      .pipe(
+        switchMap((message: IMessage<IOsrmData>) => {
+          return of({
+            event: ExternalEvents.BuildRouteSuccessed,
+            data: {
+              statusCode: 200,
+              errorCode: null,
+              isError: false,
+              data: message.data,
+              message: 'Маршрут успешно построен'
+            }
+          });
+        }),
+        catchError((err: Error) => {
+          Logger.error(err, 'ProductsGateway');
+          return of({
+            event: ExternalEvents.BuildRouteFailed,
+            data: {
+              statusCode: 503,
+              errorCode: <ExternalErrorCode>'BUILD_ROUTE_FAILED',
+              isError: true,
+              data: null,
+              message: 'Ошибка во время построения маршрута'
             }
           });
         })

@@ -1,1 +1,0 @@
-export { ExternalGateway } from './external.gateway';

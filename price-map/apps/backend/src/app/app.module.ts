@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule, UsersModule, ProductsModule, CategoriesModule, ExternalModule, ShopsModule } from './modules';
+import { AuthModule, UsersModule, ProductsModule, CategoriesModule, ShopsModule } from './modules';
 import { Shop,
   Product,
   User,
@@ -21,7 +21,6 @@ import { BackupService, HashService, RabbitService } from './services';
     UsersModule,
     ProductsModule,
     CategoriesModule,
-    ExternalModule,
     ShopsModule,
     TypeOrmModule.forRoot({
       name: 'postgresConnect',
@@ -30,7 +29,7 @@ import { BackupService, HashService, RabbitService } from './services';
       port: 5432,
       username: 'postgres',
       password: 'vkdima03',
-      database: 'script_test',
+      database: 'real_data_pm',
       entities: [
         Shop,
         Product,

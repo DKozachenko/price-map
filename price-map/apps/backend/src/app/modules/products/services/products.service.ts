@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Category3Level, Product, Shop } from '@core/entities';
 import { DeleteResult, In, Repository } from 'typeorm';
 import { catchError, forkJoin, from, Observable, of, switchMap, throwError, zip } from 'rxjs';
-import { IPriceQuery, IProductQuery, IUserFilter } from '@core/interfaces';
+import { ICoordinates, IPriceQuery, IProductQuery, IUserFilter } from '@core/interfaces';
 import { RabbitService } from '../../../services';
 import { DbErrorCode, RabbitErrorCode } from '@core/types';
 import { CategoriesService } from '../../categories/services';
@@ -58,10 +58,10 @@ export class ProductsService implements OnModuleInit {
     )
       .pipe(
         switchMap(([
-          productsMessage, 
-          shopsMessage 
+          productsMessage,
+          shopsMessage
         ] : [
-          IMessage<IProductWithNames[]>, 
+          IMessage<IProductWithNames[]>,
           IMessage<IProductIdShopMatch[]>
         ]) => {
           return this.refreshProductsAndShopsData(productsMessage.data, shopsMessage.data)
@@ -92,7 +92,7 @@ export class ProductsService implements OnModuleInit {
    * @return {*}  {Observable<Product[]>} сохраненные товары
    * @memberof ProductsService
    */
-  private refreshProductsAndShopsData(productsWithNames: IProductWithNames[], matches: IProductIdShopMatch[]): 
+  private refreshProductsAndShopsData(productsWithNames: IProductWithNames[], matches: IProductIdShopMatch[]):
     Observable<Product[]> {
     // Удаление всех товаров
     return this.deleteAll()
@@ -115,7 +115,7 @@ export class ProductsService implements OnModuleInit {
           ]);
         }),
         switchMap(([
-          shops, 
+          shops,
           categories3Level
         ]: [
           Shop[],
@@ -126,7 +126,7 @@ export class ProductsService implements OnModuleInit {
             const existedCategory3Level: Category3Level | undefined
               = categories3Level.find((item: Category3Level) => item.name === product.category3LevelName);
 
-            const match: IProductIdShopMatch | undefined 
+            const match: IProductIdShopMatch | undefined
               = matches.find((item: IProductIdShopMatch) => item.productId === product.id);
             const existedShop: Shop | undefined = shops.find((item: Shop) => item.id === match?.shop?.id);
 
@@ -288,12 +288,12 @@ export class ProductsService implements OnModuleInit {
     /* eslint-disable */
     //Условия для радиуса
     if (query.radius.center && query.radius.distance) {
-      whereQuery += `${whereQuery ? ' AND ' : 'WHERE '}round((6367 * 
+      whereQuery += `${whereQuery ? ' AND ' : 'WHERE '}round((6367 *
         2 * atan2(sqrt(
           power(sin(((${query.radius.center.latitude} - (s."coordinates"->'latitude')::float) * pi() / 180) / 2), 2) +
           cos(((s."coordinates"::jsonb->'latitude')::float) * pi() / 180) * cos(${query.radius.center.latitude}::float * pi() / 180) *
           power(((${query.radius.center.longitude} - (s."coordinates"::jsonb->'longitude')::float) * pi() / 180) / 2, 2)
-        ), sqrt(1 - 
+        ), sqrt(1 -
               power(sin(((${query.radius.center.latitude} - (s."coordinates"::jsonb->'latitude')::float) * pi() / 180) / 2), 2) +
               cos(((s."coordinates"::jsonb->'latitude')::float) * pi() / 180) * cos(${query.radius.center.latitude}::float * pi() / 180) *
               power(((${query.radius.center.longitude} - (s."coordinates"::jsonb->'longitude')::float) * pi() / 180) / 2, 2)
@@ -310,8 +310,8 @@ export class ProductsService implements OnModuleInit {
     // Условия для поиска только среди избранного пользователя
     if (query.userId) {
       whereQuery += `${whereQuery ? ' AND ' : 'WHERE '}p."id" in (
-        select "productsId" 
-        from "UserProducts" up 
+        select "productsId"
+        from "UserProducts" up
         where up."usersId" = '${query.userId}'
       )`;
     }
@@ -354,7 +354,7 @@ export class ProductsService implements OnModuleInit {
     json_build_object('id', s."id", 'name', s."name", 'osmNodeId', s."osmNodeId", 'website',
     s."website", 'coordinates', s."coordinates") AS shop,
     json_build_object('id', cl."id", 'name', cl."name", 'filters', cl."filters") AS category3Level
-    FROM "Products" p 
+    FROM "Products" p
     INNER JOIN "Shops" s ON p."shopId" = s."id"
     INNER JOIN "Categories3Level" cl ON p."category3LevelId" = cl."id"
     ${whereSql ? whereSql : ''};`;
@@ -367,11 +367,11 @@ export class ProductsService implements OnModuleInit {
    * @memberof ProductsService
    */
   public getAll(query: IProductQuery): Observable<Product[]> {
-    if (!query.category3LevelIds.length 
-        && !query.filters.length 
-        && !query.price.max 
-        && !query.price.min 
-        && !query.radius.center 
+    if (!query.category3LevelIds.length
+        && !query.filters.length
+        && !query.price.max
+        && !query.price.min
+        && !query.radius.center
         && !query.radius.distance
         && !query.userId) {
       return of([]);
@@ -379,7 +379,7 @@ export class ProductsService implements OnModuleInit {
     const sqlQuery: string = query.filters.length
       ? this.generateSqlWithFilters(query)
       : this.generateSqlWithoutFilters(query);
-    
+
     return from(this.productRepository.query(sqlQuery));
   }
 
@@ -464,5 +464,25 @@ export class ProductsService implements OnModuleInit {
         category3Level: true
       }
     }));
+  }
+
+  /**
+   * Создание строки с координатами через запятую
+   * @private
+   * @param {ICoordinates[]} coordinates координатами
+   * @return {*}  {string} коодинаты через запятую (в формате {longitude},{latitude})
+   * @memberof ProductsService
+   */
+  public createCoordinatesQuery(coordinates: ICoordinates[]): string {
+    let result = '';
+    for (let i = 0; i < coordinates.length; ++i) {
+      if (i === coordinates.length - 1) {
+        result += `${coordinates[i].longitude},${coordinates[i].latitude}`;
+      } else {
+        result += `${coordinates[i].longitude},${coordinates[i].latitude};`;
+      }
+    }
+
+    return result;
   }
 }

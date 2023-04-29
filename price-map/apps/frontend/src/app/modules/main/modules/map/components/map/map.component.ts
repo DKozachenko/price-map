@@ -38,7 +38,7 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
    * @memberof MapComponent
    */
   public isShowRouteReview: boolean = false;
- 
+
   /**
    * Показывать ли фильтр
    * @type {boolean}
@@ -191,15 +191,15 @@ export class MapComponent implements AfterViewInit, OnDestroy, OnInit {
     this.filterService.allFilters$
       .pipe(untilDestroyed(this))
       .subscribe(([
-        categoryIds, 
-        filters, 
-        priceQuery, 
+        categoryIds,
+        filters,
+        priceQuery,
         radiusQuery,
         isOnlyFavorite
       ]: [
-        Set<string>, 
-        IUserFilter[], 
-        IPriceQuery, 
+        Set<string>,
+        IUserFilter[],
+        IPriceQuery,
         IRadiusQuery,
         boolean
       ]) => {
