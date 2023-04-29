@@ -33,6 +33,7 @@ jobs:
       run: npm run lint:osrm-requester
 
   build:
+    needs: [lint]
     runs-on: ubuntu-latest
     defaults:
       run:
