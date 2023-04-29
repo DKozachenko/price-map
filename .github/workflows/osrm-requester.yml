@@ -52,4 +52,4 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Start build
-      run: ls
+      run: cd apps/osrm-requester
