@@ -52,4 +52,4 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Start build
-      run: npm run lint:execute-requester
+      run: npm run execute:osrm-requester
