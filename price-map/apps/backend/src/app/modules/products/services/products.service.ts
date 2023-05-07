@@ -108,7 +108,7 @@ export class ProductsService implements OnModuleInit {
 
           const shopsToSave: Shop[] = this.getUniqueShops(matches);
 
-          // Сохранеие магазинов и получение всех категорий 3 уровня
+          // Сохранение магазинов и получение всех категорий 3 уровня
           return forkJoin([
             this.shopsService.saveAll(shopsToSave),
             this.categoriesService.getAllCategories3Level()

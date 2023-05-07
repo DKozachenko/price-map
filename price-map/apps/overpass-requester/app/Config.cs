@@ -11,7 +11,7 @@ static class Config {
   /// <summary>
   /// Максимальное количество точек для выбора при генерации рандомных точек
   /// </summary>
-  public const int MaxNodesNumber = 25;
+  public const int MaxNodesNumber = 100;
   /// <summary>
   /// Название обменника
   /// </summary>

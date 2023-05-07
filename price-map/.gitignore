@@ -40,5 +40,5 @@ Thumbs.db
 
 .angular
 
-.apps/backend/backups
+/apps/backend/backups
 /target

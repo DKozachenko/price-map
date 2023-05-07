@@ -91,7 +91,7 @@ export class MapService {
    * @memberof MapService
    */
   private currentLayerValue: LayerType = 'products';
-  
+
   /**
    * Подписка на изменение текущего слоя
    * @private
@@ -99,7 +99,7 @@ export class MapService {
    * @memberof MapService
    */
   private currentLayer: Subject<LayerType> = new Subject<LayerType>();
-  
+
   /**
    * Подписка на изменение текущего слоя (публичная)
    * @type {Observable<LayerType>}
@@ -249,9 +249,9 @@ export class MapService {
           const coordinates: LngLatLike = <LngLatLike>geometry?.coordinates?.slice();
           this.centerMap(coordinates);
         });
-  
-        
-        source.getClusterLeaves(clusterId, pointCount, 0, 
+
+
+        source.getClusterLeaves(clusterId, pointCount, 0,
           (error?: Error | null, data?: Feature<Geometry, GeoJsonProperties>[] | null) => {
             if (error) return;
             const features: Feature<Point, IFeatureProps>[] = <Feature<Point, IFeatureProps>[]>data;
@@ -259,7 +259,7 @@ export class MapService {
             service.emitSettingItemIdToShow(itemIds);
           });
       }
-      
+
     });
   }
 
@@ -415,7 +415,15 @@ export class MapService {
             ],
             '#a16eff',
             100,
-            '#323259'
+            '#894df7',
+            250,
+            '#6835c4',
+            500,
+            '#451896',
+            1000,
+            '#300b73',
+            1750,
+            '#240954'
           ],
           'circle-radius': [
             'step',
@@ -423,10 +431,16 @@ export class MapService {
               'get',
               'point_count'
             ],
-            20,
+            15,
             100,
+            20,
+            250,
+            25,
+            500,
             30,
-            750,
+            1000,
+            35,
+            1750,
             40
           ],
         },
@@ -569,7 +583,7 @@ export class MapService {
     this.addUnclusterLayer(sourceName);
     this.addUnclusterCountLayer(sourceName);
   }
-  
+
   /**
    * Установка кликов на слои для кластеризации
    * @private
@@ -605,7 +619,7 @@ export class MapService {
   public addPriceControl(): void {
     const existedPriceControl: PriceControl | undefined
       = <PriceControl | undefined>this.map._controls.find((control: IControl) => control instanceof PriceControl);
-    
+
     if (!existedPriceControl) {
       const priceControl: PriceControl = new PriceControl(this.resolver, this.filterService);
       this.map.addControl(priceControl, 'top-left');
@@ -697,7 +711,7 @@ export class MapService {
    */
   public removeOnlyFavoriteControl(): void {
     const onlyFavoriteControl: OnlyFavoriteControl | undefined
-      = <OnlyFavoriteControl | undefined>this.map._controls.find((control: IControl) => 
+      = <OnlyFavoriteControl | undefined>this.map._controls.find((control: IControl) =>
         control instanceof OnlyFavoriteControl);
     if (onlyFavoriteControl) {
       this.map.removeControl(onlyFavoriteControl);
@@ -761,14 +775,14 @@ export class MapService {
    */
   public removeAllLayers(): void {
     const clusterPostfixes: string[] = [
-      'cluster', 
-      'cluster-count', 
-      'uncluster', 
+      'cluster',
+      'cluster-count',
+      'uncluster',
       'uncluster-count'
     ];
     for (const clusterPostfix of clusterPostfixes) {
       const layerId: string = `${this.shopsSourceName}-${clusterPostfix}`;
-      const existedLayer: CircleStyleLayer | SymbolStyleLayer 
+      const existedLayer: CircleStyleLayer | SymbolStyleLayer
         = <CircleStyleLayer | SymbolStyleLayer>this.map.getLayer(layerId);
       if (existedLayer) {
         this.map.removeLayer(layerId);
@@ -777,7 +791,7 @@ export class MapService {
 
     for (const clusterPostfix of clusterPostfixes) {
       const layerId: string = `${this.productsSourceName}-${clusterPostfix}`;
-      const existedLayer: CircleStyleLayer | SymbolStyleLayer 
+      const existedLayer: CircleStyleLayer | SymbolStyleLayer
         = <CircleStyleLayer | SymbolStyleLayer>this.map.getLayer(layerId);
       if (existedLayer) {
         this.map.removeLayer(layerId);

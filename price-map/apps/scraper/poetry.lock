@@ -122,14 +122,14 @@ pycparser = "*"
 
 [[package]]
 name = "chromedriver-py"
-version = "110.0.5481.77"
+version = "113.0.5672.63"
 description = "chromedriver binaries for all platforms"
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "chromedriver-py-110.0.5481.77.tar.gz", hash = "sha256:3d1caec019898a49690040afe889fde90243ffe08c146e4013c7ddb2e7147b16"},
-    {file = "chromedriver_py-110.0.5481.77-py3-none-any.whl", hash = "sha256:dd1e9f1bb80589095a190ebc744243b5fe43080c0888ecb2f47222ec20da2597"},
+    {file = "chromedriver-py-113.0.5672.63.tar.gz", hash = "sha256:647409aefc3f1c46f5d6ccb4d25e0198b0a9aa3f1600937edff9d887d939513d"},
+    {file = "chromedriver_py-113.0.5672.63-py3-none-any.whl", hash = "sha256:88df08b704e961bb8b729de6194b0b32ef26ccce88f353b77f4f2540eb7c0e52"},
 ]
 
 [[package]]
@@ -393,4 +393,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
   python-versions = ">=3.10"
-content-hash = "fa41d46516922ffea78b1c452353b26a318cbaf5dd57931b11c1fac26278f1f2"
+content-hash = "1582287a7b26f8cd4c0c514fb331abca84ed46a0acd2785cdb2c07f4404cfcf8"
