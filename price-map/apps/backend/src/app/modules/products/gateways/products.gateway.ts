@@ -201,9 +201,8 @@ export class ProductsGateway {
   @SubscribeMessage(ExternalEvents.BuildRouteAttempt)
   public buildRoute(@MessageBody() coordinates: ICoordinates[]):
     Observable<WsResponse<IResponseData<IOsrmData | null, ExternalErrorCode | null>>> {
-    const coordinatesStr: string = this.productsService.createCoordinatesQuery(coordinates);
-    this.rabbitService.sendMessage<string>(OSRM_REQUESTER_REQUEST_QUEUE, {
-      data: coordinatesStr,
+    this.rabbitService.sendMessage<ICoordinates[]>(OSRM_REQUESTER_REQUEST_QUEUE, {
+      data: coordinates,
       description: `Построение маршрута для ${coordinates.length} точек`,
       sendTime: new Date()
     });

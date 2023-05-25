@@ -465,24 +465,4 @@ export class ProductsService implements OnModuleInit {
       }
     }));
   }
-
-  /**
-   * Создание строки с координатами через запятую
-   * @private
-   * @param {ICoordinates[]} coordinates координатами
-   * @return {*}  {string} коодинаты через запятую (в формате {longitude},{latitude})
-   * @memberof ProductsService
-   */
-  public createCoordinatesQuery(coordinates: ICoordinates[]): string {
-    let result = '';
-    for (let i = 0; i < coordinates.length; ++i) {
-      if (i === coordinates.length - 1) {
-        result += `${coordinates[i].longitude},${coordinates[i].latitude}`;
-      } else {
-        result += `${coordinates[i].longitude},${coordinates[i].latitude};`;
-      }
-    }
-
-    return result;
-  }
 }

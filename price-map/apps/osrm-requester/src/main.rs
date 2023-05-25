@@ -7,6 +7,13 @@ use chrono::prelude::*;
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
+struct Coordinates {
+    latitude: f32,
+    longitude: f32,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
 struct Message<T> {
     data: T,
     description: String,
@@ -73,13 +80,15 @@ fn main() {
         match message {
             ConsumerMessage::Delivery(delivery) => {
                 let body: borrow::Cow<str> = String::from_utf8_lossy(&delivery.body);
-                let deserialized: Message<String> = serde_json::from_str(&body).unwrap();
+                let deserialized: Message<Vec<Coordinates>> = serde_json::from_str(&body).unwrap();
                 println!("deserialized = {:?}", deserialized);
-                let coordintes_str: String = deserialized.data;
-                println!("Coordinates string {}", coordintes_str);
+                let coordinates_array: Vec<Coordinates> = deserialized.data;
+                println!("Coordinates string {:?}", coordinates_array);
                 consumer.ack(delivery).unwrap();
 
-                let query: String = format!("http://router.project-osrm.org/route/v1/driving/{}?overview=full&steps=true", coordintes_str);
+                let coordinates_str: String = get_coordinates_str(coordinates_array);
+
+                let query: String = format!("http://router.project-osrm.org/route/v1/driving/{}?overview=full&steps=true", coordinates_str);
                 println!("{query}");
 
                 let resp = reqwest::blocking::get(query).unwrap().json::<OsrmData>().unwrap();
@@ -115,6 +124,19 @@ fn main() {
     connection.close().unwrap();
 }
 
+fn get_coordinates_str(coordinates_array: Vec<Coordinates>) -> String {
+  let mut result: String = String::new();
+
+  for (i, coordinates) in coordinates_array.iter().enumerate() {
+    if i == coordinates_array.len() - 1 {
+      result.push_str(format!("{},{}", coordinates.longitude, coordinates.latitude).as_str());
+    } else {
+      result.push_str(format!("{},{};", coordinates.longitude, coordinates.latitude).as_str());
+    }
+  }
+
+  result
+}
 
 fn map_line_string(line_string: LineString) -> Vec<Vec<f64>> {
     let mut result = Vec::new();
