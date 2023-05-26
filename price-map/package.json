@@ -11,7 +11,7 @@
     "poststart:scraper": "rimraf ./apps/scraper/scraper/app/__pycache__ && rimraf ./apps/scraper/scraper/services/__pycache__ && rimraf ./apps/scraper/scraper/entities/__pycache__",
     "prestart:overpass-requester": "nx g @nx-dotnet/core:restore",
     "start:overpass-requester": "npx nx serve overpass-requester",
-    "start:osrm-requester": "npm run build:osrm-requester && npm run execute:osrm-requester",
+    "start:osrm-requester": "npm run build:osrm-requester && cp -R apps/osrm-requester/src/config target/release && npm run execute:osrm-requester",
     "build:front": "nx build frontend",
     "build:back": "nx build backend",
     "prebuild:overpass-requester": "nx g @nx-dotnet/core:restore",

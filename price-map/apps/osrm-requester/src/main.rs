@@ -1,9 +1,17 @@
-use std::borrow;
-use amiquip::{Connection, ConsumerMessage, ConsumerOptions, Publish, QueueDeclareOptions, Result, Exchange};
-use geo_types::{LineString, Line};
+use std::{borrow, fs, result::Result, error::Error, io::Chain};
+use amiquip::{Connection, ConsumerMessage, ConsumerOptions, Publish, QueueDeclareOptions, Exchange};
+use geo_types::{LineString};
 use serde::{Serialize, Deserialize};
 use polyline;
+use serde_yaml;
 use chrono::prelude::*;
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "kebab-case")]
+struct Config {
+    request_queue: String,
+    response_queue: String,
+}
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -59,20 +67,20 @@ struct MessageData<'a> {
     legs: &'a Vec<OsmrLeg>
 }
 
-fn main() {
+fn main() -> Result<(), Box<dyn Error>> {
+    let config: Config = get_config()?;
+    println!("{:?}", config);
+
     let mut connection = Connection::insecure_open("amqp://admin:admin_rabbit@localhost:5672").unwrap();
 
-    // Open a channel - None says let the library choose the channel ID.
     let channel = connection.open_channel(None).unwrap();
 
-    // let queue = channel.q  ("hello", QueueDeclareOptions::default())?;
-    let queue = channel.queue_declare("osrm_requester_request_queue", QueueDeclareOptions {
+    let queue = channel.queue_declare(config.request_queue, QueueDeclareOptions {
       durable: true,
       ..QueueDeclareOptions::default()
     }).unwrap();
 
 
-    // Start a consumer.
     let consumer = queue.consume(ConsumerOptions::default()).unwrap();
     println!("Waiting for messages. Press Ctrl-C to exit.");
 
@@ -103,7 +111,7 @@ fn main() {
                         coordinates,
                         legs: &resp.routes[0].legs
                     },
-                    description: String::from("Temp 2"),
+                    description: String::from("Успешное построение маршрута"),
                     send_time: Local::now().to_string()
                 };
 
@@ -111,8 +119,8 @@ fn main() {
                 // println!("serialized = {}", serialized);
 
                 let exchange = Exchange::direct(&channel);
-                exchange.publish(Publish::new(serialized.as_bytes(), "osrm_requester_response_queue")).unwrap();
-                println!("message to osrm_requester_response_queue");
+                exchange.publish(Publish::new(serialized.as_bytes(), &config.response_queue)).unwrap();
+                println!("message {}", config.response_queue);
             }
             other => {
                 println!("Consumer ended: {:?}", other);
@@ -122,6 +130,15 @@ fn main() {
     }
 
     connection.close().unwrap();
+
+    Ok(())
+}
+
+fn get_config() -> Result<Config, Box<dyn Error>> {
+    let config_file_str: String = fs::read_to_string("config/config.yaml")?;
+    let config: Config = serde_yaml::from_str(&config_file_str)?;
+
+    Ok(config)
 }
 
 fn get_coordinates_str(coordinates_array: Vec<Coordinates>) -> String {
