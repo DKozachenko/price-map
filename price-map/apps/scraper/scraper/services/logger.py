@@ -9,7 +9,7 @@ class LoggerService:
     pass
 
   def __get_log_datetime(self) -> str:
-    """ Получение отформатированной строки с текущим временем 
+    """ Получение отформатированной строки с текущим временем
 
     Returns:
       str: строка
@@ -27,7 +27,7 @@ class LoggerService:
       message (str): сообщение
       context (str): контекст
     """
-    
+
     formatted_now: str = self.__get_log_datetime()
     print(f'\033[0;32m {formatted_now}\tLOG\033[0;33m [{context}]\033[0;32m {message}\033[0;37m')
 

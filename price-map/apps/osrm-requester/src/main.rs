@@ -1,10 +1,14 @@
-use std::{borrow, fs, result::Result, error::Error, io::Chain};
+use std::{borrow, fs, result::Result, error::Error};
 use amiquip::{Connection, ConsumerMessage, ConsumerOptions, Publish, QueueDeclareOptions, Exchange};
 use geo_types::{LineString};
 use serde::{Serialize, Deserialize};
 use polyline;
 use serde_yaml;
 use chrono::prelude::*;
+
+use crate::logger::Logger;
+
+pub mod logger;
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "kebab-case")]
@@ -68,68 +72,72 @@ struct MessageData<'a> {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let logger: Logger = Logger::new();
+    logger.log("Hey", "hop");
+    logger.error("Hey 2", "hop 24");
+
     let config: Config = get_config()?;
     println!("{:?}", config);
 
-    let mut connection = Connection::insecure_open("amqp://admin:admin_rabbit@localhost:5672").unwrap();
+    // let mut connection = Connection::insecure_open("amqp://admin:admin_rabbit@localhost:5672").unwrap();
 
-    let channel = connection.open_channel(None).unwrap();
+    // let channel = connection.open_channel(None).unwrap();
 
-    let queue = channel.queue_declare(config.request_queue, QueueDeclareOptions {
-      durable: true,
-      ..QueueDeclareOptions::default()
-    }).unwrap();
+    // let queue = channel.queue_declare(config.request_queue, QueueDeclareOptions {
+    //   durable: true,
+    //   ..QueueDeclareOptions::default()
+    // }).unwrap();
 
 
-    let consumer = queue.consume(ConsumerOptions::default()).unwrap();
-    println!("Waiting for messages. Press Ctrl-C to exit.");
+    // let consumer = queue.consume(ConsumerOptions::default()).unwrap();
+    // println!("Waiting for messages. Press Ctrl-C to exit.");
 
-    for (i, message) in consumer.receiver().iter().enumerate() {
-        match message {
-            ConsumerMessage::Delivery(delivery) => {
-                let body: borrow::Cow<str> = String::from_utf8_lossy(&delivery.body);
-                let deserialized: Message<Vec<Coordinates>> = serde_json::from_str(&body).unwrap();
-                println!("deserialized = {:?}", deserialized);
-                let coordinates_array: Vec<Coordinates> = deserialized.data;
-                println!("Coordinates string {:?}", coordinates_array);
-                consumer.ack(delivery).unwrap();
+    // for (i, message) in consumer.receiver().iter().enumerate() {
+    //     match message {
+    //         ConsumerMessage::Delivery(delivery) => {
+    //             let body: borrow::Cow<str> = String::from_utf8_lossy(&delivery.body);
+    //             let deserialized: Message<Vec<Coordinates>> = serde_json::from_str(&body).unwrap();
+    //             println!("deserialized = {:?}", deserialized);
+    //             let coordinates_array: Vec<Coordinates> = deserialized.data;
+    //             println!("Coordinates string {:?}", coordinates_array);
+    //             consumer.ack(delivery).unwrap();
 
-                let coordinates_str: String = get_coordinates_str(coordinates_array);
+    //             let coordinates_str: String = get_coordinates_str(coordinates_array);
 
-                let query: String = format!("http://router.project-osrm.org/route/v1/driving/{}?overview=full&steps=true", coordinates_str);
-                println!("{query}");
+    //             let query: String = format!("http://router.project-osrm.org/route/v1/driving/{}?overview=full&steps=true", coordinates_str);
+    //             println!("{query}");
 
-                let resp = reqwest::blocking::get(query).unwrap().json::<OsrmData>().unwrap();
-                // println!("{:#?}", resp);
+    //             let resp = reqwest::blocking::get(query).unwrap().json::<OsrmData>().unwrap();
+    //             // println!("{:#?}", resp);
 
-                let mut decoded = polyline::decode_polyline(&resp.routes[0].geometry, 5).unwrap();
+    //             let mut decoded = polyline::decode_polyline(&resp.routes[0].geometry, 5).unwrap();
 
-                let coordinates = map_line_string(decoded);
+    //             let coordinates = map_line_string(decoded);
 
-                let message = Message {
-                    data: MessageData {
-                        coordinates,
-                        legs: &resp.routes[0].legs
-                    },
-                    description: String::from("Успешное построение маршрута"),
-                    send_time: Local::now().to_string()
-                };
+    //             let message = Message {
+    //                 data: MessageData {
+    //                     coordinates,
+    //                     legs: &resp.routes[0].legs
+    //                 },
+    //                 description: String::from("Успешное построение маршрута"),
+    //                 send_time: Local::now().to_string()
+    //             };
 
-                let serialized = serde_json::to_string(&message).unwrap();
-                // println!("serialized = {}", serialized);
+    //             let serialized = serde_json::to_string(&message).unwrap();
+    //             // println!("serialized = {}", serialized);
 
-                let exchange = Exchange::direct(&channel);
-                exchange.publish(Publish::new(serialized.as_bytes(), &config.response_queue)).unwrap();
-                println!("message {}", config.response_queue);
-            }
-            other => {
-                println!("Consumer ended: {:?}", other);
-                break;
-            }
-        }
-    }
+    //             let exchange = Exchange::direct(&channel);
+    //             exchange.publish(Publish::new(serialized.as_bytes(), &config.response_queue)).unwrap();
+    //             println!("message {}", config.response_queue);
+    //         }
+    //         other => {
+    //             println!("Consumer ended: {:?}", other);
+    //             break;
+    //         }
+    //     }
+    // }
 
-    connection.close().unwrap();
+    // connection.close().unwrap();
 
     Ok(())
 }
