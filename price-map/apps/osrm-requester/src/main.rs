@@ -9,7 +9,7 @@ use polyline::{self, decode_polyline};
 use chrono::prelude::*;
 use logger::Logger;
 use rabbit::Rabbit;
-use osrm_requester::{Config, get_config, Message, Coordinates, get_coordinates_str, OsrmData, MessageData, get_coordinates};
+use osrm_requester::{Config, get_config, Message, Coordinates, get_coordinates_str, OsrmData, OsrmMessageData, get_coordinates};
 
 fn main() -> Result<(), Box<dyn StdError>> {
     let logger: Logger = Logger::new();
@@ -80,6 +80,7 @@ fn main() -> Result<(), Box<dyn StdError>> {
                     },
                 };
 
+                // Декодирование полилайна
                 let decoded_line_string: LineString = match decode_polyline(&osrm_data.routes[0].geometry, 5) {
                     Ok(line_string) => line_string,
                     Err(err) => {
@@ -89,9 +90,9 @@ fn main() -> Result<(), Box<dyn StdError>> {
                     },
                 };
 
-                let coordinates: Vec<Vec<f64>> = get_coordinates(decoded_line_string);
-                let message: Message<MessageData> = Message {
-                    data: MessageData {
+                let coordinates: Vec<[f64; 2]> = get_coordinates(decoded_line_string);
+                let message: Message<OsrmMessageData> = Message {
+                    data: OsrmMessageData {
                         coordinates,
                         legs: &osrm_data.routes[0].legs
                     },
@@ -116,9 +117,16 @@ fn main() -> Result<(), Box<dyn StdError>> {
     Ok(())
 }
 
+/// Отправка сообщения с ошибкой
+/// #### args:
+/// - rabbit | **&Rabbit** | *рэббит*
+/// - queue_name | **&str** | *название очереди*
+/// - message | **&str** | *сообщение*
+/// #### return:
+/// - **Result<(), Box<dyn StdError>>** | *результат отправки*
 fn send_error_message(rabbit: &Rabbit, queue_name: &str, message: &str) -> Result<(), Box<dyn StdError>> {
-    let message: Message<MessageData> = Message {
-        data: MessageData {
+    let message: Message<OsrmMessageData> = Message {
+        data: OsrmMessageData {
             coordinates: vec![],
             legs: &vec![]
         },
