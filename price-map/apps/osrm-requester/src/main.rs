@@ -1,78 +1,15 @@
 pub mod logger;
 pub mod rabbit;
 
-use std::{process, fs, result::Result, error::Error as StdError, borrow, vec};
-use amiquip::{Connection, ConsumerMessage, ConsumerOptions, Publish, QueueDeclareOptions, Exchange, Channel, Queue, Consumer, Error};
+use std::{process, result::Result, error::Error as StdError, borrow};
+use amiquip::{ConsumerMessage, Consumer};
 use geo_types::{LineString};
 use reqwest::blocking::Response;
-use serde::{Serialize, Deserialize};
 use polyline::{self, decode_polyline};
-use serde_yaml;
 use chrono::prelude::*;
-
 use logger::Logger;
 use rabbit::Rabbit;
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "kebab-case")]
-struct Config {
-    request_queue: String,
-    response_queue: String,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-struct Coordinates {
-    latitude: f32,
-    longitude: f32,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "camelCase")]
-struct Message<T> {
-    data: T,
-    description: String,
-    send_time: String
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-struct OsrmData {
-    routes: Vec<OsrmRoute>
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-struct OsrmRoute {
-    geometry: String,
-    legs: Vec<OsmrLeg>
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-struct OsmrLeg {
-    distance: f32,
-    summary: String,
-    steps: Vec<OsrmStep>
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-struct OsrmStep {
-    maneuver: OsrmManeuver
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-struct OsrmManeuver {
-    r#type: String,
-    modifier: Option<String>,
-    location: Vec<f32>,
-    bearing_after: i32,
-    bearing_before: i32
-}
-
-#[derive(Serialize, Debug)]
-#[serde(rename_all = "camelCase")]
-struct MessageData<'a> {
-    coordinates: Vec<Vec<f64>>,
-    legs: &'a Vec<OsmrLeg>
-}
+use osrm_requester::{Config, get_config, Message, Coordinates, get_coordinates_str, OsrmData, MessageData, get_coordinates};
 
 fn main() -> Result<(), Box<dyn StdError>> {
     let logger: Logger = Logger::new();
@@ -173,44 +110,10 @@ fn main() -> Result<(), Box<dyn StdError>> {
 
     rabbit.close_connection().unwrap_or_else(|err| {
         logger.error(format!("Error while closing connection: {}", err).as_str(), "main");
+        process::exit(-1);
     });
 
     Ok(())
-}
-
-fn get_config() -> Result<Config, Box<dyn StdError>> {
-    let config_file_str: String = fs::read_to_string("config/config.yaml")?;
-    let config: Config = serde_yaml::from_str(&config_file_str)?;
-
-    Ok(config)
-}
-
-fn get_coordinates_str(coordinates_array: Vec<Coordinates>) -> String {
-  let mut result: String = String::new();
-
-  for (i, coordinates) in coordinates_array.iter().enumerate() {
-    if i == coordinates_array.len() - 1 {
-      result.push_str(format!("{},{}", coordinates.longitude, coordinates.latitude).as_str());
-    } else {
-      result.push_str(format!("{},{};", coordinates.longitude, coordinates.latitude).as_str());
-    }
-  }
-
-  result
-}
-
-fn get_coordinates(line_string: LineString) -> Vec<Vec<f64>> {
-    let mut result: Vec<Vec<f64>> = Vec::new();
-
-    for coordinate in line_string {
-        let mut coordinate_vector: Vec<f64> = Vec::new();
-        coordinate_vector.push(coordinate.x);
-        coordinate_vector.push(coordinate.y);
-
-        result.push(coordinate_vector);
-    }
-
-    result
 }
 
 fn send_error_message(rabbit: &Rabbit, queue_name: &str, message: &str) -> Result<(), Box<dyn StdError>> {
