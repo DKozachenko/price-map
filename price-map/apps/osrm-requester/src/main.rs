@@ -1,15 +1,17 @@
-use std::{process, fs, result::Result, error::Error, borrow};
-use amiquip::{Connection, ConsumerMessage, ConsumerOptions, Publish, QueueDeclareOptions, Exchange, Channel, Queue, Consumer};
+pub mod logger;
+pub mod rabbit;
+
+use std::{process, fs, result::Result, error::Error as StdError, borrow, vec};
+use amiquip::{Connection, ConsumerMessage, ConsumerOptions, Publish, QueueDeclareOptions, Exchange, Channel, Queue, Consumer, Error};
 use geo_types::{LineString};
 use reqwest::blocking::Response;
 use serde::{Serialize, Deserialize};
-use polyline;
+use polyline::{self, decode_polyline};
 use serde_yaml;
 use chrono::prelude::*;
 
-use crate::logger::Logger;
-
-pub mod logger;
+use logger::Logger;
+use rabbit::Rabbit;
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "kebab-case")]
@@ -72,8 +74,9 @@ struct MessageData<'a> {
     legs: &'a Vec<OsmrLeg>
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
+fn main() -> Result<(), Box<dyn StdError>> {
     let logger: Logger = Logger::new();
+    let mut rabbit: Rabbit = Rabbit::new();
     logger.log("Application start", "main");
 
     let config: Config = get_config().unwrap_or_else(|err| {
@@ -81,27 +84,13 @@ fn main() -> Result<(), Box<dyn Error>> {
         process::exit(-1);
     });
 
-    let mut connection: Connection = Connection::insecure_open("amqp://admin:admin_rabbit@localhost:5672").unwrap_or_else(|err| {
-        logger.error(format!("Error while setting connection: {}", err).as_str(), "main");
+    rabbit.init_connection().unwrap_or_else(|err| {
+        logger.error(format!("Error while getting connection: {}", err).as_str(), "main");
         process::exit(-1);
     });
 
-    let channel: Channel = connection.open_channel(None).unwrap_or_else(|err| {
-        logger.error(format!("Error while openning channel: {}", err).as_str(), "main");
-        process::exit(-1);
-    });
-
-    let queue: Queue = channel.queue_declare(&config.request_queue, QueueDeclareOptions {
-      durable: true,
-      ..QueueDeclareOptions::default()
-    }).unwrap_or_else(|err| {
-        logger.error(format!("Error while getting queue: {}", err).as_str(), "main");
-        process::exit(-1);
-    });
-
-
-    let consumer: Consumer = queue.consume(ConsumerOptions::default()).unwrap_or_else(|err| {
-        logger.error(format!("Error while closing channel: {}", err).as_str(), "main");
+    let consumer: Consumer = rabbit.get_queue_consumer(&config.request_queue).unwrap_or_else(|err| {
+        logger.error(format!("Error while getting consumer from queue: {}, {}", &config.request_queue, err).as_str(), "main");
         process::exit(-1);
     });
 
@@ -110,37 +99,60 @@ fn main() -> Result<(), Box<dyn Error>> {
             ConsumerMessage::Delivery(delivery) => {
                 logger.log(format!("Message from {}, content length: {}", &config.request_queue, delivery.body.len()).as_str(), "main");
                 let body: borrow::Cow<str> = String::from_utf8_lossy(&delivery.body);
-                let message: Message<Vec<Coordinates>> = serde_json::from_str(&body).unwrap_or_else(|err| {
-                    logger.error(format!("Error while deserializing message {}, error: {}", body, err).as_str(), "main");
-                    process::exit(-1);
-                });
-                consumer.ack(delivery).unwrap_or_else(|err| {
-                    logger.error(format!("Error while acking message: {}", err).as_str(), "main");
-                    process::exit(-1);
-                });
+                // Десериализация JSON
+                let message: Message<Vec<Coordinates>> = match serde_json::from_str(&body) {
+                    Ok(message) => message,
+                    Err(err) => {
+                        logger.error(format!("Error while deserializing message {}, error: {}", body, err).as_str(), "main");
+                        send_error_message(&rabbit, &config.response_queue, "Невалидный JSON")?;
+                        break;
+                    },
+                };
+
+                // Доставание из очереди сообщения
+                match consumer.ack(delivery) {
+                    Ok(_) => (),
+                    Err(err) => {
+                        logger.error(format!("Error while acking message: {}", err).as_str(), "main");
+                        send_error_message(&rabbit, &config.response_queue, "Не удалось сделать запрос для получения данных")?;
+                        break;
+                    },
+                }
 
                 let coordinates_str: String = get_coordinates_str(message.data);
-
                 let url: String = format!("http://router.project-osrm.org/route/v1/driving/{}?overview=full&steps=true", coordinates_str);
 
                 logger.log(format!("Send http request to {}", url).as_str(), "main");
-                let response: Response = reqwest::blocking::get(&url).unwrap_or_else(|err| {
-                    logger.error(format!("Error while sending request: {}, error {}", url, err).as_str(), "main");
-                    process::exit(-1);
-                });
+                // Запрос в OSRM
+                let response: Response = match reqwest::blocking::get(&url) {
+                    Ok(resp) => resp,
+                    Err(err) => {
+                        logger.error(format!("Error while sending request: {}, error {}", url, err).as_str(), "main");
+                        send_error_message(&rabbit, &config.response_queue, "Не удалось сделать запрос для получения данных")?;
+                        break;
+                    },
+                };
 
-                let osrm_data: OsrmData = response.json::<OsrmData>().unwrap_or_else(|err| {
-                    logger.error(format!("Error while deserializing data from response: {}", err).as_str(), "main");
-                    process::exit(-1);
-                });
+                // Десериализация ответа
+                let osrm_data: OsrmData = match response.json::<OsrmData>() {
+                    Ok(data) => data,
+                    Err(err) => {
+                        logger.error(format!("Error while deserializing data from response: {}", err).as_str(), "main");
+                        send_error_message(&rabbit, &config.response_queue, "Не удалось получить данные")?;
+                        break;
+                    },
+                };
 
-                let decoded_line_string: LineString = polyline::decode_polyline(&osrm_data.routes[0].geometry, 5).unwrap_or_else(|err| {
-                    logger.error(format!("Error while decoding polyline: {}, error {}", &osrm_data.routes[0].geometry, err).as_str(), "main");
-                    process::exit(-1);
-                });
+                let decoded_line_string: LineString = match decode_polyline(&osrm_data.routes[0].geometry, 5) {
+                    Ok(line_string) => line_string,
+                    Err(err) => {
+                        logger.error(format!("Error while decoding polyline: {}, error {}", &osrm_data.routes[0].geometry, err).as_str(), "main");
+                        send_error_message(&rabbit, &config.response_queue, "Не удалось получить данные")?;
+                        break;
+                    },
+                };
 
                 let coordinates: Vec<Vec<f64>> = get_coordinates(decoded_line_string);
-
                 let message: Message<MessageData> = Message {
                     data: MessageData {
                         coordinates,
@@ -150,18 +162,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                     send_time: Local::now().to_string()
                 };
 
-                let message_str: String = serde_json::to_string(&message).unwrap_or_else(|err| {
-                    logger.error(format!("Error while serializing message: {:?}, error {}", message, err).as_str(), "main");
-                    process::exit(-1);
-                });
-
-                let exchange: Exchange = Exchange::direct(&channel);
-                let body: &[u8] = message_str.as_bytes();
-                exchange.publish(Publish::new(body, &config.response_queue)).unwrap_or_else(|err| {
-                    logger.error(format!("Error while publishing message: {}, error {}", message_str, err).as_str(), "main");
-                    process::exit(-1);
-                });
-                logger.log(format!("Send message to {}, content length: {}", &config.response_queue, body.len()).as_str(), "main");
+                rabbit.send_message(&config.response_queue, message)?;
             }
             other => {
                 logger.log(format!("Consumer ended: {:?}", other).as_str(), "main");
@@ -170,15 +171,14 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     }
 
-    connection.close().unwrap_or_else(|err| {
+    rabbit.close_connection().unwrap_or_else(|err| {
         logger.error(format!("Error while closing connection: {}", err).as_str(), "main");
-        process::exit(-1);
     });
 
     Ok(())
 }
 
-fn get_config() -> Result<Config, Box<dyn Error>> {
+fn get_config() -> Result<Config, Box<dyn StdError>> {
     let config_file_str: String = fs::read_to_string("config/config.yaml")?;
     let config: Config = serde_yaml::from_str(&config_file_str)?;
 
@@ -211,4 +211,19 @@ fn get_coordinates(line_string: LineString) -> Vec<Vec<f64>> {
     }
 
     result
+}
+
+fn send_error_message(rabbit: &Rabbit, queue_name: &str, message: &str) -> Result<(), Box<dyn StdError>> {
+    let message: Message<MessageData> = Message {
+        data: MessageData {
+            coordinates: vec![],
+            legs: &vec![]
+        },
+        description: message.to_string(),
+        send_time: Local::now().to_string()
+    };
+
+    rabbit.send_message(queue_name, message)?;
+
+    Ok(())
 }
