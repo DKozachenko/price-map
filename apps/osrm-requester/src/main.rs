@@ -3,7 +3,7 @@ pub mod rabbit;
 
 use std::{process, borrow};
 use amiquip::{ConsumerMessage, Consumer};
-use geo_types::{LineString};
+use geo_types::LineString;
 use reqwest::blocking::Response;
 use polyline::{self, decode_polyline};
 use chrono::prelude::*;
@@ -119,12 +119,6 @@ fn main() -> Result<()> {
 }
 
 /// Отправка сообщения с ошибкой
-/// #### args:
-/// - rabbit | **&Rabbit** | *рэббит*
-/// - queue_name | **&str** | *название очереди*
-/// - message | **&str** | *сообщение*
-/// #### return:
-/// - **Result<(), Box<dyn StdError>>** | *результат отправки*
 fn send_error_message(rabbit: &Rabbit, queue_name: &str, message: &str) -> Result<()> {
     let message: Message<Option<OsrmMessageData>> = Message {
         data: None,
