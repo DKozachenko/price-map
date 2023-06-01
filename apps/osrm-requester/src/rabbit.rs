@@ -1,7 +1,8 @@
 use amiquip::{Connection, Error, Channel, Queue, QueueDeclareOptions, Consumer, ConsumerOptions, Exchange, Publish};
 use serde::Serialize;
-use std::{error::Error as StdError, cell::RefCell};
+use std::cell::RefCell;
 use super::logger::Logger;
+use anyhow::Result;
 
 /// Клиент для взаимодействия с RabbitMQ
 #[derive(Default)]
@@ -57,7 +58,7 @@ impl Rabbit {
     /// - T | message | *сообщение (произвольные данные)*
     /// #### return:
     /// - **Result<(), Box<dyn StdError>>** | *результат отправки*
-    pub fn send_message<T>(&self, queue_name: &str, message: T) -> Result<(), Box<dyn StdError>>
+    pub fn send_message<T>(&self, queue_name: &str, message: T) -> Result<()>
         where T: Serialize {
         let message_str: String = serde_json::to_string(&message)?;
 

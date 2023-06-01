@@ -1,7 +1,7 @@
 pub mod logger;
 pub mod rabbit;
 
-use std::{process, result::Result, error::Error as StdError, borrow};
+use std::{process, borrow};
 use amiquip::{ConsumerMessage, Consumer};
 use geo_types::{LineString};
 use reqwest::blocking::Response;
@@ -10,8 +10,9 @@ use chrono::prelude::*;
 use logger::Logger;
 use rabbit::Rabbit;
 use osrm_requester::{Config, get_config, Message, Coordinates, get_coordinates_str, OsrmData, OsrmMessageData, get_coordinates};
+use anyhow::Result;
 
-fn main() -> Result<(), Box<dyn StdError>> {
+fn main() -> Result<()> {
     let logger: Logger = Logger::new();
     let mut rabbit: Rabbit = Rabbit::new();
     logger.log("Application start", "main");
@@ -124,7 +125,7 @@ fn main() -> Result<(), Box<dyn StdError>> {
 /// - message | **&str** | *сообщение*
 /// #### return:
 /// - **Result<(), Box<dyn StdError>>** | *результат отправки*
-fn send_error_message(rabbit: &Rabbit, queue_name: &str, message: &str) -> Result<(), Box<dyn StdError>> {
+fn send_error_message(rabbit: &Rabbit, queue_name: &str, message: &str) -> Result<()> {
     let message: Message<OsrmMessageData> = Message {
         data: OsrmMessageData {
             coordinates: vec![],

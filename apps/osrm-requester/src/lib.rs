@@ -1,6 +1,7 @@
 use serde::{Serialize, Deserialize};
-use std::{fs, result::Result, error::Error as StdError};
+use std::fs;
 use geo_types::LineString;
+use anyhow::Result;
 
 /// Конфиг
 #[derive(Serialize, Deserialize, Debug)]
@@ -97,7 +98,7 @@ pub struct OsrmManeuver {
 /// #### args:
 /// #### return:
 /// - **Result<Config, Box<dyn StdError>>** | *результат получения (конфиг или ошибка)*
-pub fn get_config() -> Result<Config, Box<dyn StdError>> {
+pub fn get_config() -> Result<Config> {
   let config_file_str: String = fs::read_to_string("config/config.yaml")?;
   let config: Config = serde_yaml::from_str(&config_file_str)?;
 
