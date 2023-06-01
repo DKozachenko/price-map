@@ -1,6 +1,8 @@
 mod logger;
 mod rabbit;
 mod osrm;
+mod coordinate;
+mod config;
 
 use std::{process, borrow};
 use amiquip::{ConsumerMessage, Consumer, Delivery};
@@ -13,7 +15,8 @@ use anyhow::anyhow;
 
 use logger::Logger;
 use rabbit::Rabbit;
-use osrm_requester::{Config, Coordinate, get_config, get_coordinates_str, get_coordinates};
+use config::{Config, get_config};
+use coordinate::{Coordinate, get_coordinates_str, get_coordinates};
 use osrm::{OsrmData, OsrmMessageData};
 
 /// Сообщение (интерфейс обмена данными между сервисами)
