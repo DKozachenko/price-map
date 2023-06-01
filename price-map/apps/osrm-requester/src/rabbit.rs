@@ -4,6 +4,7 @@ use std::{error::Error as StdError, cell::RefCell};
 use super::logger::Logger;
 
 /// Клиент для взаимодействия с RabbitMQ
+#[derive(Default)]
 pub struct Rabbit {
     /// **Logger** | *логгер*
     logger: Logger,

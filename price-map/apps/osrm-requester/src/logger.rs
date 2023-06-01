@@ -1,5 +1,6 @@
 use chrono::Local;
 /// Логгер
+#[derive(Default)]
 pub struct Logger;
 
 impl Logger {
@@ -20,7 +21,7 @@ impl Logger {
     /// - message | **&str** | *сообщение*
     /// - context | **&str** | *контекст*
     /// #### return:
-    pub fn log(&self, message: &str, context: &str) -> () {
+    pub fn log(&self, message: &str, context: &str) {
         let now_str: String = self.get_now_str();
         println!("\x1b[0;32m{}\tLOG\x1b[0;33m [{}]\x1b[0;32m {}\x1b[0;37m", now_str, context, message);
     }
@@ -30,7 +31,7 @@ impl Logger {
     /// - message | **&str** | *сообщение*
     /// - context | **&str** | *контекст*
     /// #### return:
-    pub fn error(&self, message: &str, context: &str) -> () {
+    pub fn error(&self, message: &str, context: &str) {
         let now_str: String = self.get_now_str();
         println!("\x1b[0;31m{}\tERROR\x1b[0;33m [{}]\x1b[0;31m {}\x1b[0;37m", now_str, context, message);
     }
