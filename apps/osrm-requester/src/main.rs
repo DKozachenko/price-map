@@ -1,5 +1,6 @@
 pub mod logger;
 pub mod rabbit;
+pub mod osrm;
 
 use std::{process, borrow};
 use amiquip::{ConsumerMessage, Consumer};
@@ -7,10 +8,25 @@ use geo_types::LineString;
 use reqwest::blocking::Response;
 use polyline::{self, decode_polyline};
 use chrono::prelude::*;
+use anyhow::Result;
+use serde::{Serialize, Deserialize};
+
 use logger::Logger;
 use rabbit::Rabbit;
-use osrm_requester::{Config, get_config, Message, Coordinates, get_coordinates_str, OsrmData, OsrmMessageData, get_coordinates};
-use anyhow::Result;
+use osrm_requester::{Config, Coordinate, get_config, get_coordinates_str, get_coordinates};
+use osrm::{OsrmData, OsrmMessageData};
+
+/// Сообщение (интерфейс обмена данными между сервисами)
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct Message<T> {
+    /// Произвольные данные
+    pub data: T,
+    /// Описание
+    pub description: String,
+    /// Время отправки
+    pub send_time: String
+}
 
 fn main() -> Result<()> {
     let logger: Logger = Logger::new();
@@ -38,7 +54,7 @@ fn main() -> Result<()> {
                 logger.log(format!("Message from {}, content length: {}", &config.request_queue, delivery.body.len()).as_str(), "main");
                 let body: borrow::Cow<str> = String::from_utf8_lossy(&delivery.body);
                 // Десериализация JSON
-                let message: Message<Vec<Coordinates>> = match serde_json::from_str(&body) {
+                let message: Message<Vec<Coordinate>> = match serde_json::from_str(&body) {
                     Ok(message) => message,
                     Err(err) => {
                         logger.error(format!("Error while deserializing message {}, error: {}", body, err).as_str(), "main");
