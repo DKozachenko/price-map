@@ -3,11 +3,12 @@ use serde::{Serialize, Deserialize};
 /// Данные из OSRM для отправки в очередь
 #[derive(Serialize, Debug)]
 #[serde(rename_all = "camelCase")]
-pub struct OsrmMessageData<'a> {
+pub struct OsrmMessageData {
     /// Координаты
     pub coordinates: Vec<[f64; 2]>,
     /// Маршруты между двумя ключевыми точками
-    pub legs: &'a Vec<OsmrLeg>
+    // pub legs: &'a Vec<OsmrLeg>
+    pub legs: Vec<OsmrLeg>
 }
 
 /// Данные OSRM
@@ -27,7 +28,7 @@ pub struct OsrmRoute {
 }
 
 /// Маршрут между двумя ключевыми точками
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OsmrLeg {
     /// Дистанция
     distance: f32,
@@ -38,14 +39,14 @@ pub struct OsmrLeg {
 }
 
 /// Шаг OSRM
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OsrmStep {
     /// Маневр
     maneuver: OsrmManeuver
 }
 
 /// Маневр OSRM
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct OsrmManeuver {
     /// Тип
     r#type: String,

@@ -1,7 +1,6 @@
 use serde::{Serialize, Deserialize};
 use std::fs;
 use geo_types::LineString;
-use anyhow::Result;
 
 /// Конфиг
 #[derive(Serialize, Deserialize, Debug)]
@@ -24,7 +23,7 @@ pub struct Coordinate {
 }
 
 /// Получение конфига
-pub fn get_config() -> Result<Config> {
+pub fn get_config() -> anyhow::Result<Config> {
   let config_file_str: String = fs::read_to_string("config/config.yaml")?;
   let config: Config = serde_yaml::from_str(&config_file_str)?;
 
