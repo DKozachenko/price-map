@@ -12,6 +12,9 @@
 `npm ci`
 2. Запуск
 `npm run start:osrm-requester`
+Если в выходной папке **target/release** есть папка **config**, то для сборки используется команда
+`npm run build:osrm-requester`, а для запуска
+`npm run execute:osrm-requester`
 
 ### Принцип работы
 
