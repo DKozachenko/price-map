@@ -4,7 +4,6 @@ use geo_types::LineString;
 use reqwest::blocking::Response;
 use polyline::{self, decode_polyline};
 use chrono::prelude::*;
-use anyhow;
 use serde::{Serialize, Deserialize};
 
 pub mod logger;
