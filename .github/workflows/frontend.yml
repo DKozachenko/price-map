@@ -10,9 +10,6 @@ on:
 jobs:
   lint:
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: ./price-map
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -38,9 +35,6 @@ jobs:
   test:
     needs: [lint]
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: ./price-map
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -66,9 +60,6 @@ jobs:
   build:
     needs: [test]
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: ./price-map
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
