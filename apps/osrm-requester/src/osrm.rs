@@ -52,7 +52,7 @@ pub struct OsrmManeuver {
     r#type: String,
     /// Модификатор
     modifier: Option<String>,
-    /// локация (координаты)
+    /// Локация (по сути координата)
     location: Vec<f32>,
     /// Угол до
     bearing_after: i32,

@@ -1,3 +1,7 @@
+mod logger;
+mod rabbit;
+mod osrm;
+
 use std::{process, borrow};
 use amiquip::{ConsumerMessage, Consumer, Delivery};
 use geo_types::LineString;
@@ -5,10 +9,7 @@ use reqwest::blocking::Response;
 use polyline::{self, decode_polyline};
 use chrono::prelude::*;
 use serde::{Serialize, Deserialize};
-
-pub mod logger;
-pub mod rabbit;
-pub mod osrm;
+use anyhow::anyhow;
 
 use logger::Logger;
 use rabbit::Rabbit;
@@ -82,11 +83,11 @@ fn process_message(logger: &Logger, consumer: &Consumer, queue_name: &str, deliv
     let body: borrow::Cow<str> = String::from_utf8_lossy(&delivery.body);
     // Десериализация JSON
     let message: Message<Vec<Coordinate>> = serde_json::from_str(&body)
-        .map_err(|err| anyhow::anyhow!("Error while deserializing message {body}, error: {err}"))?;
+        .map_err(|err| anyhow!("Error while deserializing message {body}, error: {err}"))?;
 
     // Доставание из очереди сообщения
     consumer.ack(delivery)
-        .map_err(|err| anyhow::anyhow!("Error while acking message {err}"))?;
+        .map_err(|err| anyhow!("Error while acking message {err}"))?;
 
     let coordinates_str: String = get_coordinates_str(message.data);
     let url: String = format!("http://router.project-osrm.org/route/v1/driving/{}?overview=full&steps=true", coordinates_str);
@@ -94,15 +95,15 @@ fn process_message(logger: &Logger, consumer: &Consumer, queue_name: &str, deliv
     logger.log(format!("Send http request to {}", url).as_str(), "process_message");
     // Запрос в OSRM
     let response: Response = reqwest::blocking::get(&url)
-        .map_err(|err| anyhow::anyhow!("Error while sending request: {url}, error {err}"))?;
+        .map_err(|err| anyhow!("Error while sending request: {url}, error {err}"))?;
 
     // Десериализация ответа
     let osrm_data: OsrmData = response.json::<OsrmData>()
-        .map_err(|err| anyhow::anyhow!("Error while deserializing data from response: {err}"))?;
+        .map_err(|err| anyhow!("Error while deserializing data from response: {err}"))?;
 
     // Декодирование полилайна
     let decoded_line_string: LineString = decode_polyline(&osrm_data.routes[0].geometry, 5)
-        .map_err(|err| anyhow::anyhow!(format!("Error while decoding polyline: {}, error {}", &osrm_data.routes[0].geometry, err)))?;
+        .map_err(|err| anyhow!(format!("Error while decoding polyline: {}, error {}", &osrm_data.routes[0].geometry, err)))?;
 
     let coordinates: Vec<[f64; 2]> = get_coordinates(decoded_line_string);
     Ok(OsrmMessageData {
