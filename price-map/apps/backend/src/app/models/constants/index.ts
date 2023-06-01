@@ -4,4 +4,6 @@ export { CATEGORIES_QUEUE } from './categories-queue.constant';
 export { PRODUCTS_QUEUE } from './products-queue.constant';
 export { SHOPS_IN_QUEUE } from './shops-in-queue.constant';
 export { BUILDING_INFO_REQUEST_QUEUE } from './building-info-request-queue.constant';
-export {BUILDING_INFO_RESPONSE_QUEUE } from './building-info-response-queue.constant';
+export { BUILDING_INFO_RESPONSE_QUEUE } from './building-info-response-queue.constant';
+export { OSRM_REQUESTER_RESPONSE_QUEUE } from './osrm-requester-response-queue.constant';
+export { OSRM_REQUESTER_REQUEST_QUEUE } from './osrm-requester-request-queue.constant';

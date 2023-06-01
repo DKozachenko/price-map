@@ -37,7 +37,7 @@ export class BackupService {
           return;
         };
         Logger.debug(`Backup of ${dbName} at ${now.toLocaleString()}` 
-          + `was successfully created: ${stdout}`, 'makeBackup');
+          + ` was successfully created: ${stdout}`, 'makeBackup');
       });
   };
 }

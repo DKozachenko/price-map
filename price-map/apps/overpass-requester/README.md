@@ -1,6 +1,6 @@
 # overpass-requester
 
-Сервис, который получает различную информаwb. о точках, посредством HTTP-запросов в [Overpass API](https://overpass-turbo.eu/).
+Сервис, который получает различную информацию о точках, посредством HTTP-запросов в [Overpass API](https://overpass-turbo.eu/).
 
 ### Стэк
 

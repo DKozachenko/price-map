@@ -77,7 +77,7 @@ export class RabbitService {
         if (message === null) {
           subscribe.error(new Error('Consumer cancelled by server'));
         }
-        
+
         const bytes: number = message.content.length;
         Logger.debug(`Message from ${queueName}, content length: ${bytes} bytes`, 'RabbitService');
         try {
@@ -86,6 +86,7 @@ export class RabbitService {
           this.channel.ack(message);
           subscribe.next(obj);
         } catch (err: any) {
+          this.channel.ack(message);
           Logger.error(err, 'RabbitService');
           subscribe.error(new Error(`Error while parsing JSON from ${queueName}, content length: ${bytes} bytes`));
         }

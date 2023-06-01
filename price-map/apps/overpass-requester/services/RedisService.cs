@@ -38,6 +38,7 @@ class RedisService {
     ConfigurationOptions options = ConfigurationOptions.Parse("localhost:6379");
     options.ConnectRetry = 3;
     options.AllowAdmin = true;
+    options.ConnectTimeout = 1500000;
 
     this.connection = ConnectionMultiplexer.Connect(options);
     this.server = this.connection.GetServer("localhost", 6379);
@@ -76,7 +77,7 @@ class RedisService {
       this.LoggerService.Log($"No cached value by key: {key}", "RedisService");
       return default(T);
     }
-    
+
     T? data = this.JsonService.DeserializeFromString<T>(dataStr);
 
     this.LoggerService.Log($"Gotten cached value by key: {key}", "RedisService");

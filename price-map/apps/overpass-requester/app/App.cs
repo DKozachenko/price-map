@@ -154,9 +154,9 @@ class App {
     }
     return result;
   }
-  
+
   /// <summary>
-  /// Добавление сопоставления названия магазина и точек из ответа 
+  /// Добавление сопоставления названия магазина и точек из ответа
   /// </summary>
   /// <param name="shopName">Название магазина</param>
   /// <param name="response">Ответ от OSM</param>
@@ -270,7 +270,7 @@ class App {
       // Если в ответе есть элементы и в тэгах есть кол-во этажей
       if (osmCachedResponse?.Elements?.Count > 0 && osmCachedResponse?.Elements[0]?.Tags?.BuildingLevels is not null) {
         return Convert.ToInt32(osmCachedResponse.Elements[0].Tags.BuildingLevels);
-      } 
+      }
 
       return null;
     }

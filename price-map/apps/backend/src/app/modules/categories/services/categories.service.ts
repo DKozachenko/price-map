@@ -45,11 +45,10 @@ export class CategoriesService implements OnModuleInit {
 
   constructor(private readonly rabbitService: RabbitService) {}
 
-  public onModuleInit(): void {      
+  public onModuleInit(): void {
     this.subscribeOnCategoriesQueue();
   }
 
-  
   /**
    * Обновление данных по всем категориям (удаление и сохранение по новой)
    * @param {Omit<Category1Level, 'id'>[]} categories1Level категории 1 уровня

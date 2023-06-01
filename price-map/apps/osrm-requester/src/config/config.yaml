@@ -1,0 +1,3 @@
+---
+ request-queue: "osrm_requester_request_queue"
+ response-queue: "osrm_requester_response_queue"

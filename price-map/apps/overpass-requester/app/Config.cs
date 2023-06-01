@@ -11,11 +11,11 @@ static class Config {
   /// <summary>
   /// Максимальное количество точек для выбора при генерации рандомных точек
   /// </summary>
-  public const int MaxNodesNumber = 25;
+  public const int MaxNodesNumber = 100;
   /// <summary>
   /// Название обменника
   /// </summary>
-  public const string OsmRequesterExchange = "osrm-requester-exchange";
+  public const string OsmRequesterExchange = "overpass-requester-exchange";
   /// <summary>
   /// Название ключа маршрутизации для магазинов
   /// </summary>
@@ -36,4 +36,4 @@ static class Config {
   /// Название ключа маршрутизации для отправки информации о здании
   /// </summary>
   public const string BuildingInfoResponseRoutingKey = "building_info_response";
-} 
+}
