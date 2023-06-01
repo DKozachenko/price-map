@@ -1,0 +1,7 @@
+{
+  "nugetPackages": {
+    "RabbitMQ.Client": "6.4.0",
+    "Newtonsoft.Json": "13.0.3",
+    "NRedisStack": "0.6.0"
+  }
+}

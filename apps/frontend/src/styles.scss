@@ -1,0 +1,329 @@
+@import '~maplibre-gl/dist/maplibre-gl.css';
+@import "./assets/styles/mixins";
+
+html {
+  font-size: 10px!important;
+  overflow-y: hidden!important;
+}
+
+body {
+  font-family: 'Consolas', sans-serif;
+}
+
+.root {
+  height: 100%;
+  width: 100%;
+}
+
+.form__error {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  z-index: 5;
+  background-color: white;
+  border-radius: 1rem;
+  padding: .6rem;
+  border: 1px solid #a16eff;
+
+  .form__error-description {
+    @include font(1.3rem, #7a00ff, 700);
+  }
+}
+
+// Стили для попапа на карте
+.custom__popup {
+  .mapboxgl-popup-content,
+  .maplibregl-popup-content {
+    padding: 0;
+  }
+}
+
+.popup__card {
+  margin-bottom: 0!important;
+
+  nb-card-header {
+    @include font(1.6rem, white);
+    padding-right: 3rem;
+  }
+
+  nb-card-body,
+  nb-card-body p {
+    @include font(1.4rem, white);
+  }
+}
+
+//Кастомные скролл
+.custom__scroll {
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #323259;
+    border-radius: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: white;
+    border-radius: 20px;
+    border: 3px solid white;
+
+    &:hover {
+      border-color: darken(white, 10%);
+    }
+  }
+}
+
+.header nav {
+  min-height: 5.7rem;
+}
+
+//Кастомные стили для карточек на карте
+.custom__map-card {
+  position: absolute;
+  margin-bottom: 0!important;
+  z-index: 5;
+  top: 0;
+  bottom: 0;
+  border-radius: 0!important;
+
+  nb-card-header {
+    @include font(1.8rem, white);
+  }
+
+  &__body {
+    padding: 2rem!important;
+    height: 100%;
+  }
+}
+
+//Общие стили для входа / регистраци
+.auth {
+  margin-top: 2rem;
+  border: 2px solid #a16eff;
+  border-radius: 1rem;
+
+  padding: 2rem 1.5rem;
+
+  &__title {
+    @include font(3.5rem, #a16eff);
+    text-align: center;
+
+    margin-bottom: 2.5rem;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__group {
+    margin-bottom: 2rem;
+    min-width: 28rem;
+
+    position: relative;
+  }
+
+  input {
+    @include font(1.6rem, white);
+
+    &::placeholder {
+      @include font(1.6rem, white);
+      opacity: 0.5;
+    }
+  }
+
+  label {
+    @include font(1.3rem, white, 700);
+    margin-left: 1rem;
+  }
+}
+
+.nb-theme-cosmic [nbInput].status-basic {
+  border-color: #a16eff!important;
+
+  &:hover {
+    border-color: darken(#a16eff, 5%)!important;
+  }
+}
+
+.button {
+  margin-top: 0;
+  width: 100%;
+  letter-spacing: 0.2rem;
+}
+
+.auth,
+.setting {
+  [nbButton].size-medium,
+  .nb-theme-cosmic .size-medium[nbButtonToggle] {
+    @include font(1.6rem, white);
+    padding: .7rem 1.5rem;
+    letter-spacing: .2rem;
+  }
+}
+
+//Стили для оповещений
+nb-toast {
+  .title {
+    @include font(1.8rem, white, 700);
+  }
+
+  .message {
+    @include font(1.4rem, white, 700);
+  }
+}
+
+//Cтили для контролы для слоев, цены, радиуса
+.mapboxgl-ctrl-top-left,
+.maplibregl-ctrl-top-left {
+  left: initial;
+  right: 25rem;
+
+  display: flex;
+  align-items: center;
+}
+
+//Cтили для контролы для масштабирования, геолокации и очистки маршрута
+.mapboxgl-ctrl-top-right,
+.maplibregl-ctrl-top-right {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+//Стили для контейнера контролов рисования от MapBox, обираем отступ, чтобы не двигалась верстка
+.mapboxgl-ctrl-group.mapboxgl-ctrl:empty {
+  margin-top: 0;
+}
+
+//Стили для сайдбаров
+.sidebar {
+  left: 0;
+  border: none!important;
+  border-right: 1px solid #13132b;
+  width: 20.5vw;
+
+  &__body {
+    flex-grow: 1;
+    flex-basis: fit-content;
+
+    &-items {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+  }
+
+  &__item {
+    nb-card-header{
+      @include font(1.3rem, white, 700);
+      text-overflow: ellipsis;
+      word-break: break-word;
+      border-bottom-color: white!important;
+    }
+
+    nb-card-footer {
+      padding: 1rem .4rem!important;
+      border-top-color: white!important;
+      transition: background-color .2s linear;
+
+      display: block;
+
+      &:hover {
+        background-color: transparent!important;
+        cursor: initial!important;
+      }
+
+      nb-actions {
+        flex-grow: 1;
+      }
+
+      nb-action {
+        padding: 0 .75rem!important;
+        border-left: 1px solid white!important;
+        flex-grow: 1;
+        justify-content: center;
+
+        &.in_route,
+        &.favorite {
+          svg {
+            fill:#a16eff;
+          }
+        }
+
+        &:hover {
+          nb-icon {
+            transform: scale(1.15);
+          }
+        }
+
+        nb-icon {
+          color: white;
+          transition: transform .2s linear;
+        }
+      }
+    }
+  }
+
+  nb-card-footer {
+    transition: background-color .2s linear;
+
+    display: flex;
+    justify-content: center;
+
+    &:hover {
+      background-color: darken(#323259, 10%);
+      cursor: pointer;
+    }
+  }
+}
+
+nb-tooltip .content {
+  @include font(1.2rem, black, 400);
+}
+
+//Стили для отдельного модуля (секции)
+.section {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__body {
+    max-width: 60rem;
+
+    &-title {
+      @include font(3.5rem, #a16eff);
+      text-align: center;
+
+      margin-bottom: 2.5rem;
+    }
+  }
+}
+
+nb-layout {
+  &.with_filter {
+    nb-spinner.size-medium {
+      left: 20.5vw;
+    }
+  }
+}
+
+nb-spinner.size-medium  {
+  font-size: 9.5rem!important;
+}
+
+// Анимация для уведомления
+@keyframes twinkle {
+  0% {
+    box-shadow: 0 0 0 #a16eff;
+  } 
+  50% {
+    box-shadow: 0 0 3rem #a16eff;  
+  } 
+  100% {
+    box-shadow: 0 0 0 #a16eff;  
+  }
+}
