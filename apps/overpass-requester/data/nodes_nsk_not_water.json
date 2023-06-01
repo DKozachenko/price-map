@@ -1,0 +1,10364 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.57.1 74a55df1",
+  "osm3s": {
+    "timestamp_osm_base": "2023-04-13T14:13:54Z",
+    "timestamp_areas_base": "2023-04-13T07:44:09Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+
+{
+  "type": "node",
+  "id": 672789350,
+  "lat": 55.0685178,
+  "lon": 82.9081007,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 686199243,
+  "lat": 54.9866885,
+  "lon": 82.8721865,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 686199244,
+  "lat": 54.9868112,
+  "lon": 82.8721640,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 686199245,
+  "lat": 54.9869564,
+  "lon": 82.8721528,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 686199246,
+  "lat": 54.9871114,
+  "lon": 82.8721303,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 686199261,
+  "lat": 54.9871558,
+  "lon": 82.8726258,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 686199262,
+  "lat": 54.9871584,
+  "lon": 82.8728869,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 686199263,
+  "lat": 54.9871713,
+  "lon": 82.8731299,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 686199264,
+  "lat": 54.9871791,
+  "lon": 82.8733729,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 686199265,
+  "lat": 54.9872701,
+  "lon": 82.8736573,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 686199266,
+  "lat": 54.9866239,
+  "lon": 82.8727608,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 686199267,
+  "lat": 54.9866316,
+  "lon": 82.8729994,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 686199268,
+  "lat": 54.9866497,
+  "lon": 82.8732019,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 686199269,
+  "lat": 54.9866575,
+  "lon": 82.8734584,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 686199270,
+  "lat": 54.9866652,
+  "lon": 82.8736925,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 699752777,
+  "lat": 54.9414577,
+  "lon": 83.1335484,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 699752779,
+  "lat": 54.9400614,
+  "lon": 83.1351661,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 699752780,
+  "lat": 54.9401025,
+  "lon": 83.1352932,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 699752823,
+  "lat": 54.9428954,
+  "lon": 83.1361606,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 699752829,
+  "lat": 54.9431235,
+  "lon": 83.1364469,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 699752830,
+  "lat": 54.9432413,
+  "lon": 83.1367268,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 699752831,
+  "lat": 54.9432936,
+  "lon": 83.1369579,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 699752832,
+  "lat": 54.9428046,
+  "lon": 83.1377167,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 699811495,
+  "lat": 54.9407712,
+  "lon": 83.1410969,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 699811496,
+  "lat": 54.9407792,
+  "lon": 83.1408112,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 699811497,
+  "lat": 54.9415069,
+  "lon": 83.1395353,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 699811498,
+  "lat": 54.9417760,
+  "lon": 83.1396265,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 699811499,
+  "lat": 54.9420121,
+  "lon": 83.1398286,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 699811500,
+  "lat": 54.9413677,
+  "lon": 83.1414802,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 702396716,
+  "lat": 54.8650300,
+  "lon": 83.0965313,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 708514684,
+  "lat": 55.0352525,
+  "lon": 82.8840475,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 708514758,
+  "lat": 55.0352896,
+  "lon": 82.8833012,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 708514876,
+  "lat": 55.0360804,
+  "lon": 82.8858950,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 716144563,
+  "lat": 54.9618424,
+  "lon": 82.8276515,
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 761165290,
+  "lat": 54.9678787,
+  "lon": 82.9222073,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 899087196,
+  "lat": 54.8582590,
+  "lon": 83.0767198,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324608,
+  "lat": 54.8465726,
+  "lon": 83.1116622,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324610,
+  "lat": 54.8468017,
+  "lon": 83.1122914,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324611,
+  "lat": 54.8467052,
+  "lon": 83.1120264,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324612,
+  "lat": 54.8466932,
+  "lon": 83.1119933,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324614,
+  "lat": 54.8465244,
+  "lon": 83.1115297,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324615,
+  "lat": 54.8465967,
+  "lon": 83.1117284,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324618,
+  "lat": 54.8466691,
+  "lon": 83.1119271,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324621,
+  "lat": 54.8467173,
+  "lon": 83.1120596,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324622,
+  "lat": 54.8466088,
+  "lon": 83.1117615,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324624,
+  "lat": 54.8465847,
+  "lon": 83.1116953,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324625,
+  "lat": 54.8465485,
+  "lon": 83.1115959,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324626,
+  "lat": 54.8465123,
+  "lon": 83.1114966,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324629,
+  "lat": 54.8467294,
+  "lon": 83.1120927,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324630,
+  "lat": 54.8466450,
+  "lon": 83.1118609,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324632,
+  "lat": 54.8465364,
+  "lon": 83.1115628,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324634,
+  "lat": 54.8467897,
+  "lon": 83.1122582,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324637,
+  "lat": 54.8467776,
+  "lon": 83.1122251,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324638,
+  "lat": 54.8466570,
+  "lon": 83.1118940,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324640,
+  "lat": 54.8466208,
+  "lon": 83.1117946,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324641,
+  "lat": 54.8467535,
+  "lon": 83.1121589,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324643,
+  "lat": 54.8466329,
+  "lon": 83.1118277,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324645,
+  "lat": 54.8469029,
+  "lon": 83.1121601,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324646,
+  "lat": 54.8466811,
+  "lon": 83.1119602,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324647,
+  "lat": 54.8474953,
+  "lon": 83.1121135,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324649,
+  "lat": 54.8467414,
+  "lon": 83.1121258,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324650,
+  "lat": 54.8465605,
+  "lon": 83.1116291,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003324652,
+  "lat": 54.8467655,
+  "lon": 83.1121920,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376693,
+  "lat": 54.8472794,
+  "lon": 83.1121538,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376695,
+  "lat": 54.8468476,
+  "lon": 83.1118372,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376696,
+  "lat": 54.8474728,
+  "lon": 83.1138514,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376698,
+  "lat": 54.8468597,
+  "lon": 83.1118703,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376700,
+  "lat": 54.8475399,
+  "lon": 83.1133312,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376701,
+  "lat": 54.8469441,
+  "lon": 83.1121022,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376702,
+  "lat": 54.8473983,
+  "lon": 83.1138601,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376703,
+  "lat": 54.8469562,
+  "lon": 83.1121353,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376705,
+  "lat": 54.8476114,
+  "lon": 83.1150021,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376708,
+  "lat": 54.8468235,
+  "lon": 83.1117710,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376709,
+  "lat": 54.8471850,
+  "lon": 83.1116754,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376711,
+  "lat": 54.8467391,
+  "lon": 83.1115392,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376712,
+  "lat": 54.8469200,
+  "lon": 83.1120359,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376714,
+  "lat": 54.8475710,
+  "lon": 83.1149967,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376715,
+  "lat": 54.8467994,
+  "lon": 83.1117048,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376716,
+  "lat": 54.8468356,
+  "lon": 83.1118041,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376718,
+  "lat": 54.8475922,
+  "lon": 83.1134024,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376721,
+  "lat": 54.8471840,
+  "lon": 83.1119033,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376722,
+  "lat": 54.8468959,
+  "lon": 83.1119697,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376723,
+  "lat": 54.8475685,
+  "lon": 83.1134715,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376724,
+  "lat": 54.8469320,
+  "lon": 83.1120690,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376727,
+  "lat": 54.8467753,
+  "lon": 83.1116385,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376728,
+  "lat": 54.8472416,
+  "lon": 83.1121641,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376730,
+  "lat": 54.8468115,
+  "lon": 83.1117379,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376731,
+  "lat": 54.8475114,
+  "lon": 83.1138536,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376732,
+  "lat": 54.8471581,
+  "lon": 83.1121261,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376734,
+  "lat": 54.8468718,
+  "lon": 83.1119035,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376735,
+  "lat": 54.8469079,
+  "lon": 83.1120028,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376737,
+  "lat": 54.8467873,
+  "lon": 83.1116717,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376739,
+  "lat": 54.8474293,
+  "lon": 83.1138536,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376741,
+  "lat": 54.8475573,
+  "lon": 83.1138471,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376744,
+  "lat": 54.8468838,
+  "lon": 83.1119366,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376745,
+  "lat": 54.8467512,
+  "lon": 83.1115723,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376747,
+  "lat": 54.8475664,
+  "lon": 83.1149157,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1003376749,
+  "lat": 54.8467632,
+  "lon": 83.1116054,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1004928273,
+  "lat": 54.8662173,
+  "lon": 83.0844967,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1004928365,
+  "lat": 54.8662221,
+  "lon": 83.0842906,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1005078670,
+  "lat": 54.8449351,
+  "lon": 83.1166555,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1005078733,
+  "lat": 54.8447411,
+  "lon": 83.1166010,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1005078786,
+  "lat": 54.8449250,
+  "lon": 83.1166690,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1005078857,
+  "lat": 54.8447287,
+  "lon": 83.1165630,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1005078873,
+  "lat": 54.8449069,
+  "lon": 83.1166872,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1005078884,
+  "lat": 54.8449614,
+  "lon": 83.1166787,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1005078887,
+  "lat": 54.8447135,
+  "lon": 83.1165316,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1005078897,
+  "lat": 54.8447734,
+  "lon": 83.1166687,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1005078898,
+  "lat": 54.8447002,
+  "lon": 83.1165085,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1005078921,
+  "lat": 54.8449525,
+  "lon": 83.1166404,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1005078933,
+  "lat": 54.8447554,
+  "lon": 83.1166290,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Sequoia",
+    "species:en": "Spruce"
+  }
+},
+{
+  "type": "node",
+  "id": 1012305218,
+  "lat": 54.8409492,
+  "lon": 83.1184780,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027569635,
+  "lat": 54.9843758,
+  "lon": 82.8261581,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027569666,
+  "lat": 54.9840093,
+  "lon": 82.8250644,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027569710,
+  "lat": 54.9848539,
+  "lon": 82.8280952,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027569734,
+  "lat": 54.9842772,
+  "lon": 82.8268929,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027569804,
+  "lat": 54.9845427,
+  "lon": 82.8271462,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027569836,
+  "lat": 54.9845194,
+  "lon": 82.8263644,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027569875,
+  "lat": 54.9845930,
+  "lon": 82.8274276,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027569945,
+  "lat": 54.9845427,
+  "lon": 82.8274714,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570004,
+  "lat": 54.9849611,
+  "lon": 82.8252830,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570021,
+  "lat": 54.9843883,
+  "lon": 82.8252207,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570051,
+  "lat": 54.9846055,
+  "lon": 82.8277216,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570124,
+  "lat": 54.9845822,
+  "lon": 82.8271618,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570212,
+  "lat": 54.9845714,
+  "lon": 82.8271024,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570290,
+  "lat": 54.9849113,
+  "lon": 82.8280014,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570301,
+  "lat": 54.9845409,
+  "lon": 82.8272650,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570323,
+  "lat": 54.9840025,
+  "lon": 82.8246696,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570338,
+  "lat": 54.9843233,
+  "lon": 82.8251777,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570364,
+  "lat": 54.9845176,
+  "lon": 82.8260861,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570416,
+  "lat": 54.9840294,
+  "lon": 82.8247634,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570438,
+  "lat": 54.9846027,
+  "lon": 82.8280702,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570492,
+  "lat": 54.9850031,
+  "lon": 82.8251426,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570540,
+  "lat": 54.9845696,
+  "lon": 82.8270242,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1027570643,
+  "lat": 54.9845535,
+  "lon": 82.8276528,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1037252417,
+  "lat": 54.9903220,
+  "lon": 82.8141160,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1037252446,
+  "lat": 54.9902991,
+  "lon": 82.8135639,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1037252541,
+  "lat": 54.9903358,
+  "lon": 82.8131638,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1037252575,
+  "lat": 54.9902991,
+  "lon": 82.8139320,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1037252626,
+  "lat": 54.9902073,
+  "lon": 82.8130358,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098406,
+  "lat": 54.9829594,
+  "lon": 82.8138349,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098409,
+  "lat": 54.9826951,
+  "lon": 82.8175192,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098429,
+  "lat": 54.9829770,
+  "lon": 82.8141910,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098436,
+  "lat": 54.9885644,
+  "lon": 82.8180571,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098440,
+  "lat": 54.9824837,
+  "lon": 82.8175376,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098453,
+  "lat": 54.9889978,
+  "lon": 82.8177857,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098459,
+  "lat": 54.9830897,
+  "lon": 82.8166964,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098486,
+  "lat": 54.9889978,
+  "lon": 82.8180817,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098488,
+  "lat": 54.9828818,
+  "lon": 82.8148051,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098500,
+  "lat": 54.9822934,
+  "lon": 82.8175130,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098522,
+  "lat": 54.9829594,
+  "lon": 82.8151551,
+  "tags": {
+    "fixme": "resurvey",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098527,
+  "lat": 54.9826493,
+  "lon": 82.8174455,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098537,
+  "lat": 54.9828642,
+  "lon": 82.8135893,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098540,
+  "lat": 54.9829241,
+  "lon": 82.8174823,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098550,
+  "lat": 54.9830510,
+  "lon": 82.8159411,
+  "tags": {
+    "height": "1",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098561,
+  "lat": 54.9889780,
+  "lon": 82.8174292,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098563,
+  "lat": 54.9885927,
+  "lon": 82.8181514,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098566,
+  "lat": 54.9829734,
+  "lon": 82.8140621,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098569,
+  "lat": 54.9830651,
+  "lon": 82.8163525,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098581,
+  "lat": 54.9829911,
+  "lon": 82.8145779,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098582,
+  "lat": 54.9823286,
+  "lon": 82.8175683,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098595,
+  "lat": 54.9831144,
+  "lon": 82.8169481,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098614,
+  "lat": 54.9890325,
+  "lon": 82.8183721,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098617,
+  "lat": 54.9830193,
+  "lon": 82.8150507,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098619,
+  "lat": 54.9831179,
+  "lon": 82.8173165,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098630,
+  "lat": 54.9830263,
+  "lon": 82.8153086,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098637,
+  "lat": 54.9829488,
+  "lon": 82.8137305,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098639,
+  "lat": 54.9827620,
+  "lon": 82.8174946,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098650,
+  "lat": 54.9830686,
+  "lon": 82.8162051,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098651,
+  "lat": 54.9886082,
+  "lon": 82.8188297,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098652,
+  "lat": 54.9825471,
+  "lon": 82.8175376,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098661,
+  "lat": 54.9890011,
+  "lon": 82.8176304,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098666,
+  "lat": 54.9885541,
+  "lon": 82.8176619,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098671,
+  "lat": 54.9830827,
+  "lon": 82.8165797,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098677,
+  "lat": 54.9890077,
+  "lon": 82.8180041,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098681,
+  "lat": 54.9830122,
+  "lon": 82.8148358,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098683,
+  "lat": 54.9822053,
+  "lon": 82.8175867,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098697,
+  "lat": 54.9831144,
+  "lon": 82.8172183,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098700,
+  "lat": 54.9825224,
+  "lon": 82.8174762,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098708,
+  "lat": 54.9890523,
+  "lon": 82.8189642,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098713,
+  "lat": 54.9827973,
+  "lon": 82.8135954,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098714,
+  "lat": 54.9829911,
+  "lon": 82.8174701,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098726,
+  "lat": 54.9830404,
+  "lon": 82.8155726,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098736,
+  "lat": 54.9829558,
+  "lon": 82.8139516,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098738,
+  "lat": 54.9826211,
+  "lon": 82.8175315,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098753,
+  "lat": 54.9829840,
+  "lon": 82.8144489,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098755,
+  "lat": 54.9824097,
+  "lon": 82.8175499,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098762,
+  "lat": 54.9890011,
+  "lon": 82.8178920,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098769,
+  "lat": 54.9830897,
+  "lon": 82.8168253,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098776,
+  "lat": 54.9889714,
+  "lon": 82.8181134,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098780,
+  "lat": 54.9828677,
+  "lon": 82.8146270,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098783,
+  "lat": 54.9824273,
+  "lon": 82.8174762,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098797,
+  "lat": 54.9830193,
+  "lon": 82.8152104,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098800,
+  "lat": 54.9827092,
+  "lon": 82.8174455,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098814,
+  "lat": 54.9829417,
+  "lon": 82.8135770,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098815,
+  "lat": 54.9828255,
+  "lon": 82.8174946,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098827,
+  "lat": 54.9830580,
+  "lon": 82.8160639,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098835,
+  "lat": 54.9889879,
+  "lon": 82.8175269,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098837,
+  "lat": 54.9885464,
+  "lon": 82.8178191,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098838,
+  "lat": 54.9830827,
+  "lon": 82.8164630,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098853,
+  "lat": 54.9830016,
+  "lon": 82.8147007,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098857,
+  "lat": 54.9822617,
+  "lon": 82.8175806,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098871,
+  "lat": 54.9831109,
+  "lon": 82.8170832,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098879,
+  "lat": 54.9890275,
+  "lon": 82.8184526,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098884,
+  "lat": 54.9830545,
+  "lon": 82.8174578,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1056098896,
+  "lat": 54.9830333,
+  "lon": 82.8154437,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1104885403,
+  "lat": 55.0159623,
+  "lon": 82.9353018,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1104889587,
+  "lat": 55.0159181,
+  "lon": 82.9354176,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1104889843,
+  "lat": 55.0159434,
+  "lon": 82.9353514,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1107442921,
+  "lat": 55.0150408,
+  "lon": 82.9400344,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1125925465,
+  "lat": 54.9864580,
+  "lon": 82.8227017,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1125925473,
+  "lat": 54.9861896,
+  "lon": 82.8227201,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1125925494,
+  "lat": 54.9863587,
+  "lon": 82.8227054,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1126003363,
+  "lat": 55.0248837,
+  "lon": 82.9780603,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1126003382,
+  "lat": 55.0270118,
+  "lon": 82.9823292,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1126003655,
+  "lat": 55.0265674,
+  "lon": 82.9814302,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1126003685,
+  "lat": 55.0267628,
+  "lon": 82.9817673,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1126003761,
+  "lat": 55.0264515,
+  "lon": 82.9811980,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1126004353,
+  "lat": 55.0271192,
+  "lon": 82.9825202,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1126004475,
+  "lat": 55.0267177,
+  "lon": 82.9816962,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1374824725,
+  "lat": 55.0521469,
+  "lon": 82.8955019,
+  "tags": {
+    "amenity": "parking",
+    "fee": "yes",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1374824727,
+  "lat": 55.0521625,
+  "lon": 82.8956882,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1374824729,
+  "lat": 55.0521938,
+  "lon": 82.8956882,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1374824732,
+  "lat": 55.0521951,
+  "lon": 82.8949476,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1374824735,
+  "lat": 55.0522094,
+  "lon": 82.8949862,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1374824737,
+  "lat": 55.0522250,
+  "lon": 82.8950271,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1374824738,
+  "lat": 55.0522315,
+  "lon": 82.8956087,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1374824739,
+  "lat": 55.0522484,
+  "lon": 82.8951066,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1374824740,
+  "lat": 55.0522562,
+  "lon": 82.8957223,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1374824741,
+  "lat": 55.0522770,
+  "lon": 82.8951793,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1374824742,
+  "lat": 55.0522940,
+  "lon": 82.8952202,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1374824743,
+  "lat": 55.0523070,
+  "lon": 82.8952611,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1374824744,
+  "lat": 55.0524618,
+  "lon": 82.8956632,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1530898681,
+  "lat": 54.8529326,
+  "lon": 83.0413511,
+  "tags": {
+    "leaf_type": "needleleaved",
+    "name:botanical": "Pinus",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1530898698,
+  "lat": 54.8530885,
+  "lon": 83.0412129,
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1560768579,
+  "lat": 54.8870604,
+  "lon": 83.0803408,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1560768582,
+  "lat": 54.8871043,
+  "lon": 83.0806126,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1560768584,
+  "lat": 54.8871783,
+  "lon": 83.0808653,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1560848719,
+  "lat": 54.8866362,
+  "lon": 83.0804170,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1560848732,
+  "lat": 54.8868859,
+  "lon": 83.0798412,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1560853596,
+  "lat": 54.8871370,
+  "lon": 83.0870285,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1560853597,
+  "lat": 54.8873219,
+  "lon": 83.0862451,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1560853598,
+  "lat": 54.8873276,
+  "lon": 83.0865112,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1560853602,
+  "lat": 54.8873825,
+  "lon": 83.0867021,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170520,
+  "lat": 55.0238564,
+  "lon": 82.9224898,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170524,
+  "lat": 55.0239161,
+  "lon": 82.9224797,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170526,
+  "lat": 55.0240761,
+  "lon": 82.9224393,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170532,
+  "lat": 55.0241176,
+  "lon": 82.9224208,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170547,
+  "lat": 55.0241937,
+  "lon": 82.9224090,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170549,
+  "lat": 55.0242747,
+  "lon": 82.9223906,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170551,
+  "lat": 55.0244135,
+  "lon": 82.9223586,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170562,
+  "lat": 55.0245022,
+  "lon": 82.9216959,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170570,
+  "lat": 55.0245397,
+  "lon": 82.9223183,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170573,
+  "lat": 55.0246429,
+  "lon": 82.9223082,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170575,
+  "lat": 55.0247226,
+  "lon": 82.9200598,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170578,
+  "lat": 55.0247348,
+  "lon": 82.9202105,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170588,
+  "lat": 55.0247487,
+  "lon": 82.9203816,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170590,
+  "lat": 55.0247595,
+  "lon": 82.9205137,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170593,
+  "lat": 55.0247738,
+  "lon": 82.9206901,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170595,
+  "lat": 55.0247885,
+  "lon": 82.9208709,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170596,
+  "lat": 55.0248016,
+  "lon": 82.9210333,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170604,
+  "lat": 55.0248795,
+  "lon": 82.9198326,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1573170608,
+  "lat": 55.0250703,
+  "lon": 82.9197993,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1584358934,
+  "lat": 55.0380881,
+  "lon": 82.9533024,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1771481738,
+  "lat": 55.1163901,
+  "lon": 82.8585037,
+  "tags": {
+    "attraction": "yes",
+    "leaf_type": "needleleaved",
+    "name": "300-летняя сосна",
+    "natural": "tree",
+    "tourism": "attraction"
+  }
+},
+{
+  "type": "node",
+  "id": 1879686343,
+  "lat": 54.8361539,
+  "lon": 83.1010674,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1956492525,
+  "lat": 54.8471100,
+  "lon": 83.0385489,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1956492538,
+  "lat": 54.8472382,
+  "lon": 83.0391004,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1956492543,
+  "lat": 54.8472789,
+  "lon": 83.0386892,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1956492554,
+  "lat": 54.8474881,
+  "lon": 83.0386094,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 1956492747,
+  "lat": 54.8492327,
+  "lon": 83.0365022,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 2179967269,
+  "lat": 54.8409425,
+  "lon": 83.1172364,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 2598476398,
+  "lat": 55.0337142,
+  "lon": 83.0617913,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3016571213,
+  "lat": 54.9381726,
+  "lon": 82.9301681,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3016571222,
+  "lat": 54.9380093,
+  "lon": 82.9302137,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3016571457,
+  "lat": 54.9381850,
+  "lon": 82.9295861,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3016571460,
+  "lat": 54.9380911,
+  "lon": 82.9297524,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3137936965,
+  "lat": 55.1048294,
+  "lon": 82.9487403,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3150258937,
+  "lat": 55.0122678,
+  "lon": 82.9225404,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3508249742,
+  "lat": 55.0699971,
+  "lon": 82.8890904,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3508249743,
+  "lat": 55.0700577,
+  "lon": 82.8891601,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3508249744,
+  "lat": 55.0701183,
+  "lon": 82.8892179,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3594450664,
+  "lat": 54.8541697,
+  "lon": 82.9799063,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3594450665,
+  "lat": 54.8544660,
+  "lon": 82.9795204,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3594450666,
+  "lat": 54.8543021,
+  "lon": 82.9794831,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3594450667,
+  "lat": 54.8537065,
+  "lon": 82.9801961,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3594450668,
+  "lat": 54.8544321,
+  "lon": 82.9798096,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3594450669,
+  "lat": 54.8528404,
+  "lon": 82.9805147,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3612949869,
+  "lat": 54.9845029,
+  "lon": 82.8209593,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615216709,
+  "lat": 54.9844246,
+  "lon": 82.8204823,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615216710,
+  "lat": 54.9844974,
+  "lon": 82.8204400,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615216711,
+  "lat": 54.9844673,
+  "lon": 82.8205042,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615216714,
+  "lat": 54.9846638,
+  "lon": 82.8204007,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615216715,
+  "lat": 54.9846019,
+  "lon": 82.8204240,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615216717,
+  "lat": 54.9847859,
+  "lon": 82.8204808,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615216720,
+  "lat": 54.9849674,
+  "lon": 82.8203686,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615216721,
+  "lat": 54.9849690,
+  "lon": 82.8204240,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615216722,
+  "lat": 54.9849306,
+  "lon": 82.8204211,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615216723,
+  "lat": 54.9848662,
+  "lon": 82.8204196,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615281046,
+  "lat": 54.9837180,
+  "lon": 82.8208705,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615281047,
+  "lat": 54.9838385,
+  "lon": 82.8205872,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615281048,
+  "lat": 54.9838488,
+  "lon": 82.8208135,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615281049,
+  "lat": 54.9838460,
+  "lon": 82.8207061,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615281050,
+  "lat": 54.9838441,
+  "lon": 82.8206491,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615281051,
+  "lat": 54.9838479,
+  "lon": 82.8207582,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615285491,
+  "lat": 54.9839580,
+  "lon": 82.8212928,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3615285492,
+  "lat": 54.9838842,
+  "lon": 82.8212821,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3651252660,
+  "lat": 55.0581555,
+  "lon": 82.8787598,
+  "tags": {
+    "natural": "stone"
+  }
+},
+{
+  "type": "node",
+  "id": 3977402648,
+  "lat": 55.0205842,
+  "lon": 82.9364123,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3977402649,
+  "lat": 55.0207395,
+  "lon": 82.9359643,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3977402650,
+  "lat": 55.0209609,
+  "lon": 82.9354252,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3977402651,
+  "lat": 55.0213756,
+  "lon": 82.9367135,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3977402655,
+  "lat": 55.0212956,
+  "lon": 82.9366142,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 3977406664,
+  "lat": 55.0212018,
+  "lon": 82.9364935,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4059895001,
+  "lat": 54.9845469,
+  "lon": 82.8248118,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4147325043,
+  "lat": 55.0651418,
+  "lon": 82.8821474,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4155864069,
+  "lat": 54.9373535,
+  "lon": 83.1054576,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4155864070,
+  "lat": 54.9374137,
+  "lon": 83.1057344,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4155864071,
+  "lat": 54.9369805,
+  "lon": 83.1058816,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4155901452,
+  "lat": 54.9492727,
+  "lon": 83.1044792,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4290007690,
+  "lat": 54.9646488,
+  "lon": 83.1121700,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4328810569,
+  "lat": 55.0012515,
+  "lon": 83.0069022,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4425049827,
+  "lat": 55.0821958,
+  "lon": 82.9434946,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4425049836,
+  "lat": 55.0821281,
+  "lon": 82.9434893,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309028,
+  "lat": 54.8435169,
+  "lon": 83.0901473,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309029,
+  "lat": 54.8434203,
+  "lon": 83.0900452,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309030,
+  "lat": 54.8434696,
+  "lon": 83.0898826,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309031,
+  "lat": 54.8431341,
+  "lon": 83.0897948,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309032,
+  "lat": 54.8430267,
+  "lon": 83.0897187,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309033,
+  "lat": 54.8431866,
+  "lon": 83.0896290,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309034,
+  "lat": 54.8433224,
+  "lon": 83.0899463,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309035,
+  "lat": 54.8433730,
+  "lon": 83.0897805,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309036,
+  "lat": 54.8434236,
+  "lon": 83.0896148,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309037,
+  "lat": 54.8432415,
+  "lon": 83.0898710,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309038,
+  "lat": 54.8432940,
+  "lon": 83.0897052,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309039,
+  "lat": 54.8433465,
+  "lon": 83.0895393,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309040,
+  "lat": 54.8434743,
+  "lon": 83.0894491,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309041,
+  "lat": 54.8435188,
+  "lon": 83.0897199,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309042,
+  "lat": 54.8435634,
+  "lon": 83.0899908,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309043,
+  "lat": 54.8436079,
+  "lon": 83.0902617,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309044,
+  "lat": 54.8433711,
+  "lon": 83.0902079,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309045,
+  "lat": 54.8434703,
+  "lon": 83.0903037,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309046,
+  "lat": 54.8435696,
+  "lon": 83.0903996,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309047,
+  "lat": 54.8432718,
+  "lon": 83.0901120,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309048,
+  "lat": 54.8429858,
+  "lon": 83.0898615,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309049,
+  "lat": 54.8430874,
+  "lon": 83.0899492,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309050,
+  "lat": 54.8430215,
+  "lon": 83.0905013,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309051,
+  "lat": 54.8428842,
+  "lon": 83.0897738,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309052,
+  "lat": 54.8433990,
+  "lon": 83.0893735,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309053,
+  "lat": 54.8432391,
+  "lon": 83.0894631,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309054,
+  "lat": 54.8430792,
+  "lon": 83.0895528,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4683309055,
+  "lat": 54.8429193,
+  "lon": 83.0896425,
+  "tags": {
+    "height": "3",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628744,
+  "lat": 55.0228136,
+  "lon": 83.0218844,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628745,
+  "lat": 55.0228554,
+  "lon": 83.0219162,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628746,
+  "lat": 55.0228983,
+  "lon": 83.0219480,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628747,
+  "lat": 55.0229401,
+  "lon": 83.0219742,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628748,
+  "lat": 55.0229777,
+  "lon": 83.0220004,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628749,
+  "lat": 55.0230163,
+  "lon": 83.0220284,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628750,
+  "lat": 55.0230549,
+  "lon": 83.0220528,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628751,
+  "lat": 55.0227439,
+  "lon": 83.0218414,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628752,
+  "lat": 55.0227064,
+  "lon": 83.0218059,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628753,
+  "lat": 55.0226646,
+  "lon": 83.0217778,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628754,
+  "lat": 55.0226238,
+  "lon": 83.0217479,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628755,
+  "lat": 55.0225477,
+  "lon": 83.0216918,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628756,
+  "lat": 55.0225080,
+  "lon": 83.0216637,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628757,
+  "lat": 55.0224694,
+  "lon": 83.0216413,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628758,
+  "lat": 55.0224405,
+  "lon": 83.0216169,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628759,
+  "lat": 55.0224072,
+  "lon": 83.0215982,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628760,
+  "lat": 55.0223761,
+  "lon": 83.0215720,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628761,
+  "lat": 55.0223450,
+  "lon": 83.0215496,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628762,
+  "lat": 55.0222978,
+  "lon": 83.0215197,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628763,
+  "lat": 55.0222592,
+  "lon": 83.0214897,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628764,
+  "lat": 55.0222185,
+  "lon": 83.0214636,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628765,
+  "lat": 55.0221820,
+  "lon": 83.0214374,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628766,
+  "lat": 55.0221434,
+  "lon": 83.0214074,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628767,
+  "lat": 55.0221059,
+  "lon": 83.0213775,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628768,
+  "lat": 55.0220662,
+  "lon": 83.0213532,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628769,
+  "lat": 55.0220309,
+  "lon": 83.0213270,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817628770,
+  "lat": 55.0219901,
+  "lon": 83.0213064,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714827,
+  "lat": 55.0232583,
+  "lon": 83.0211527,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714828,
+  "lat": 55.0232208,
+  "lon": 83.0211194,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714829,
+  "lat": 55.0231857,
+  "lon": 83.0210894,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714830,
+  "lat": 55.0231456,
+  "lon": 83.0210604,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714831,
+  "lat": 55.0231087,
+  "lon": 83.0210367,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714832,
+  "lat": 55.0230773,
+  "lon": 83.0210152,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714833,
+  "lat": 55.0230373,
+  "lon": 83.0209884,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714834,
+  "lat": 55.0230003,
+  "lon": 83.0209658,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714835,
+  "lat": 55.0229658,
+  "lon": 83.0209368,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714836,
+  "lat": 55.0229030,
+  "lon": 83.0208928,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714837,
+  "lat": 55.0228759,
+  "lon": 83.0208691,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714838,
+  "lat": 55.0228439,
+  "lon": 83.0208476,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714839,
+  "lat": 55.0228131,
+  "lon": 83.0208262,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714840,
+  "lat": 55.0227761,
+  "lon": 83.0208004,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714841,
+  "lat": 55.0227416,
+  "lon": 83.0207746,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714842,
+  "lat": 55.0227059,
+  "lon": 83.0207477,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714843,
+  "lat": 55.0226478,
+  "lon": 83.0207108,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714844,
+  "lat": 55.0225926,
+  "lon": 83.0206738,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714845,
+  "lat": 55.0225523,
+  "lon": 83.0206479,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714846,
+  "lat": 55.0225169,
+  "lon": 83.0206207,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714847,
+  "lat": 55.0224836,
+  "lon": 83.0205899,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714848,
+  "lat": 55.0224461,
+  "lon": 83.0205664,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714849,
+  "lat": 55.0224101,
+  "lon": 83.0205405,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714850,
+  "lat": 55.0223697,
+  "lon": 83.0205171,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714851,
+  "lat": 55.0223322,
+  "lon": 83.0204850,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714852,
+  "lat": 55.0222933,
+  "lon": 83.0204591,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714853,
+  "lat": 55.0222530,
+  "lon": 83.0204331,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4817714854,
+  "lat": 55.0222127,
+  "lon": 83.0204085,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781474,
+  "lat": 55.0234462,
+  "lon": 83.0213016,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781475,
+  "lat": 55.0234824,
+  "lon": 83.0213294,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781476,
+  "lat": 55.0235221,
+  "lon": 83.0213571,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781477,
+  "lat": 55.0235583,
+  "lon": 83.0213817,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781478,
+  "lat": 55.0235998,
+  "lon": 83.0214079,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781479,
+  "lat": 55.0236396,
+  "lon": 83.0214357,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781480,
+  "lat": 55.0236749,
+  "lon": 83.0214541,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781481,
+  "lat": 55.0237173,
+  "lon": 83.0214865,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781482,
+  "lat": 55.0237517,
+  "lon": 83.0215111,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781483,
+  "lat": 55.0237835,
+  "lon": 83.0215404,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781484,
+  "lat": 55.0238206,
+  "lon": 83.0215635,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781485,
+  "lat": 55.0238639,
+  "lon": 83.0215959,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781486,
+  "lat": 55.0239062,
+  "lon": 83.0216251,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781487,
+  "lat": 55.0239407,
+  "lon": 83.0216452,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781488,
+  "lat": 55.0239769,
+  "lon": 83.0216698,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781489,
+  "lat": 55.0240113,
+  "lon": 83.0216991,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781490,
+  "lat": 55.0240520,
+  "lon": 83.0217253,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781491,
+  "lat": 55.0240908,
+  "lon": 83.0217530,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781492,
+  "lat": 55.0241279,
+  "lon": 83.0217792,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781493,
+  "lat": 55.0241650,
+  "lon": 83.0218023,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781494,
+  "lat": 55.0242030,
+  "lon": 83.0218316,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781495,
+  "lat": 55.0242427,
+  "lon": 83.0218624,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781737,
+  "lat": 55.0226070,
+  "lon": 83.0226763,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781738,
+  "lat": 55.0225948,
+  "lon": 83.0227347,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781739,
+  "lat": 55.0225674,
+  "lon": 83.0228302,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781740,
+  "lat": 55.0225573,
+  "lon": 83.0228798,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781741,
+  "lat": 55.0223108,
+  "lon": 83.0224781,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781742,
+  "lat": 55.0222702,
+  "lon": 83.0226674,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781743,
+  "lat": 55.0220191,
+  "lon": 83.0222585,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781744,
+  "lat": 55.0220037,
+  "lon": 83.0223203,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781745,
+  "lat": 55.0219843,
+  "lon": 83.0224151,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819781746,
+  "lat": 55.0219723,
+  "lon": 83.0224708,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782119,
+  "lat": 55.0241907,
+  "lon": 83.0229594,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782120,
+  "lat": 55.0242237,
+  "lon": 83.0229868,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782221,
+  "lat": 55.0242597,
+  "lon": 83.0230196,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782222,
+  "lat": 55.0242962,
+  "lon": 83.0230443,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782223,
+  "lat": 55.0243393,
+  "lon": 83.0230789,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782224,
+  "lat": 55.0243768,
+  "lon": 83.0231054,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782225,
+  "lat": 55.0241146,
+  "lon": 83.0228984,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782226,
+  "lat": 55.0240862,
+  "lon": 83.0228745,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782227,
+  "lat": 55.0240451,
+  "lon": 83.0228435,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782228,
+  "lat": 55.0240076,
+  "lon": 83.0228143,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782229,
+  "lat": 55.0239665,
+  "lon": 83.0227886,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782230,
+  "lat": 55.0239396,
+  "lon": 83.0227630,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782231,
+  "lat": 55.0239031,
+  "lon": 83.0227364,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782232,
+  "lat": 55.0238661,
+  "lon": 83.0227081,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782233,
+  "lat": 55.0238225,
+  "lon": 83.0226772,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782234,
+  "lat": 55.0237855,
+  "lon": 83.0226471,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782235,
+  "lat": 55.0237505,
+  "lon": 83.0226179,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782236,
+  "lat": 55.0237145,
+  "lon": 83.0225904,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782237,
+  "lat": 55.0236764,
+  "lon": 83.0225612,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782238,
+  "lat": 55.0236434,
+  "lon": 83.0225382,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782239,
+  "lat": 55.0236034,
+  "lon": 83.0225073,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782240,
+  "lat": 55.0235689,
+  "lon": 83.0224736,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782241,
+  "lat": 55.0235354,
+  "lon": 83.0224506,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782242,
+  "lat": 55.0234999,
+  "lon": 83.0224223,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782243,
+  "lat": 55.0234548,
+  "lon": 83.0223852,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782244,
+  "lat": 55.0234213,
+  "lon": 83.0223613,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782245,
+  "lat": 55.0233822,
+  "lon": 83.0223321,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782246,
+  "lat": 55.0233432,
+  "lon": 83.0223011,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 4819782247,
+  "lat": 55.0233062,
+  "lon": 83.0222728,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5037234549,
+  "lat": 55.1663703,
+  "lon": 82.9613484,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "natural": "tree",
+    "species": "Betula"
+  }
+},
+{
+  "type": "node",
+  "id": 5203626373,
+  "lat": 55.0505153,
+  "lon": 82.8411352,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5821891011,
+  "lat": 55.1657483,
+  "lon": 82.9722732,
+  "tags": {
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 5861456717,
+  "lat": 54.8401062,
+  "lon": 83.0909858,
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5861456718,
+  "lat": 54.8402698,
+  "lon": 83.0908955,
+  "tags": {
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5936237279,
+  "lat": 55.0526420,
+  "lon": 82.9922989,
+  "tags": {
+    "natural": "beach"
+  }
+},
+{
+  "type": "node",
+  "id": 5936237280,
+  "lat": 55.0520291,
+  "lon": 82.9919081,
+  "tags": {
+    "natural": "cliff"
+  }
+},
+{
+  "type": "node",
+  "id": 5954239648,
+  "lat": 54.8566577,
+  "lon": 83.0766606,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962411768,
+  "lat": 55.0580650,
+  "lon": 82.9782610,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962411769,
+  "lat": 55.0465079,
+  "lon": 82.9437845,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962411773,
+  "lat": 55.0461817,
+  "lon": 82.9525616,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962411777,
+  "lat": 55.0463389,
+  "lon": 82.9429795,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962411782,
+  "lat": 55.0476065,
+  "lon": 82.9525934,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962415691,
+  "lat": 55.0578874,
+  "lon": 82.9785421,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962415692,
+  "lat": 55.0465452,
+  "lon": 82.9441345,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962415697,
+  "lat": 55.0456272,
+  "lon": 82.9518943,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962415700,
+  "lat": 55.0589743,
+  "lon": 82.9782899,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962415708,
+  "lat": 55.0513264,
+  "lon": 82.9628330,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962415712,
+  "lat": 55.0580329,
+  "lon": 82.9786875,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962415713,
+  "lat": 55.0464422,
+  "lon": 82.9426189,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962415719,
+  "lat": 55.0454215,
+  "lon": 82.9486993,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962415721,
+  "lat": 55.0581824,
+  "lon": 82.9785468,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962415722,
+  "lat": 55.0464683,
+  "lon": 82.9432031,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962415729,
+  "lat": 55.0469576,
+  "lon": 82.9508813,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 5962415739,
+  "lat": 55.0443391,
+  "lon": 82.9461533,
+  "tags": {
+    "natural": "yes"
+  }
+},
+{
+  "type": "node",
+  "id": 6115291919,
+  "lat": 55.0267555,
+  "lon": 83.0068240,
+  "tags": {
+    "intermittent": "no",
+    "name": "Родник",
+    "natural": "spring"
+  }
+},
+{
+  "type": "node",
+  "id": 6115292097,
+  "lat": 55.0272991,
+  "lon": 83.0137892,
+  "tags": {
+    "name": "Родник",
+    "natural": "spring"
+  }
+},
+{
+  "type": "node",
+  "id": 6391371837,
+  "lat": 54.8380864,
+  "lon": 83.1076894,
+  "tags": {
+    "denotation": "urban",
+    "description": "Одно из самых старых деревьев на территории Академгородка",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6418721950,
+  "lat": 55.0667200,
+  "lon": 82.9270363,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Pinus",
+    "leaf_cycle": "evergreen",
+    "natural": "tree",
+    "species": "Pinus sylvestris"
+  }
+},
+{
+  "type": "node",
+  "id": 6418721951,
+  "lat": 55.0667768,
+  "lon": 82.9271315,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Pinus",
+    "leaf_cycle": "evergreen",
+    "natural": "tree",
+    "species": "Pinus sylvestris"
+  }
+},
+{
+  "type": "node",
+  "id": 6433589292,
+  "lat": 55.1276017,
+  "lon": 82.8988731,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6447179509,
+  "lat": 55.1160646,
+  "lon": 82.9371268,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6447179510,
+  "lat": 55.1160968,
+  "lon": 82.9371616,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6447179511,
+  "lat": 55.1161229,
+  "lon": 82.9371777,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6447179512,
+  "lat": 55.1161029,
+  "lon": 82.9372314,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6447179513,
+  "lat": 55.1160615,
+  "lon": 82.9372072,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6447179514,
+  "lat": 55.1159235,
+  "lon": 82.9377893,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6447179515,
+  "lat": 55.1159434,
+  "lon": 82.9377517,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6447179516,
+  "lat": 55.1159741,
+  "lon": 82.9378375,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6452389415,
+  "lat": 55.1136669,
+  "lon": 82.9235709,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6452389416,
+  "lat": 55.1137006,
+  "lon": 82.9236245,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6452389417,
+  "lat": 55.1137283,
+  "lon": 82.9236647,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6452389418,
+  "lat": 55.1137482,
+  "lon": 82.9236996,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6466639779,
+  "lat": 55.0649145,
+  "lon": 82.9555804,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá",
+    "taxon:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 6466641615,
+  "lat": 55.0618179,
+  "lon": 82.9524609,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá",
+    "taxon:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 6482090441,
+  "lat": 55.0035811,
+  "lon": 83.0155224,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá"
+  }
+},
+{
+  "type": "node",
+  "id": 6482091285,
+  "lat": 55.0035457,
+  "lon": 83.0153802,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá"
+  }
+},
+{
+  "type": "node",
+  "id": 6482091286,
+  "lat": 55.0036611,
+  "lon": 83.0151710,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá"
+  }
+},
+{
+  "type": "node",
+  "id": 6482091287,
+  "lat": 55.0035657,
+  "lon": 83.0152059,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá"
+  }
+},
+{
+  "type": "node",
+  "id": 6482091301,
+  "lat": 55.0036857,
+  "lon": 83.0161339,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá"
+  }
+},
+{
+  "type": "node",
+  "id": 6482091302,
+  "lat": 55.0037950,
+  "lon": 83.0163458,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá"
+  }
+},
+{
+  "type": "node",
+  "id": 6482091303,
+  "lat": 55.0037134,
+  "lon": 83.0164236,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá"
+  }
+},
+{
+  "type": "node",
+  "id": 6490006692,
+  "lat": 54.9350477,
+  "lon": 82.8969111,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6490006693,
+  "lat": 54.9350739,
+  "lon": 82.8969137,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6490006694,
+  "lat": 54.9351201,
+  "lon": 82.8969151,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6490006695,
+  "lat": 54.9350076,
+  "lon": 82.8967971,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá"
+  }
+},
+{
+  "type": "node",
+  "id": 6490006696,
+  "lat": 54.9350461,
+  "lon": 82.8967997,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá"
+  }
+},
+{
+  "type": "node",
+  "id": 6490006697,
+  "lat": 54.9350893,
+  "lon": 82.8968078,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá"
+  }
+},
+{
+  "type": "node",
+  "id": 6490007191,
+  "lat": 54.9348343,
+  "lon": 82.8967756,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá"
+  }
+},
+{
+  "type": "node",
+  "id": 6490007192,
+  "lat": 54.9347595,
+  "lon": 82.8968681,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6490007193,
+  "lat": 54.9347965,
+  "lon": 82.8968762,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6490007194,
+  "lat": 54.9348312,
+  "lon": 82.8968722,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6490007195,
+  "lat": 54.9350142,
+  "lon": 82.8969090,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6493847466,
+  "lat": 55.0036788,
+  "lon": 83.0112000,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá"
+  }
+},
+{
+  "type": "node",
+  "id": 6497075982,
+  "lat": 55.0024166,
+  "lon": 83.0106085,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:cs": "Bříza Bělokorá"
+  }
+},
+{
+  "type": "node",
+  "id": 6544303423,
+  "lat": 55.0648822,
+  "lon": 82.9109457,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6544303424,
+  "lat": 55.0649390,
+  "lon": 82.9110745,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6544303425,
+  "lat": 55.0651095,
+  "lon": 82.9110262,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6544303426,
+  "lat": 55.0652478,
+  "lon": 82.9109833,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6544303427,
+  "lat": 55.0651740,
+  "lon": 82.9110074,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6544303428,
+  "lat": 55.0648039,
+  "lon": 82.9109725,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6544303429,
+  "lat": 55.0651341,
+  "lon": 82.9108760,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6604993376,
+  "lat": 54.8719611,
+  "lon": 83.1086931,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6611951759,
+  "lat": 55.0372601,
+  "lon": 82.9922826,
+  "tags": {
+    "description": "Зелёные насаждения",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 6611951760,
+  "lat": 55.0369642,
+  "lon": 82.9924818,
+  "tags": {
+    "description": "Зелёные насаждения",
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 6611951768,
+  "lat": 55.0371923,
+  "lon": 82.9926191,
+  "tags": {
+    "description": "Одинокая береза",
+    "diameter": "20 см",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6611951769,
+  "lat": 55.0371607,
+  "lon": 82.9923301,
+  "tags": {
+    "description": "Зелёные насаждения",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "mixed",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 6626999536,
+  "lat": 55.0335717,
+  "lon": 82.9222512,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6626999537,
+  "lat": 55.0336170,
+  "lon": 82.9222378,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6626999538,
+  "lat": 55.0336431,
+  "lon": 82.9222298,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6634790259,
+  "lat": 55.0539416,
+  "lon": 82.9257247,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6634790260,
+  "lat": 55.0539370,
+  "lon": 82.9257555,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6634790273,
+  "lat": 55.0442843,
+  "lon": 82.9288468,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6718401887,
+  "lat": 54.9776640,
+  "lon": 82.8856427,
+  "tags": {
+    "description": "дуб",
+    "leaf_cycle": "mixed",
+    "leaf_type": "leafless",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 6792717247,
+  "lat": 54.8397414,
+  "lon": 83.0951370,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6792717248,
+  "lat": 54.8397877,
+  "lon": 83.0948929,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6792717249,
+  "lat": 54.8397630,
+  "lon": 83.0948634,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6792717250,
+  "lat": 54.8397445,
+  "lon": 83.0948574,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6792717251,
+  "lat": 54.8397143,
+  "lon": 83.0948628,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6792717252,
+  "lat": 54.8397634,
+  "lon": 83.0951343,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 6792717253,
+  "lat": 54.8397240,
+  "lon": 83.0951263,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7199689764,
+  "lat": 55.1299243,
+  "lon": 82.8880918,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7199689765,
+  "lat": 55.1294459,
+  "lon": 82.8878528,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7199689766,
+  "lat": 55.1296024,
+  "lon": 82.8891203,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7559221347,
+  "lat": 54.8480930,
+  "lon": 83.1065944,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7559221348,
+  "lat": 54.8478655,
+  "lon": 83.1055802,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7559221349,
+  "lat": 54.8480755,
+  "lon": 83.1052691,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7559221350,
+  "lat": 54.8481164,
+  "lon": 83.1051537,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283038,
+  "lat": 54.9882030,
+  "lon": 83.0469081,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283039,
+  "lat": 54.9882309,
+  "lon": 83.0469285,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283040,
+  "lat": 54.9882594,
+  "lon": 83.0469612,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283041,
+  "lat": 54.9882878,
+  "lon": 83.0469913,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283042,
+  "lat": 54.9883259,
+  "lon": 83.0470249,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283043,
+  "lat": 54.9883599,
+  "lon": 83.0470515,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283044,
+  "lat": 54.9883969,
+  "lon": 83.0470975,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283045,
+  "lat": 54.9884264,
+  "lon": 83.0471347,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283046,
+  "lat": 54.9882998,
+  "lon": 83.0467755,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283047,
+  "lat": 54.9883613,
+  "lon": 83.0467839,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283048,
+  "lat": 54.9883638,
+  "lon": 83.0468681,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283049,
+  "lat": 54.9841656,
+  "lon": 83.0406848,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283050,
+  "lat": 54.9848937,
+  "lon": 83.0399722,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283051,
+  "lat": 54.9848693,
+  "lon": 83.0399678,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283052,
+  "lat": 54.9848505,
+  "lon": 83.0399660,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283053,
+  "lat": 54.9848195,
+  "lon": 83.0399642,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283054,
+  "lat": 54.9847901,
+  "lon": 83.0399624,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283055,
+  "lat": 54.9844724,
+  "lon": 83.0399571,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283056,
+  "lat": 54.9847647,
+  "lon": 83.0399584,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7897283057,
+  "lat": 54.9847312,
+  "lon": 83.0399646,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660319,
+  "lat": 54.9847076,
+  "lon": 83.0399633,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660320,
+  "lat": 54.9846820,
+  "lon": 83.0399602,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660321,
+  "lat": 54.9846546,
+  "lon": 83.0399618,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660322,
+  "lat": 54.9846272,
+  "lon": 83.0399602,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660323,
+  "lat": 54.9846007,
+  "lon": 83.0399556,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660324,
+  "lat": 54.9845697,
+  "lon": 83.0399587,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660325,
+  "lat": 54.9845450,
+  "lon": 83.0399602,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660326,
+  "lat": 54.9845167,
+  "lon": 83.0399587,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660327,
+  "lat": 54.9844274,
+  "lon": 83.0399556,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660328,
+  "lat": 54.9844018,
+  "lon": 83.0399587,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660329,
+  "lat": 54.9843487,
+  "lon": 83.0399525,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660330,
+  "lat": 54.9842984,
+  "lon": 83.0399572,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660331,
+  "lat": 54.9842948,
+  "lon": 83.0399538,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660332,
+  "lat": 54.9842692,
+  "lon": 83.0399508,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660333,
+  "lat": 54.9842356,
+  "lon": 83.0399569,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660334,
+  "lat": 54.9842091,
+  "lon": 83.0399523,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660335,
+  "lat": 54.9841835,
+  "lon": 83.0399569,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660336,
+  "lat": 54.9841481,
+  "lon": 83.0399554,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660337,
+  "lat": 54.9841269,
+  "lon": 83.0399615,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660338,
+  "lat": 54.9840933,
+  "lon": 83.0399569,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660339,
+  "lat": 54.9847005,
+  "lon": 83.0406982,
+  "tags": {
+    "height": "20",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660340,
+  "lat": 54.9849852,
+  "lon": 83.0398093,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660341,
+  "lat": 54.9849816,
+  "lon": 83.0398555,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660342,
+  "lat": 54.9849755,
+  "lon": 83.0399341,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7899660343,
+  "lat": 54.9849755,
+  "lon": 83.0400111,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7901771936,
+  "lat": 54.9840740,
+  "lon": 83.0398699,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7901771937,
+  "lat": 54.9841126,
+  "lon": 83.0398663,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7901771938,
+  "lat": 54.9841471,
+  "lon": 83.0398672,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7901771939,
+  "lat": 54.9841862,
+  "lon": 83.0398663,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7901771940,
+  "lat": 54.9842273,
+  "lon": 83.0398663,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7901771941,
+  "lat": 54.9842568,
+  "lon": 83.0398699,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7901771942,
+  "lat": 54.9843020,
+  "lon": 83.0398637,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7901771943,
+  "lat": 54.9843350,
+  "lon": 83.0398628,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7901771944,
+  "lat": 54.9843690,
+  "lon": 83.0398654,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7901771945,
+  "lat": 54.9844284,
+  "lon": 83.0398663,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7901771946,
+  "lat": 54.9844749,
+  "lon": 83.0398673,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7901771947,
+  "lat": 54.9846477,
+  "lon": 83.0397090,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271620,
+  "lat": 54.9846447,
+  "lon": 83.0406892,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271621,
+  "lat": 54.9846078,
+  "lon": 83.0406811,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271622,
+  "lat": 54.9845786,
+  "lon": 83.0406784,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271623,
+  "lat": 54.9845509,
+  "lon": 83.0406798,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271624,
+  "lat": 54.9845216,
+  "lon": 83.0406798,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271625,
+  "lat": 54.9844955,
+  "lon": 83.0406784,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271626,
+  "lat": 54.9844716,
+  "lon": 83.0406784,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271627,
+  "lat": 54.9844439,
+  "lon": 83.0406744,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271628,
+  "lat": 54.9844131,
+  "lon": 83.0406758,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271629,
+  "lat": 54.9843823,
+  "lon": 83.0406744,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271630,
+  "lat": 54.9843623,
+  "lon": 83.0406771,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271631,
+  "lat": 54.9843385,
+  "lon": 83.0406771,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271632,
+  "lat": 54.9843077,
+  "lon": 83.0406771,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271633,
+  "lat": 54.9842769,
+  "lon": 83.0406784,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271634,
+  "lat": 54.9842469,
+  "lon": 83.0406758,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271635,
+  "lat": 54.9842184,
+  "lon": 83.0406731,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271636,
+  "lat": 54.9842407,
+  "lon": 83.0407267,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271637,
+  "lat": 54.9842862,
+  "lon": 83.0407240,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271638,
+  "lat": 54.9843131,
+  "lon": 83.0407200,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271639,
+  "lat": 54.9843539,
+  "lon": 83.0407214,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271640,
+  "lat": 54.9843923,
+  "lon": 83.0407254,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271641,
+  "lat": 54.9844308,
+  "lon": 83.0407254,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271642,
+  "lat": 54.9844647,
+  "lon": 83.0407173,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271643,
+  "lat": 54.9845024,
+  "lon": 83.0407227,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271644,
+  "lat": 54.9845386,
+  "lon": 83.0407254,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271645,
+  "lat": 54.9845724,
+  "lon": 83.0407187,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271646,
+  "lat": 54.9846209,
+  "lon": 83.0407348,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902271647,
+  "lat": 54.9846648,
+  "lon": 83.0407415,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7902296985,
+  "lat": 54.9863252,
+  "lon": 83.0446897,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7907287737,
+  "lat": 54.8107208,
+  "lon": 83.1251459,
+  "tags": {
+    "attraction": "yes",
+    "denotation": "landmark",
+    "height": "8",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "name": "Берёза-подсвечник \"ЩШ\"",
+    "natural": "tree",
+    "tourism": "attraction"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110086,
+  "lat": 54.9786291,
+  "lon": 83.0330475,
+  "tags": {
+    "natural": "spring"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110087,
+  "lat": 54.9846510,
+  "lon": 83.0422006,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110088,
+  "lat": 54.9846651,
+  "lon": 83.0422337,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110089,
+  "lat": 54.9846899,
+  "lon": 83.0422741,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110090,
+  "lat": 54.9847060,
+  "lon": 83.0423074,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110091,
+  "lat": 54.9847210,
+  "lon": 83.0423395,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110092,
+  "lat": 54.9847359,
+  "lon": 83.0423804,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110093,
+  "lat": 54.9847497,
+  "lon": 83.0424086,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110094,
+  "lat": 54.9847703,
+  "lon": 83.0424438,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110095,
+  "lat": 54.9847861,
+  "lon": 83.0424833,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110096,
+  "lat": 54.9848059,
+  "lon": 83.0425158,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110097,
+  "lat": 54.9848262,
+  "lon": 83.0425531,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110098,
+  "lat": 54.9848436,
+  "lon": 83.0425940,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110099,
+  "lat": 54.9848581,
+  "lon": 83.0426307,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110100,
+  "lat": 54.9848771,
+  "lon": 83.0426688,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110101,
+  "lat": 54.9848937,
+  "lon": 83.0426977,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110102,
+  "lat": 54.9849091,
+  "lon": 83.0427315,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110103,
+  "lat": 54.9849281,
+  "lon": 83.0427689,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110104,
+  "lat": 54.9849435,
+  "lon": 83.0428070,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110105,
+  "lat": 54.9849605,
+  "lon": 83.0428380,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110106,
+  "lat": 54.9849836,
+  "lon": 83.0428690,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110107,
+  "lat": 54.9848419,
+  "lon": 83.0424495,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110108,
+  "lat": 54.9848767,
+  "lon": 83.0425263,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110109,
+  "lat": 54.9848889,
+  "lon": 83.0425630,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110110,
+  "lat": 54.9848080,
+  "lon": 83.0423825,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110111,
+  "lat": 54.9847901,
+  "lon": 83.0423402,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110112,
+  "lat": 54.9847736,
+  "lon": 83.0422993,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110113,
+  "lat": 54.9847533,
+  "lon": 83.0422675,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110114,
+  "lat": 54.9847416,
+  "lon": 83.0422429,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110115,
+  "lat": 54.9847278,
+  "lon": 83.0422013,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110116,
+  "lat": 54.9847121,
+  "lon": 83.0421639,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7913110117,
+  "lat": 54.9846930,
+  "lon": 83.0421272,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7942011764,
+  "lat": 54.9845686,
+  "lon": 83.0398759,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7944651438,
+  "lat": 54.9909986,
+  "lon": 83.0391247,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7944651439,
+  "lat": 54.9904298,
+  "lon": 83.0392613,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7944651442,
+  "lat": 54.9847226,
+  "lon": 83.0408035,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7944651443,
+  "lat": 54.9847944,
+  "lon": 83.0405881,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7966162743,
+  "lat": 54.9842081,
+  "lon": 83.0407110,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7966162744,
+  "lat": 54.9851347,
+  "lon": 83.0432133,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7966162745,
+  "lat": 54.9851937,
+  "lon": 83.0433113,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7966162746,
+  "lat": 54.9851856,
+  "lon": 83.0432938,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7966162747,
+  "lat": 54.9852131,
+  "lon": 83.0433452,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7972702361,
+  "lat": 54.9840625,
+  "lon": 83.0410135,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7972702362,
+  "lat": 54.9839330,
+  "lon": 83.0406207,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226344,
+  "lat": 54.9839525,
+  "lon": 83.0406610,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226345,
+  "lat": 54.9839764,
+  "lon": 83.0407080,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226346,
+  "lat": 54.9839987,
+  "lon": 83.0407455,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226347,
+  "lat": 54.9840125,
+  "lon": 83.0407804,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226348,
+  "lat": 54.9840325,
+  "lon": 83.0408099,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226349,
+  "lat": 54.9840471,
+  "lon": 83.0408448,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226350,
+  "lat": 54.9840679,
+  "lon": 83.0408770,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226351,
+  "lat": 54.9840789,
+  "lon": 83.0409008,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226352,
+  "lat": 54.9838848,
+  "lon": 83.0406610,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226353,
+  "lat": 54.9839017,
+  "lon": 83.0406932,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226354,
+  "lat": 54.9839194,
+  "lon": 83.0407331,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226355,
+  "lat": 54.9839309,
+  "lon": 83.0407656,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226356,
+  "lat": 54.9839510,
+  "lon": 83.0408019,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226357,
+  "lat": 54.9839642,
+  "lon": 83.0408334,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226358,
+  "lat": 54.9839833,
+  "lon": 83.0408618,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226359,
+  "lat": 54.9839946,
+  "lon": 83.0408980,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226360,
+  "lat": 54.9840144,
+  "lon": 83.0409307,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7973226361,
+  "lat": 54.9840383,
+  "lon": 83.0409661,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633072,
+  "lat": 54.9840822,
+  "lon": 83.0410562,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633073,
+  "lat": 54.9841017,
+  "lon": 83.0410954,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633074,
+  "lat": 54.9841171,
+  "lon": 83.0411263,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633075,
+  "lat": 54.9841372,
+  "lon": 83.0411645,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633076,
+  "lat": 54.9841567,
+  "lon": 83.0412047,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633077,
+  "lat": 54.9841810,
+  "lon": 83.0412593,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633078,
+  "lat": 54.9841987,
+  "lon": 83.0413026,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633079,
+  "lat": 54.9842159,
+  "lon": 83.0413273,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633080,
+  "lat": 54.9842366,
+  "lon": 83.0413624,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633081,
+  "lat": 54.9842508,
+  "lon": 83.0413974,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633082,
+  "lat": 54.9842650,
+  "lon": 83.0414366,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633083,
+  "lat": 54.9842904,
+  "lon": 83.0414902,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633084,
+  "lat": 54.9843075,
+  "lon": 83.0415211,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633085,
+  "lat": 54.9843253,
+  "lon": 83.0415510,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633086,
+  "lat": 54.9843424,
+  "lon": 83.0415860,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633087,
+  "lat": 54.9843608,
+  "lon": 83.0416180,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633088,
+  "lat": 54.9843744,
+  "lon": 83.0416602,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633089,
+  "lat": 54.9844033,
+  "lon": 83.0417004,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633090,
+  "lat": 54.9844193,
+  "lon": 83.0417437,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633091,
+  "lat": 54.9844353,
+  "lon": 83.0417777,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633092,
+  "lat": 54.9844518,
+  "lon": 83.0418097,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633093,
+  "lat": 54.9844690,
+  "lon": 83.0418499,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633094,
+  "lat": 54.9844909,
+  "lon": 83.0418808,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633095,
+  "lat": 54.9845240,
+  "lon": 83.0419395,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633096,
+  "lat": 54.9845495,
+  "lon": 83.0419923,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633097,
+  "lat": 54.9845601,
+  "lon": 83.0420106,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633098,
+  "lat": 54.9845364,
+  "lon": 83.0419684,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633099,
+  "lat": 54.9845701,
+  "lon": 83.0420302,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633101,
+  "lat": 54.9845808,
+  "lon": 83.0420508,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633102,
+  "lat": 54.9845926,
+  "lon": 83.0420721,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633104,
+  "lat": 54.9846343,
+  "lon": 83.0420229,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633105,
+  "lat": 54.9846208,
+  "lon": 83.0420010,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633106,
+  "lat": 54.9846110,
+  "lon": 83.0419768,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633107,
+  "lat": 54.9845984,
+  "lon": 83.0419494,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633108,
+  "lat": 54.9845912,
+  "lon": 83.0419323,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633109,
+  "lat": 54.9845778,
+  "lon": 83.0419080,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633110,
+  "lat": 54.9845666,
+  "lon": 83.0418838,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633111,
+  "lat": 54.9845397,
+  "lon": 83.0418370,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7992633112,
+  "lat": 54.9845554,
+  "lon": 83.0418643,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 7997301663,
+  "lat": 54.9839251,
+  "lon": 83.0406020,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 8236351467,
+  "lat": 54.8233906,
+  "lon": 83.0827804,
+  "tags": {
+    "name": "Пляж нудистов",
+    "natural": "beach"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056919,
+  "lat": 54.9863297,
+  "lon": 83.0450308,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056920,
+  "lat": 54.9863592,
+  "lon": 83.0450644,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056921,
+  "lat": 54.9863906,
+  "lon": 83.0451043,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056922,
+  "lat": 54.9864201,
+  "lon": 83.0451352,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056923,
+  "lat": 54.9864526,
+  "lon": 83.0451706,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056924,
+  "lat": 54.9864779,
+  "lon": 83.0451980,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056925,
+  "lat": 54.9865104,
+  "lon": 83.0452325,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056926,
+  "lat": 54.9865470,
+  "lon": 83.0452609,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056927,
+  "lat": 54.9866084,
+  "lon": 83.0453299,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056928,
+  "lat": 54.9866678,
+  "lon": 83.0453838,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056929,
+  "lat": 54.9867034,
+  "lon": 83.0454316,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056930,
+  "lat": 54.9867633,
+  "lon": 83.0454847,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056931,
+  "lat": 54.9867968,
+  "lon": 83.0455148,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056932,
+  "lat": 54.9868602,
+  "lon": 83.0455803,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056933,
+  "lat": 54.9869272,
+  "lon": 83.0456378,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056934,
+  "lat": 54.9869805,
+  "lon": 83.0456909,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056935,
+  "lat": 54.9870201,
+  "lon": 83.0457360,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056936,
+  "lat": 54.9870607,
+  "lon": 83.0457705,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056937,
+  "lat": 54.9870673,
+  "lon": 83.0458625,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056938,
+  "lat": 54.9870374,
+  "lon": 83.0458404,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056939,
+  "lat": 54.9870135,
+  "lon": 83.0458130,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056940,
+  "lat": 54.9869790,
+  "lon": 83.0457873,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056941,
+  "lat": 54.9869486,
+  "lon": 83.0457590,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056942,
+  "lat": 54.9868810,
+  "lon": 83.0456962,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056943,
+  "lat": 54.9868501,
+  "lon": 83.0456608,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056944,
+  "lat": 54.9867957,
+  "lon": 83.0456042,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056945,
+  "lat": 54.9867602,
+  "lon": 83.0455741,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056946,
+  "lat": 54.9867292,
+  "lon": 83.0455458,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056947,
+  "lat": 54.9866277,
+  "lon": 83.0454520,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056948,
+  "lat": 54.9865653,
+  "lon": 83.0453865,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056949,
+  "lat": 54.9864993,
+  "lon": 83.0453201,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056950,
+  "lat": 54.9864678,
+  "lon": 83.0452945,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056951,
+  "lat": 54.9864404,
+  "lon": 83.0452547,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056952,
+  "lat": 54.9864094,
+  "lon": 83.0452246,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056953,
+  "lat": 54.9863769,
+  "lon": 83.0451936,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9032056954,
+  "lat": 54.9863201,
+  "lon": 83.0451370,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040318505,
+  "lat": 54.9885934,
+  "lon": 83.0425879,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040318506,
+  "lat": 54.9889462,
+  "lon": 83.0408172,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040318507,
+  "lat": 54.9889748,
+  "lon": 83.0407989,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040318508,
+  "lat": 54.9889480,
+  "lon": 83.0407816,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040318509,
+  "lat": 54.9889497,
+  "lon": 83.0407481,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040318510,
+  "lat": 54.9889485,
+  "lon": 83.0407003,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040318511,
+  "lat": 54.9889483,
+  "lon": 83.0406611,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040318512,
+  "lat": 54.9889445,
+  "lon": 83.0406292,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040318513,
+  "lat": 54.9889480,
+  "lon": 83.0405844,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040318514,
+  "lat": 54.9889456,
+  "lon": 83.0405458,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040318515,
+  "lat": 54.9889462,
+  "lon": 83.0405133,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040318516,
+  "lat": 54.9889462,
+  "lon": 83.0404777,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040344017,
+  "lat": 54.9889456,
+  "lon": 83.0404371,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040344018,
+  "lat": 54.9889421,
+  "lon": 83.0403964,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040344019,
+  "lat": 54.9889445,
+  "lon": 83.0403547,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040344020,
+  "lat": 54.9889456,
+  "lon": 83.0403161,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040344021,
+  "lat": 54.9889456,
+  "lon": 83.0402694,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040344022,
+  "lat": 54.9889450,
+  "lon": 83.0402348,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040344023,
+  "lat": 54.9889456,
+  "lon": 83.0401921,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040344024,
+  "lat": 54.9889474,
+  "lon": 83.0401555,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040344025,
+  "lat": 54.9889500,
+  "lon": 83.0401187,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040344026,
+  "lat": 54.9889467,
+  "lon": 83.0400739,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040344027,
+  "lat": 54.9889459,
+  "lon": 83.0400336,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040344028,
+  "lat": 54.9889462,
+  "lon": 83.0399929,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040344029,
+  "lat": 54.9889450,
+  "lon": 83.0399523,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040344030,
+  "lat": 54.9889462,
+  "lon": 83.0398984,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455373,
+  "lat": 54.9903264,
+  "lon": 83.0395675,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455374,
+  "lat": 54.9903582,
+  "lon": 83.0395675,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455375,
+  "lat": 54.9904022,
+  "lon": 83.0395642,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455376,
+  "lat": 54.9904369,
+  "lon": 83.0395609,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455377,
+  "lat": 54.9904753,
+  "lon": 83.0395675,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455378,
+  "lat": 54.9905717,
+  "lon": 83.0395626,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455379,
+  "lat": 54.9906073,
+  "lon": 83.0395642,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455380,
+  "lat": 54.9906466,
+  "lon": 83.0395658,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455381,
+  "lat": 54.9906822,
+  "lon": 83.0395560,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455382,
+  "lat": 54.9907206,
+  "lon": 83.0395658,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455383,
+  "lat": 54.9907627,
+  "lon": 83.0395642,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455384,
+  "lat": 54.9908076,
+  "lon": 83.0395593,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455385,
+  "lat": 54.9908507,
+  "lon": 83.0395675,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455386,
+  "lat": 54.9908985,
+  "lon": 83.0395609,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455387,
+  "lat": 54.9909612,
+  "lon": 83.0392851,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455388,
+  "lat": 54.9909715,
+  "lon": 83.0393292,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455389,
+  "lat": 54.9909724,
+  "lon": 83.0393667,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455390,
+  "lat": 54.9909640,
+  "lon": 83.0394092,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455391,
+  "lat": 54.9910970,
+  "lon": 83.0395577,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455392,
+  "lat": 54.9910661,
+  "lon": 83.0395593,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455393,
+  "lat": 54.9910417,
+  "lon": 83.0395560,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455394,
+  "lat": 54.9910136,
+  "lon": 83.0395658,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455395,
+  "lat": 54.9909818,
+  "lon": 83.0395593,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455396,
+  "lat": 54.9910127,
+  "lon": 83.0392313,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455397,
+  "lat": 54.9910277,
+  "lon": 83.0392574,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455398,
+  "lat": 54.9910539,
+  "lon": 83.0392998,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455399,
+  "lat": 54.9910754,
+  "lon": 83.0393504,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455400,
+  "lat": 54.9904706,
+  "lon": 83.0394532,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455401,
+  "lat": 54.9904425,
+  "lon": 83.0394532,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455402,
+  "lat": 54.9904135,
+  "lon": 83.0394548,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455403,
+  "lat": 54.9903798,
+  "lon": 83.0394532,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455404,
+  "lat": 54.9904097,
+  "lon": 83.0394124,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455405,
+  "lat": 54.9904416,
+  "lon": 83.0393667,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455406,
+  "lat": 54.9904678,
+  "lon": 83.0393308,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455407,
+  "lat": 54.9904818,
+  "lon": 83.0393716,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455408,
+  "lat": 54.9904790,
+  "lon": 83.0394124,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455409,
+  "lat": 54.9904088,
+  "lon": 83.0392819,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455410,
+  "lat": 54.9903863,
+  "lon": 83.0393194,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455411,
+  "lat": 54.9903592,
+  "lon": 83.0393504,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9040455412,
+  "lat": 54.9903358,
+  "lon": 83.0393814,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9079656789,
+  "lat": 54.9885558,
+  "lon": 83.0468274,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9079656790,
+  "lat": 54.9885558,
+  "lon": 83.0470212,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9079656791,
+  "lat": 54.9885545,
+  "lon": 83.0471228,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9079656792,
+  "lat": 54.9885558,
+  "lon": 83.0473504,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9169781503,
+  "lat": 55.0576364,
+  "lon": 82.9036038,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9169781504,
+  "lat": 55.0576357,
+  "lon": 82.9035147,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9169781505,
+  "lat": 55.0576253,
+  "lon": 82.9033316,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9169781506,
+  "lat": 55.0576180,
+  "lon": 82.9032645,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9169801408,
+  "lat": 55.0576510,
+  "lon": 82.9037943,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9169801409,
+  "lat": 55.0576468,
+  "lon": 82.9037359,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9169801410,
+  "lat": 55.0576406,
+  "lon": 82.9036729,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9169807721,
+  "lat": 55.0604561,
+  "lon": 82.9069184,
+  "tags": {
+    "genus": "Betula",
+    "natural": "tree",
+    "species": "Pendula",
+    "taxon": "Betula Pendula",
+    "taxon:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9177828874,
+  "lat": 55.0454061,
+  "lon": 82.9264288,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9287741693,
+  "lat": 54.9643472,
+  "lon": 83.1168857,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9287741718,
+  "lat": 54.9616479,
+  "lon": 83.1193936,
+  "tags": {
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9572587076,
+  "lat": 54.8688236,
+  "lon": 83.0779933,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9572587077,
+  "lat": 54.8690389,
+  "lon": 83.0780130,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9572587078,
+  "lat": 54.8687164,
+  "lon": 83.0780320,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9572587079,
+  "lat": 54.8686436,
+  "lon": 83.0780297,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9572587080,
+  "lat": 54.8685528,
+  "lon": 83.0780255,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9572587081,
+  "lat": 54.8684439,
+  "lon": 83.0780276,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9572587082,
+  "lat": 54.8683554,
+  "lon": 83.0780161,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9572587083,
+  "lat": 54.8682532,
+  "lon": 83.0779964,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9572587084,
+  "lat": 54.8681670,
+  "lon": 83.0778187,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9572587085,
+  "lat": 54.8680917,
+  "lon": 83.0776834,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9572700105,
+  "lat": 54.8689751,
+  "lon": 83.0777405,
+  "tags": {
+    "natural": "shrub"
+  }
+},
+{
+  "type": "node",
+  "id": 9572700106,
+  "lat": 54.8689792,
+  "lon": 83.0776382,
+  "tags": {
+    "natural": "shrub"
+  }
+},
+{
+  "type": "node",
+  "id": 9572700107,
+  "lat": 54.8689499,
+  "lon": 83.0775915,
+  "tags": {
+    "natural": "shrub"
+  }
+},
+{
+  "type": "node",
+  "id": 9572700108,
+  "lat": 54.8689075,
+  "lon": 83.0775811,
+  "tags": {
+    "natural": "shrub"
+  }
+},
+{
+  "type": "node",
+  "id": 9572700109,
+  "lat": 54.8688694,
+  "lon": 83.0776185,
+  "tags": {
+    "natural": "shrub"
+  }
+},
+{
+  "type": "node",
+  "id": 9572700110,
+  "lat": 54.8688607,
+  "lon": 83.0777330,
+  "tags": {
+    "natural": "shrub"
+  }
+},
+{
+  "type": "node",
+  "id": 9695215303,
+  "lat": 55.0397721,
+  "lon": 82.9040015,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9695215304,
+  "lat": 55.0397252,
+  "lon": 82.9039009,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9695215305,
+  "lat": 55.0397029,
+  "lon": 82.9038298,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9695215306,
+  "lat": 55.0396853,
+  "lon": 82.9037802,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9695215307,
+  "lat": 55.0396653,
+  "lon": 82.9037292,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9695215308,
+  "lat": 55.0396491,
+  "lon": 82.9036662,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9695215309,
+  "lat": 55.0396053,
+  "lon": 82.9035696,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9702299802,
+  "lat": 55.0315103,
+  "lon": 82.9069144,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9702299803,
+  "lat": 55.0313266,
+  "lon": 82.9071262,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9702299804,
+  "lat": 55.0313450,
+  "lon": 82.9070820,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9703755185,
+  "lat": 55.0362477,
+  "lon": 82.9114792,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9703755186,
+  "lat": 55.0362310,
+  "lon": 82.9114458,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9703755187,
+  "lat": 55.0361926,
+  "lon": 82.9113773,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9703755188,
+  "lat": 55.0361701,
+  "lon": 82.9113439,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9705442776,
+  "lat": 55.0577009,
+  "lon": 82.9775798,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9705442777,
+  "lat": 55.0577332,
+  "lon": 82.9776254,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9705442778,
+  "lat": 55.0577286,
+  "lon": 82.9777327,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9705442779,
+  "lat": 55.0577655,
+  "lon": 82.9777139,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9705442780,
+  "lat": 55.0577962,
+  "lon": 82.9776844,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9705442781,
+  "lat": 55.0578377,
+  "lon": 82.9776227,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9705442782,
+  "lat": 55.0578730,
+  "lon": 82.9775745,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9705442783,
+  "lat": 55.0578991,
+  "lon": 82.9775342,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9705442784,
+  "lat": 55.0579314,
+  "lon": 82.9774699,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9705442785,
+  "lat": 55.0579606,
+  "lon": 82.9774350,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9705442786,
+  "lat": 55.0579882,
+  "lon": 82.9773867,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9705442787,
+  "lat": 55.0580113,
+  "lon": 82.9773465,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9785302241,
+  "lat": 55.0584061,
+  "lon": 82.9130888,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9785302242,
+  "lat": 55.0583577,
+  "lon": 82.9130995,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9785302243,
+  "lat": 55.0582555,
+  "lon": 82.9131237,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9785302244,
+  "lat": 55.0581795,
+  "lon": 82.9131478,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9785350460,
+  "lat": 55.0596550,
+  "lon": 82.9139256,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9785350461,
+  "lat": 55.0595989,
+  "lon": 82.9139324,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9785350462,
+  "lat": 55.0595375,
+  "lon": 82.9139310,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9785350463,
+  "lat": 55.0594806,
+  "lon": 82.9139364,
+  "tags": {
+    "denotation": "avenue",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9832421954,
+  "lat": 55.0671769,
+  "lon": 82.9219099,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Pinus",
+    "genus:en": "Pine",
+    "genus:ru": "Сосна",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Pinus sylvestris"
+  }
+},
+{
+  "type": "node",
+  "id": 9832428220,
+  "lat": 55.0666915,
+  "lon": 82.9239611,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Pinus",
+    "genus:en": "Pine",
+    "genus:ru": "Сосна",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Pinus sylvestris"
+  }
+},
+{
+  "type": "node",
+  "id": 9832428221,
+  "lat": 55.0670010,
+  "lon": 82.9243889,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula",
+    "species:en": "Silver birch",
+    "species:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9832428222,
+  "lat": 55.0670271,
+  "lon": 82.9244372,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula",
+    "species:en": "Silver birch",
+    "species:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9832428223,
+  "lat": 55.0671500,
+  "lon": 82.9246880,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula",
+    "species:en": "Silver birch",
+    "species:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9855089737,
+  "lat": 55.0665011,
+  "lon": 82.9272106,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula",
+    "species:en": "Silver birch",
+    "species:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9855089738,
+  "lat": 55.0665902,
+  "lon": 82.9274708,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Pinus",
+    "leaf_cycle": "evergreen",
+    "natural": "tree",
+    "species": "Pinus sylvestris"
+  }
+},
+{
+  "type": "node",
+  "id": 9855089797,
+  "lat": 55.0687903,
+  "lon": 82.9318240,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Pinus",
+    "genus:en": "Pine",
+    "genus:ru": "Сосна",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Pinus sylvestris"
+  }
+},
+{
+  "type": "node",
+  "id": 9855089798,
+  "lat": 55.0688172,
+  "lon": 82.9318455,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Pinus",
+    "genus:en": "Pine",
+    "genus:ru": "Сосна",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Pinus sylvestris"
+  }
+},
+{
+  "type": "node",
+  "id": 9857333786,
+  "lat": 55.0605744,
+  "lon": 82.9022259,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "genus:en": "Spruce",
+    "genus:ru": "Ель",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Pícea ábies"
+  }
+},
+{
+  "type": "node",
+  "id": 9886682340,
+  "lat": 55.0829411,
+  "lon": 82.8921340,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "genus:en": "Spruce",
+    "genus:ru": "Ель",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Pícea ábies"
+  }
+},
+{
+  "type": "node",
+  "id": 9886696545,
+  "lat": 55.0823584,
+  "lon": 82.8899011,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "genus:en": "Spruce",
+    "genus:ru": "Ель",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Pícea ábies"
+  }
+},
+{
+  "type": "node",
+  "id": 9889021489,
+  "lat": 55.0782459,
+  "lon": 82.8886659,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula"
+  }
+},
+{
+  "type": "node",
+  "id": 9889021490,
+  "lat": 55.0782237,
+  "lon": 82.8886311,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034139,
+  "lat": 55.0798949,
+  "lon": 82.8884044,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034148,
+  "lat": 55.0798619,
+  "lon": 82.8883736,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034149,
+  "lat": 55.0797879,
+  "lon": 82.8882160,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034152,
+  "lat": 55.0805844,
+  "lon": 82.8888309,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034153,
+  "lat": 55.0805145,
+  "lon": 82.8885680,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034154,
+  "lat": 55.0806757,
+  "lon": 82.8892225,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "genus:en": "Spruce",
+    "genus:ru": "Ель",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Pícea ábies"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034169,
+  "lat": 55.0815125,
+  "lon": 82.8883494,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "genus:en": "Spruce",
+    "genus:ru": "Ель",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Picea pungens"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034170,
+  "lat": 55.0816583,
+  "lon": 82.8882388,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Quércus",
+    "genus:en": "Oak",
+    "genus:ru": "Дуб",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Quércus róbur"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034178,
+  "lat": 55.0821254,
+  "lon": 82.8883401,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034181,
+  "lat": 55.0821112,
+  "lon": 82.8890213,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034184,
+  "lat": 55.0828750,
+  "lon": 82.8918457,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "genus:en": "Spruce",
+    "genus:ru": "Ель",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Pícea ábies"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034185,
+  "lat": 55.0830017,
+  "lon": 82.8923205,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "genus:en": "Spruce",
+    "genus:ru": "Ель",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Pícea ábies"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034186,
+  "lat": 55.0830063,
+  "lon": 82.8923647,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "genus:en": "Spruce",
+    "genus:ru": "Ель",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Pícea ábies"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034187,
+  "lat": 55.0830232,
+  "lon": 82.8924197,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "genus:en": "Spruce",
+    "genus:ru": "Ель",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Pícea ábies"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034188,
+  "lat": 55.0828781,
+  "lon": 82.8928636,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula",
+    "species:en": "Silver birch",
+    "species:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9889034189,
+  "lat": 55.0831169,
+  "lon": 82.8928971,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula",
+    "species:en": "Silver birch",
+    "species:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9938645724,
+  "lat": 55.0562976,
+  "lon": 82.8985271,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula",
+    "species:en": "Silver birch",
+    "species:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9938645725,
+  "lat": 55.0562853,
+  "lon": 82.8984949,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula",
+    "species:en": "Silver birch",
+    "species:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9938645726,
+  "lat": 55.0562768,
+  "lon": 82.8984600,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula",
+    "species:en": "Silver birch",
+    "species:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9938645727,
+  "lat": 55.0562569,
+  "lon": 82.8984131,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula",
+    "species:en": "Silver birch",
+    "species:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 9938659707,
+  "lat": 55.0556193,
+  "lon": 82.8988141,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "genus:en": "Spruce",
+    "genus:ru": "Ель",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Pícea ábies"
+  }
+},
+{
+  "type": "node",
+  "id": 9938659708,
+  "lat": 55.0558036,
+  "lon": 82.8991628,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Betula",
+    "genus:en": "Birch",
+    "genus:ru": "Берёза",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree",
+    "species": "Betula pendula",
+    "species:en": "Silver birch",
+    "species:ru": "Берёза повислая"
+  }
+},
+{
+  "type": "node",
+  "id": 10055217049,
+  "lat": 54.9732631,
+  "lon": 83.0009516,
+  "tags": {
+    "name": "Порог Борок",
+    "natural": "peak"
+  }
+},
+{
+  "type": "node",
+  "id": 10076710841,
+  "lat": 54.9905499,
+  "lon": 83.0387504,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10076710842,
+  "lat": 54.9905542,
+  "lon": 83.0387997,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10076710843,
+  "lat": 54.9905535,
+  "lon": 83.0388598,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10076710844,
+  "lat": 54.9905560,
+  "lon": 83.0389156,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10076710845,
+  "lat": 54.9905542,
+  "lon": 83.0389703,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10076710846,
+  "lat": 54.9906219,
+  "lon": 83.0390776,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10076710847,
+  "lat": 54.9906442,
+  "lon": 83.0390497,
+  "tags": {
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10076710848,
+  "lat": 54.9906059,
+  "lon": 83.0390851,
+  "tags": {
+    "natural": "shrub"
+  }
+},
+{
+  "type": "node",
+  "id": 10097255092,
+  "lat": 54.8892581,
+  "lon": 83.0762945,
+  "tags": {
+    "circumference": "0.15",
+    "denotation": "urban",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10119130208,
+  "lat": 55.0506690,
+  "lon": 82.9291177,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Picea abies"
+  }
+},
+{
+  "type": "node",
+  "id": 10119130209,
+  "lat": 55.0506743,
+  "lon": 82.9291807,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Picea abies"
+  }
+},
+{
+  "type": "node",
+  "id": 10119170781,
+  "lat": 55.0508364,
+  "lon": 82.9284243,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Picea abies"
+  }
+},
+{
+  "type": "node",
+  "id": 10119170782,
+  "lat": 55.0508303,
+  "lon": 82.9283908,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Picea abies"
+  }
+},
+{
+  "type": "node",
+  "id": 10119170783,
+  "lat": 55.0507612,
+  "lon": 82.9283372,
+  "tags": {
+    "denotation": "urban",
+    "genus": "Picea",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree",
+    "species": "Picea abies"
+  }
+},
+{
+  "type": "node",
+  "id": 10187641344,
+  "lat": 55.0521063,
+  "lon": 82.9254739,
+  "tags": {
+    "genus": "Pinus",
+    "height": "1.5",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10187641345,
+  "lat": 55.0520948,
+  "lon": 82.9253586,
+  "tags": {
+    "genus": "Pinus",
+    "height": "1.5",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10187641346,
+  "lat": 55.0520756,
+  "lon": 82.9252405,
+  "tags": {
+    "genus": "Pinus",
+    "height": "1.5",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10187641347,
+  "lat": 55.0520649,
+  "lon": 82.9251279,
+  "tags": {
+    "genus": "Pinus",
+    "height": "1.5",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10187641348,
+  "lat": 55.0520518,
+  "lon": 82.9250032,
+  "tags": {
+    "genus": "Pinus",
+    "height": "1.5",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10187641349,
+  "lat": 55.0520334,
+  "lon": 82.9248945,
+  "tags": {
+    "genus": "Pinus",
+    "height": "1.5",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10187641350,
+  "lat": 55.0520195,
+  "lon": 82.9247738,
+  "tags": {
+    "genus": "Pinus",
+    "height": "1.5",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10187641351,
+  "lat": 55.0519942,
+  "lon": 82.9246196,
+  "tags": {
+    "genus": "Pinus",
+    "height": "1.5",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10187641352,
+  "lat": 55.0519857,
+  "lon": 82.9245298,
+  "tags": {
+    "genus": "Pinus",
+    "height": "1.5",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10187641353,
+  "lat": 55.0519742,
+  "lon": 82.9244627,
+  "tags": {
+    "genus": "Pinus",
+    "height": "1.5",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10187641354,
+  "lat": 55.0519665,
+  "lon": 82.9243997,
+  "tags": {
+    "genus": "Pinus",
+    "height": "1.5",
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10225203175,
+  "lat": 55.0505156,
+  "lon": 82.9269592,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10225203176,
+  "lat": 55.0504801,
+  "lon": 82.9269708,
+  "tags": {
+    "denotation": "urban",
+    "leaf_cycle": "deciduous",
+    "leaf_type": "broadleaved",
+    "natural": "tree"
+  }
+},
+{
+  "type": "node",
+  "id": 10704474129,
+  "lat": 54.9867846,
+  "lon": 82.7798263,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10704474130,
+  "lat": 54.9867276,
+  "lon": 82.7797391,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10704474131,
+  "lat": 54.9867115,
+  "lon": 82.7797395,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10704474132,
+  "lat": 54.9866841,
+  "lon": 82.7797434,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10704474133,
+  "lat": 54.9866588,
+  "lon": 82.7797444,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042466,
+  "lat": 54.9865195,
+  "lon": 82.7800208,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042467,
+  "lat": 54.9866443,
+  "lon": 82.7800952,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042468,
+  "lat": 54.9866931,
+  "lon": 82.7800859,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042469,
+  "lat": 54.9867357,
+  "lon": 82.7800799,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042470,
+  "lat": 54.9867815,
+  "lon": 82.7800719,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042471,
+  "lat": 54.9865106,
+  "lon": 82.7799566,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042472,
+  "lat": 54.9865091,
+  "lon": 82.7798768,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042473,
+  "lat": 54.9865036,
+  "lon": 82.7797943,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042474,
+  "lat": 54.9865006,
+  "lon": 82.7797185,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042475,
+  "lat": 54.9864952,
+  "lon": 82.7796079,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042476,
+  "lat": 54.9865072,
+  "lon": 82.7796710,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042477,
+  "lat": 54.9864937,
+  "lon": 82.7795408,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042478,
+  "lat": 54.9864898,
+  "lon": 82.7794691,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042479,
+  "lat": 54.9864845,
+  "lon": 82.7793853,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042480,
+  "lat": 54.9864799,
+  "lon": 82.7793209,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042481,
+  "lat": 54.9864799,
+  "lon": 82.7792538,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042482,
+  "lat": 54.9865476,
+  "lon": 82.7789212,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042483,
+  "lat": 54.9865968,
+  "lon": 82.7789159,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042484,
+  "lat": 54.9866399,
+  "lon": 82.7789159,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042485,
+  "lat": 54.9866861,
+  "lon": 82.7789186,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042486,
+  "lat": 54.9867415,
+  "lon": 82.7789132,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042487,
+  "lat": 54.9868030,
+  "lon": 82.7789025,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042488,
+  "lat": 54.9868538,
+  "lon": 82.7788864,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042489,
+  "lat": 54.9865256,
+  "lon": 82.7801044,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042490,
+  "lat": 54.9864801,
+  "lon": 82.7792080,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042491,
+  "lat": 54.9864766,
+  "lon": 82.7790921,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+},
+{
+  "type": "node",
+  "id": 10733042492,
+  "lat": 54.9864894,
+  "lon": 82.7790027,
+  "tags": {
+    "leaf_cycle": "evergreen",
+    "leaf_type": "needleleaved",
+    "natural": "wood"
+  }
+}
+
+  ]
+}
