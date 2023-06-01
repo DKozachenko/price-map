@@ -126,11 +126,8 @@ fn main() -> Result<()> {
 /// #### return:
 /// - **Result<(), Box<dyn StdError>>** | *результат отправки*
 fn send_error_message(rabbit: &Rabbit, queue_name: &str, message: &str) -> Result<()> {
-    let message: Message<OsrmMessageData> = Message {
-        data: OsrmMessageData {
-            coordinates: vec![],
-            legs: &vec![]
-        },
+    let message: Message<Option<OsrmMessageData>> = Message {
+        data: None,
         description: message.to_string(),
         send_time: Local::now().to_string()
     };
