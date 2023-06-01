@@ -111,17 +111,11 @@ pub fn get_config() -> Result<Config> {
 /// #### return:
 /// - **String** | *строка координат*
 pub fn get_coordinates_str(coordinates_array: Vec<Coordinates>) -> String {
-    let mut result: String = String::new();
-
-    for (i, coordinates) in coordinates_array.iter().enumerate() {
-    if i == coordinates_array.len() - 1 {
-        result.push_str(format!("{},{}", coordinates.longitude, coordinates.latitude).as_str());
-    } else {
-        result.push_str(format!("{},{};", coordinates.longitude, coordinates.latitude).as_str());
-    }
-    }
-
-    result
+    coordinates_array
+        .into_iter()
+        .map(|c| format!("{},{}", c.longitude, c.latitude))
+        .collect::<Vec<String>>()
+        .join(";")
 }
 
 /// Получение координат из LineString
@@ -130,11 +124,8 @@ pub fn get_coordinates_str(coordinates_array: Vec<Coordinates>) -> String {
 /// #### return:
 /// - **Vec<[f64; 2]>** | *массив кооринат*
 pub fn get_coordinates(line_string: LineString) -> Vec<[f64; 2]> {
-  let mut result: Vec<[f64; 2]> = Vec::new();
-
-  for coordinate in line_string {
-      result.push([coordinate.x, coordinate.y]);
-  }
-
-  result
+    line_string
+        .into_iter()
+        .map(|c| [c.x, c.y])
+        .collect()
 }
