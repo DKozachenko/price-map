@@ -208,15 +208,27 @@ export class ProductsGateway {
     });
     return this.rabbitService.getMessage<IOsrmData>(OSRM_REQUESTER_RESPONSE_QUEUE)
       .pipe(
-        switchMap((message: IMessage<IOsrmData>) => {
+        switchMap((message: IMessage<IOsrmData | null>) => {
+          if (message.data) {
+            return of({
+              event: ExternalEvents.BuildRouteSuccessed,
+              data: {
+                statusCode: 200,
+                errorCode: null,
+                isError: false,
+                data: message.data,
+                message: 'Маршрут успешно построен'
+              }
+            });
+          }
           return of({
-            event: ExternalEvents.BuildRouteSuccessed,
+            event: ExternalEvents.BuildRouteFailed,
             data: {
-              statusCode: 200,
-              errorCode: null,
-              isError: false,
-              data: message.data,
-              message: 'Маршрут успешно построен'
+              statusCode: 400,
+              errorCode: <ExternalErrorCode>'BUILD_ROUTE_FAILED',
+              isError: true,
+              data: null,
+              message: 'Ошибка при построении маршрута'
             }
           });
         }),
